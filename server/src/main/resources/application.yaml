@@ -16,6 +16,10 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 25MB
   threads:
     virtual:
       enabled: true
@@ -61,9 +65,16 @@ eloka:
   # Providers (ADR-0004). none = refuse with PROVIDER_NOT_CONFIGURED; fake = local/test only.
   integration:
     otp-provider: none
+    identity-provider: none # PAN + DigiLocker
+    credit-bureau: none     # no bureau contracted yet (docs/OPEN_QUESTIONS.md Q-1)
+    malware-scanner: none   # PDFs are refused until a scanner is configured
+  documents:
+    storage-path: ${ELOKA_STORAGE_PATH:data/files}
   # Partner application rules. Open business questions (docs/OPEN_QUESTIONS.md) are settings here.
   onboarding:
     idle-expiry: 30d
     max-attempts: 3
     consent-version: "2026-10-27"
     declaration-version: "2026-10-27"
+    # The client page DigiLocker sends the applicant back to
+    digilocker-return-url: ${ELOKA_PUBLIC_URL:http://localhost:3003}/apply/digilocker?state={state}

@@ -17,5 +17,10 @@ eloka:
     index-key: cGFydG5lci10ZXN0LWluZGV4LWtleS0zMi1ieXRlcyE=
   integration:
     otp-provider: fake
+    identity-provider: fake
+    credit-bureau: fake
+    malware-scanner: fake
+  documents:
+    storage-path: build/test-files
   identity:
     otp-max-per-ip-per-hour: 1000 # every MockMvc request comes from 127.0.0.1

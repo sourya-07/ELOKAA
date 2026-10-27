@@ -29,11 +29,19 @@ logging:
 eloka:
   environment: ${ELOKA_ENVIRONMENT:production}
   cors-allowed-origin-patterns: ${ELOKA_CORS_ALLOWED_ORIGIN_PATTERNS:}
+  documents:
+    storage-path: ${ELOKA_STORAGE_PATH:/app/data/files}
   crypto:
     field-key: ${ELOKA_CRYPTO_FIELD_KEY}
     index-key: ${ELOKA_CRYPTO_INDEX_KEY}
   integration:
     otp-provider: ${ELOKA_OTP_PROVIDER:none}
+    identity-provider: ${ELOKA_IDENTITY_PROVIDER:none}
+    credit-bureau: ${ELOKA_CREDIT_BUREAU:none}
+    malware-scanner: ${ELOKA_MALWARE_SCANNER:none}
+    clamav:
+      host: ${ELOKA_CLAMAV_HOST:}
+      port: ${ELOKA_CLAMAV_PORT:3310}
     eps:
       base-url: ${ELOKA_EPS_BASE_URL:}
       developer-key: ${ELOKA_EPS_DEVELOPER_KEY:}

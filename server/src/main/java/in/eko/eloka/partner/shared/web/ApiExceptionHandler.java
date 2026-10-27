@@ -6,10 +6,16 @@ import in.eko.eloka.partner.shared.error.RateLimitedException;
 import in.eko.eloka.partner.shared.error.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
@@ -40,6 +46,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			problem.setProperty("retry_after", limited.getRetryAfter().toSeconds());
 		}
 		return problem;
+	}
+
+	/** A unique key won a race (the same PAN or mobile in two places at once): the loser gets a clean 409. */
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	ProblemDetail handleConflict(DataIntegrityViolationException ex) {
+		log.warn("Unique constraint refused a write: {}", ex.getMostSpecificCause().getClass().getSimpleName());
+		ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,
+				"This was changed at the same moment somewhere else. Please reload and try again.");
+		problem.setProperty("code", "CONFLICT");
+		return problem;
+	}
+
+	/** Uploads above the server's size limit (the parent class maps them to 413). */
+	@Override
+	protected ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONTENT_TOO_LARGE,
+				"The file is too large. Files can be at most 10 MB.");
+		problem.setProperty("code", "FILE_TOO_LARGE");
+		return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE).body(problem);
 	}
 
 	@ExceptionHandler(Exception.class)

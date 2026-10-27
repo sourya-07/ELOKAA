@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import in.eko.eloka.partner.integration.MobileOtpGateway;
@@ -42,7 +41,7 @@ class EpsMobileOtpGateway implements MobileOtpGateway {
 	@Override
 	public SentOtp send(String mobile) {
 		JsonNode response = eps.call("mobile-otp-send", HttpMethod.POST, "/tools/kyc/mobile/otp",
-				Map.of("mobile", mobile, "csp_id", cspId, "client_ref_id", clientRef()));
+				Map.of("mobile", mobile, "csp_id", cspId, "client_ref_id", EpsClient.clientRef()));
 		JsonNode data = response.path("data");
 		String reference = data.path("tid").asString("");
 		if (response.get("status").asInt() != 0 || reference.isBlank()) {
@@ -54,7 +53,7 @@ class EpsMobileOtpGateway implements MobileOtpGateway {
 	@Override
 	public boolean verify(String mobile, String reference, String code) {
 		JsonNode response = eps.call("mobile-otp-verify", HttpMethod.PUT, "/tools/kyc/mobile/otp/verify",
-				Map.of("mobile", mobile, "otp", code, "otp_ref_id", reference, "client_ref_id", clientRef()));
+				Map.of("mobile", mobile, "otp", code, "otp_ref_id", reference, "client_ref_id", EpsClient.clientRef()));
 		if (response.get("status").asInt() != 0) {
 			return false;
 		}
@@ -75,8 +74,4 @@ class EpsMobileOtpGateway implements MobileOtpGateway {
 		}
 	}
 
-	/** 10–20 characters, unique per call. */
-	private static String clientRef() {
-		return "PTN" + System.currentTimeMillis() + String.format("%03d", ThreadLocalRandom.current().nextInt(1000));
-	}
 }

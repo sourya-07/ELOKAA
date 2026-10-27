@@ -9,6 +9,7 @@ import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import in.eko.eloka.partner.integration.ProviderUnavailableException;
@@ -102,6 +103,11 @@ class EpsClient {
 					ex.getClass().getSimpleName());
 			throw new ProviderUnavailableException("EPS");
 		}
+	}
+
+	/** A new {@code client_ref_id}: 10–20 characters, unique per call. */
+	static String clientRef() {
+		return "PTN" + System.currentTimeMillis() + String.format("%03d", ThreadLocalRandom.current().nextInt(1000));
 	}
 
 	String sign(String timestamp) {

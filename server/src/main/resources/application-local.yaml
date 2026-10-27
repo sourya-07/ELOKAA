@@ -26,3 +26,6 @@ eloka:
     otp-max-per-ip-per-hour: 1000
   integration:
     otp-provider: fake # every OTP is 123456, no SMS
+    identity-provider: fake # PAN and DigiLocker answers by PAN digits (docs/LOCAL_DEVELOPMENT.md)
+    credit-bureau: fake
+    malware-scanner: fake
