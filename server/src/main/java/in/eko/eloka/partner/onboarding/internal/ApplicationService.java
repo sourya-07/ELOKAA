@@ -260,26 +260,49 @@ class ApplicationService {
 		return get(applicantId, publicId);
 	}
 
+	/** Reasons an applicant can give for withdrawing; anything else is recorded as {@code NONE}. */
+	static final Set<String> WITHDRAW_REASONS = Set.of("CHANGED_MIND", "TAKES_TOO_LONG", "WILL_APPLY_LATER", "OTHER");
+
+	/**
+	 * The withdraw checks without a lock, so a stale version, someone else's id or a closed
+	 * application fails before the applicant's one-time code is used up.
+	 */
+	@Transactional(readOnly = true)
+	void checkWithdrawable(UUID applicantId, String publicId, long expectedVersion) {
+		checkWithdraw(applications.findByPublicIdAndApplicantId(publicId, applicantId)
+			.orElseThrow(ApplicationService::notFound), expectedVersion);
+	}
+
 	/**
 	 * Withdraws after a fresh OTP (step-up), from in progress, submitted or correction required.
-	 * Checked against the current version like every write.
+	 * Checked again under the row lock, for races with staff or another tab.
 	 */
 	@Transactional
 	ApplicationSnapshot withdraw(UUID applicantId, String publicId, long expectedVersion, String reasonCode) {
 		PartnerApplication application = applications.lockByPublicIdAndApplicantId(publicId, applicantId)
 			.orElseThrow(ApplicationService::notFound);
+		checkWithdraw(application, expectedVersion);
+		stateMachine.apply(application, LifecycleEvent.WITHDRAW, "APPLICANT", applicantId.toString());
+		String reason = reasonCode != null && WITHDRAW_REASONS.contains(reasonCode.trim().toUpperCase())
+				? reasonCode.trim().toUpperCase() : "NONE";
+		audit.record(new AuditEntry("APPLICATION_WITHDRAW_REASON", "APPLICANT", applicantId.toString(),
+				"PARTNER_APPLICATION", publicId, Map.of("reason_code", reason)));
+		applications.saveAndFlush(application);
+		return snapshot(application);
+	}
+
+	private void checkWithdraw(PartnerApplication application, long expectedVersion) {
 		if (application.getVersion() != expectedVersion) {
 			throw new ApiProblem(HttpStatus.PRECONDITION_FAILED, "PRECONDITION_FAILED",
 					"This application changed in another tab or device. Here is the latest version.",
 					Map.of("current", snapshot(application)));
 		}
-		stateMachine.apply(application, LifecycleEvent.WITHDRAW, "APPLICANT", applicantId.toString());
-		String reason = reasonCode == null || !reasonCode.trim().toUpperCase().matches("[A-Z][A-Z0-9_]{1,39}") ? "NONE"
-				: reasonCode.trim().toUpperCase();
-		audit.record(new AuditEntry("APPLICATION_WITHDRAW_REASON", "APPLICANT", applicantId.toString(),
-				"PARTNER_APPLICATION", publicId, Map.of("reason_code", reason)));
-		applications.saveAndFlush(application);
-		return snapshot(application);
+		if (!stateMachine.allows(application, LifecycleEvent.WITHDRAW)) {
+			throw new ApiProblem(HttpStatus.CONFLICT, "INVALID_STATE_TRANSITION",
+					"This is not possible while the application is "
+							+ application.getStatus().name().toLowerCase().replace('_', ' '),
+					Map.of("current_status", application.getStatus().name()));
+		}
 	}
 
 	/**

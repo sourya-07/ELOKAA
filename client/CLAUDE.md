@@ -22,7 +22,7 @@ src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy 
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest), guards, PanForm,
                       SubmitStep, useDocuments, useAction, withApplication, WithdrawPanel (step-up code, then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
-src/components/       ApplyShell/Section, OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
+src/components/       ApplyShell/Section (journey steps link to /apply/status), OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
 __tests__/            Jest tests, mirroring src/ (render.tsx wraps the theme, fixtures.ts builds snapshots)
 ```

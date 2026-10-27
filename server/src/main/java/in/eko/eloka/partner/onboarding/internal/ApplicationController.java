@@ -41,14 +41,24 @@ class ApplicationController {
 		this.reauth = reauth;
 	}
 
-	/** Withdraws the application. Needs a fresh code from {@code POST /v1/partner/reauth}. */
+	/**
+	 * Withdraws the application. Needs a fresh code from {@code POST /v1/partner/reauth} and an
+	 * {@code Idempotency-Key}: a retry after a lost answer replays the result instead of checking the
+	 * used code again. The application is checked before the code, so a refused request keeps it.
+	 */
 	@PostMapping("/{id}/withdraw")
-	ResponseEntity<ApplicationSnapshot> withdraw(@PathVariable String id, @RequestBody WithdrawRequest body,
-			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+	ResponseEntity<?> withdraw(@PathVariable String id, @RequestBody(required = false) WithdrawRequest body,
+			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch,
+			@RequestHeader(value = Idempotency.HEADER, required = false) String key, HttpServletRequest request) {
 		long version = WebSupport.expectedVersion(ifMatch);
 		UUID applicantId = WebSupport.applicantId();
-		reauth.verify(applicantId, body == null ? null : body.otp());
-		return WebSupport.ok(applications.withdraw(applicantId, id, version, body == null ? null : body.reasonCode()));
+		String reasonCode = body == null ? null : body.reasonCode();
+		// The fingerprint leaves the code out: it is single use, and a retry may carry a newer one
+		return idempotency.run(applicantId, key, WebSupport.fingerprint(request, version + " " + reasonCode), () -> {
+			applications.checkWithdrawable(applicantId, id, version);
+			reauth.verify(applicantId, body == null ? null : body.otp());
+			return WebSupport.ok(applications.withdraw(applicantId, id, version, reasonCode));
+		});
 	}
 
 	record ConsentRequest(String purpose, String version) {

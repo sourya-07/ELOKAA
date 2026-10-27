@@ -20,9 +20,17 @@ export function ApplyShell({ title, subtitle, step, children }: Props) {
 			</Head>
 			<Box as="header" borderBottom="1px solid" borderColor="border.hairline" bg="bg.surface">
 				<Container maxW="720px" py={4}>
-					<Text as={NextLink} href="/apply" fontWeight={700} fontSize="lg" letterSpacing="-0.01em">
-						ELOKA
-					</Text>
+					<Flex justify="space-between" align="center">
+						<Text as={NextLink} href="/apply" fontWeight={700} fontSize="lg" letterSpacing="-0.01em">
+							ELOKA
+						</Text>
+						{/* Journey steps only: the status page shows the application and lets the applicant withdraw */}
+						{step && (
+							<Text as={NextLink} href="/apply/status" fontSize="sm" color="text.link">
+								My application
+							</Text>
+						)}
+					</Flex>
 				</Container>
 			</Box>
 			<Container as="main" maxW="720px" py={{ base: 6, md: 10 }}>

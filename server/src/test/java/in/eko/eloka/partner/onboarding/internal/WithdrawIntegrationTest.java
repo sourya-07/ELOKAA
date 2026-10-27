@@ -1,6 +1,7 @@
 package in.eko.eloka.partner.onboarding.internal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import tools.jackson.databind.json.JsonMapper;
 
 /** Withdrawing needs a fresh code to the applicant's own mobile. */
@@ -30,19 +32,27 @@ class WithdrawIntegrationTest {
 	JsonMapper json;
 
 	@Test
-	void withdrawNeedsAFreshCode() throws Exception {
+	void withdrawNeedsAFreshCodeAndARetryReplays() throws Exception {
 		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
 		long version = applicant.refresh().get("version").asLong();
 		String withdraw = "/v1/partner/applications/" + applicant.id() + "/withdraw";
 
-		applicant.call(post(withdraw).header("If-Match", "\"v" + version + "\"").contentType(MediaType.APPLICATION_JSON)
-			.content("{\"otp\":\"123456\"}")).andExpect(status().isGone()); // no code asked for yet
+		applicant.call(withdraw(withdraw, version, "wd-1", "123456")).andExpect(status().isGone()); // no code asked for
 		applicant.call(post("/v1/partner/reauth")).andExpect(status().isAccepted());
-		applicant.call(post(withdraw).header("If-Match", "\"v" + version + "\"").contentType(MediaType.APPLICATION_JSON)
-			.content("{\"otp\":\"000000\"}")).andExpect(status().isUnprocessableContent())
+		applicant.call(withdraw(withdraw, version, "wd-2", "000000")).andExpect(status().isUnprocessableContent())
 			.andExpect(jsonPath("$.attempts_left").value(4));
-		applicant.call(post(withdraw).header("If-Match", "\"v" + version + "\"").contentType(MediaType.APPLICATION_JSON)
-			.content("{\"otp\":\"123456\",\"reason_code\":\"CHANGED_MIND\"}")).andExpect(status().isOk())
+		// A stale version is refused before the code is checked, so the code still works afterwards
+		applicant.call(withdraw(withdraw, version - 1, "wd-3", "123456")).andExpect(status().isPreconditionFailed());
+		applicant.call(withdraw(withdraw, version, "wd-4", "123456")).andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("WITHDRAWN"));
+		// The answer was lost: the same request again replays it instead of checking the used code
+		applicant.call(withdraw(withdraw, version, "wd-4", "123456")).andExpect(status().isOk())
+			.andExpect(header().string("Idempotent-Replayed", "true"))
+			.andExpect(jsonPath("$.status").value("WITHDRAWN"));
+	}
+
+	private static MockHttpServletRequestBuilder withdraw(String path, long version, String key, String otp) {
+		return post(path).header("If-Match", "\"v" + version + "\"").header("Idempotency-Key", key)
+			.contentType(MediaType.APPLICATION_JSON).content("{\"otp\":\"" + otp + "\",\"reason_code\":\"CHANGED_MIND\"}");
 	}
 }

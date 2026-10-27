@@ -21,6 +21,7 @@ export function WithdrawPanel() {
 	const [stage, setStage] = useState<"closed" | "confirm" | "code">("closed");
 	const [reason, setReason] = useState("CHANGED_MIND");
 	const [code, setCode] = useState("");
+	const [length, setLength] = useState(6);
 
 	if (stage === "closed") {
 		return (
@@ -31,7 +32,8 @@ export function WithdrawPanel() {
 	}
 	const sendCode = () =>
 		run(async () => {
-			await call("/v1/partner/reauth", { method: "POST" });
+			const reply = await call<{ otp_length: number }>("/v1/partner/reauth", { method: "POST" });
+			setLength(reply.data.otp_length);
 			setCode("");
 			setStage("code");
 		});
@@ -55,12 +57,13 @@ export function WithdrawPanel() {
 				) : (
 					<>
 						<Text>Enter the code we sent to your mobile.</Text>
-						<OtpInput value={code} onChange={setCode} isDisabled={busy} />
+						<OtpInput length={length} value={code} onChange={setCode} isDisabled={busy} />
 						<Button
 							colorScheme="red"
 							isLoading={busy}
-							isDisabled={code.length !== 6}
-							onClick={() => run(() => write("/withdraw", { body: { otp: code, reason_code: reason } }))}
+							isDisabled={code.length !== length}
+							// Idempotent: a retry after a lost answer replays the withdrawal, the code is single use
+							onClick={() => run(() => write("/withdraw", { body: { otp: code, reason_code: reason }, idempotent: true }))}
 						>
 							Withdraw
 						</Button>

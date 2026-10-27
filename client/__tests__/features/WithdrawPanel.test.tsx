@@ -37,8 +37,21 @@ describe("withdraw panel", () => {
 		fireEvent.paste(screen.getByLabelText("Digit 1 of 6"), { clipboardData: { getData: () => "123456" } });
 		fireEvent.click(screen.getByRole("button", { name: "Withdraw" }));
 		await waitFor(() =>
-			expect(write).toHaveBeenCalledWith("/withdraw", { body: { otp: "123456", reason_code: "WILL_APPLY_LATER" } }),
+			expect(write).toHaveBeenCalledWith("/withdraw", {
+				body: { otp: "123456", reason_code: "WILL_APPLY_LATER" },
+				idempotent: true,
+			}),
 		);
+	});
+
+	it("uses the code length the server sends", async () => {
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt(null), write: jest.fn() });
+		respond({ status: 202, body: { expires_in: 300, otp_length: 4 } });
+		render(<WithdrawPanel />);
+		fireEvent.click(screen.getByRole("button", { name: "Withdraw application" }));
+		fireEvent.click(screen.getByRole("button", { name: "Send code to my mobile" }));
+		expect(await screen.findByLabelText("Digit 1 of 4")).toBeInTheDocument();
+		expect(screen.queryByLabelText("Digit 5 of 6")).not.toBeInTheDocument();
 	});
 
 	it("can be closed without doing anything", () => {
