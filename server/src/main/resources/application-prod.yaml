@@ -1,9 +1,34 @@
 # Staging and production. Every value is injected by the deployment; nothing secret is stored here.
+# Missing variables stop the app at startup. ELOKA_ENVIRONMENT defaults to production, which turns on
+# ProductionSafetyGuard; staging sets ELOKA_ENVIRONMENT=staging and is held to the same rules.
+spring:
+  docker:
+    compose:
+      enabled: false
+  datasource:
+    url: ${ELOKA_DB_URL}
+    username: ${ELOKA_DB_USERNAME}
+    password: ${ELOKA_DB_PASSWORD}
+  flyway:
+    enabled: ${ELOKA_DB_MIGRATE_ON_START:false} # only the one-shot migrate container migrates
+
+server:
+  tomcat:
+    remoteip:
+      internal-proxies: ${ELOKA_TRUSTED_PROXIES:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}|127\.0\.0\.1}
+
 management:
   server:
     port: ${MANAGEMENT_SERVER_PORT:8081}
 
 logging:
   structured:
-    format:
-      console: ecs
+    json:
+      customizer: in.eko.eloka.partner.shared.logging.MaskingJsonCustomizer
+
+eloka:
+  environment: ${ELOKA_ENVIRONMENT:production}
+  cors-allowed-origin-patterns: ${ELOKA_CORS_ALLOWED_ORIGIN_PATTERNS:}
+  crypto:
+    field-key: ${ELOKA_CRYPTO_FIELD_KEY}
+    index-key: ${ELOKA_CRYPTO_INDEX_KEY}

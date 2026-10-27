@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Logging. Every message goes through PiiMasker (personal data redacted).
+    eloka.access  one line per request
+    eloka.audit   mirror of the audit trail (the audit_event table is the record)
+  prod profile (staging + production containers): ECS JSON on stdout only; the platform collects
+  and retains it. Other profiles: readable text on the console and rolling files under
+  ${ELOKA_LOG_DIR} (default ./logs) for local debugging.
+-->
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+	<conversionRule conversionWord="maskedMsg" class="in.eko.eloka.partner.shared.logging.MaskedMessageConverter"/>
+
+	<springProperty name="LOG_DIR" source="logging.file.path" defaultValue="logs"/>
+	<property name="TEXT_PATTERN"
+		value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%X{request_id:--}] [%X{session_ref:--}] %logger{36} - %maskedMsg%n%wEx"/>
+
+	<springProfile name="!prod">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5level) %clr([%X{request_id:--}]){faint} %clr(%logger{30}){cyan} - %maskedMsg%n%wEx</pattern>
+			</encoder>
+		</appender>
+		<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>${LOG_DIR}/eloka-partner.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+				<fileNamePattern>${LOG_DIR}/eloka-partner.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+				<maxFileSize>50MB</maxFileSize>
+				<maxHistory>7</maxHistory>
+				<totalSizeCap>1GB</totalSizeCap>
+			</rollingPolicy>
+			<encoder><pattern>${TEXT_PATTERN}</pattern></encoder>
+		</appender>
+		<root level="INFO">
+			<appender-ref ref="CONSOLE"/>
+			<appender-ref ref="FILE"/>
+		</root>
+	</springProfile>
+
+	<springProfile name="prod">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+				<format>ecs</format>
+				<charset>UTF-8</charset>
+			</encoder>
+		</appender>
+		<root level="INFO">
+			<appender-ref ref="CONSOLE"/>
+		</root>
+	</springProfile>
+</configuration>

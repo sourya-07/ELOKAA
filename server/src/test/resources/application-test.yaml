@@ -1,0 +1,17 @@
+# Automated tests (profile "test"). Throwaway values; MySQL comes from Testcontainers.
+spring:
+  docker:
+    compose:
+      enabled: false
+
+logging:
+  file:
+    path: build/test-logs
+
+eloka:
+  environment: test
+  cors-allowed-origin-patterns:
+    - http://localhost:[*]
+  crypto:
+    field-key: cGFydG5lci10ZXN0LWZpZWxkLWtleS0zMi1ieXRlcyE=
+    index-key: cGFydG5lci10ZXN0LWluZGV4LWtleS0zMi1ieXRlcyE=

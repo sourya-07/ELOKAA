@@ -24,3 +24,4 @@ Java 25, Spring Boot 4.1, Spring Modulith, Spring Security, MySQL 8.4, Flyway ·
 
 - 2026-10-27: decisions, journey and ADRs written. No application code yet.
 - 2026-10-27: repo bootstrap: client and server skeletons that build and test, CI, security scans (gitleaks, dependency review, Trivy), CodeQL, Dependabot, Dockerfiles, Makefile.
+- 2026-10-27: server foundation (P3): shared errors, security (default deny), crypto, masked logging, safety guard, hash-chained audit log, Flyway V1–V2, Testcontainers MySQL test.
