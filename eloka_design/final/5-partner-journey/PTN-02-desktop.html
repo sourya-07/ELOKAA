@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PTN-02 Choose how to apply (desktop)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "on-error-container": "#93000a",
+              "surface-dim": "#dadad7",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e2e3e0",
+              "tertiary-container": "#1b1c18",
+              "error": "#ba1a1a",
+              "secondary": "#4053c4",
+              "primary-fixed": "#e5e2e1",
+              "surface-tint": "#5f5e5e",
+              "secondary-container": "#778afd",
+              "surface-variant": "#e2e3e0",
+              "surface": "#f9f9f6",
+              "on-tertiary-fixed": "#1b1c18",
+              "on-primary-fixed": "#1c1b1b",
+              "inverse-surface": "#2f312f",
+              "outline-variant": "#c4c7c7",
+              "surface-bright": "#f9f9f6",
+              "primary": "#000000",
+              "on-error": "#ffffff",
+              "on-primary-container": "#858383",
+              "on-surface-variant": "#444748",
+              "on-background": "#1a1c1b",
+              "inverse-on-surface": "#f1f1ee",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f4f4f1",
+              "primary-fixed-dim": "#c9c6c5",
+              "surface-container": "#eeeeeb",
+              "background": "#f9f9f6",
+              "surface-container-high": "#e8e8e5",
+              "tertiary": "#000000",
+              "secondary-fixed": "#dee0ff",
+              "primary-container": "#1c1b1b",
+              "error-container": "#ffdad6",
+              "outline": "#747878",
+              "on-tertiary-container": "#84847e",
+              "on-secondary-container": "#001a88",
+              "on-primary-fixed-variant": "#474646",
+              "tertiary-fixed-dim": "#c8c6c0",
+              "secondary-fixed-dim": "#bbc3ff",
+              "on-secondary-fixed-variant": "#2439ab",
+              "on-tertiary-fixed-variant": "#474742",
+              "tertiary-fixed": "#e4e2dc",
+              "on-secondary-fixed": "#000f5d",
+              "on-surface": "#1a1c1b",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "inverse-primary": "#c9c6c5",
+              "connect-blue": "#11299E"
+            },
+            "borderRadius": {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            "spacing": {
+              "space-3xl": "48px",
+              "space-lg": "16px",
+              "space-xl": "24px",
+              "space-xs": "4px",
+              "space-4xl": "64px",
+              "margin": "1.5rem",
+              "space-md": "12px",
+              "space-sm": "8px",
+              "space-2xl": "32px",
+              "gutter": "1rem"
+            },
+            "fontFamily": {
+              "label": ["Inter"],
+              "h2": ["Inter"],
+              "h1": ["Inter"],
+              "display-mobile": ["Inter"],
+              "display": ["Inter"],
+              "h3": ["Inter"],
+              "body-sm": ["Inter"],
+              "body": ["Inter"]
+            },
+            "fontSize": {
+              "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+              "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+              "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+              "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+              "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+              "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+              "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+              "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col justify-between selection:bg-surface-variant">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-h1 text-h1 font-bold text-primary dark:text-inverse-primary tracking-tight">ELOKA</span>
+
+</div>
+<nav class="hidden md:flex items-center gap-8">
+</nav>
+<div class="flex items-center gap-4">
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-[720px] mx-auto px-6 py-12 flex-grow">
+<!-- Page Header & Subtitle -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-2">
+<h1 class="font-display text-display text-on-background">How would you like to apply?</h1>
+</div>
+<p class="font-body text-body text-on-surface-variant">
+                Signed in as +91 XXXXXX3210
+            </p>
+</div>
+<!-- 2-Column Grid Options -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<!-- Option 1: Apply with DigiLocker -->
+<div class="cursor-pointer bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-6 relative flex flex-col justify-between hover:border-connect-blue transition-all duration-200 shadow-sm group" onclick="selectCard(this)">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-connect-blue">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="text-xs font-label bg-connect-blue/10 text-connect-blue px-2.5 py-1 rounded-full font-semibold">Faster</span>
+</div>
+<h3 class="font-h3 text-h3 mb-2 text-on-background">Apply with DigiLocker</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
+                        We fetch your name, date of birth, home address and the last 4 digits of your Aadhaar from DigiLocker. 8 steps.
+                    </p>
+</div>
+<ul class="space-y-2 border-t border-[#E5E5E0] pt-4">
+<li class="flex items-center gap-2 font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-connect-blue text-lg">check_circle</span>
+                        Fewer forms to fill
+                    </li>
+<li class="flex items-center gap-2 font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-connect-blue text-lg">check_circle</span>
+                        Aadhaar details fetched for you
+                    </li>
+</ul>
+</div>
+<!-- Option 2: Apply step by step -->
+<div class="cursor-pointer bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-6 relative flex flex-col justify-between hover:border-connect-blue transition-all duration-200 shadow-sm group" onclick="selectCard(this)">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">edit_document</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-2 text-on-background">Apply step by step</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
+                        Enter your details and upload documents yourself. 10 steps.
+                    </p>
+</div>
+<ul class="space-y-2 border-t border-[#E5E5E0] pt-4">
+<li class="flex items-center gap-2 font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-outline text-lg">radio_button_unchecked</span>
+                        Enter your details yourself
+                    </li>
+<li class="flex items-center gap-2 font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-outline text-lg">radio_button_unchecked</span>
+                        Upload your documents
+                    </li>
+</ul>
+</div>
+</div>
+<!-- Info Box: Keep these ready -->
+<div class="bg-surface-container-low border border-[#E5E5E0] rounded-xl p-6 mb-8">
+<div class="flex items-start gap-3 mb-4">
+<span class="material-symbols-outlined text-on-surface-variant mt-0.5">info</span>
+<div>
+<h4 class="font-h3 text-h3 text-on-background mb-1">Keep these ready</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Have these with you before you start.</p>
+</div>
+</div>
+<ul class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-7">
+<li class="flex items-center gap-2 font-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+                    Your Aadhaar-linked mobile (for DigiLocker)
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+                    Your PAN
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+                    Graduation certificate
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+                    Voter ID or driving licence
+                </li>
+</ul>
+</div>
+<!-- Consent Checkbox -->
+<div class="flex items-start gap-3 mb-8 bg-surface-container-lowest border border-[#E5E5E0] p-4 rounded-xl">
+<input class="mt-1 w-4 h-4 rounded border-outline text-primary focus:ring-primary" id="consent" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" for="consent">
+                I agree that ELOKA may use these details to process my partner application. <a class="text-connect-blue underline font-medium hover:text-opacity-80" href="#">Read how we use your data.</a>
+</label>
+</div>
+<!-- Solid Black Continue Button -->
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-h3 text-h3 hover:opacity-95 active:scale-[0.99] transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+            Continue
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-6 py-6 max-w-7xl mx-auto gap-4">
+
+<div class="flex items-center gap-6">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script>
+        function selectCard(element) {
+            // Remove selection styling from siblings
+            const parent = element.parentElement;
+            parent.querySelectorAll('div').forEach(card => {
+                card.classList.remove('border-connect-blue', 'bg-surface-container-lowest');
+                card.classList.add('border-[#E5E5E0]');
+            });
+            // Apply selection to clicked card
+            element.classList.remove('border-[#E5E5E0]');
+            element.classList.add('border-connect-blue', 'bg-surface-container-lowest');
+        }
+    </script>
+</body></html>

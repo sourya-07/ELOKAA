@@ -90,3 +90,24 @@ Names: `APP-` = partner application steps, `STF-` = staff console, `R1-` = exist
 | R1-10 | Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs. |
 | R1-10-phone | Generated 2026-10-22 by converting the existing screen. Awaiting owner review (ST-8d). Phone query center with tickets as cards. Not specs: ticket ids, names and the bottom-bar tabs (they come from the app). |
 | R1-theme-check | Theme check 2026-10-22: the agent home in a second tenant brand (teal #0F766E, amber accent) to show white-label theming. Awaiting owner review (ST-8d). Not specs: 'Today's volume', commission and settlement lines, 'Terminal Online', agent id, version label; the dates (2023) are sample only. |
+
+## final/5-partner-journey: Partner journey (14), made 2026-10-27
+
+The individual partner journey from docs/PARTNER_JOURNEY.md (`PTN-`), adapted from the APP- screens. All awaiting owner review. The repo files are ahead of Stitch: wrong text Stitch added (Skip buttons, PNG as a format, an invented "re-apply after 90 days" rule, dashboard links) was removed locally and re-rendered; `metadata.json` lists every patch and leftover per screen.
+
+| Design | What |
+|---|---|
+| PTN-01 | Page 1: mobile number + OTP |
+| PTN-02, PTN-02-desktop | Page 2: DigiLocker or step by step, data-use consent |
+| PTN-03D | DigiLocker: connect, check details, enter PAN |
+| PTN-03 | Aadhaar, step by step: masked front/back + last 4 digits |
+| PTN-04 | PAN + date of birth |
+| PTN-04C, PTN-04C-desktop | Credit check: consent, checking, eligible, not eligible, could not check |
+| PTN-05 | Home address |
+| PTN-06 | Live photo + passport-size photo (JPG/JPEG) |
+| PTN-07 | Graduation certificate (required) + computer certificates (optional) |
+| PTN-08 | Voter ID or driving licence (at least one) |
+| PTN-09 | Review + declaration |
+| PTN-10 | Status, including "not eligible" |
+
+Missing: desktop versions of PTN-01, 03D, 03, 04, 05, 06, 07, 08, 09, 10 and the staff case-view variant (STF-P).

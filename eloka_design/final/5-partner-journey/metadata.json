@@ -1,0 +1,170 @@
+{
+  "projectId": "18017913531452476583",
+  "title": "ELOKA Platform",
+  "created": "2026-10-27",
+  "note": "Partner (individual) journey, docs/PARTNER_JOURNEY.md. Stitch screens are NOT on the canvas (MCP-created screens are not placed there) and list_screens truncates at ~103 screens, so open them by id. Timed-out edit calls may have left extra untitled/duplicate PTN screens in Stitch; the ids below are the ones to use. Awaiting owner review. Repo file ahead of Stitch: HTML patched locally and rendered with Playwright Chromium (390px @2x).",
+  "stepCounts": {
+    "digilocker": 8,
+    "stepByStep": 10
+  },
+  "screens": {
+    "PTN-01": {
+      "id": "36f35ab965d9421aabda867d585c3666",
+      "sourceScreen": "projects/18017913531452476583/screens/36f35ab965d9421aabda867d585c3666",
+      "derivedFrom": "APP-02 76d48a7341804488a3801ea400756566",
+      "files": [
+        "PTN-01.png",
+        "PTN-01.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Not patched. Page 1 of both paths; mobile + OTP states. Rendered locally."
+    },
+    "PTN-02": {
+      "id": "1b460894e8d74c84907d524cd83c110c",
+      "sourceScreen": "projects/18017913531452476583/screens/1b460894e8d74c84907d524cd83c110c",
+      "derivedFrom": "APP-01 d03e670968fa4140afcada3c67b96097",
+      "files": [
+        "PTN-02.png",
+        "PTN-02.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: Stitch wrote the copy in lower case; fixed casing; added '8 steps' / '10 steps'."
+    },
+    "PTN-03D": {
+      "id": "253ef1e1e7534b46b19bf384b960f7e6",
+      "sourceScreen": "projects/18017913531452476583/screens/253ef1e1e7534b46b19bf384b960f7e6",
+      "derivedFrom": "APP-22 d7498148f3f1449fb625a1e209df9711",
+      "files": [
+        "PTN-03D.png",
+        "PTN-03D.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: header 'Partner Onboarding' -> 'ELOKA'. Not spec: upper-case step labels (CSS), bottom Help/Support bar."
+    },
+    "PTN-03": {
+      "id": "ce7a6f6dc10e46fdbb7b1639cb76f359",
+      "sourceScreen": "projects/18017913531452476583/screens/ce7a6f6dc10e46fdbb7b1639cb76f359",
+      "derivedFrom": "APP-09B 1999928d2d294cf49f3b79b08cbb1816",
+      "files": [
+        "PTN-03.png",
+        "PTN-03.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: header 'Verification' -> 'ELOKA', removed 'Skip', removed PNG from formats, plain subtext. No rejected-upload example (spec mentions it in PARTNER_JOURNEY only as a review state)."
+    },
+    "PTN-04": {
+      "id": "6a23e936b81c4e089838b754b3fba9b0",
+      "sourceScreen": "projects/18017913531452476583/screens/6a23e936b81c4e089838b754b3fba9b0",
+      "derivedFrom": "APP-06 460aae2497fe4f47a9e75ef7bfb0b004",
+      "files": [
+        "PTN-04.png",
+        "PTN-04.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched subtext. Verified and error states exist in the HTML but are hidden in the render. Credit-check consent lives on PTN-04C, not here."
+    },
+    "PTN-04C": {
+      "id": "4cac92defaa44a048919a15674b01164",
+      "sourceScreen": "projects/18017913531452476583/screens/4cac92defaa44a048919a15674b01164",
+      "derivedFrom": "APP-16-21 65e2e5582db844b391f42c1a0115f656",
+      "files": [
+        "PTN-04C.png",
+        "PTN-04C.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Not patched. Stacked states: consent, checking, eligible, not eligible (no score), could not check. Title/description lines are spec-sheet labels. NOT SPEC: 'This does not affect your credit score' depends on the bureau product (soft vs hard enquiry, docs/OPEN_QUESTIONS.md Q-1); confirm before build."
+    },
+    "PTN-05": {
+      "id": "2d2bf8ff86214a558b252814badc9f6d",
+      "sourceScreen": "projects/18017913531452476583/screens/2d2bf8ff86214a558b252814badc9f6d",
+      "derivedFrom": "APP-07 ac56a992595a41e9a775be01afc90b80",
+      "files": [
+        "PTN-05.png",
+        "PTN-05.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched 'Select State' casing. Step-by-step path only."
+    },
+    "PTN-06": {
+      "id": "52403bb1ca734b949b99ed5bd5c55074",
+      "sourceScreen": "projects/18017913531452476583/screens/52403bb1ca734b949b99ed5bd5c55074",
+      "derivedFrom": "APP-08-10 99af10dc97994a6d9e7e2a343cab9929 (frame C)",
+      "files": [
+        "PTN-06.png",
+        "PTN-06.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: header, removed 'Skip', plain subtext. Not spec: camera preview uses a stock room photo placeholder."
+    },
+    "PTN-07": {
+      "id": "3f27e7f9771b4e139165acd06c6c02f8",
+      "sourceScreen": "projects/18017913531452476583/screens/3f27e7f9771b4e139165acd06c6c02f8",
+      "derivedFrom": "APP-11 e488cca74d96426ea1f8282352cc655c",
+      "files": [
+        "PTN-07.png",
+        "PTN-07.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: header, removed 'Skip', 'Add certificate' label."
+    },
+    "PTN-08": {
+      "id": "372fdc29cdb24e919652892cc4e64e7a",
+      "sourceScreen": "projects/18017913531452476583/screens/372fdc29cdb24e919652892cc4e64e7a",
+      "derivedFrom": "APP-11 e488cca74d96426ea1f8282352cc655c",
+      "files": [
+        "PTN-08.png",
+        "PTN-08.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: header was 'Bank Verification' -> 'ELOKA', removed 'Skip', format text. 'Optional' pills on each card: at least one is required (server rule)."
+    },
+    "PTN-09": {
+      "id": "9dcbb3432e2c418aac54075fdb075a2a",
+      "sourceScreen": "projects/18017913531452476583/screens/9dcbb3432e2c418aac54075fdb075a2a",
+      "derivedFrom": "APP-14 efa69ea760104abb8c0ac34a77eeede4",
+      "files": [
+        "PTN-09.png",
+        "PTN-09.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: header, removed 'Edit' on the credit check row (cannot be edited)."
+    },
+    "PTN-10": {
+      "id": "a378d3b0b11f45b5afe845fe4e10a25e",
+      "sourceScreen": "projects/18017913531452476583/screens/a378d3b0b11f45b5afe845fe4e10a25e",
+      "derivedFrom": "APP-16-21 65e2e5582db844b391f42c1a0115f656",
+      "files": [
+        "PTN-10.png",
+        "PTN-10.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: removed invented copy (rejection reason, '90 days' reapply rule - Q-6 is open), removed 'Save Draft / Submit' bar. Reference 'PTN-7Q2K9X' is sample."
+    },
+    "PTN-02-desktop": {
+      "id": "fd5056f3980a450c819437e781d154f0",
+      "sourceScreen": "projects/18017913531452476583/screens/fd5056f3980a450c819437e781d154f0",
+      "derivedFrom": "PTN-02 1b460894e8d74c84907d524cd83c110c",
+      "files": [
+        "PTN-02-desktop.png",
+        "PTN-02-desktop.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: removed invented nav (Dashboard/Support/Sign Out), copyright line and Contact link; replaced invented option copy with spec copy. Rendered at 1280px."
+    },
+    "PTN-04C-desktop": {
+      "id": "5c32a9b304ad4482bf1f5b9b9842a450",
+      "sourceScreen": "projects/18017913531452476583/screens/5c32a9b304ad4482bf1f5b9b9842a450",
+      "derivedFrom": "PTN-04C 4cac92defaa44a048919a15674b01164",
+      "files": [
+        "PTN-04C-desktop.png",
+        "PTN-04C-desktop.html"
+      ],
+      "status": "awaiting owner review",
+      "notes": "Patched: rail step 10 'Status' -> 'Review'. Rendered at 1280px. NOT SPEC: 'This does not affect your credit score' depends on the bureau product (soft vs hard enquiry, docs/OPEN_QUESTIONS.md Q-1); confirm before build."
+    }
+  },
+  "missing": [
+    "Desktop versions of PTN-01, 03D, 03, 04, 05, 06, 07, 08, 09, 10 (PTN-01 desktop edit timed out; no id)",
+    "STF-P staff case view variant (credit result + new document types)"
+  ]
+}
