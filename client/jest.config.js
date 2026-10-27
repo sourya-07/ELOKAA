@@ -8,4 +8,6 @@ module.exports = createJestConfig({
 	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 	moduleNameMapper: { "^@/(.*)$": "<rootDir>/src/$1" },
 	testMatch: ["<rootDir>/__tests__/**/*.test.{ts,tsx}"],
+	collectCoverageFrom: ["src/lib/**/*.ts", "src/components/**/*.tsx", "src/features/**/guards.ts"],
+	coverageThreshold: { global: { lines: 60 } },
 });

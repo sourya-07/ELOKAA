@@ -12,8 +12,8 @@ The web journey through which a prospective ELOKA partner verifies their mobile 
 | [`docs/adr/`](docs/adr/) | architecture decisions |
 | [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md) | what is still undecided and the default we build on |
 | [`eloka_design/`](eloka_design/README.md) | Google Stitch designs (png + html) |
-| `client/` | Next.js web app (skeleton) |
-| `server/` | Spring Boot backend (skeleton) |
+| `client/` | Next.js web app: applicant journey (`/apply`), staff console (`/staff`), BFF proxy |
+| `server/` | Spring Boot backend: sign-in, application, checks, documents, review |
 | `deploy/` | Docker Compose + Caddy production stack (planned) |
 
 ## Stack
@@ -30,3 +30,4 @@ Java 25, Spring Boot 4.1, Spring Modulith, Spring Security, MySQL 8.4, Flyway ·
 - 2026-10-27: Security workflow fixed: Tomcat 11.0.25 and Jackson 3.1.7 pinned (server image), postcss 8.5.x forced (client image), gitleaks now scans the full history with a checksum-pinned CLI.
 - 2026-10-27: identity, credit check and documents (P6–P8): PAN (EPS PAN Lite adapter), DigiLocker (EPS adapter, single-use state), masked Aadhaar upload, home address, CIBIL check with the 700 rule (fake bureau only), photos, certificates, voter ID / driving licence, encrypted uploads with content checks and malware scan, Flyway V6–V9. Local fakes: [`docs/LOCAL_DEVELOPMENT.md`](docs/LOCAL_DEVELOPMENT.md).
 - 2026-10-27: staff review (P9): staff sign-in (Google; OTP locally), roles, queue, case view, evidence decisions, corrections, maker-checker approval, reject, hold, audited reveal of hidden values, Flyway V10.
+- 2026-10-27: client (P10–P12): BFF proxy with HttpOnly session cookies, CSRF checks and token refresh; CSP with a per-request nonce; theme from DESIGN.md; all applicant pages (mobile OTP, method, DigiLocker, Aadhaar, PAN, credit check, address, photos with camera, education, voter ID / DL, review, status); staff console (sign-in, queue, case review).

@@ -9,6 +9,10 @@ make server-run                      # :8091, MySQL from server/compose.yaml on 
 make setup && make client-dev        # :3003
 ```
 
+Then open <http://localhost:3003/apply> (applicant, OTP `123456` for any mobile) or
+<http://localhost:3003/staff> (staff, see below). The client calls the server only through its proxy
+(`/api/v1/**`); settings are in `client/.env.development`.
+
 ## Fake providers (`local` and `test` profiles only)
 
 Every outside service runs on a fake locally (ADR-0004). Staging and production refuse to start with any of them.

@@ -25,3 +25,10 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-27 | P9 staff review | major | `onboarding/internal/ReviewService.java` | reason codes and the step list could overflow their columns | fixed: reason codes validated (`[A-Z][A-Z0-9_]{1,39}`), target cut to 40 characters |
 | 2026-10-27 | P9 staff review | minor | `identity/StaffView.java` | `/me` used camelCase names | fixed: snake_case |
 | 2026-10-27 | P9 staff review | minor | `integration/internal/GoogleIdTokenVerifier.java` | a failed fetch of Google's keys looked like a bad token; no timeouts | fixed: `503 PROVIDER_UNAVAILABLE`, 5 s / 10 s timeouts |
+| 2026-10-27 | P10–P12 client | major | `client/src/pages/api/v1/[...path].ts` | parallel calls with an expired token both refreshed; the second use of the old refresh token makes the server end the session | fixed: one refresh per refresh token shared by concurrent calls (`singleFlight`), test added |
+| 2026-10-27 | P10–P12 client | major | `client/src/lib/steps.ts` | DigiLocker applicants without a full address could not reach the address page | fixed: `HOME_ADDRESS` always routes to `/apply/address`; test added |
+| 2026-10-27 | P10–P12 client | major | `client/src/features/apply/ApplicationContext.tsx` | approved applicants looped on loading | fixed: an `ALREADY_APPROVED` answer loads the current (approved) application |
+| 2026-10-27 | P10–P12 client | major | `client/src/pages/apply/digilocker.tsx` | a stale "waiting" value dropped the state, so "Check again" did nothing | fixed: the completion result decides |
+| 2026-10-27 | P10–P12 client | minor | `client/src/lib/api.ts` | a retried action got a new Idempotency-Key | fixed: one key per action and application version, reused on retry |
+| 2026-10-27 | P10–P12 client | minor | `client/src/components/CameraCapture.tsx` | live-photo upload failures were not shown | fixed |
+| 2026-10-27 | P10–P12 client | minor | `client/src/features/apply/ApplicationContext.tsx` | a failed load showed a spinner forever | fixed: message and "Try again" |
