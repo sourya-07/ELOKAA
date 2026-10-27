@@ -1,0 +1,9 @@
+# Staging and production. Every value is injected by the deployment; nothing secret is stored here.
+management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:8081}
+
+logging:
+  structured:
+    format:
+      console: ecs

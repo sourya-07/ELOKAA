@@ -1,0 +1,3 @@
+# Local development only. 8091 so it can run next to the eloka server (8090).
+server:
+  port: 8091

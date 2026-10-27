@@ -1,0 +1,13 @@
+# gitleaks: the default rules, plus an allowlist for published local/test keys.
+# Those keys are public on purpose and ProductionSafetyGuard refuses them outside local/test.
+# Never add real secrets here; fix the leak instead.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Published development and test keys"
+paths = [
+  '''server/src/main/resources/application-local\.yaml''',
+  '''server/src/test/.*''',
+  '''client/__tests__/.*''',
+]

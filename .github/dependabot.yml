@@ -1,0 +1,40 @@
+# Weekly update PRs for dependencies, base images and CI actions. Minor and patch updates arrive
+# grouped (one PR per ecosystem). Major versions are planned upgrades done by hand (ADR-0002).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /client
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      client-minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: gradle
+    directory: /server
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      server-minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: docker
+    directories: [/server, /client]
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]

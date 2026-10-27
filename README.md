@@ -12,8 +12,8 @@ The web journey through which a prospective ELOKA partner verifies their mobile 
 | [`docs/adr/`](docs/adr/) | architecture decisions |
 | [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md) | what is still undecided and the default we build on |
 | [`eloka_design/`](eloka_design/README.md) | Google Stitch designs (png + html) |
-| `client/` | Next.js web app (planned) |
-| `server/` | Spring Boot backend (planned) |
+| `client/` | Next.js web app (skeleton) |
+| `server/` | Spring Boot backend (skeleton) |
 | `deploy/` | Docker Compose + Caddy production stack (planned) |
 
 ## Stack
@@ -23,3 +23,4 @@ Java 25, Spring Boot 4.1, Spring Modulith, Spring Security, MySQL 8.4, Flyway ·
 ## Status
 
 - 2026-10-27: decisions, journey and ADRs written. No application code yet.
+- 2026-10-27: repo bootstrap: client and server skeletons that build and test, CI, security scans (gitleaks, dependency review, Trivy), CodeQL, Dependabot, Dockerfiles, Makefile.

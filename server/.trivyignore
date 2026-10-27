@@ -1,0 +1,9 @@
+# Trivy ignores for the server image. Every entry needs a reason and an expiry (exp:YYYY-MM-DD).
+# Go stdlib CVEs in /usr/bin/pebble, which ships in the eclipse-temurin (Ubuntu) base image.
+# Our container never runs it (ENTRYPOINT is java). Ubuntu had no fixed package on 2026-10-16;
+# `apt-get upgrade` in the Dockerfile picks it up once released. Re-check by the expiry date.
+CVE-2026-78667 exp:2026-11-30
+CVE-2026-78669 exp:2026-11-30
+CVE-2026-97031 exp:2026-11-30
+# Same binary (/usr/bin/pebble, Go stdlib crypto/x509), reported 2026-10-21; still no fixed Ubuntu package.
+CVE-2026-111943 exp:2026-11-30
