@@ -19,6 +19,10 @@ repositories {
 }
 
 extra["springModulithVersion"] = "2.1.1"
+// Security patches ahead of the next Spring Boot release (Trivy, 2026-10-27; same as the eloka repo).
+// Remove each line once Spring Boot's own managed version is at least this high.
+extra["tomcat.version"] = "11.0.25"
+extra["jackson-bom.version"] = "3.1.7"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")

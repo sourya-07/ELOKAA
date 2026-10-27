@@ -45,4 +45,5 @@ The development Mac has 8 GB RAM: run one heavy job at a time (Gradle, Jest, `ne
 - **Personal data:** never log OTPs, tokens, PAN, Aadhaar, credit data or document bytes. Mask by default in logs and UI.
 - **Configuration, not conditionals.** Environments differ only in configuration (Spring profiles, env vars).
 - **Small commits**, Conventional Commits (`feat(server): …`), on `main`. Tests and docs are part of the same commit.
-- Before committing: the checks for every folder you touched (`make client-check`, `make server-test`).
+- Before committing: the checks for every folder you touched (`make client-check`, `make server-test`). The Security workflow (Trivy image scan, gitleaks) runs on every push, including docs-only ones: check `gh run list` after a push and fix red runs.
+- Security version pins live in `server/build.gradle.kts` (`extra[...]`) and `client/package.json` (`overrides`). Remove one only when the managed version is at least as high.

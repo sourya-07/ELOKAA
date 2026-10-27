@@ -8,6 +8,7 @@ useDefault = true
 description = "Published development and test keys"
 paths = [
   '''server/src/main/resources/application-local\.yaml''',
+  '''server/src/main/java/in/eko/eloka/partner/shared/crypto/CryptoConfig\.java''',
   '''server/src/test/.*''',
   '''client/__tests__/.*''',
 ]

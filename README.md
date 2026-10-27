@@ -27,3 +27,4 @@ Java 25, Spring Boot 4.1, Spring Modulith, Spring Security, MySQL 8.4, Flyway ·
 - 2026-10-27: server foundation (P3): shared errors, security (default deny), crypto, masked logging, safety guard, hash-chained audit log, Flyway V1–V2, Testcontainers MySQL test.
 - 2026-10-27: applicant sign-in (P4): mobile OTP through a provider port (local fake, EPS adapter, "not configured" stub), rate limits, sessions with refresh rotation, Flyway V3. API: [`docs/API.md`](docs/API.md).
 - 2026-10-27: application core (P5): partner application and its 11 steps, status machine, If-Match/ETag, Idempotency-Key on submit, consent records, declaration, expiry job, Flyway V4–V5.
+- 2026-10-27: Security workflow fixed: Tomcat 11.0.25 and Jackson 3.1.7 pinned (server image), postcss 8.5.x forced (client image), gitleaks now scans the full history with a checksum-pinned CLI.

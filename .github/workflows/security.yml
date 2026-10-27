@@ -17,13 +17,24 @@ permissions:
 jobs:
   secrets:
     runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.24.3
+      # From gitleaks_8.24.3_checksums.txt; a changed download fails the job
+      GITLEAKS_SHA256: 9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # The gitleaks action scans "parent of the first pushed commit..head", which fails on a
+      # repository's first commit. The CLI scans the whole history, the same on every run.
+      - name: Install gitleaks
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum --check --strict
+          tar -xzf gitleaks.tar.gz gitleaks
+      - name: Scan the full history
+        run: ./gitleaks git --redact --verbose --exit-code 1 .
 
   dependency-review:
     if: github.event_name == 'pull_request'
