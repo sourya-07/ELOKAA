@@ -19,3 +19,10 @@ eloka:
   crypto:
     field-key: cGFydG5lci1sb2NhbC1maWVsZC1rZXktMzItYnl0ZXM=
     index-key: cGFydG5lci1sb2NhbC1pbmRleC1rZXktMzItYnl0ZXM=
+  identity:
+    otp-min-gap: 0s
+    otp-max-per-hour: 1000
+    otp-max-per-day: 1000
+    otp-max-per-ip-per-hour: 1000
+  integration:
+    otp-provider: fake # every OTP is 123456, no SMS

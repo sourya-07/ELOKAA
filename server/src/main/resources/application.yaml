@@ -47,3 +47,17 @@ logging:
 
 eloka:
   environment: ${ELOKA_ENVIRONMENT:local}
+  identity:
+    otp-length: 6
+    otp-ttl: 5m
+    otp-max-attempts: 5
+    otp-min-gap: 30s
+    otp-max-per-hour: 5
+    otp-max-per-day: 10
+    otp-max-per-ip-per-hour: 10
+    session-idle-timeout: 2h
+    session-absolute-ttl: 12h
+    access-token-ttl: 30m
+  # Providers (ADR-0004). none = refuse with PROVIDER_NOT_CONFIGURED; fake = local/test only.
+  integration:
+    otp-provider: none

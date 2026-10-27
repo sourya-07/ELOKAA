@@ -26,4 +26,5 @@ Applicants upload identity documents and run a credit check. In eloka the browse
 ## Consequences
 
 - The proxy must forward `ETag`, `If-Match`, `Idempotency-Key`, `X-Request-Id`, multipart bodies and real status codes.
+- The proxy must also pass the browser's address in `X-Forwarded-For` (appending to what Caddy sent). The server trusts that header only from private-network proxies (`server.tomcat.remoteip`), and the per-IP OTP limit depends on it: without it every applicant would share the proxy's address.
 - Only the proxy needs the server's internal URL; no API host in the browser's CSP.

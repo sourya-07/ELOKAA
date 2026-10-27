@@ -21,8 +21,12 @@ src/main/java/in/eko/eloka/partner/
 │             (FieldCipher AES-256-GCM, BlindIndex HMAC, Tokens, Masking, Mobiles), logging (RequestIdFilter,
 │             PiiMasker, masked text/JSON output), config (ProductionSafetyGuard, UnsafeInProduction,
 │             SafetyCheck, ElokaProperties), persistence (BaseEntity UUIDv7, PublicIds), time (Clock bean)
-└── audit/    AuditLog (hash-chained audit_event, same transaction as the change), AuditTrail (read side)
-   planned: identity, integration, documents, verification, eligibility, partneronboarding, review, system
+├── audit/    AuditLog (hash-chained audit_event, same transaction as the change), AuditTrail (read side)
+├── integration/  provider ports (MobileOtpGateway); internal: ProviderConfig picks fake | eps | none per
+│             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters, fakes, stubs
+└── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
+              (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session
+   planned: documents, verification, eligibility, partneronboarding, review, system
 src/main/resources/
 ├── application.yaml / application-local.yaml / application-prod.yaml (staging + production)
 ├── logback-spring.xml          prod: ECS JSON on stdout; elsewhere text console + logs/eloka-partner.log; all masked
@@ -39,3 +43,4 @@ src/test/resources/application-test.yaml
 - **Environments:** `ELOKA_ENVIRONMENT` is `local`, `test`, `staging` or `production`. `ProductionSafetyGuard` refuses to start staging or production while any `UnsafeInProduction` bean (fake provider, fixed OTP) or failed `SafetyCheck` (published development key) is present.
 - **Audit:** every business decision calls `AuditLog.record` inside the same transaction. `details` holds ids and codes only.
 - **Logs:** never log request bodies; `PiiMasker` is the last line of defence, not the first.
+- **Providers:** add a port in `integration/`, an adapter + fake + stub in `integration/internal/`, and one `switch` arm in `ProviderConfig`. A provider failure is `ProviderUnavailableException` (503), a missing provider `ProviderNotConfiguredException` (409); neither may ever count as a pass.

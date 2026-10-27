@@ -1,0 +1,204 @@
+<html class="light"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PTN-04 Your PAN (final)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary-fixed": "#dee0ff",
+          "on-error-container": "#93000a",
+          "on-primary-fixed-variant": "#474646",
+          "on-surface": "#1a1c1b",
+          "on-secondary-fixed": "#000f5d",
+          "surface-bright": "#f9f9f6",
+          "on-tertiary": "#ffffff",
+          "outline-variant": "#c4c7c7",
+          "surface-container-low": "#f4f4f1",
+          "surface": "#f9f9f6",
+          "tertiary-container": "#1b1c18",
+          "on-tertiary-container": "#84847e",
+          "on-tertiary-fixed-variant": "#474742",
+          "on-secondary-container": "#001a88",
+          "surface-container": "#eeeeeb",
+          "on-tertiary-fixed": "#1b1c18",
+          "background": "#f9f9f6",
+          "surface-container-high": "#e8e8e5",
+          "on-secondary": "#ffffff",
+          "on-secondary-fixed-variant": "#2439ab",
+          "primary-fixed-dim": "#c9c6c5",
+          "surface-container-highest": "#e2e3e0",
+          "tertiary-fixed-dim": "#c8c6c0",
+          "secondary-fixed-dim": "#bbc3ff",
+          "surface-tint": "#5f5e5e",
+          "surface-dim": "#dadad7",
+          "primary-container": "#1c1b1b",
+          "on-background": "#1a1c1b",
+          "on-primary-container": "#858383",
+          "inverse-surface": "#2f312f",
+          "on-error": "#ffffff",
+          "primary-fixed": "#e5e2e1",
+          "secondary": "#4053c4",
+          "surface-variant": "#e2e3e0",
+          "on-primary": "#ffffff",
+          "secondary-container": "#778afd",
+          "surface-container-lowest": "#ffffff",
+          "on-surface-variant": "#444748",
+          "tertiary-fixed": "#e4e2dc",
+          "inverse-primary": "#c9c6c5",
+          "inverse-on-surface": "#f1f1ee",
+          "outline": "#747878",
+          "on-primary-fixed": "#1c1b1b",
+          "error": "#ba1a1a",
+          "tertiary": "#000000",
+          "primary": "#000000",
+          "error-container": "#ffdad6"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "16px",
+          "space-xs": "4px",
+          "space-sm": "8px",
+          "space-md": "12px",
+          "gutter": "1rem",
+          "space-2xl": "32px",
+          "space-4xl": "64px",
+          "margin": "1.5rem",
+          "space-xl": "24px",
+          "space-3xl": "48px"
+        },
+        "fontFamily": {
+          "display-mobile": ["Inter"],
+          "label": ["Inter"],
+          "display": ["Inter"],
+          "body": ["Inter"],
+          "h3": ["Inter"],
+          "h2": ["Inter"],
+          "h1": ["Inter"],
+          "body-sm": ["Inter"]
+        },
+        "fontSize": {
+          "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+          "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+          "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+          "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+          "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+          "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+          "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+        }
+      }
+    }
+  }
+</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex flex-col justify-between selection:bg-primary-container selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface w-full px-4 h-16 flex justify-between items-center z-40">
+<div class="flex items-center gap-3">
+<button aria-label="Go back" class="text-primary dark:text-inverse-primary p-2 -ml-2 rounded-lg hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="font-h2 text-h2 text-primary dark:text-inverse-primary tracking-tight">ELOKA</span>
+</div>
+<div class="flex items-center">
+<button class="font-h3 text-h3 text-primary dark:text-inverse-primary hover:text-on-surface-variant transition-colors px-3 py-1.5 rounded-lg hover:bg-surface-variant">
+        Help
+      </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 max-w-[640px] w-full mx-auto px-4 py-6 pb-28">
+<!-- Step Indicator -->
+<div class="mb-4">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider">Step 4 of 10</span>
+</div>
+<!-- Header & Instructions -->
+<div class="mb-6">
+<h1 class="font-h1 text-h1 text-on-surface mb-2">Your PAN</h1>
+<p class="font-body text-body text-on-surface-variant">We check your PAN with the Income Tax Department. Your name must match your Aadhaar.</p>
+</div>
+<!-- Form Section -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] mb-6 space-y-4">
+<!-- Field 1: PAN -->
+<div class="space-y-1.5">
+<label class="block font-label text-label text-on-surface" for="pan-input">PAN</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-[#85857F] rounded-lg px-3.5 py-3 font-body text-body text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 uppercase transition-all" id="pan-input" maxlength="10" placeholder="ABCDE1234F" type="text"/>
+</div>
+</div>
+<!-- Field 2: Date of Birth -->
+<div class="space-y-1.5">
+<label class="block font-label text-label text-on-surface" for="dob-input">Date of birth</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-[#85857F] rounded-lg px-3.5 py-3 font-body text-body text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" id="dob-input" placeholder="DD / MM / YYYY" type="text"/>
+</div>
+</div>
+</div>
+<!-- Error State Variant (Hidden by default, shown for spec completeness) -->
+<div class="hidden bg-error-container/30 border border-error rounded-xl p-4 mb-6 flex items-start gap-3">
+<span class="material-symbols-outlined text-error mt-0.5">error</span>
+<div>
+<h3 class="font-h3 text-h3 text-on-error-container mb-1">Verification failed</h3>
+<p class="font-body-sm text-body-sm text-on-error-container">We couldn't verify this PAN. 2 attempts left.</p>
+</div>
+</div>
+<!-- Verified Success Card Variant (Hidden by default, can be toggled) -->
+<div class="hidden bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-4 mb-6 flex items-center justify-between shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-on-surface">RAVI SAMPLE</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">XXXXX1234X</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Verified</span>
+</div>
+</main>
+<!-- Bottom Action Bar / Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-4 py-3 bg-surface dark:bg-inverse-surface md:hidden">
+<div class="w-full">
+<button class="w-full h-12 bg-primary text-on-primary rounded-lg font-h3 text-h3 flex items-center justify-center shadow-sm active:scale-[0.98] transition-all duration-200">
+        Verify PAN
+      </button>
+</div>
+</nav>
+<!-- Desktop Bottom Action Bar alternative wrapper -->
+<div class="hidden md:flex fixed bottom-0 left-0 w-full bg-surface border-t border-[#E5E5E0] py-4 px-6 justify-between items-center z-50">
+<div class="text-body-sm text-on-surface-variant flex gap-6">
+<a class="hover:underline" href="#">Privacy</a>
+<span>·</span>
+<a class="hover:underline" href="#">Terms</a>
+</div>
+<div class="w-auto">
+<button class="h-12 px-8 bg-primary text-on-primary rounded-lg font-h3 text-h3 flex items-center justify-center shadow-sm active:scale-[0.98] transition-all duration-200">
+        Verify PAN
+      </button>
+</div>
+</div>
+<!-- Mobile Footer links (above bottom nav) -->
+<footer class="md:hidden pb-20 pt-2 text-center">
+<div class="text-body-sm text-on-surface-variant space-x-2">
+<a class="hover:underline" href="#">Privacy</a>
+<span>·</span>
+<a class="hover:underline" href="#">Terms</a>
+</div>
+</footer>
+</body></html>

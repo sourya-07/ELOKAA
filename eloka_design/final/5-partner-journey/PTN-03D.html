@@ -1,0 +1,247 @@
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PTN-03D DigiLocker and your details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-tint": "#5f5e5e",
+            "on-primary-fixed-variant": "#474646",
+            "secondary-fixed": "#dee0ff",
+            "on-primary": "#ffffff",
+            "surface": "#f9f9f6",
+            "on-primary-container": "#858383",
+            "on-tertiary-fixed": "#1b1c18",
+            "on-error-container": "#93000a",
+            "background": "#f9f9f6",
+            "outline": "#747878",
+            "on-tertiary-fixed-variant": "#474742",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-secondary-fixed": "#000f5d",
+            "surface-container-low": "#f4f4f1",
+            "tertiary": "#000000",
+            "surface-dim": "#dadad7",
+            "inverse-on-surface": "#f1f1ee",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#84847e",
+            "on-secondary-fixed-variant": "#2439ab",
+            "surface-container": "#eeeeeb",
+            "surface-bright": "#f9f9f6",
+            "primary-fixed": "#e5e2e1",
+            "secondary": "#4053c4",
+            "primary-container": "#1c1b1b",
+            "on-surface-variant": "#444748",
+            "on-error": "#ffffff",
+            "inverse-surface": "#2f312f",
+            "outline-variant": "#c4c7c7",
+            "surface-container-highest": "#e2e3e0",
+            "primary": "#000000",
+            "on-secondary": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#e4e2dc",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#c9c6c5",
+            "error": "#ba1a1a",
+            "tertiary-container": "#1b1c18",
+            "surface-variant": "#e2e3e0",
+            "surface-container-high": "#e8e8e5",
+            "on-primary-fixed": "#1c1b1b",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-background": "#1a1c1b",
+            "on-secondary-container": "#001a88",
+            "on-surface": "#1a1c1b",
+            "secondary-container": "#778afd"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-3xl": "48px",
+            "space-xs": "4px",
+            "space-md": "12px",
+            "space-2xl": "32px",
+            "gutter": "1rem",
+            "space-lg": "16px",
+            "margin": "1.5rem",
+            "space-xl": "24px",
+            "space-sm": "8px",
+            "space-4xl": "64px"
+          },
+          "fontFamily": {
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "h2": ["Inter"],
+            "body-sm": ["Inter"],
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"],
+            "label": ["Inter"],
+            "h3": ["Inter"]
+          },
+          "fontSize": {
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-full flex flex-col items-center pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 bg-surface dark:bg-inverse-surface shadow-sm dark:shadow-none w-full max-w-md">
+<div class="flex justify-between items-center w-full px-4 h-16">
+<button aria-label="Back" class="text-primary dark:text-inverse-primary hover:bg-surface-variant dark:hover:bg-inverse-surface p-2 rounded-full transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-h2 font-h2 text-on-surface dark:text-inverse-on-surface">ELOKA</h1>
+<div class="w-10"></div>
+</div>
+</header>
+<!-- Main Container -->
+<main class="w-full max-w-md px-4 py-space-xl flex flex-col gap-space-2xl">
+<!-- Frame 1: Step 3 of 8 · Connect DigiLocker -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="text-label font-label text-primary uppercase tracking-wider">Step 3 of 8 · Connect DigiLocker</div>
+<h2 class="text-h1 font-h1 text-on-surface">Connect DigiLocker</h2>
+<div class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-lg border border-outline-variant">
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">What we'll fetch</div>
+<ul class="flex flex-col gap-space-xs">
+<li class="flex items-center gap-space-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="check_circle">check_circle</span>
+<span>Your name and date of birth</span>
+</li>
+<li class="flex items-center gap-space-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="check_circle">check_circle</span>
+<span>Your home address</span>
+</li>
+<li class="flex items-center gap-space-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="check_circle">check_circle</span>
+<span>The last 4 digits of your Aadhaar</span>
+</li>
+</ul>
+</div>
+<label class="flex items-start gap-space-sm cursor-pointer pt-space-xs">
+<input checked="" class="mt-1 rounded border-outline text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span class="text-body-sm text-on-surface-variant leading-tight">I allow ELOKA to fetch these details from DigiLocker for this application.</span>
+</label>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-on-primary font-h3 py-space-md px-space-xl rounded-lg shadow-sm hover:opacity-90 active:translate-y-[1px] transition-all flex items-center justify-center gap-space-sm">
+<span>Continue to DigiLocker</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Waiting State Mock -->
+<div class="hidden bg-surface-container p-space-md rounded-lg flex items-center justify-between border border-outline-variant">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined animate-spin text-primary" data-icon="progress_activity">progress_activity</span>
+<span class="text-body-sm text-on-surface font-semibold">Waiting for DigiLocker…</span>
+</div>
+<button class="text-label text-secondary font-semibold hover:underline">Check again</button>
+</div>
+<!-- Error State Mock -->
+<div class="hidden bg-error-container/40 border border-error/30 p-space-md rounded-lg flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-error text-base mt-0.5" data-icon="error">error</span>
+<p class="text-body-sm text-on-error-container">DigiLocker didn't share your details. Try again or apply step by step.</p>
+</div>
+<button class="self-start text-label font-semibold bg-error text-on-error px-space-md py-space-xs rounded hover:opacity-90 transition-all">Try again</button>
+</div>
+</section>
+<!-- Frame 2: Step 4 of 8 · Check your details -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="text-label font-label text-primary uppercase tracking-wider">Step 4 of 8 · Check your details</div>
+<div>
+<h2 class="text-h1 font-h1 text-on-surface">Check your details</h2>
+<p class="text-body-sm text-on-surface-variant mt-1">Fetched from DigiLocker on 21 Oct 2026.</p>
+</div>
+<!-- Card: You -->
+<div class="bg-surface-container-low p-space-lg rounded-lg border border-outline-variant flex flex-col gap-space-md">
+<div class="flex justify-between items-center">
+<span class="text-label font-bold text-on-surface-variant uppercase tracking-wider">You</span>
+<span class="bg-primary-fixed text-on-primary-fixed text-label px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span> Verified
+          </span>
+</div>
+<div class="grid grid-cols-2 gap-space-md text-body-sm">
+<div>
+<div class="text-label text-on-surface-variant">Name</div>
+<div class="font-semibold text-on-surface">RAVI SAMPLE</div>
+</div>
+<div>
+<div class="text-label text-on-surface-variant">Date of birth</div>
+<div class="font-semibold text-on-surface">01 Jan 1990</div>
+</div>
+<div>
+<div class="text-label text-on-surface-variant">Aadhaar</div>
+<div class="font-semibold text-on-surface">XXXX-XXXX-1234</div>
+</div>
+<div>
+<div class="text-label text-on-surface-variant">Mobile</div>
+<div class="font-semibold text-on-surface">+91 XXXXXX3210</div>
+</div>
+</div>
+</div>
+<!-- Card: Home address -->
+<div class="bg-surface-container-low p-space-lg rounded-lg border border-outline-variant flex flex-col gap-space-sm">
+<div class="flex justify-between items-center">
+<span class="text-label font-bold text-on-surface-variant uppercase tracking-wider">Home address</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed text-label px-2 py-0.5 rounded-full font-semibold">From DigiLocker</span>
+</div>
+<p class="text-body-sm text-on-surface font-medium leading-relaxed">
+          Flat 12, Sample Lane, Bandra West, Mumbai 400051
+        </p>
+</div>
+<!-- Card: Your PAN -->
+<div class="bg-surface-container-low p-space-lg rounded-lg border border-outline-variant flex flex-col gap-space-md">
+<div class="flex justify-between items-center">
+<span class="text-label font-bold text-on-surface-variant uppercase tracking-wider">Your PAN</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-space-md py-space-sm text-body text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary uppercase font-mono tracking-widest" placeholder="ABCDE1234F" type="text" value="ABCDE1234F"/>
+<p class="text-label text-on-surface-variant">We check it with the Income Tax Department. The name must match your Aadhaar.</p>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-on-primary font-h3 py-space-md px-space-xl rounded-lg shadow-sm hover:opacity-90 active:translate-y-[1px] transition-all flex items-center justify-center gap-space-sm">
+<span>Confirm and continue</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Secondary Link -->
+<div class="text-center pt-space-xs">
+<button class="text-body-sm font-semibold text-secondary hover:underline">Switch to step-by-step application</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface dark:bg-inverse-surface shadow-lg dark:shadow-none">
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-2xl px-4 py-2 hover:bg-surface-container dark:hover:bg-inverse-surface transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-label font-label mt-1">Help</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-container dark:hover:bg-inverse-surface transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span class="text-label font-label mt-1">Support</span>
+</a>
+</nav>
+</body></html>

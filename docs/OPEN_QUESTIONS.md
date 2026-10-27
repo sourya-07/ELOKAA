@@ -29,6 +29,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-14 | Java base package | default | `in.eko.eloka.partner` |
 | Q-15 | Voter ID and driving licence: may an applicant add both? | default | yes; at least one is required |
 | Q-16 | Optional computer certificates: how many? | default | up to 5 |
+| Q-17 | EPS Mobile OTP needs a `csp_id` ("the agent the OTP is sent on behalf of"). What do we send for a partner applicant? | default | `ELOKA_EPS_CSP_ID`, else our `initiator_id`. The EPS adapter is tested against a mock server only, not yet against EPS UAT |
 
 ## Closed
 

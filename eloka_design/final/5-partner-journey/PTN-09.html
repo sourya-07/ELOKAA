@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PTN-09 Review (final)</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#93000a",
+            "primary-fixed": "#e5e2e1",
+            "surface-container-lowest": "#ffffff",
+            "primary-fixed-dim": "#c9c6c5",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#2f312f",
+            "on-secondary": "#ffffff",
+            "on-primary-fixed": "#1c1b1b",
+            "on-error": "#ffffff",
+            "outline-variant": "#c4c7c7",
+            "primary": "#000000",
+            "tertiary": "#000000",
+            "secondary-fixed": "#dee0ff",
+            "surface-container-highest": "#e2e3e0",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "surface-bright": "#f9f9f6",
+            "surface-tint": "#5f5e5e",
+            "on-secondary-container": "#001a88",
+            "on-secondary-fixed": "#000f5d",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-primary": "#ffffff",
+            "on-background": "#1a1c1b",
+            "tertiary-fixed": "#e4e2dc",
+            "on-tertiary-container": "#84847e",
+            "surface": "#f9f9f6",
+            "primary-container": "#1c1b1b",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "inverse-on-surface": "#f1f1ee",
+            "tertiary-container": "#1b1c18",
+            "surface-container-high": "#e8e8e5",
+            "on-surface-variant": "#444748",
+            "secondary-container": "#778afd",
+            "on-surface": "#1a1c1b",
+            "surface-dim": "#dadad7",
+            "surface-container": "#eeeeeb",
+            "on-primary-container": "#858383",
+            "surface-container-low": "#f4f4f1",
+            "outline": "#747878",
+            "surface-variant": "#e2e3e0",
+            "secondary": "#4053c4",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-primary-fixed-variant": "#474646",
+            "inverse-primary": "#c9c6c5",
+            "on-tertiary-fixed": "#1b1c18",
+            "background": "#f9f9f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "space-4xl": "64px",
+            "space-xs": "4px",
+            "space-xl": "24px",
+            "space-sm": "8px",
+            "space-lg": "16px",
+            "space-3xl": "48px",
+            "space-md": "12px",
+            "margin": "1.5rem",
+            "space-2xl": "32px"
+          },
+          "fontFamily": {
+            "h3": ["Inter"],
+            "display": ["Inter"],
+            "h1": ["Inter"],
+            "label": ["Inter"],
+            "h2": ["Inter"],
+            "body": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-secondary-container selection:text-on-secondary-container pb-28">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface text-primary dark:text-inverse-primary sticky top-0 z-40 flex justify-between items-center w-full px-4 h-16">
+<button aria-label="Back" class="p-2 hover:bg-surface-variant rounded-full transition-all duration-200 active:scale-98">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-h1 font-h1 font-bold text-center tracking-tight">ELOKA</h1>
+<button aria-label="Help" class="p-2 hover:bg-surface-variant rounded-full transition-all duration-200 active:scale-98">
+<span class="material-symbols-outlined">help</span>
+</button>
+</header>
+<main class="max-w-xl mx-auto px-4 py-6 space-y-6">
+<!-- Progress & Header info -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-body-sm text-on-surface-variant font-medium">
+<span>Step 10 of 10</span>
+<span class="text-secondary font-semibold">Final review</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-full rounded-full"></div>
+</div>
+<h2 class="text-h2 font-h2 text-on-background pt-2">Review your application</h2>
+<p class="text-body-sm text-on-surface-variant">Please verify your details carefully before final submission.</p>
+</div>
+<!-- Review Cards Container -->
+<div class="space-y-4">
+<!-- You / Personal Details -->
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 shadow-sm relative group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">person</span>
+<span class="text-h3 font-h3 text-on-surface">You</span>
+</div>
+<button class="text-secondary text-body-sm font-semibold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+</div>
+<div class="text-body-sm text-on-surface-variant space-y-1 pl-7">
+<p class="font-semibold text-on-surface">RAVI SAMPLE</p>
+<p>+91 XXXXXX3210</p>
+<p>Aadhaar XXXX-XXXX-1234</p>
+<p>PAN XXXXX1234X</p>
+</div>
+</div>
+<!-- Home address -->
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 shadow-sm relative group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">home</span>
+<span class="text-h3 font-h3 text-on-surface">Home address</span>
+</div>
+<button class="text-secondary text-body-sm font-semibold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+</div>
+<div class="text-body-sm text-on-surface-variant pl-7">
+<p class="text-on-surface">Flat 12, Sample Lane, Bandra West, Mumbai 400051</p>
+</div>
+</div>
+<!-- Credit check -->
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 shadow-sm relative group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">verified</span>
+<span class="text-h3 font-h3 text-on-surface">Credit check</span>
+</div>
+
+</div>
+<div class="text-body-sm text-on-surface-variant pl-7 flex items-center gap-2">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+            Eligible
+          </span>
+</div>
+</div>
+<!-- Photos -->
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 shadow-sm relative group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">photo_camera</span>
+<span class="text-h3 font-h3 text-on-surface">Photos</span>
+</div>
+<button class="text-secondary text-body-sm font-semibold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+</div>
+<div class="text-body-sm text-on-surface-variant pl-7">
+<p class="text-on-surface">2 added</p>
+</div>
+</div>
+<!-- Education -->
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 shadow-sm relative group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">school</span>
+<span class="text-h3 font-h3 text-on-surface">Education</span>
+</div>
+<button class="text-secondary text-body-sm font-semibold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+</div>
+<div class="text-body-sm text-on-surface-variant pl-7">
+<p class="text-on-surface">Graduation + 1 computer certificate</p>
+</div>
+</div>
+<!-- ID -->
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 shadow-sm relative group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">badge</span>
+<span class="text-h3 font-h3 text-on-surface">ID</span>
+</div>
+<button class="text-secondary text-body-sm font-semibold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+</div>
+<div class="text-body-sm text-on-surface-variant pl-7">
+<p class="text-on-surface">Voter ID</p>
+</div>
+</div>
+</div>
+<!-- Declaration Checkbox Section -->
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4">
+<label class="flex items-start gap-3 cursor-pointer">
+<input class="mt-1 h-5 w-5 rounded border-outline text-primary focus:ring-primary cursor-pointer" id="declaration-check" type="checkbox"/>
+<span class="text-body-sm text-on-surface select-none">
+          I declare that the information above is true and complete
+        </span>
+</label>
+</div>
+</main>
+<!-- BottomNavBar / Sticky Footer -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface dark:bg-surface px-4 py-4 shadow-md flex justify-around items-center">
+<button class="w-full max-w-xl bg-primary text-on-primary py-3.5 px-6 rounded-lg font-h3 text-h3 opacity-50 cursor-not-allowed transition-all duration-200 active:scale-98 flex items-center justify-center gap-2" disabled="" id="submit-btn">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+      Submit application
+    </button>
+</nav>
+<script>
+    const checkbox = document.getElementById('declaration-check');
+    const submitBtn = document.getElementById('submit-btn');
+
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        submitBtn.removeAttribute('disabled');
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.add('hover:bg-opacity-90');
+      } else {
+        submitBtn.setAttribute('disabled', 'true');
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.remove('hover:bg-opacity-90');
+      }
+    });
+
+    submitBtn.addEventListener('click', function() {
+      if(!this.hasAttribute('disabled')) {
+        alert('Application submitted successfully!');
+      }
+    });
+  </script>
+</body></html>

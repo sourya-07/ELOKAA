@@ -32,3 +32,11 @@ eloka:
   crypto:
     field-key: ${ELOKA_CRYPTO_FIELD_KEY}
     index-key: ${ELOKA_CRYPTO_INDEX_KEY}
+  integration:
+    otp-provider: ${ELOKA_OTP_PROVIDER:none}
+    eps:
+      base-url: ${ELOKA_EPS_BASE_URL:}
+      developer-key: ${ELOKA_EPS_DEVELOPER_KEY:}
+      access-key: ${ELOKA_EPS_ACCESS_KEY:}
+      initiator-id: ${ELOKA_EPS_INITIATOR_ID:}
+      csp-id: ${ELOKA_EPS_CSP_ID:}

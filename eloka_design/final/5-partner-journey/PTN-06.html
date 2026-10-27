@@ -1,0 +1,190 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PTN-06 Photos (final)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f4f4f1",
+              "tertiary-fixed-dim": "#c8c6c0",
+              "on-primary-container": "#858383",
+              "primary": "#000000",
+              "surface-variant": "#e2e3e0",
+              "secondary-fixed": "#dee0ff",
+              "surface-container": "#eeeeeb",
+              "inverse-surface": "#2f312f",
+              "surface-container-highest": "#e2e3e0",
+              "outline": "#747878",
+              "background": "#f9f9f6",
+              "on-error": "#ffffff",
+              "primary-fixed": "#e5e2e1",
+              "on-background": "#1a1c1b",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#1b1c18",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#e4e2dc",
+              "secondary-fixed-dim": "#bbc3ff",
+              "on-primary-fixed-variant": "#474646",
+              "surface-container-high": "#e8e8e5",
+              "on-secondary-container": "#001a88",
+              "on-secondary-fixed-variant": "#2439ab",
+              "surface": "#f9f9f6",
+              "surface-bright": "#f9f9f6",
+              "error-container": "#ffdad6",
+              "tertiary": "#000000",
+              "tertiary-container": "#1b1c18",
+              "primary-container": "#1c1b1b",
+              "on-tertiary-container": "#84847e",
+              "inverse-on-surface": "#f1f1ee",
+              "on-primary-fixed": "#1c1b1b",
+              "surface-tint": "#5f5e5e",
+              "secondary": "#4053c4",
+              "inverse-primary": "#c9c6c5",
+              "on-surface-variant": "#444748",
+              "secondary-container": "#778afd",
+              "on-surface": "#1a1c1b",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#c9c6c5",
+              "on-tertiary-fixed-variant": "#474742",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-primary": "#ffffff",
+              "surface-dim": "#dadad7",
+              "outline-variant": "#c4c7c7",
+              "on-secondary-fixed": "#000f5d"
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px"
+            },
+            spacing: {
+              "space-xs": "4px",
+              "space-4xl": "64px",
+              "gutter": "1rem",
+              "margin": "1.5rem",
+              "space-3xl": "48px",
+              "space-md": "12px",
+              "space-2xl": "32px",
+              "space-xl": "24px",
+              "space-sm": "8px",
+              "space-lg": "16px"
+            },
+            fontFamily: {
+              h2: ["Inter"],
+              body: ["Inter"],
+              "display-mobile": ["Inter"],
+              "body-sm": ["Inter"],
+              label: ["Inter"],
+              display: ["Inter"],
+              h1: ["Inter"],
+              h3: ["Inter"]
+            },
+            fontSize: {
+              h2: ["20px", { lineHeight: "28px", letterSpacing: "normal", fontWeight: "600" }],
+              body: ["16px", { lineHeight: "24px", letterSpacing: "normal", fontWeight: "400" }],
+              "display-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+              "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "normal", fontWeight: "400" }],
+              label: ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "500" }],
+              display: ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+              h1: ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+              h3: ["16px", { lineHeight: "24px", letterSpacing: "normal", fontWeight: "600" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface flex justify-between items-center w-full px-4 h-16 fixed top-0 left-0 z-40">
+<button class="text-primary dark:text-inverse-primary hover:bg-surface-variant dark:hover:bg-inverse-surface p-2 rounded-lg transition-all duration-200 active:scale-98 flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-h3 text-h3 text-primary dark:text-inverse-primary font-bold tracking-tight">ELOKA</h1>
+
+</header>
+<!-- Main Canvas -->
+<main class="max-w-[640px] mx-auto px-4 pt-24 pb-32">
+<!-- Step Indicator & Heading -->
+<div class="mb-6">
+<div class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-body-sm font-medium mb-2">
+                Step 7 of 10
+            </div>
+<h2 class="font-display-mobile text-display-mobile text-on-background">Your photos</h2>
+<p class="text-on-surface-variant font-body-sm mt-1">Take a live photo with your camera and upload a passport-size photo.</p>
+</div>
+<!-- Section 1: Live photo -->
+<section class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 mb-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+<div class="flex items-center justify-between mb-3">
+<h3 class="font-h3 text-h3 text-on-background">Live photo</h3>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container-high text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-[#11299E]"></span> Required
+                </span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4">Face the camera in good light. Remove glasses.</p>
+<!-- Camera Box / Viewfinder -->
+<div class="relative w-full h-64 bg-surface-container-low border border-[#E5E5E0] rounded-lg overflow-hidden flex flex-col items-center justify-center text-center p-4 mb-4 group">
+<!-- Background decorative placeholder simulation -->
+<div class="absolute inset-0 bg-cover bg-center opacity-40" data-alt="A softly lit minimalist indoor studio background with neutral warm tones, designed for professional portrait capture during partner onboarding." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAuD-wRMDsMReCFxfGA0kqDOtVcXk7hieS2BDpFAzJLuKIT-u4mMcoWv4WDGutD_Wy51SZbW241jgvILagHnkx6WyaR6JYjIqLy8BDBp0T2rus2jJIpNaDWJEwRH_AuSGfhpw8ooFQTKISfYtC_3OQOV7gdeimfy8fmqukTNC97dhunBS6QhHxJUn4rLLeLk2mpBZB3JqQGzoytDXKaIKSo-WQ2UcYI0-q5651m3Me5Z645SqwAM3fPINw1YDDw7jg-Sa58w51xlgdy')"></div>
+<div class="relative z-10 w-20 h-20 rounded-full bg-surface-container-lowest border border-[#E5E5E0] flex items-center justify-center mb-3 shadow-sm">
+<span class="material-symbols-outlined text-[36px] text-on-surface-variant">photo_camera</span>
+</div>
+<span class="relative z-10 text-body-sm font-medium text-on-surface">Position your face within the frame</span>
+</div>
+<!-- Action button for Live Photo -->
+<button class="w-full bg-primary text-on-primary font-body-sm font-medium py-3 px-4 rounded-lg hover:opacity-95 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">camera</span>
+                Take photo
+            </button>
+</section>
+<!-- Section 2: Passport-size photo -->
+<section class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 mb-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+<div class="flex items-center justify-between mb-3">
+<h3 class="font-h3 text-h3 text-on-background">Passport-size photo</h3>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container-high text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-[#11299E]"></span> Required
+                </span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-4">Plain light background</p>
+<!-- Upload Tile -->
+<label class="border-2 border-dashed border-[#E5E5E0] hover:border-[#11299E] bg-surface-container-low hover:bg-surface-container transition-all duration-200 rounded-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer mb-3 group">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest border border-[#E5E5E0] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px] text-on-surface-variant">upload_file</span>
+</div>
+<span class="font-body-sm font-semibold text-on-background mb-1">Click to upload or drag and drop</span>
+<span class="text-label text-on-surface-variant">JPG or JPEG, up to 5 MB</span>
+<input accept=".jpg,.jpeg" class="hidden" type="file"/>
+</label>
+<!-- Tip -->
+<div class="flex items-start gap-2.5 px-3 py-2.5 rounded-lg bg-surface-container-low text-on-surface-variant text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-[#11299E] mt-0.5">info</span>
+<span>Ensure your face is clearly visible, centered, and taken against a neutral solid background without hats or tinted glasses.</span>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-4 py-3 bg-surface dark:bg-inverse-surface">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container dark:hover:bg-inverse-surface rounded-2xl transition-all duration-200 active:scale-98" href="#">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span class="font-body-sm text-body-sm mt-0.5">Back</span>
+</a>
+<a class="flex-1 ml-3 bg-primary text-on-primary font-body-sm font-semibold py-3.5 px-6 rounded-lg text-center hover:opacity-95 active:scale-[0.98] transition-all duration-200 shadow-sm flex items-center justify-center gap-2" href="#">
+            Save and continue
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</nav>
+</body></html>

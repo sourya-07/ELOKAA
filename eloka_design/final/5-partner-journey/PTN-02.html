@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PTN-02 Choose how to apply</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#dadad7",
+            "surface-container-low": "#f4f4f1",
+            "on-surface-variant": "#444748",
+            "on-background": "#1a1c1b",
+            "error-container": "#ffdad6",
+            "error": "#ba1a1a",
+            "surface-tint": "#5f5e5e",
+            "secondary-fixed-dim": "#bbc3ff",
+            "primary-fixed": "#e5e2e1",
+            "on-secondary": "#ffffff",
+            "outline": "#747878",
+            "inverse-on-surface": "#f1f1ee",
+            "secondary-container": "#778afd",
+            "on-primary-fixed": "#1c1b1b",
+            "inverse-surface": "#2f312f",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#2439ab",
+            "surface-container": "#eeeeeb",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface-bright": "#f9f9f6",
+            "background": "#f9f9f6",
+            "surface-variant": "#e2e3e0",
+            "secondary": "#4053c4",
+            "on-tertiary": "#ffffff",
+            "surface-container-high": "#e8e8e5",
+            "on-primary-fixed-variant": "#474646",
+            "on-error": "#ffffff",
+            "tertiary": "#000000",
+            "surface-container-lowest": "#ffffff",
+            "inverse-primary": "#c9c6c5",
+            "tertiary-fixed": "#e4e2dc",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#1b1c18",
+            "on-primary-container": "#858383",
+            "on-secondary-fixed": "#000f5d",
+            "on-secondary-container": "#001a88",
+            "primary-container": "#1c1b1b",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-tertiary-fixed-variant": "#474742",
+            "surface": "#f9f9f6",
+            "outline-variant": "#c4c7c7",
+            "secondary-fixed": "#dee0ff",
+            "on-surface": "#1a1c1b",
+            "surface-container-highest": "#e2e3e0",
+            "on-tertiary-container": "#84847e",
+            "primary": "#000000"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "margin": "1.5rem",
+            "space-xl": "24px",
+            "space-lg": "16px",
+            "space-4xl": "64px",
+            "space-2xl": "32px",
+            "space-3xl": "48px",
+            "space-xs": "4px",
+            "space-md": "12px",
+            "space-sm": "8px"
+          },
+          "fontFamily": {
+            "label": ["Inter"],
+            "h2": ["Inter"],
+            "body": ["Inter"],
+            "h3": ["Inter"],
+            "display": ["Inter"],
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-secondary selection:text-white flex justify-center items-center min-h-screen">
+<div class="w-full max-w-[440px] min-h-screen bg-surface flex flex-col justify-between shadow-sm relative">
+<!-- Top App Bar -->
+<header class="bg-surface flex flex-col w-full">
+<div class="flex justify-between items-center w-full px-4 py-3">
+<div class="flex items-center gap-2">
+<span class="font-h1 text-h1 font-bold text-primary tracking-tight">ELOKA</span>
+</div>
+<button aria-label="Help" class="flex items-center justify-center p-2 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<div class="px-4 pb-2">
+<p class="font-body-sm text-on-surface-variant">Signed in as +91 XXXXXX3210</p>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-4 py-2 flex flex-col gap-space-lg overflow-y-auto">
+<!-- Heading -->
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">How would you like to apply?</h1>
+</div>
+<!-- Options Container -->
+<div class="flex flex-col gap-space-md">
+<!-- Option 1: DigiLocker (Selected by default) -->
+<div class="bg-surface-container-lowest border-2 border-secondary rounded-xl p-4 flex flex-col gap-space-sm cursor-pointer shadow-sm relative transition-all duration-200" id="card-digilocker" onclick="selectOption('digilocker')">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full border-2 border-secondary flex items-center justify-center bg-secondary">
+<div class="w-2 h-2 rounded-full bg-white"></div>
+</div>
+<span class="font-h3 text-h3 text-on-surface">Apply with DigiLocker</span>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-label text-label">Faster</span>
+</div>
+<p class="font-body-sm text-on-surface-variant pl-7">We fetch your name, date of birth, home address and the last 4 digits of your Aadhaar from DigiLocker.</p>
+<p class="font-label text-label text-on-surface-variant pl-7">8 steps</p>
+<div class="flex flex-col gap-1 pl-7 pt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-size: 16px;">check_circle</span>
+<span class="font-body-sm text-on-surface">Fewer forms to fill</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-size: 16px;">check_circle</span>
+<span class="font-body-sm text-on-surface">Aadhaar details fetched for you</span>
+</div>
+</div>
+</div>
+<!-- Option 2: Step by step -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-space-sm cursor-pointer shadow-sm relative transition-all duration-200 hover:border-outline" id="card-step" onclick="selectOption('step')">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center bg-transparent">
+<div class="w-2 h-2 rounded-full bg-transparent"></div>
+</div>
+<span class="font-h3 text-h3 text-on-surface">Apply step by step</span>
+</div>
+</div>
+<p class="font-body-sm text-on-surface-variant pl-7">Enter your details and upload documents yourself.</p>
+<p class="font-label text-label text-on-surface-variant pl-7">10 steps</p>
+</div>
+</div>
+<!-- Keep these ready card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-4 flex flex-col gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface" style="font-size: 20px;">info</span>
+<span class="font-h3 text-h3 text-on-surface">Keep these ready</span>
+</div>
+<ul class="flex flex-col gap-space-xs pl-7 list-disc font-body-sm text-on-surface-variant">
+<li>Your Aadhaar-linked mobile (for DigiLocker)</li>
+<li>Your PAN</li>
+<li>Graduation certificate</li>
+<li>Voter ID or driving licence</li>
+</ul>
+</div>
+</main>
+<!-- Footer Action Area -->
+<footer class="bg-surface px-4 py-4 flex flex-col gap-space-md">
+<!-- Checkbox Agreement -->
+<label class="flex items-start gap-3 cursor-pointer">
+<input class="mt-1 w-4 h-4 rounded border-outline text-secondary focus:ring-secondary" id="agreement-checkbox" type="checkbox"/>
+<span class="font-body-sm text-on-surface-variant">
+          I agree that ELOKA may use these details to process my partner application. <a class="text-secondary underline underline-offset-2" href="#">Read how we use your data.</a>
+</span>
+</label>
+<!-- Continue Button -->
+<button class="w-full bg-primary text-on-primary py-3 px-4 rounded-lg font-h3 text-h3 active:scale-[0.98] transition-all duration-200 text-center shadow-sm" onclick="handleContinue()">
+        Continue
+      </button>
+<!-- Footer Links -->
+<div class="flex justify-center items-center gap-2 font-body-sm text-on-surface-variant pb-2">
+<a class="hover:underline" href="#">Privacy</a>
+<span>·</span>
+<a class="hover:underline" href="#">Terms</a>
+</div>
+</footer>
+</div>
+<script>
+    function selectOption(type) {
+      const cardDigi = document.getElementById('card-digilocker');
+      const cardStep = document.getElementById('card-step');
+      
+      const radioDigi = cardDigi.querySelector('div > div > div');
+      const radioStep = cardStep.querySelector('div > div > div');
+      
+      if (type === 'digilocker') {
+        cardDigi.className = "bg-surface-container-lowest border-2 border-secondary rounded-xl p-4 flex flex-col gap-space-sm cursor-pointer shadow-sm relative transition-all duration-200";
+        radioDigi.className = "w-5 h-5 rounded-full border-2 border-secondary flex items-center justify-center bg-secondary";
+        radioDigi.innerHTML = '<div class="w-2 h-2 rounded-full bg-white"></div>';
+        
+        cardStep.className = "bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-space-sm cursor-pointer shadow-sm relative transition-all duration-200 hover:border-outline";
+        radioStep.className = "w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center bg-transparent";
+        radioStep.innerHTML = '<div class="w-2 h-2 rounded-full bg-transparent"></div>';
+      } else {
+        cardStep.className = "bg-surface-container-lowest border-2 border-secondary rounded-xl p-4 flex flex-col gap-space-sm cursor-pointer shadow-sm relative transition-all duration-200";
+        radioStep.className = "w-5 h-5 rounded-full border-2 border-secondary flex items-center justify-center bg-secondary";
+        radioStep.innerHTML = '<div class="w-2 h-2 rounded-full bg-white"></div>';
+        
+        cardDigi.className = "bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-space-sm cursor-pointer shadow-sm relative transition-all duration-200 hover:border-outline";
+        radioDigi.className = "w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center bg-transparent";
+        radioDigi.innerHTML = '<div class="w-2 h-2 rounded-full bg-transparent"></div>';
+      }
+    }
+
+    function handleContinue() {
+      const checkbox = document.getElementById('agreement-checkbox');
+      if (!checkbox.checked) {
+        alert('Please agree to the data usage terms to continue.');
+        return;
+      }
+      alert('Proceeding with application...');
+    }
+  </script>
+</body></html>

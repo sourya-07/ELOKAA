@@ -15,3 +15,7 @@ eloka:
   crypto:
     field-key: cGFydG5lci10ZXN0LWZpZWxkLWtleS0zMi1ieXRlcyE=
     index-key: cGFydG5lci10ZXN0LWluZGV4LWtleS0zMi1ieXRlcyE=
+  integration:
+    otp-provider: fake
+  identity:
+    otp-max-per-ip-per-hour: 1000 # every MockMvc request comes from 127.0.0.1

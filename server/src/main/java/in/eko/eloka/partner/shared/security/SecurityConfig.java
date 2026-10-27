@@ -9,6 +9,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,6 +43,10 @@ public class SecurityConfig {
 						AnonymousAuthenticationFilter.class)
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/actuator/health/**", "/actuator/info", "/error").permitAll()
+						// Applicants: sign-in is public; everything else needs an applicant session
+						.requestMatchers(HttpMethod.POST, "/v1/partner/otp", "/v1/partner/otp/verify",
+								"/v1/partner/session/refresh").permitAll()
+						.requestMatchers("/v1/partner/**").hasAuthority("KIND_" + SessionKind.PARTNER_APPLICANT.name())
 						.anyRequest().denyAll())
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((request, response, e) -> writeProblem(response,
