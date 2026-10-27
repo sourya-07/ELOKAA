@@ -1,0 +1,190 @@
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eloka - Phone Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#93000a",
+            "background": "#f9f9f6",
+            "error-container": "#ffdad6",
+            "secondary-container": "#778afd",
+            "tertiary-fixed": "#e4e2dc",
+            "on-primary-fixed": "#1c1b1b",
+            "on-tertiary-container": "#84847e",
+            "on-secondary-fixed": "#000f5d",
+            "inverse-surface": "#2f312f",
+            "inverse-primary": "#c9c6c5",
+            "on-surface": "#1a1c1b",
+            "surface-variant": "#e2e3e0",
+            "on-background": "#1a1c1b",
+            "on-secondary-container": "#001a88",
+            "on-primary": "#ffffff",
+            "on-primary-fixed-variant": "#474646",
+            "on-error": "#ffffff",
+            "outline-variant": "#c4c7c7",
+            "primary-fixed-dim": "#c9c6c5",
+            "surface-container": "#eeeeeb",
+            "outline": "#747878",
+            "surface-tint": "#5f5e5e",
+            "inverse-on-surface": "#f1f1ee",
+            "primary": "#000000",
+            "on-tertiary-fixed": "#1b1c18",
+            "on-secondary-fixed-variant": "#2439ab",
+            "surface-container-low": "#f4f4f1",
+            "on-primary-container": "#858383",
+            "secondary": "#4053c4",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "surface-container-high": "#e8e8e5",
+            "primary-fixed": "#e5e2e1",
+            "on-surface-variant": "#444748",
+            "tertiary": "#000000",
+            "surface": "#f9f9f6",
+            "secondary-fixed": "#dee0ff",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#1b1c18",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#e2e3e0",
+            "surface-bright": "#f9f9f6",
+            "primary-container": "#1c1b1b",
+            "on-tertiary-fixed-variant": "#474742",
+            "secondary-fixed-dim": "#bbc3ff",
+            "surface-dim": "#dadad7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "4px",
+            "space-md": "12px",
+            "space-4xl": "64px",
+            "space-3xl": "48px",
+            "space-xl": "24px",
+            "space-lg": "16px",
+            "space-2xl": "32px",
+            "margin": "1.5rem",
+            "space-sm": "8px",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "display": ["Inter"],
+            "label": ["Inter"],
+            "h3": ["Inter"],
+            "body-sm": ["Inter"],
+            "body": ["Inter"],
+            "h2": ["Inter"],
+            "display-mobile": ["Inter"],
+            "h1": ["Inter"]
+          },
+          "fontSize": {
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full bg-background text-on-background font-body flex flex-col justify-between antialiased" style="background-color: #FAFAF7;">
+<!-- TopAppBar -->
+<header class="bg-surface text-on-surface flex justify-between items-center w-full px-6 h-16 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="font-h1 text-h1 text-primary tracking-tight">ELOKA</span>
+</div>
+<div>
+<a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Help</a>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center px-4 py-12">
+<div class="w-full max-w-5xl flex flex-col md:flex-row gap-8 justify-center items-stretch">
+<!-- Card 1: Your mobile number -->
+<div class="w-full md:w-[440px] bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex flex-col justify-between">
+<div>
+<!-- Header section of card -->
+<div class="flex items-center justify-between mb-6">
+<button aria-label="Back" class="p-2 -ml-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="inline-flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant">
+<span class="font-label text-label text-on-surface-variant">Applying with DigiLocker</span>
+<a class="font-label text-label text-primary underline hover:text-on-surface" href="#">Change</a>
+</div>
+</div>
+<h1 class="font-h1 text-h1 text-on-surface mb-2">Your mobile number</h1>
+<p class="font-body-sm text-on-surface-variant mb-6">We'll use this number to sign you in and to contact you about this application.</p>
+<!-- Input field -->
+<div class="space-y-2 mb-6">
+<label class="block font-label text-label text-on-surface">Mobile number</label>
+<div class="flex items-center border border-outline rounded-lg bg-surface-container-lowest focus-within:ring-2 focus-within:ring-primary overflow-hidden">
+<span class="px-4 py-3 bg-surface-container font-body-sm text-on-surface-variant border-r border-outline-variant">+91</span>
+<input class="w-full px-4 py-3 border-none focus:ring-0 font-body text-on-surface bg-transparent" type="tel" value="98765 43210"/>
+</div>
+<p class="font-body-sm text-on-surface-variant text-xs">We'll send a 6-digit code by SMS.</p>
+</div>
+</div>
+<div>
+<button class="w-full bg-primary text-on-primary py-3.5 px-4 rounded-lg font-h3 text-h3 hover:opacity-95 active:scale-[0.98] transition-all duration-200">
+            Send code
+          </button>
+</div>
+</div>
+<!-- Card 2: Enter the code -->
+<div class="w-full md:w-[440px] bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex flex-col justify-between">
+<div>
+<div class="mb-6 pt-2">
+<h1 class="font-h1 text-h1 text-on-surface mb-2">Enter the code</h1>
+<div class="flex items-center gap-2 font-body-sm text-on-surface-variant">
+<span>Sent to +91 XXXXXX3210</span>
+<a class="text-primary underline hover:text-on-surface font-medium" href="#">Change</a>
+</div>
+</div>
+<!-- OTP Boxes -->
+<div class="flex gap-3 mb-6 justify-between">
+<div class="w-[48px] h-[48px] border border-primary rounded-lg flex items-center justify-center font-h2 text-h2 text-on-surface bg-surface-container-lowest shadow-sm">4</div>
+<div class="w-[48px] h-[48px] border border-primary rounded-lg flex items-center justify-center font-h2 text-h2 text-on-surface bg-surface-container-lowest shadow-sm">8</div>
+<div class="w-[48px] h-[48px] border border-primary rounded-lg flex items-center justify-center font-h2 text-h2 text-on-surface bg-surface-container-lowest shadow-sm">2</div>
+<div class="w-[48px] h-[48px] border border-outline-variant rounded-lg flex items-center justify-center font-h2 text-h2 text-on-surface-variant bg-surface-container-lowest"></div>
+<div class="w-[48px] h-[48px] border border-outline-variant rounded-lg flex items-center justify-center font-h2 text-h2 text-on-surface-variant bg-surface-container-lowest"></div>
+<div class="w-[48px] h-[48px] border border-outline-variant rounded-lg flex items-center justify-center font-h2 text-h2 text-on-surface-variant bg-surface-container-lowest"></div>
+</div>
+<div class="flex items-center justify-between mb-8 font-body-sm">
+<span class="text-on-surface-variant">Resend code in 0:28</span>
+<button class="text-primary hover:underline font-medium" disabled="">Resend code</button>
+</div>
+</div>
+<div>
+<button class="w-full bg-primary text-on-primary py-3.5 px-4 rounded-lg font-h3 text-h3 hover:opacity-95 active:scale-[0.98] transition-all duration-200">
+            Verify
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Page Footer -->
+<footer class="w-full py-6 text-center font-body-sm text-on-surface-variant border-t border-outline-variant bg-surface">
+<div class="flex justify-center items-center gap-3">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<span>·</span>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+</div>
+</footer>
+</body></html>

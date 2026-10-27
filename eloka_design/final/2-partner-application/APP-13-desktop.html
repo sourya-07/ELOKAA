@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA Platform - White-label setup</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-primary-fixed": "#1c1b1b",
+            "on-tertiary-container": "#84847e",
+            "surface-container": "#eeeeeb",
+            "on-secondary-fixed-variant": "#2439ab",
+            "inverse-on-surface": "#f1f1ee",
+            "surface": "#f9f9f6",
+            "surface-variant": "#e2e3e0",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "outline-variant": "#c4c7c7",
+            "primary-fixed": "#e5e2e1",
+            "on-secondary-container": "#001a88",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "outline": "#747878",
+            "secondary-fixed": "#dee0ff",
+            "surface-bright": "#f9f9f6",
+            "inverse-surface": "#2f312f",
+            "inverse-primary": "#c9c6c5",
+            "on-background": "#1a1c1b",
+            "tertiary": "#000000",
+            "primary": "#000000",
+            "surface-container-low": "#f4f4f1",
+            "on-tertiary-fixed": "#1b1c18",
+            "on-surface": "#1a1c1b",
+            "surface-container-high": "#e8e8e5",
+            "secondary": "#4053c4",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-primary-fixed-variant": "#474646",
+            "surface-dim": "#dadad7",
+            "error": "#ba1a1a",
+            "surface-tint": "#5f5e5e",
+            "on-tertiary": "#ffffff",
+            "background": "#f9f9f6",
+            "surface-container-highest": "#e2e3e0",
+            "secondary-container": "#778afd",
+            "on-tertiary-fixed-variant": "#474742",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#444748",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#1b1c18",
+            "on-secondary-fixed": "#000f5d",
+            "on-primary-container": "#858383",
+            "primary-fixed-dim": "#c9c6c5",
+            "primary-container": "#1c1b1b",
+            "on-primary": "#ffffff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "gutter": "1rem",
+            "space-sm": "8px",
+            "space-3xl": "48px",
+            "space-xs": "4px",
+            "space-xl": "24px",
+            "space-4xl": "64px",
+            "space-lg": "16px",
+            "space-2xl": "32px",
+            "space-md": "12px",
+            "margin": "1.5rem"
+          },
+          fontFamily: {
+            "h2": ["Inter"],
+            "h1": ["Inter"],
+            "h3": ["Inter"],
+            "display": ["Inter"],
+            "label": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body": ["Inter"]
+          },
+          fontSize: {
+            "h2": ["20px", { lineHeight: "28px", letterSpacing: "normal", fontWeight: "600" }],
+            "h1": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "h3": ["16px", { lineHeight: "24px", letterSpacing: "normal", fontWeight: "600" }],
+            "display": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "label": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "500" }],
+            "body-sm": ["14px", { lineHeight: "20px", letterSpacing: "normal", fontWeight: "400" }],
+            "display-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+            "body": ["16px", { lineHeight: "24px", letterSpacing: "normal", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .tnum { font-variant-numeric: tabular-nums; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+  </style>
+</head>
+<body class="h-full bg-background text-on-surface antialiased flex flex-col font-body">
+<!-- Top Navigation Bar (Shared Component Anchor) -->
+<header class="w-full h-14 px-gutter flex items-center justify-between z-40 bg-surface-container-lowest border-b border-outline-variant shrink-0">
+<div class="flex items-center gap-space-lg">
+<span class="font-h1 text-h1 font-bold text-on-surface tracking-tight">ELOKA</span>
+<span class="h-4 w-px bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">Tenant Onboarding</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Help</a>
+<span class="text-outline-variant text-label">•</span>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Sign Out</a>
+</div>
+</header>
+<!-- Application Progress Status Bar -->
+<div class="w-full bg-surface-container-lowest border-b border-outline-variant px-space-2xl py-2 shrink-0">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<span class="font-label text-label text-on-surface-variant">Application</span>
+<span class="text-outline-variant text-label">/</span>
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-high font-label text-label text-on-surface font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Saved
+        </span>
+<span class="font-label text-label text-on-surface-variant tnum">Step 11 of 13</span>
+</div>
+<div class="flex items-center gap-space-md w-64">
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-300" style="width: 85%;"></div>
+</div>
+<span class="font-label text-label text-on-surface font-medium tnum">85%</span>
+</div>
+</div>
+</div>
+<!-- Main Workspace Container (1280px Desktop) -->
+<div class="flex-1 max-w-[1280px] w-full mx-auto px-space-lg py-space-xl grid grid-cols-12 gap-space-xl items-start">
+<!-- Column 1: Vertical Step Rail (280px equivalent: col-span-3) -->
+<aside class="col-span-3 sticky top-6 bg-surface-container-lowest rounded-lg border border-outline-variant p-space-md shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+<div class="px-space-sm pb-space-sm border-b border-outline-variant flex items-center justify-between">
+<h2 class="font-h3 text-h3 text-on-surface">Application steps</h2>
+<span class="font-label text-label px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant tnum font-semibold">10 completed</span>
+</div>
+<nav class="mt-space-sm space-y-0.5 font-label text-label">
+<!-- 1. Mobile verification -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">1. Mobile verification</span>
+</div>
+<!-- 2. Consent -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">2. Consent</span>
+</div>
+<!-- 3. Program -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">3. Program</span>
+</div>
+<!-- 4. Business PAN -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">4. Business PAN</span>
+</div>
+<!-- 5. Business details -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">5. Business details</span>
+</div>
+<!-- 6. Email -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">6. Email</span>
+</div>
+<!-- 7. Signatory KYC -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">7. Signatory KYC</span>
+</div>
+<!-- 8. Live photo -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">8. Live photo</span>
+</div>
+<!-- 9. Documents -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">9. Documents</span>
+</div>
+<!-- 10. Bank account -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px] material-symbols-fill">check_circle</span>
+<span class="text-on-surface font-normal">10. Bank account</span>
+</div>
+<!-- 11. White-label setup (ACTIVE) -->
+<div class="flex items-center gap-space-md px-space-md py-2 rounded-lg bg-[#E8ECFA] text-secondary font-semibold border border-[#D5DEFA]">
+<span class="w-4 h-4 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px] tnum font-bold">11</span>
+<span class="text-secondary font-semibold">White-label setup</span>
+</div>
+<!-- 12. Declaration -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span>
+<span class="font-normal">12. Declaration</span>
+</div>
+<!-- 13. Agreement -->
+<div class="flex items-center gap-space-md px-space-md py-1.5 rounded-lg text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span class="font-normal">13. Agreement</span>
+</div>
+</nav>
+</aside>
+<!-- Column 2: Form Column (max 640px equivalent: col-span-5) -->
+<main class="col-span-5 space-y-space-xl">
+<!-- Section Header -->
+<div class="space-y-1">
+<div class="flex items-center gap-space-md">
+<h1 class="font-h1 text-h1 text-on-surface">Set up your platform</h1>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container font-label text-label text-on-surface font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+            Saved
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Customise the name, web address and brand appearance of your portal.</p>
+</div>
+<!-- Card 1: Platform identity -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-space-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-space-lg">
+<h2 class="font-h3 text-h3 text-on-surface border-b border-outline-variant pb-space-sm">Platform identity</h2>
+<!-- Field: Platform name -->
+<div class="space-y-1">
+<label class="block font-label text-label font-semibold text-on-surface">Platform name <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent" id="platformNameInput" type="text" value="Sample Pay"/>
+<p class="font-label text-label text-on-surface-variant">Shown to your agents and customers. Up to 60 characters.</p>
+</div>
+<!-- Field: Web address -->
+<div class="space-y-1">
+<label class="block font-label text-label font-semibold text-on-surface">Web address <span class="text-error">*</span></label>
+<div class="flex rounded-lg border border-outline-variant overflow-hidden focus-within:ring-2 focus-within:ring-secondary focus-within:border-transparent bg-surface-container-lowest">
+<input class="w-full border-0 px-3 py-2 font-body-sm text-body-sm text-on-surface focus:ring-0" id="subdomainInput" type="text" value="sampletraders"/>
+<span class="bg-surface-container-low px-3 py-2 font-body-sm text-body-sm text-on-surface-variant border-l border-outline-variant flex items-center select-none tnum">.eloka.app</span>
+</div>
+<!-- Availability Line -->
+<div class="flex items-center gap-1.5 text-emerald-700 font-label text-label pt-0.5">
+<span class="material-symbols-outlined text-[16px] text-emerald-600 material-symbols-fill">check_circle</span>
+<span class="font-medium tnum">sampletraders.eloka.app is available</span>
+</div>
+</div>
+<!-- State variants callout box -->
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-space-md space-y-space-md">
+<!-- Taken variant preview -->
+<div class="space-y-1.5">
+<span class="block font-label text-label text-on-surface-variant">This address is taken. Try one of these:</span>
+<div class="flex flex-wrap gap-1.5">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest border border-outline-variant font-label text-label text-secondary hover:bg-surface-container transition-colors duration-100 tnum" type="button">sampletradersin</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest border border-outline-variant font-label text-label text-secondary hover:bg-surface-container transition-colors duration-100 tnum" type="button">sample-traders</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest border border-outline-variant font-label text-label text-secondary hover:bg-surface-container transition-colors duration-100 tnum" type="button">stpay</button>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-space-sm flex items-center gap-1.5 text-error font-label text-label">
+<span class="material-symbols-outlined text-[16px]">error</span>
+<span>Use 3–40 lowercase letters, numbers or hyphens</span>
+</div>
+</div>
+</section>
+<!-- Card 2: Logo -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-space-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-space-lg">
+<h2 class="font-h3 text-h3 text-on-surface border-b border-outline-variant pb-space-sm">Logo (optional)</h2>
+<!-- Upload drop zone -->
+<div class="border border-dashed border-outline-variant rounded-lg p-space-lg text-center bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-outline text-[24px]">cloud_upload</span>
+<p class="font-body-sm text-body-sm font-medium text-on-surface mt-1">Upload logo — PNG or JPG, square works best</p>
+<p class="font-label text-label text-on-surface-variant mt-0.5">Maximum file size 2 MB</p>
+</div>
+<!-- Already-uploaded state -->
+<div class="flex items-center justify-between p-space-md border border-outline-variant rounded-lg bg-surface-container-lowest">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded bg-[#0F172A] text-on-secondary flex items-center justify-center font-bold text-sm tracking-wider select-none">
+              SP
+            </div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface">sample-pay-logo.png</p>
+<p class="font-label text-label text-on-surface-variant tnum">64 KB</p>
+</div>
+</div>
+<button class="font-label text-label text-error hover:underline px-2 py-1" type="button">Remove</button>
+</div>
+</section>
+<!-- Card 3: Brand appearance & colours -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-space-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-space-lg">
+<h2 class="font-h3 text-h3 text-on-surface border-b border-outline-variant pb-space-sm">Brand colours</h2>
+<!-- Ready-made palette swatches -->
+<div class="space-y-space-sm">
+<label class="block font-label text-label font-semibold text-on-surface">Preset palettes</label>
+<div class="grid grid-cols-3 gap-2">
+<!-- Swatch 1: Selected (Deep Navy & Azure) -->
+<button class="p-2 rounded-lg border-2 border-secondary bg-surface-container-lowest flex items-center justify-between shadow-sm" type="button">
+<span class="font-label text-label text-on-surface font-medium">Navy / Azure</span>
+<div class="flex -space-x-1">
+<span class="w-4 h-4 rounded-full bg-[#0F172A] border border-white"></span>
+<span class="w-4 h-4 rounded-full bg-[#2563EB] border border-white"></span>
+</div>
+</button>
+<!-- Swatch 2 -->
+<button class="p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline flex items-center justify-between" type="button">
+<span class="font-label text-label text-on-surface">Forest / Mint</span>
+<div class="flex -space-x-1">
+<span class="w-4 h-4 rounded-full bg-[#064E3B] border border-white"></span>
+<span class="w-4 h-4 rounded-full bg-[#10B981] border border-white"></span>
+</div>
+</button>
+<!-- Swatch 3 -->
+<button class="p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline flex items-center justify-between" type="button">
+<span class="font-label text-label text-on-surface">Charcoal / Amber</span>
+<div class="flex -space-x-1">
+<span class="w-4 h-4 rounded-full bg-[#1E293B] border border-white"></span>
+<span class="w-4 h-4 rounded-full bg-[#F59E0B] border border-white"></span>
+</div>
+</button>
+<!-- Swatch 4 -->
+<button class="p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline flex items-center justify-between" type="button">
+<span class="font-label text-label text-on-surface">Wine / Rose</span>
+<div class="flex -space-x-1">
+<span class="w-4 h-4 rounded-full bg-[#831843] border border-white"></span>
+<span class="w-4 h-4 rounded-full bg-[#F43F5E] border border-white"></span>
+</div>
+</button>
+<!-- Swatch 5 -->
+<button class="p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline flex items-center justify-between" type="button">
+<span class="font-label text-label text-on-surface">Royal / Cyan</span>
+<div class="flex -space-x-1">
+<span class="w-4 h-4 rounded-full bg-[#1E3A8A] border border-white"></span>
+<span class="w-4 h-4 rounded-full bg-[#06B6D4] border border-white"></span>
+</div>
+</button>
+<!-- Swatch 6 -->
+<button class="p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline flex items-center justify-between" type="button">
+<span class="font-label text-label text-on-surface">Slate / Teal</span>
+<div class="flex -space-x-1">
+<span class="w-4 h-4 rounded-full bg-[#334155] border border-white"></span>
+<span class="w-4 h-4 rounded-full bg-[#14B8A6] border border-white"></span>
+</div>
+</button>
+</div>
+</div>
+<!-- Custom Color Inputs -->
+<div class="pt-space-sm border-t border-outline-variant space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label text-label font-semibold text-on-surface">Custom colours</span>
+<span class="font-label text-label text-secondary cursor-pointer">Reset presets</span>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<!-- Primary Color Picker -->
+<div class="space-y-1">
+<label class="block font-label text-label text-on-surface-variant">Primary</label>
+<div class="flex items-center border border-outline-variant rounded-lg p-1.5 bg-surface-container-lowest">
+<span class="w-6 h-6 rounded bg-[#0F172A] border border-outline-variant mr-2 shrink-0"></span>
+<input class="w-full border-0 p-0 font-body-sm text-body-sm text-on-surface uppercase tnum focus:ring-0" type="text" value="#0F172A"/>
+</div>
+</div>
+<!-- Accent Color Picker -->
+<div class="space-y-1">
+<label class="block font-label text-label text-on-surface-variant">Accent</label>
+<div class="flex items-center border border-outline-variant rounded-lg p-1.5 bg-surface-container-lowest">
+<span class="w-6 h-6 rounded bg-[#2563EB] border border-outline-variant mr-2 shrink-0"></span>
+<input class="w-full border-0 p-0 font-body-sm text-body-sm text-on-surface uppercase tnum focus:ring-0" type="text" value="#2563EB"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Segmented Control: Navigation style -->
+<div class="space-y-1.5 pt-space-sm border-t border-outline-variant">
+<label class="block font-label text-label font-semibold text-on-surface">Navigation style</label>
+<div class="grid grid-cols-2 p-1 bg-surface-container-low rounded-lg border border-outline-variant">
+<button class="py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.04)]" type="button">
+              Dark
+            </button>
+<button class="py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm font-normal" type="button">
+              Light
+            </button>
+</div>
+</div>
+<!-- Warning Callout Note -->
+<div class="bg-[#FFFBEB] border border-[#FDE68A] rounded-lg p-space-md flex gap-space-sm text-[#92400E]">
+<span class="material-symbols-outlined text-[18px] shrink-0 text-[#B45309]">info</span>
+<p class="font-label text-label leading-relaxed">
+            Text on this colour may be hard to read. We'll use a darker shade for buttons.
+          </p>
+</div>
+</section>
+<!-- Form Actions -->
+<div class="flex items-center justify-between pt-space-sm pb-space-2xl">
+<button class="px-space-lg py-2 rounded-lg font-body-sm text-body-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors duration-150" type="button">
+          Save draft
+        </button>
+<button class="h-10 px-space-xl bg-primary text-on-primary rounded-[10px] font-body-sm text-body-sm font-semibold hover:bg-neutral-800 active:translate-y-px transition-all duration-100 shadow-sm flex items-center gap-1.5" type="button">
+<span>Save and continue</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Column 3: Sticky Live Preview Panel (col-span-4) -->
+<aside class="col-span-4 sticky top-6 space-y-space-md">
+<!-- Live Preview Header -->
+<div class="flex items-center justify-between pb-1">
+<div>
+<span class="font-h3 text-h3 text-on-surface">Preview</span>
+<p class="font-label text-label text-on-surface-variant">Live preview of your platform</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label text-label">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Interactive
+        </span>
+</div>
+<!-- Framed Miniature Mockup Frame -->
+<div class="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
+<!-- Mockup Browser Bar -->
+<div class="bg-surface-container-low px-3 py-2 border-b border-outline-variant flex items-center justify-between select-none">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span>
+</div>
+<div class="bg-surface-container-lowest px-3 py-0.5 rounded border border-outline-variant text-[11px] text-on-surface-variant font-mono tnum">
+            sampletraders.eloka.app
+          </div>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">lock</span>
+</div>
+<!-- Mockup Portal Canvas -->
+<div class="bg-[#F8F9FA] min-h-[460px] flex flex-col">
+<!-- Top bar with brand styling -->
+<div class="bg-[#0F172A] px-3 py-2.5 flex items-center justify-between text-white shrink-0">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-white text-[#0F172A] flex items-center justify-center font-bold text-[10px]">
+                SP
+              </div>
+<span class="font-semibold text-xs tracking-tight" id="previewTitle">Sample Pay</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center text-[9px] font-medium text-slate-200">JD</span>
+</div>
+</div>
+<!-- Mockup Internal Layout (Side menu + Main view) -->
+<div class="flex flex-1">
+<!-- Side menu -->
+<div class="w-24 bg-surface-container-lowest border-r border-outline-variant p-2 space-y-1 text-[11px] shrink-0">
+<div class="px-2 py-1 rounded bg-[#E8ECFA] text-secondary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] material-symbols-fill">home</span>
+<span>Home</span>
+</div>
+<div class="px-2 py-1 text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">payments</span>
+<span>Transactions</span>
+</div>
+<div class="px-2 py-1 text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">group</span>
+<span>Network</span>
+</div>
+</div>
+<!-- Content Container -->
+<div class="flex-1 p-3 space-y-3">
+<!-- Balance Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3 shadow-none space-y-2">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-[10px] text-on-surface-variant uppercase font-medium">Available balance</span>
+<p class="text-sm font-bold text-on-surface tnum">₹2,45,800.00</p>
+</div>
+<button class="bg-[#0F172A] text-white text-[10px] font-semibold px-2.5 py-1 rounded shadow-sm hover:opacity-95" type="button">
+                    Add money
+                  </button>
+</div>
+<div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-outline-variant">
+<div class="bg-surface-container-low p-1.5 rounded">
+<span class="block text-[9px] text-on-surface-variant">Today's Inflow</span>
+<span class="text-[11px] font-semibold text-emerald-700 tnum">+₹32,400</span>
+</div>
+<div class="bg-surface-container-low p-1.5 rounded">
+<span class="block text-[9px] text-on-surface-variant">Settled</span>
+<span class="text-[11px] font-semibold text-on-surface tnum">₹1,80,000</span>
+</div>
+</div>
+</div>
+<!-- Quick Table Row -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-2 space-y-1.5">
+<span class="text-[10px] font-semibold text-on-surface block px-1">Recent payouts</span>
+<div class="space-y-1">
+<div class="flex items-center justify-between text-[10px] p-1 rounded bg-surface-container-low">
+<span class="font-medium text-on-surface">Txn #94012</span>
+<span class="font-semibold text-on-surface tnum">₹12,450</span>
+</div>
+<div class="flex items-center justify-between text-[10px] p-1 rounded bg-surface-container-low">
+<span class="font-medium text-on-surface">Txn #94011</span>
+<span class="font-semibold text-on-surface tnum">₹4,200</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<script>
+    // Lightweight interaction to dynamically reflect the typed platform title into the live preview
+    const platformInput = document.getElementById('platformNameInput');
+    const previewTitle = document.getElementById('previewTitle');
+    if (platformInput && previewTitle) {
+      platformInput.addEventListener('input', (e) => {
+        previewTitle.textContent = e.target.value.trim() || 'Portal Brand';
+      });
+    }
+  </script>
+</body></html>

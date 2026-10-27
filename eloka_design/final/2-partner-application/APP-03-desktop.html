@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Applicant Portal - Application Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#bbc3ff",
+            "surface-tint": "#5f5e5e",
+            "primary-container": "#1c1b1b",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#e2e3e0",
+            "on-surface-variant": "#444748",
+            "surface": "#f9f9f6",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-secondary-container": "#001a88",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#e8e8e5",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-background": "#1a1c1b",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed-variant": "#474646",
+            "surface-container-low": "#f4f4f1",
+            "surface-variant": "#e2e3e0",
+            "secondary-container": "#778afd",
+            "surface-container-lowest": "#ffffff",
+            "inverse-on-surface": "#f1f1ee",
+            "on-primary-fixed": "#1c1b1b",
+            "error": "#ba1a1a",
+            "inverse-surface": "#2f312f",
+            "background": "#f9f9f6",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-secondary-fixed": "#000f5d",
+            "on-error": "#ffffff",
+            "surface-dim": "#dadad7",
+            "surface-container": "#eeeeeb",
+            "primary-fixed": "#e5e2e1",
+            "on-primary": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "on-tertiary-fixed": "#1b1c18",
+            "on-primary-container": "#858383",
+            "on-surface": "#1a1c1b",
+            "tertiary-container": "#1b1c18",
+            "outline": "#747878",
+            "on-tertiary-container": "#84847e",
+            "error-container": "#ffdad6",
+            "inverse-primary": "#c9c6c5",
+            "secondary": "#4053c4",
+            "tertiary": "#000000",
+            "primary": "#000000",
+            "primary-fixed-dim": "#c9c6c5",
+            "secondary-fixed": "#dee0ff",
+            "outline-variant": "#c4c7c7",
+            "surface-bright": "#f9f9f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "16px",
+            "space-4xl": "64px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-3xl": "48px",
+            "gutter": "1rem",
+            "space-xs": "4px",
+            "space-xl": "24px",
+            "space-2xl": "32px",
+            "margin": "1.5rem"
+          },
+          "fontFamily": {
+            "body": ["Inter"],
+            "label": ["Inter"],
+            "h3": ["Inter"],
+            "h1": ["Inter"],
+            "h2": ["Inter"],
+            "display-mobile": ["Inter"],
+            "display": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#FAFAF7] text-on-background font-body min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-8 h-16 bg-surface dark:bg-surface shadow-sm">
+<div class="font-h1 text-h1 font-bold text-on-surface dark:text-inverse-on-surface tracking-tight">
+      ELOKA
+    </div>
+<div class="flex items-center space-x-6">
+<button class="text-on-surface-variant font-body-sm hover:text-on-surface transition-all duration-200 flex items-center space-x-1">
+<span class="material-symbols-outlined" style="font-size: 20px;">help</span>
+<span>Help</span>
+</button>
+<button class="text-on-surface-variant font-body-sm hover:text-on-surface transition-all duration-200 flex items-center space-x-1">
+<span class="material-symbols-outlined" style="font-size: 20px;">logout</span>
+<span>Sign out</span>
+</button>
+</div>
+</header>
+<!-- Main Content Layout -->
+<div class="flex flex-1 max-w-[1400px] w-full mx-auto px-8 py-8 gap-8 items-start">
+<!-- Left Column: Step Rail Card (280px) -->
+<aside class="w-[280px] bg-surface-container-low dark:bg-surface-container-low rounded-[14px] border border-[#E5E5E0] p-6 flex flex-col shrink-0">
+<h2 class="font-h2 text-h2 text-on-surface mb-4">Your steps</h2>
+<nav class="flex flex-col space-y-2 overflow-y-auto max-h-[calc(100vh-16rem)] pr-1">
+<!-- Step 1 (Completed) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-emerald-600" style="font-size: 18px;">check_circle</span>
+<span>1 Mobile verification</span>
+</div>
+<!-- Step 2 (Completed) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-emerald-600" style="font-size: 18px;">check_circle</span>
+<span>2 Consent</span>
+</div>
+<!-- Step 3 (Completed) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-emerald-600" style="font-size: 18px;">check_circle</span>
+<span>3 Program</span>
+</div>
+<!-- Step 4 (Current, Highlighted) -->
+<div class="flex items-center space-x-3 p-3 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-h3 shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">radio_button_checked</span>
+<span>4 Business PAN</span>
+</div>
+<!-- Step 5 -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">radio_button_unchecked</span>
+<span>5 Business details</span>
+</div>
+<!-- Step 6 -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">radio_button_unchecked</span>
+<span>6 Email</span>
+</div>
+<!-- Step 7 (Failed, red icon) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-error" style="font-size: 18px;">cancel</span>
+<span>7 Signatory KYC</span>
+</div>
+<!-- Step 8 -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">radio_button_unchecked</span>
+<span>8 Live photo</span>
+</div>
+<!-- Step 9 (Needs changes, amber icon) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-amber-600" style="font-size: 18px;">error</span>
+<span>9 Documents</span>
+</div>
+<!-- Step 10 -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">radio_button_unchecked</span>
+<span>10 Bank account</span>
+</div>
+<!-- Step 11 -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">radio_button_unchecked</span>
+<span>11 White-label setup</span>
+</div>
+<!-- Step 12 (Lock icon) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant/60 font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">lock</span>
+<span>12 Declaration</span>
+</div>
+<!-- Step 13 (Lock icon) -->
+<div class="flex items-center space-x-3 p-2 rounded-lg text-on-surface-variant/60 font-body-sm">
+<span class="material-symbols-outlined text-outline" style="font-size: 18px;">lock</span>
+<span>13 Agreement</span>
+</div>
+</nav>
+</aside>
+<!-- Right Column (max 720px) -->
+<main class="flex-1 max-w-[720px] flex flex-col space-y-6">
+<!-- 1. Header & Progress Overview Card -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-[14px] p-6 shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<h1 class="font-h1 text-h1 text-on-surface">Your application</h1>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full font-label text-label uppercase">In progress</span>
+</div>
+<div class="flex items-center space-x-3 mb-6">
+<span class="text-on-surface-variant font-body-sm">ID chip:</span>
+<code class="bg-surface-container px-2 py-1 rounded text-on-surface font-mono text-body-sm">onb_7Q2K9X</code>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between font-body-sm text-on-surface-variant">
+<span>Step 4 of 13</span>
+<span>31%</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 31%;"></div>
+</div>
+</div>
+</div>
+<!-- 2. Highlighted Card: Next Step -->
+<div class="bg-surface-container-lowest border border-primary rounded-[14px] p-6 shadow-sm flex items-center justify-between">
+<div class="space-y-1">
+<span class="text-label text-primary font-bold uppercase tracking-wider">Next: Business PAN</span>
+<h3 class="font-h2 text-h2 text-on-surface">Verify your business PAN to continue</h3>
+<p class="font-body-sm text-on-surface-variant">Ensure your corporate tax identification matches official records.</p>
+</div>
+<button class="bg-[#0A0A0A] text-white px-5 py-2.5 rounded-lg font-h3 hover:opacity-90 active:translate-y-[1px] transition-all">
+          Continue
+        </button>
+</div>
+<!-- 3. Warning Strip -->
+<div class="bg-amber-50 border border-amber-200 rounded-[14px] p-4 flex items-center space-x-3 text-amber-900">
+<span class="material-symbols-outlined text-amber-600" style="font-size: 20px;">warning</span>
+<p class="font-body-sm">This application will expire on 28 Oct if there's no activity.</p>
+</div>
+<!-- 4. Card: Needs your attention -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-[14px] p-6 shadow-sm space-y-4">
+<h3 class="font-h2 text-h2 text-on-surface">Needs your attention</h3>
+<div class="divide-y divide-[#E5E5E0]">
+<!-- Row 1 -->
+<div class="py-3 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-error" style="font-size: 20px;">cancel</span>
+<div>
+<p class="font-h3 text-h3 text-on-surface">Signatory KYC</p>
+<p class="font-body-sm text-on-surface-variant">1 attempt left</p>
+</div>
+</div>
+<button class="border border-outline-variant px-4 py-1.5 rounded-lg font-h3 text-on-surface hover:bg-surface-container transition-all">
+              Retry
+            </button>
+</div>
+<!-- Row 2 -->
+<div class="py-3 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-amber-600" style="font-size: 20px;">error</span>
+<div>
+<p class="font-h3 text-h3 text-on-surface">Documents</p>
+<p class="font-body-sm text-on-surface-variant">Address proof is unclear</p>
+</div>
+</div>
+<button class="border border-outline-variant px-4 py-1.5 rounded-lg font-h3 text-on-surface hover:bg-surface-container transition-all">
+              Fix
+            </button>
+</div>
+</div>
+</div>
+<!-- 5. Ghost text button -->
+<div class="pt-2">
+<button class="text-on-surface-variant hover:text-error font-body-sm transition-colors">
+          Withdraw application
+        </button>
+</div>
+</main>
+</div>
+</body></html>

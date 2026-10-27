@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ELOKA Components — Reference Sheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#FAFAF7',
+            surface: '#FFFFFF',
+            linen: '#F4F3EE',
+            'linen-alt': '#EFEEE8',
+            stone: '#E5E5E0',
+            field: '#85857F',
+            ink: '#0A0A0A',
+            'ink-pressed': '#1F1F1F',
+            graphite: '#5C5C57',
+            'graphite-muted': '#6F6F6A',
+            connect: '#11299E',
+            'connect-wash': '#E8ECFA',
+            'forest': '#065F46',
+            'mint-mist': '#ECFDF5',
+            'mint-border': '#A7F3D0',
+            'oxblood': '#991B1B',
+            'blush': '#FEF2F2',
+            'blush-border': '#FCA5A5',
+            'umber': '#92400E',
+            'cream': '#FFFBEB',
+            'cream-border': '#FCD34D',
+            'ice': '#EFF6FF',
+            'ice-border': '#BFDBFE',
+            'royal': '#1E40AF',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          boxShadow: {
+            soft: '0 1px 2px rgba(10, 10, 10, 0.04)',
+            dialog: '0 8px 30px rgba(10, 10, 10, 0.12), 0 1px 3px rgba(10, 10, 10, 0.05)',
+            toast: '0 4px 12px rgba(10, 10, 10, 0.18)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Tabular figures for numbers, IDs, and financial tokens */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    .custom-focus-ring {
+      outline: 2px solid #11299E;
+      outline-offset: 2px;
+    }
+    @keyframes spin-custom {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .animate-spin-custom {
+      animation: spin-custom 0.8s linear infinite;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+    .skeleton-bar {
+      animation: pulse-subtle 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-sans antialiased selection:bg-connect-wash selection:text-connect min-h-screen pb-32">
+
+  <!-- Floating Sticky Bar: Navigation Anchor & Theme Metadata -->
+  <header class="border-b border-stone bg-canvas sticky top-0 z-30 px-6 py-4 backdrop-blur-md bg-opacity-95">
+    <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 bg-ink text-white rounded-[6px] flex items-center justify-center font-bold text-sm tracking-tight">E</div>
+          <h1 class="text-2xl font-bold tracking-tight text-ink">ELOKA components</h1>
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-linen text-graphite border border-stone">v1.2 Platform DS</span>
+        </div>
+        <p class="text-sm text-graphite mt-0.5">Reference sheet — platform screens (Applicant onboarding & Staff review console)</p>
+      </div>
+
+      <!-- Quick Section Anchor Tags -->
+      <nav class="flex flex-wrap items-center gap-1.5 text-xs text-graphite">
+        <a href="#buttons" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Buttons</a>
+        <a href="#inputs" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Forms</a>
+        <a href="#otp" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">OTP</a>
+        <a href="#pills" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Pills</a>
+        <a href="#cards" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Cards</a>
+        <a href="#docs" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Documents</a>
+        <a href="#progress" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Step Rail</a>
+        <a href="#table" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Table</a>
+        <a href="#feedback" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Feedback & Dialogs</a>
+        <a href="#timeline" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Timeline</a>
+        <a href="#masked" class="px-2.5 py-1 rounded-[6px] hover:bg-linen hover:text-ink transition-colors">Masked</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-[1340px] mx-auto px-6 pt-10 space-y-16">
+
+    <!-- 1. INTRO / FOUNDATION TOKEN SUMMARY -->
+    <section class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft">
+      <div class="flex items-center justify-between pb-4 border-b border-stone mb-5">
+        <div>
+          <h2 class="text-base font-semibold text-ink">Design Foundation: Quiet Authority</h2>
+          <p class="text-xs text-graphite mt-0.5">Fintech white-label platform for India. Strict 4px base rhythm, neutral high-contrast surfaces, single solid CTA.</p>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-graphite font-mono">
+          <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#FAFAF7] border border-stone"></span>#FAFAF7 Paper</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#0A0A0A]"></span>#0A0A0A Ink</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#11299E]"></span>#11299E Connect</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 text-xs">
+        <div class="p-3 bg-canvas rounded-[8px] border border-stone">
+          <p class="text-graphite text-[11px] mb-1">Canvas</p>
+          <div class="font-mono font-medium text-ink">#FAFAF7</div>
+          <div class="text-[10px] text-graphite-muted mt-1">Warm paper</div>
+        </div>
+        <div class="p-3 bg-surface rounded-[8px] border border-stone">
+          <p class="text-graphite text-[11px] mb-1">Surface White</p>
+          <div class="font-mono font-medium text-ink">#FFFFFF</div>
+          <div class="text-[10px] text-graphite-muted mt-1">Cards & inputs</div>
+        </div>
+        <div class="p-3 bg-linen rounded-[8px] border border-stone">
+          <p class="text-graphite text-[11px] mb-1">Soft Linen</p>
+          <div class="font-mono font-medium text-ink">#F4F3EE</div>
+          <div class="text-[10px] text-graphite-muted mt-1">Headers / rails</div>
+        </div>
+        <div class="p-3 bg-stone rounded-[8px] border border-stone">
+          <p class="text-graphite text-[11px] mb-1">Hairline Stone</p>
+          <div class="font-mono font-medium text-ink">#E5E5E0</div>
+          <div class="text-[10px] text-graphite-muted mt-1">Borders & lines</div>
+        </div>
+        <div class="p-3 bg-mint-mist rounded-[8px] border border-mint-border text-forest">
+          <p class="text-[11px] opacity-80 mb-1">Success</p>
+          <div class="font-mono font-medium">#065F46</div>
+          <div class="text-[10px] opacity-80 mt-1">Mint Mist #ECFDF5</div>
+        </div>
+        <div class="p-3 bg-blush rounded-[8px] border border-blush-border text-oxblood">
+          <p class="text-[11px] opacity-80 mb-1">Danger</p>
+          <div class="font-mono font-medium">#991B1B</div>
+          <div class="text-[10px] opacity-80 mt-1">Blush #FEF2F2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. BUTTONS SECTION -->
+    <section id="buttons" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">2. Buttons</h2>
+          <p class="text-xs text-graphite">Single primary button per view rule. Standard radius: 10px. Focus ring: 2px Connect Blue with 2px offset.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Component: &lt;Button /&gt;</span>
+      </div>
+
+      <!-- State Matrix Table -->
+      <div class="bg-surface border border-stone rounded-[14px] overflow-hidden shadow-soft">
+        <div class="px-6 py-3 bg-linen border-b border-stone">
+          <span class="text-xs font-semibold uppercase tracking-wider text-graphite">Button Variants × State Matrix (Default 40px height)</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm border-collapse">
+            <thead>
+              <tr class="border-b border-stone text-xs font-medium text-graphite bg-canvas">
+                <th class="py-3 px-6 w-36">Variant</th>
+                <th class="py-3 px-6">Default</th>
+                <th class="py-3 px-6">Hover</th>
+                <th class="py-3 px-6">Focus State</th>
+                <th class="py-3 px-6">Disabled</th>
+                <th class="py-3 px-6">Loading</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone">
+              <!-- Primary Row -->
+              <tr>
+                <td class="py-4 px-6 font-medium text-ink bg-canvas/30">
+                  <div>Primary</div>
+                  <span class="text-[11px] font-normal text-graphite">Solid ink black</span>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-ink text-white text-sm font-medium transition-colors hover:bg-ink-pressed flex items-center justify-center">
+                    Verify PAN
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-ink-pressed text-white text-sm font-medium shadow-sm flex items-center justify-center">
+                    Verify PAN
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-ink text-white text-sm font-medium custom-focus-ring flex items-center justify-center">
+                    Verify PAN
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" disabled class="h-10 px-4 rounded-[10px] bg-linen text-graphite-muted cursor-not-allowed border border-stone text-sm font-medium flex items-center justify-center">
+                    Verify PAN
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 w-[112px] rounded-[10px] bg-ink text-white text-sm font-medium flex items-center justify-center cursor-wait">
+                    <svg class="animate-spin-custom h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Secondary Row -->
+              <tr>
+                <td class="py-4 px-6 font-medium text-ink bg-canvas/30">
+                  <div>Secondary</div>
+                  <span class="text-[11px] font-normal text-graphite">Outlined white</span>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-white border border-field text-ink text-sm font-medium hover:bg-linen transition-colors">
+                    Save draft
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-linen border border-field text-ink text-sm font-medium">
+                    Save draft
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-white border border-field text-ink text-sm font-medium custom-focus-ring">
+                    Save draft
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" disabled class="h-10 px-4 rounded-[10px] bg-linen/50 border border-stone text-graphite-muted cursor-not-allowed text-sm font-medium">
+                    Save draft
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 w-[104px] rounded-[10px] bg-white border border-field text-ink text-sm font-medium flex items-center justify-center cursor-wait">
+                    <svg class="animate-spin-custom h-4 w-4 text-ink" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Ghost Row -->
+              <tr>
+                <td class="py-4 px-6 font-medium text-ink bg-canvas/30">
+                  <div>Ghost</div>
+                  <span class="text-[11px] font-normal text-graphite">Transparent flat</span>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-3 rounded-[10px] text-graphite text-sm font-medium hover:bg-linen hover:text-ink transition-colors">
+                    Back to queue
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-3 rounded-[10px] bg-linen text-ink text-sm font-medium">
+                    Back to queue
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-3 rounded-[10px] text-graphite text-sm font-medium custom-focus-ring">
+                    Back to queue
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" disabled class="h-10 px-3 rounded-[10px] text-graphite-muted cursor-not-allowed text-sm font-medium">
+                    Back to queue
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-3 w-[120px] rounded-[10px] text-graphite text-sm font-medium flex items-center justify-center cursor-wait">
+                    <svg class="animate-spin-custom h-4 w-4 text-graphite" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Danger Row -->
+              <tr>
+                <td class="py-4 px-6 font-medium text-ink bg-canvas/30">
+                  <div>Danger</div>
+                  <span class="text-[11px] font-normal text-graphite">Oxblood outline/fill</span>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-blush border border-blush-border text-oxblood text-sm font-medium hover:bg-[#FEE2E2] transition-colors">
+                    Reject
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-[#FEE2E2] border border-blush-border text-oxblood text-sm font-medium">
+                    Reject
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 rounded-[10px] bg-blush border border-blush-border text-oxblood text-sm font-medium custom-focus-ring">
+                    Reject
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" disabled class="h-10 px-4 rounded-[10px] bg-canvas border border-stone text-graphite-muted cursor-not-allowed text-sm font-medium">
+                    Reject
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="h-10 px-4 w-[76px] rounded-[10px] bg-blush border border-blush-border text-oxblood text-sm font-medium flex items-center justify-center cursor-wait">
+                    <svg class="animate-spin-custom h-4 w-4 text-oxblood" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Link Row -->
+              <tr>
+                <td class="py-4 px-6 font-medium text-ink bg-canvas/30">
+                  <div>Link</div>
+                  <span class="text-[11px] font-normal text-graphite">Connect Blue</span>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="text-sm font-medium text-connect hover:underline focus:outline-none">
+                    Check again
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="text-sm font-medium text-connect underline">
+                    Check again
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" class="text-sm font-medium text-connect custom-focus-ring px-1 rounded">
+                    Check again
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <button type="button" disabled class="text-sm font-medium text-graphite-muted cursor-not-allowed">
+                    Check again
+                  </button>
+                </td>
+                <td class="py-4 px-6">
+                  <span class="text-sm font-medium text-connect flex items-center gap-1.5 cursor-wait">
+                    <svg class="animate-spin-custom h-3.5 w-3.5 text-connect" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Checking...</span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Button Sizes Showcase Row -->
+        <div class="p-6 bg-linen/50 border-t border-stone flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <h3 class="text-xs font-semibold text-graphite uppercase tracking-wider mb-1">Scale & Responsive Form Factors</h3>
+            <p class="text-xs text-graphite-muted">Small (32px table/compact), Medium (40px desktop standard), Large (48px mobile primary button with 44px+ touch target)</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-4">
+            <!-- Small 32px -->
+            <div class="flex items-center gap-2">
+              <button type="button" class="h-8 px-3 rounded-[6px] bg-ink text-white text-xs font-medium hover:bg-ink-pressed">
+                Small (32px)
+              </button>
+            </div>
+            <!-- Medium 40px -->
+            <div class="flex items-center gap-2">
+              <button type="button" class="h-10 px-4 rounded-[10px] bg-ink text-white text-sm font-medium hover:bg-ink-pressed">
+                Medium (40px)
+              </button>
+            </div>
+            <!-- Large 48px Mobile CTA Preview -->
+            <div class="w-full md:w-64">
+              <button type="button" class="w-full h-12 px-5 rounded-[10px] bg-ink text-white text-base font-medium shadow-sm hover:bg-ink-pressed flex items-center justify-center">
+                Large (48px Mobile Full)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. FORM FIELDS SECTION -->
+    <section id="inputs" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">3. Form Fields & Controls</h2>
+          <p class="text-xs text-graphite">Label placed firmly above. Helper text below in Body small Graphite. Errors in Oxblood with icon replacing helper.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Standard height: 40px (Desktop) / 48px (Mobile)</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- 5 Text Input States -->
+        <div class="md:col-span-2 bg-surface border border-stone rounded-[14px] p-6 shadow-soft space-y-6">
+          <div class="flex items-center justify-between border-b border-stone pb-3">
+            <h3 class="text-sm font-semibold text-ink">Text Input — 5 Required States</h3>
+            <span class="text-xs text-graphite font-mono">10px radius • 1px border</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <!-- 1. Empty State with helper -->
+            <div>
+              <label class="block text-xs font-medium text-graphite mb-1.5">
+                Business PAN <span class="text-oxblood">*</span>
+              </label>
+              <input type="text" placeholder="e.g. AABCS1429B" class="w-full h-10 px-3.5 rounded-[10px] bg-white border border-field text-ink placeholder:text-graphite-muted text-sm focus:outline-none focus:border-connect focus:ring-2 focus:ring-connect/20">
+              <p class="text-xs text-graphite mt-1.5">Must be a valid 10-character alphanumeric Indian PAN.</p>
+            </div>
+
+            <!-- 2. Filled State -->
+            <div>
+              <label class="block text-xs font-medium text-graphite mb-1.5">
+                Business Legal Name <span class="text-oxblood">*</span>
+              </label>
+              <input type="text" value="Sample Traders Private Limited" class="w-full h-10 px-3.5 rounded-[10px] bg-white border border-field text-ink text-sm focus:outline-none focus:border-connect">
+              <p class="text-xs text-graphite mt-1.5">Matches Ministry of Corporate Affairs registration.</p>
+            </div>
+
+            <!-- 3. Focused State -->
+            <div>
+              <label class="block text-xs font-medium text-ink mb-1.5">
+                GSTIN Registration <span class="text-graphite-muted text-[11px]">(optional)</span>
+              </label>
+              <input type="text" value="27AABCU9603R1ZM" class="w-full h-10 px-3.5 rounded-[10px] bg-white border border-connect custom-focus-ring text-ink text-sm">
+              <p class="text-xs text-graphite mt-1.5">State code matches operating headquarters.</p>
+            </div>
+
+            <!-- 4. Error State (icon replaces helper) -->
+            <div>
+              <label class="block text-xs font-medium text-oxblood mb-1.5">
+                Registered Contact Mobile <span class="text-oxblood">*</span>
+              </label>
+              <div class="relative">
+                <input type="text" value="98765" class="w-full h-10 px-3.5 pr-10 rounded-[10px] bg-white border border-oxblood text-oxblood text-sm focus:outline-none">
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-oxblood">
+                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+              </div>
+              <p class="text-xs font-medium text-oxblood mt-1.5 flex items-center gap-1">
+                <span>Enter a valid 10-digit Indian phone number</span>
+              </p>
+            </div>
+
+            <!-- 5. Disabled State -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-graphite-muted mb-1.5">
+                System Identifier (Locked)
+              </label>
+              <input type="text" disabled value="ELK_TENANT_98410294" class="w-full h-10 px-3.5 rounded-[10px] bg-linen text-graphite border border-stone text-sm font-mono cursor-not-allowed">
+              <p class="text-xs text-graphite-muted mt-1.5">Assigned automatically by core banking service.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Select, Textarea, Radio & Checkbox -->
+        <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft space-y-5">
+          <div class="border-b border-stone pb-3">
+            <h3 class="text-sm font-semibold text-ink">Dropdowns & Compound Controls</h3>
+            <span class="text-xs text-graphite">Select, Textarea with Counter, Selectors</span>
+          </div>
+
+          <!-- Select Dropdown -->
+          <div>
+            <label class="block text-xs font-medium text-graphite mb-1.5">
+              Entity Classification <span class="text-oxblood">*</span>
+            </label>
+            <div class="relative">
+              <select class="w-full h-10 px-3.5 pr-10 rounded-[10px] bg-white border border-field text-ink text-sm appearance-none focus:outline-none focus:border-connect focus:ring-2 focus:ring-connect/20">
+                <option value="pvt">Private Limited Company</option>
+                <option value="llp">Limited Liability Partnership</option>
+                <option value="proprietorship">Sole Proprietorship</option>
+                <option value="partnership">Partnership Firm</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-graphite">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Textarea with Character Counter -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="block text-xs font-medium text-graphite">Applicant Note / Business Scope</label>
+              <span class="text-[11px] font-mono text-graphite-muted">0 / 1000</span>
+            </div>
+            <textarea rows="3" placeholder="Provide additional background regarding retail banking distribution..." class="w-full p-3 rounded-[10px] bg-white border border-field text-ink text-sm placeholder:text-graphite-muted focus:outline-none focus:border-connect"></textarea>
+          </div>
+
+          <!-- Checkbox and Radio Controls -->
+          <div class="space-y-3 pt-2 border-t border-stone">
+            <div>
+              <span class="block text-xs font-medium text-graphite mb-2">Entity Category (Radio Group)</span>
+              <div class="space-y-2">
+                <label class="flex items-center gap-2.5 text-xs text-ink cursor-pointer">
+                  <input type="radio" name="entity_cat" checked class="w-4 h-4 text-ink border-field focus:ring-connect">
+                  <span>Authorized Payment Intermediary</span>
+                </label>
+                <label class="flex items-center gap-2.5 text-xs text-ink cursor-pointer">
+                  <input type="radio" name="entity_cat" class="w-4 h-4 text-ink border-field focus:ring-connect">
+                  <span>Regional Cooperative Distributor</span>
+                </label>
+                <label class="flex items-center gap-2.5 text-xs text-ink cursor-pointer">
+                  <input type="radio" name="entity_cat" class="w-4 h-4 text-ink border-field focus:ring-connect">
+                  <span>Direct Enterprise Tenant</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <label class="flex items-start gap-2.5 text-xs text-ink cursor-pointer">
+                <input type="checkbox" checked class="w-4 h-4 rounded text-ink border-field mt-0.5 focus:ring-connect">
+                <span class="text-graphite leading-relaxed">I confirm under penalty of Indian law that all uploaded statutory proofs are genuine.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. OTP SECTION -->
+    <section id="otp" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">4. OTP Verification Module</h2>
+          <p class="text-xs text-graphite">Six individual square 48px boxes with auto-advancing visual cue, timer counter, and error states.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">6-digit SMS / Aadhaar OTP</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Default State with Timer -->
+        <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-medium text-graphite">Default State (In-progress entry)</span>
+              <span class="text-xs font-mono text-connect bg-connect-wash px-2 py-0.5 rounded">Active Focus</span>
+            </div>
+            <p class="text-sm font-semibold text-ink mb-1">Enter Verification Code</p>
+            <p class="text-xs text-graphite mb-5">Sent to signatory mobile number ending in <span class="font-mono font-medium text-ink">XXXXXX8102</span></p>
+
+            <!-- 6 Digit Boxes -->
+            <div class="flex items-center gap-2 sm:gap-3 mb-4">
+              <input type="text" maxlength="1" value="5" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-field bg-white text-ink focus:outline-none">
+              <input type="text" maxlength="1" value="2" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-field bg-white text-ink focus:outline-none">
+              <input type="text" maxlength="1" value="8" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-field bg-white text-ink focus:outline-none">
+              <input type="text" maxlength="1" value="" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border-2 border-connect bg-white text-ink custom-focus-ring">
+              <input type="text" maxlength="1" value="" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-field bg-white text-ink focus:outline-none">
+              <input type="text" maxlength="1" value="" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-field bg-white text-ink focus:outline-none">
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-stone flex items-center justify-between text-xs">
+            <span class="text-graphite">Didn't receive the SMS?</span>
+            <span class="font-medium text-graphite-muted">Resend code in <span class="font-mono text-ink font-semibold">0:28</span></span>
+          </div>
+        </div>
+
+        <!-- Error State with attempts left -->
+        <div class="bg-surface border border-blush-border rounded-[14px] p-6 shadow-soft flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-medium text-oxblood">Validation Error State</span>
+              <span class="text-xs font-mono text-oxblood bg-blush px-2 py-0.5 rounded border border-blush-border">Failed Match</span>
+            </div>
+            <p class="text-sm font-semibold text-ink mb-1">Enter Verification Code</p>
+            <p class="text-xs text-graphite mb-5">Sent to signatory mobile number ending in <span class="font-mono font-medium text-ink">XXXXXX8102</span></p>
+
+            <!-- 6 Digit Error Boxes -->
+            <div class="flex items-center gap-2 sm:gap-3 mb-4">
+              <input type="text" maxlength="1" value="4" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-oxblood bg-blush/40 text-oxblood focus:outline-none">
+              <input type="text" maxlength="1" value="9" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-oxblood bg-blush/40 text-oxblood focus:outline-none">
+              <input type="text" maxlength="1" value="1" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-oxblood bg-blush/40 text-oxblood focus:outline-none">
+              <input type="text" maxlength="1" value="0" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-oxblood bg-blush/40 text-oxblood focus:outline-none">
+              <input type="text" maxlength="1" value="2" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-oxblood bg-blush/40 text-oxblood focus:outline-none">
+              <input type="text" maxlength="1" value="7" class="w-12 h-12 text-center text-lg font-semibold tabular-nums rounded-[10px] border border-oxblood bg-blush/40 text-oxblood focus:outline-none">
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-blush-border/60 flex items-center justify-between text-xs">
+            <span class="text-oxblood font-medium flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+              Incorrect code — 2 attempts left
+            </span>
+            <button class="font-medium text-connect hover:underline">Resend now</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. STATUS PILLS SECTION -->
+    <section id="pills" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">5. Status Pills & Semantic Indicators</h2>
+          <p class="text-xs text-graphite">Height: 24px pill shape. 8px solid dot + sentence-case label. Always combined with text (never color alone).</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Label: 12px / 16px medium</span>
+      </div>
+
+      <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+
+          <!-- Neutral -->
+          <div class="space-y-3">
+            <span class="text-xs font-semibold text-graphite uppercase tracking-wider block">Neutral / Idle</span>
+            <div class="flex flex-col gap-2 items-start">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-linen text-graphite border border-stone">
+                <span class="w-2 h-2 rounded-full bg-graphite"></span>
+                Not started
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-linen text-graphite border border-stone">
+                <span class="w-2 h-2 rounded-full bg-graphite-muted"></span>
+                Skipped
+              </span>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="space-y-3">
+            <span class="text-xs font-semibold text-royal uppercase tracking-wider block">Info / Ongoing</span>
+            <div class="flex flex-col gap-2 items-start">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-ice text-royal border border-ice-border">
+                <span class="w-2 h-2 rounded-full bg-royal animate-pulse"></span>
+                In progress
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-ice text-royal border border-ice-border">
+                <span class="w-2 h-2 rounded-full bg-royal"></span>
+                Submitted
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-ice text-royal border border-ice-border">
+                <span class="w-2 h-2 rounded-full bg-royal"></span>
+                Under review
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-ice text-royal border border-ice-border">
+                <span class="w-2 h-2 rounded-full bg-royal"></span>
+                Checking
+              </span>
+            </div>
+          </div>
+
+          <!-- Warning -->
+          <div class="space-y-3">
+            <span class="text-xs font-semibold text-umber uppercase tracking-wider block">Warning / Action</span>
+            <div class="flex flex-col gap-2 items-start">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cream text-umber border border-cream-border">
+                <span class="w-2 h-2 rounded-full bg-umber"></span>
+                Correction required
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cream text-umber border border-cream-border">
+                <span class="w-2 h-2 rounded-full bg-umber"></span>
+                On hold
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-cream text-umber border border-cream-border">
+                <span class="w-2 h-2 rounded-full bg-umber"></span>
+                Needs review
+              </span>
+            </div>
+          </div>
+
+          <!-- Success -->
+          <div class="space-y-3">
+            <span class="text-xs font-semibold text-forest uppercase tracking-wider block">Success / Done</span>
+            <div class="flex flex-col gap-2 items-start">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-mint-mist text-forest border border-mint-border">
+                <span class="w-2 h-2 rounded-full bg-forest"></span>
+                Completed
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-mint-mist text-forest border border-mint-border">
+                <span class="w-2 h-2 rounded-full bg-forest"></span>
+                Verified
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-mint-mist text-forest border border-mint-border">
+                <span class="w-2 h-2 rounded-full bg-forest"></span>
+                Approved
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-mint-mist text-forest border border-mint-border">
+                <span class="w-2 h-2 rounded-full bg-forest"></span>
+                Signed
+              </span>
+            </div>
+          </div>
+
+          <!-- Danger -->
+          <div class="space-y-3">
+            <span class="text-xs font-semibold text-oxblood uppercase tracking-wider block">Danger / Blocked</span>
+            <div class="flex flex-col gap-2 items-start">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blush text-oxblood border border-blush-border">
+                <span class="w-2 h-2 rounded-full bg-oxblood"></span>
+                Failed
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blush text-oxblood border border-blush-border">
+                <span class="w-2 h-2 rounded-full bg-oxblood"></span>
+                Rejected
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blush text-oxblood border border-blush-border">
+                <span class="w-2 h-2 rounded-full bg-oxblood"></span>
+                Expired
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blush text-oxblood border border-blush-border">
+                <span class="w-2 h-2 rounded-full bg-oxblood"></span>
+                Withdrawn
+              </span>
+            </div>
+          </div>
+
+          <!-- Locked / Special -->
+          <div class="space-y-3">
+            <span class="text-xs font-semibold text-graphite uppercase tracking-wider block">Gated / Locked</span>
+            <div class="flex flex-col gap-2 items-start">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-linen text-graphite border border-stone">
+                <svg class="w-3 h-3 text-graphite" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                </svg>
+                Locked
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. CARDS SECTION -->
+    <section id="cards" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">6. Section Card Architecture</h2>
+          <p class="text-xs text-graphite">White surface, Hairline Stone outline, 14px rounded corners, 24px desktop padding. Structured Header, Body & Action Footer.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">2-Column Key/Value Grid</span>
+      </div>
+
+      <div class="max-w-3xl bg-surface border border-stone rounded-[14px] shadow-soft overflow-hidden">
+        <!-- Card Header -->
+        <div class="px-6 py-4.5 border-b border-stone flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <h3 class="text-base font-semibold text-ink">Entity Verification Summary</h3>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-mint-mist text-forest border border-mint-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-forest"></span>
+              Verified
+            </span>
+          </div>
+          <button type="button" class="text-xs font-medium text-connect hover:underline flex items-center gap-1">
+            <span>Edit details</span>
+          </button>
+        </div>
+
+        <!-- Card Body (Two-column Label/Value) -->
+        <div class="p-6">
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+            <div>
+              <dt class="text-xs font-medium text-graphite">Business name</dt>
+              <dd class="mt-1 font-medium text-ink">Sample Traders Private Limited</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium text-graphite">Entity type</dt>
+              <dd class="mt-1 font-medium text-ink">Private Limited Company (CIN registered)</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium text-graphite">PAN (Permanent Account Number)</dt>
+              <dd class="mt-1 flex items-center gap-2">
+                <span class="font-mono text-sm px-2 py-0.5 bg-linen rounded border border-stone text-ink">XXXXX1234X</span>
+                <span class="text-[11px] text-forest font-medium">✓ NSDL Validated</span>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium text-graphite">CIN / Registration No.</dt>
+              <dd class="mt-1 font-mono text-sm text-ink">U72900MH2021PTC364918</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium text-graphite">Authorized Signatory</dt>
+              <dd class="mt-1 font-medium text-ink">Vikramaditya S. Rathore (Director)</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium text-graphite">Registered State / Pincode</dt>
+              <dd class="mt-1 font-medium text-ink">Maharashtra — 400051</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="px-6 py-4 bg-linen/50 border-t border-stone flex items-center justify-between">
+          <span class="text-xs text-graphite-muted">Last updated: 21 Oct 2026, 11:20 AM</span>
+          <div class="flex items-center gap-3">
+            <button type="button" class="h-9 px-4 rounded-[10px] bg-white border border-field text-ink text-xs font-medium hover:bg-linen">
+              Download summary
+            </button>
+            <button type="button" class="h-9 px-4 rounded-[10px] bg-ink text-white text-xs font-medium hover:bg-ink-pressed">
+              Confirm & proceed
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. DOCUMENT TILE SECTION -->
+    <section id="docs" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">7. Document Tiles</h2>
+          <p class="text-xs text-graphite">Stacked document rows with metadata, status pills, reviewer note strips for rejections, and contextual actions.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Applicant Document Management</span>
+      </div>
+
+      <div class="space-y-3">
+        <!-- 1. Address proof (Waiting for review) -->
+        <div class="bg-surface border border-stone rounded-[14px] p-4.5 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-[8px] bg-linen border border-stone flex items-center justify-center text-graphite flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h4 class="text-sm font-semibold text-ink">Address proof</h4>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-ice text-royal border border-ice-border">
+                  <span class="w-1.5 h-1.5 rounded-full bg-royal"></span>
+                  Waiting for review
+                </span>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-graphite mt-0.5">
+                <span class="font-mono">address-proof.pdf</span>
+                <span>•</span>
+                <span class="tabular-nums">1.2 MB</span>
+                <span>•</span>
+                <span>Uploaded 21 Oct</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-xs self-end md:self-auto">
+            <button type="button" class="text-connect font-medium hover:underline">View</button>
+            <span class="text-stone">|</span>
+            <button type="button" class="text-graphite font-medium hover:text-ink">Replace</button>
+            <span class="text-stone">|</span>
+            <button type="button" class="text-oxblood font-medium hover:underline">Remove</button>
+          </div>
+        </div>
+
+        <!-- 2. Incorporation certificate (Verified) -->
+        <div class="bg-surface border border-stone rounded-[14px] p-4.5 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-[8px] bg-mint-mist border border-mint-border flex items-center justify-center text-forest flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h4 class="text-sm font-semibold text-ink">Incorporation certificate</h4>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-mint-mist text-forest border border-mint-border">
+                  <span class="w-1.5 h-1.5 rounded-full bg-forest"></span>
+                  Verified
+                </span>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-graphite mt-0.5">
+                <span class="font-mono">mca-certificate-coi.pdf</span>
+                <span>•</span>
+                <span class="tabular-nums">3.4 MB</span>
+                <span>•</span>
+                <span>Verified via MCA portal</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-xs self-end md:self-auto">
+            <button type="button" class="text-connect font-medium hover:underline">View original</button>
+          </div>
+        </div>
+
+        <!-- 3. Bank proof (Rejected with Reviewer note strip) -->
+        <div class="bg-surface border border-blush-border rounded-[14px] p-4.5 shadow-soft space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-[8px] bg-blush border border-blush-border flex items-center justify-center text-oxblood flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2.5">
+                  <h4 class="text-sm font-semibold text-ink">Bank proof (Cancelled Cheque)</h4>
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-blush text-oxblood border border-blush-border">
+                    <span class="w-1.5 h-1.5 rounded-full bg-oxblood"></span>
+                    Rejected
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-graphite mt-0.5">
+                  <span class="font-mono">cancelled-cheque-scan.jpeg</span>
+                  <span>•</span>
+                  <span class="tabular-nums">840 KB</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 text-xs self-end md:self-auto">
+              <button type="button" class="h-8 px-3 rounded-[6px] bg-ink text-white font-medium hover:bg-ink-pressed">
+                Upload new copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Highlighted Reviewer Note Strip -->
+          <div class="bg-blush border-l-4 border-oxblood p-3 rounded-r-[8px] text-xs text-oxblood flex items-start gap-2.5">
+            <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            <div>
+              <span class="font-semibold">Reviewer note:</span> Image is blurred, account number and IFSC are not legible. Please upload a clearer copy or original e-statement.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. PROGRESS & STEP RAIL SECTION -->
+    <section id="progress" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">8. Progress Navigation: Rail & Mobile Bar</h2>
+          <p class="text-xs text-graphite">280px desktop vertical rail across 13 onboarding steps alongside the compact mobile counterpart.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Step 4 of 13 active state</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Desktop 280px Vertical Rail -->
+        <div class="lg:col-span-5 bg-surface border border-stone rounded-[14px] p-5 shadow-soft">
+          <div class="flex items-center justify-between pb-3 border-b border-stone mb-4">
+            <span class="text-xs font-semibold text-graphite uppercase tracking-wider">Applicant 13-Step Rail (Desktop)</span>
+            <span class="text-xs font-mono text-connect font-medium">3 / 13 Done</span>
+          </div>
+
+          <div class="relative pl-2">
+            <!-- Continuous vertical spine line -->
+            <div class="absolute left-[19px] top-4 bottom-4 w-[2px] bg-stone"></div>
+
+            <ul class="space-y-3.5 relative text-xs">
+              <!-- Step 1 (Completed) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-forest text-white flex items-center justify-center z-10 flex-shrink-0">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </span>
+                <span class="text-graphite font-medium">1. Mobile authentication</span>
+              </li>
+
+              <!-- Step 2 (Completed) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-forest text-white flex items-center justify-center z-10 flex-shrink-0">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </span>
+                <span class="text-graphite font-medium">2. Consent & Privacy terms</span>
+              </li>
+
+              <!-- Step 3 (Completed) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-forest text-white flex items-center justify-center z-10 flex-shrink-0">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </span>
+                <span class="text-graphite font-medium">3. Program selection</span>
+              </li>
+
+              <!-- Step 4 (Current / Active Step) -->
+              <li class="flex items-center gap-3 bg-connect-wash -mx-3 px-3 py-1.5 rounded-lg border-l-4 border-connect">
+                <span class="w-6 h-6 rounded-full bg-connect text-white flex items-center justify-center font-bold text-[11px] z-10 flex-shrink-0">
+                  4
+                </span>
+                <div class="flex-1">
+                  <span class="text-ink font-semibold block text-sm">4. Business PAN</span>
+                  <span class="text-[11px] text-connect">NSDL real-time verification</span>
+                </div>
+              </li>
+
+              <!-- Step 5 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">5</span>
+                <span class="text-graphite-muted">5. Business details</span>
+              </li>
+
+              <!-- Step 6 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">6</span>
+                <span class="text-graphite-muted">6. Email verification</span>
+              </li>
+
+              <!-- Step 7 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">7</span>
+                <span class="text-graphite-muted">7. Signatory KYC</span>
+              </li>
+
+              <!-- Step 8 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">8</span>
+                <span class="text-graphite-muted">8. Live photo (Liveness)</span>
+              </li>
+
+              <!-- Step 9 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">9</span>
+                <span class="text-graphite-muted">9. Documents upload</span>
+              </li>
+
+              <!-- Step 10 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">10</span>
+                <span class="text-graphite-muted">10. Bank account (Penny drop)</span>
+              </li>
+
+              <!-- Step 11 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">11</span>
+                <span class="text-graphite-muted">11. White-label setup</span>
+              </li>
+
+              <!-- Step 12 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">12</span>
+                <span class="text-graphite-muted">12. Declaration</span>
+              </li>
+
+              <!-- Step 13 (Pending) -->
+              <li class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-linen border border-stone text-graphite flex items-center justify-center font-medium text-[11px] z-10 flex-shrink-0">13</span>
+                <span class="text-graphite-muted">13. Digital Agreement</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Mobile Compact Progress Header (Simulated Mobile Viewport) -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft">
+            <span class="text-xs font-semibold text-graphite uppercase tracking-wider block mb-3">Compact Mobile Progress Bar Preview</span>
+            <p class="text-xs text-graphite mb-4">Collapsed header displayed on mobile touchscreens under 768px viewports.</p>
+
+            <!-- Mobile Bar Component -->
+            <div class="border border-stone rounded-[12px] bg-canvas p-4 max-w-sm">
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-ink">Step 4 of 13</span>
+                <span class="font-medium text-graphite">31% complete</span>
+              </div>
+              <p class="text-xs text-ink font-medium mb-2.5">Business PAN Verification</p>
+              
+              <!-- Thin Connect Blue Progress line -->
+              <div class="w-full h-1.5 bg-stone rounded-full overflow-hidden">
+                <div class="bg-connect h-full rounded-full transition-all duration-300" style="width: 31%;"></div>
+              </div>
+
+              <div class="mt-3 flex items-center justify-between text-[11px] text-graphite-muted">
+                <span>Next: Business details</span>
+                <button class="text-connect font-medium hover:underline">View all steps</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Touch Target Documentation Box -->
+          <div class="bg-linen border border-stone rounded-[14px] p-5 text-xs text-graphite space-y-2">
+            <h4 class="font-semibold text-ink flex items-center gap-2">
+              <svg class="w-4 h-4 text-connect" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              Mobile Touch Accessibility Standard
+            </h4>
+            <p>All interactive tap zones (primary mobile action footer, form selectors, and table toggles) enforce a minimum <strong>44 × 44px</strong> hit area with full-width sticky footer layout.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 9. REVIEW QUEUE TABLE SECTION -->
+    <section id="table" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">9. Review Queue Data Table</h2>
+          <p class="text-xs text-graphite">Desktop staff queue with integrated filter bar, tabular figures, hover row states, and "Load more" trigger.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Staff Review Console</span>
+      </div>
+
+      <div class="bg-surface border border-stone rounded-[14px] shadow-soft overflow-hidden">
+        
+        <!-- Filter Bar -->
+        <div class="p-4 bg-linen/40 border-b border-stone flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Search Input -->
+            <div class="relative w-64">
+              <input type="text" placeholder="Search application, PAN, company..." class="w-full h-9 pl-9 pr-3 rounded-[8px] bg-white border border-field text-xs text-ink placeholder:text-graphite-muted focus:outline-none focus:border-connect">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-graphite">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+            </div>
+
+            <!-- Status Dropdown -->
+            <select class="h-9 px-3 rounded-[8px] bg-white border border-field text-xs text-ink focus:outline-none">
+              <option>All Statuses (142)</option>
+              <option>Submitted</option>
+              <option>Under review</option>
+              <option>Correction required</option>
+              <option>Approved</option>
+            </select>
+
+            <!-- Assigned to me toggle -->
+            <label class="flex items-center gap-2 text-xs font-medium text-ink cursor-pointer bg-white px-3 h-9 rounded-[8px] border border-stone">
+              <input type="checkbox" class="w-3.5 h-3.5 rounded text-ink border-field focus:ring-connect">
+              <span>Assigned to me</span>
+            </label>
+          </div>
+
+          <div class="text-xs text-graphite flex items-center gap-2">
+            <span>Showing <span class="font-semibold text-ink tabular-nums">4</span> of <span class="font-semibold text-ink tabular-nums">142</span> applications</span>
+          </div>
+        </div>
+
+        <!-- Full-width Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-stone text-graphite bg-linen uppercase tracking-wider text-[11px] font-semibold">
+                <th class="py-3 px-5">Application</th>
+                <th class="py-3 px-5">Company</th>
+                <th class="py-3 px-5">Entity Type</th>
+                <th class="py-3 px-5">Status</th>
+                <th class="py-3 px-5">Submitted</th>
+                <th class="py-3 px-5">Assigned To</th>
+                <th class="py-3 px-5 text-center">Flags</th>
+                <th class="py-3 px-5 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone">
+              <!-- Row 1 -->
+              <tr class="hover:bg-linen/60 transition-colors">
+                <td class="py-3.5 px-5 font-mono font-medium text-ink">onb_7Q2K</td>
+                <td class="py-3.5 px-5 font-medium text-ink">Sample Traders Pvt Ltd</td>
+                <td class="py-3.5 px-5 text-graphite">Private Limited</td>
+                <td class="py-3.5 px-5">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-ice text-royal border border-ice-border">
+                    <span class="w-1.5 h-1.5 rounded-full bg-royal"></span>
+                    Submitted
+                  </span>
+                </td>
+                <td class="py-3.5 px-5 tabular-nums text-graphite">21 Oct 2026</td>
+                <td class="py-3.5 px-5 text-graphite-muted">Unassigned</td>
+                <td class="py-3.5 px-5 text-center">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-cream text-umber font-mono text-[11px] font-semibold border border-cream-border">1</span>
+                </td>
+                <td class="py-3.5 px-5 text-right">
+                  <button class="text-xs text-connect font-medium hover:underline">Review case</button>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="hover:bg-linen/60 transition-colors">
+                <td class="py-3.5 px-5 font-mono font-medium text-ink">onb_9M4P</td>
+                <td class="py-3.5 px-5 font-medium text-ink">Bharat Gramin Pay Solutions</td>
+                <td class="py-3.5 px-5 text-graphite">LLP</td>
+                <td class="py-3.5 px-5">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-ice text-royal border border-ice-border">
+                    <span class="w-1.5 h-1.5 rounded-full bg-royal animate-pulse"></span>
+                    Under review
+                  </span>
+                </td>
+                <td class="py-3.5 px-5 tabular-nums text-graphite">20 Oct 2026</td>
+                <td class="py-3.5 px-5 text-ink font-medium">Ananya Roy</td>
+                <td class="py-3.5 px-5 text-center">
+                  <span class="text-graphite-muted font-mono">—</span>
+                </td>
+                <td class="py-3.5 px-5 text-right">
+                  <button class="text-xs text-connect font-medium hover:underline">Continue</button>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="hover:bg-linen/60 transition-colors">
+                <td class="py-3.5 px-5 font-mono font-medium text-ink">onb_3V8R</td>
+                <td class="py-3.5 px-5 font-medium text-ink">Kalyani Retail Fin-Network</td>
+                <td class="py-3.5 px-5 text-graphite">Sole Proprietorship</td>
+                <td class="py-3.5 px-5">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-cream text-umber border border-cream-border">
+                    <span class="w-1.5 h-1.5 rounded-full bg-umber"></span>
+                    Correction required
+                  </span>
+                </td>
+                <td class="py-3.5 px-5 tabular-nums text-graphite">19 Oct 2026</td>
+                <td class="py-3.5 px-5 text-ink font-medium">Rajesh Verma</td>
+                <td class="py-3.5 px-5 text-center">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blush text-oxblood font-mono text-[11px] font-semibold border border-blush-border">2</span>
+                </td>
+                <td class="py-3.5 px-5 text-right">
+                  <button class="text-xs text-connect font-medium hover:underline">View issues</button>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr class="hover:bg-linen/60 transition-colors">
+                <td class="py-3.5 px-5 font-mono font-medium text-ink">onb_1X5T</td>
+                <td class="py-3.5 px-5 font-medium text-ink">Narmada Digital Kendra</td>
+                <td class="py-3.5 px-5 text-graphite">Partnership Firm</td>
+                <td class="py-3.5 px-5">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-mint-mist text-forest border border-mint-border">
+                    <span class="w-1.5 h-1.5 rounded-full bg-forest"></span>
+                    Approved
+                  </span>
+                </td>
+                <td class="py-3.5 px-5 tabular-nums text-graphite">18 Oct 2026</td>
+                <td class="py-3.5 px-5 text-ink font-medium">Ananya Roy</td>
+                <td class="py-3.5 px-5 text-center">
+                  <span class="text-graphite-muted font-mono">—</span>
+                </td>
+                <td class="py-3.5 px-5 text-right">
+                  <button class="text-xs text-graphite font-medium hover:text-ink">View summary</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table Footer: Load More Action -->
+        <div class="p-4 bg-canvas border-t border-stone flex items-center justify-center">
+          <button type="button" class="h-9 px-5 rounded-[10px] bg-white border border-field text-ink text-xs font-medium hover:bg-linen flex items-center gap-2">
+            <span>Load more applications</span>
+            <svg class="w-3.5 h-3.5 text-graphite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 10. FEEDBACK, DIALOGS, & STATES SECTION -->
+    <section id="feedback" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">10. Feedback States, Overlays & Modals</h2>
+          <p class="text-xs text-graphite">Confirmation dialog, empty state, error fallback, pending provider check, skeleton loader, and inverse dark toast.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">System Dialog & Notification Patterns</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+        <!-- 1. Confirmation Dialog: Reject Application -->
+        <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-dialog space-y-5">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-blush border border-blush-border flex items-center justify-center text-oxblood flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <div>
+                <h3 class="text-base font-semibold text-ink">Reject application</h3>
+                <p class="text-xs text-graphite">This will halt onboarding for <span class="font-mono text-ink">onb_7Q2K</span></p>
+              </div>
+            </div>
+            <button class="text-graphite-muted hover:text-ink">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="space-y-4 text-xs">
+            <!-- Required Reason Select -->
+            <div>
+              <label class="block font-medium text-graphite mb-1.5">
+                Rejection reason <span class="text-oxblood">*</span>
+              </label>
+              <select class="w-full h-10 px-3 rounded-[10px] bg-white border border-field text-ink text-xs focus:outline-none focus:border-oxblood">
+                <option>Fraudulent or invalid KYC documentation</option>
+                <option>Entity PAN mismatch with MCA registration</option>
+                <option>Restricted industry category</option>
+                <option>Applicant requested cancellation</option>
+              </select>
+            </div>
+
+            <!-- Message to Applicant -->
+            <div>
+              <label class="block font-medium text-graphite mb-1.5">
+                Message to applicant (visible in portal) <span class="text-oxblood">*</span>
+              </label>
+              <textarea rows="2" class="w-full p-2.5 rounded-[10px] bg-white border border-field text-ink text-xs focus:outline-none" placeholder="Explain what failed and next steps..."></textarea>
+            </div>
+
+            <!-- Internal Note -->
+            <div>
+              <label class="block font-medium text-graphite mb-1.5">
+                Internal compliance note (Eko staff only)
+              </label>
+              <textarea rows="2" class="w-full p-2.5 rounded-[10px] bg-white border border-field text-ink text-xs focus:outline-none" placeholder="Log internal audit verification findings..."></textarea>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-stone flex items-center justify-end gap-3">
+            <button type="button" class="h-9 px-4 rounded-[10px] bg-white border border-field text-ink text-xs font-medium hover:bg-linen">
+              Cancel
+            </button>
+            <button type="button" class="h-9 px-4 rounded-[10px] bg-oxblood text-white text-xs font-medium hover:bg-[#7F1D1D] shadow-sm">
+              Reject application
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. System States Grid (Empty, Error, Provider Check, Skeleton, Toast) -->
+        <div class="space-y-6">
+
+          <!-- Dark Toast: Saved -->
+          <div class="flex items-center justify-between p-3.5 bg-ink text-white rounded-[10px] shadow-toast">
+            <div class="flex items-center gap-2.5 text-xs font-medium">
+              <svg class="w-4 h-4 text-mint-border" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Application draft changes saved successfully</span>
+            </div>
+            <button class="text-xs text-graphite-muted hover:text-white">Dismiss</button>
+          </div>
+
+          <!-- Pending Check Card -->
+          <div class="bg-ice border border-ice-border rounded-[14px] p-4.5 flex items-start justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <div class="w-5 h-5 mt-0.5 rounded-full border-2 border-royal border-t-transparent animate-spin flex-shrink-0"></div>
+              <div>
+                <h4 class="text-xs font-semibold text-royal">We're checking with the provider</h4>
+                <p class="text-xs text-graphite mt-0.5">Contacting the National Payments Corporation of India (NPCI) for bank account IFSC verification.</p>
+              </div>
+            </div>
+            <button class="text-xs font-medium text-connect hover:underline flex-shrink-0">Check again</button>
+          </div>
+
+          <!-- Empty State -->
+          <div class="bg-surface border border-stone rounded-[14px] p-6 text-center space-y-2">
+            <div class="w-10 h-10 mx-auto rounded-full bg-linen border border-stone flex items-center justify-center text-graphite">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h4 class="text-sm font-semibold text-ink">No applications match these filters</h4>
+            <p class="text-xs text-graphite max-w-xs mx-auto">Try widening your date range or clearing the selected search query.</p>
+            <div class="pt-2">
+              <button class="h-8 px-3 rounded-[6px] bg-white border border-field text-ink text-xs font-medium hover:bg-linen">Clear filters</button>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div class="bg-blush border border-blush-border rounded-[14px] p-4.5 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-white border border-blush-border flex items-center justify-center text-oxblood flex-shrink-0">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              </div>
+              <div>
+                <h4 class="text-xs font-semibold text-oxblood">Something went wrong</h4>
+                <p class="text-xs text-graphite">NSDL network timeout during verification. Your application is saved.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="h-8 px-3 rounded-[6px] bg-white border border-blush-border text-oxblood text-xs font-medium hover:bg-linen">Try again</button>
+              <button class="text-xs text-graphite hover:underline">Details</button>
+            </div>
+          </div>
+
+          <!-- Skeleton Loader -->
+          <div class="bg-surface border border-stone rounded-[14px] p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="h-4 bg-stone rounded w-32 skeleton-bar"></div>
+              <div class="h-4 bg-stone rounded w-16 skeleton-bar"></div>
+            </div>
+            <div class="space-y-2 pt-2">
+              <div class="h-3 bg-linen rounded w-full skeleton-bar"></div>
+              <div class="h-3 bg-linen rounded w-5/6 skeleton-bar"></div>
+              <div class="h-3 bg-linen rounded w-2/3 skeleton-bar"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 11. TIMELINE SECTION -->
+    <section id="timeline" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">11. Audit Timeline</h2>
+          <p class="text-xs text-graphite">Chronological event log with timestamp on the left in tabular graphite, node dots, and status pills.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Immutable Audit Trail</span>
+      </div>
+
+      <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft max-w-2xl">
+        <div class="relative pl-6 sm:pl-32 space-y-8">
+          <!-- Timeline Vertical Spine -->
+          <div class="absolute left-2 sm:left-28 top-2 bottom-2 w-[1px] bg-stone"></div>
+
+          <!-- Event 1: Resubmitted -->
+          <div class="relative flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+            <div class="sm:w-24 text-right text-xs tabular-nums text-graphite font-mono">21 Oct, 11:15</div>
+            <div class="absolute left-[-21px] sm:left-[-21px] top-1 w-2.5 h-2.5 rounded-full bg-connect ring-4 ring-canvas"></div>
+            <div class="flex-1 bg-linen/50 p-3 rounded-[8px] border border-stone">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-ink">Resubmitted</span>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-ice text-royal border border-ice-border">Under review</span>
+              </div>
+              <p class="text-xs text-graphite mt-1">Applicant replaced rejected cancelled cheque with high-resolution bank passbook scan.</p>
+            </div>
+          </div>
+
+          <!-- Event 2: Correction requested -->
+          <div class="relative flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+            <div class="sm:w-24 text-right text-xs tabular-nums text-graphite font-mono">21 Oct, 10:42</div>
+            <div class="absolute left-[-21px] sm:left-[-21px] top-1 w-2.5 h-2.5 rounded-full bg-umber ring-4 ring-canvas"></div>
+            <div class="flex-1 bg-canvas p-3 rounded-[8px] border border-stone">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-ink">Correction requested</span>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-cream text-umber border border-cream-border">Correction</span>
+              </div>
+              <p class="text-xs text-graphite mt-1">Reviewer flagged blurred cheque image. Email notification dispatched to applicant.</p>
+            </div>
+          </div>
+
+          <!-- Event 3: Reviewer assigned -->
+          <div class="relative flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+            <div class="sm:w-24 text-right text-xs tabular-nums text-graphite font-mono">21 Oct, 09:15</div>
+            <div class="absolute left-[-21px] sm:left-[-21px] top-1 w-2.5 h-2.5 rounded-full bg-graphite ring-4 ring-canvas"></div>
+            <div class="flex-1 bg-canvas p-3 rounded-[8px] border border-stone">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-ink">Reviewer assigned</span>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-ice text-royal border border-ice-border">In progress</span>
+              </div>
+              <p class="text-xs text-graphite mt-1">Application claimed from queue by staff member <span class="font-medium text-ink">Rajesh Verma</span>.</p>
+            </div>
+          </div>
+
+          <!-- Event 4: Application submitted -->
+          <div class="relative flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+            <div class="sm:w-24 text-right text-xs tabular-nums text-graphite font-mono">20 Oct, 18:30</div>
+            <div class="absolute left-[-21px] sm:left-[-21px] top-1 w-2.5 h-2.5 rounded-full bg-forest ring-4 ring-canvas"></div>
+            <div class="flex-1 bg-canvas p-3 rounded-[8px] border border-stone">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-ink">Application submitted</span>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-mint-mist text-forest border border-mint-border">Completed</span>
+              </div>
+              <p class="text-xs text-graphite mt-1">Applicant completed 13/13 onboarding steps and verified digital signature via Aadhaar e-Sign.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. MASKED VALUES SECTION -->
+    <section id="masked" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-stone pb-3">
+        <div>
+          <h2 class="text-lg font-semibold tracking-tight text-ink">12. Masked Financial Values</h2>
+          <p class="text-xs text-graphite">PII and banking secrecy tokens (PAN, Aadhaar, Account Numbers) displayed with copy and reveal actions.</p>
+        </div>
+        <span class="text-xs font-mono text-graphite">Data Privacy & Security</span>
+      </div>
+
+      <div class="bg-surface border border-stone rounded-[14px] p-6 shadow-soft">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <!-- Masked Chip 1: PAN -->
+          <div class="p-4 bg-linen/50 rounded-[10px] border border-stone space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-medium text-graphite">Signatory PAN</span>
+              <span class="text-[11px] text-graphite-muted">Masked (10 chars)</span>
+            </div>
+            <div class="flex items-center justify-between bg-white px-3 py-2 rounded-[8px] border border-stone">
+              <span class="font-mono text-sm tracking-wider font-semibold text-ink tabular-nums">XXXXX1234X</span>
+              <div class="flex items-center gap-2">
+                <button type="button" title="Copy masked value" class="p-1 text-graphite hover:text-ink transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </button>
+                <button type="button" class="text-xs font-medium text-connect hover:underline">Reveal</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Masked Chip 2: Bank Account Number -->
+          <div class="p-4 bg-linen/50 rounded-[10px] border border-stone space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-medium text-graphite">Settlement Account</span>
+              <span class="text-[11px] text-graphite-muted">HDFC Bank Ltd</span>
+            </div>
+            <div class="flex items-center justify-between bg-white px-3 py-2 rounded-[8px] border border-stone">
+              <span class="font-mono text-sm tracking-wider font-semibold text-ink tabular-nums">XXXXXX4321</span>
+              <div class="flex items-center gap-2">
+                <button type="button" title="Copy masked value" class="p-1 text-graphite hover:text-ink transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </button>
+                <button type="button" class="text-xs font-medium text-connect hover:underline">Reveal</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Masked Chip 3: Aadhaar Virtual ID -->
+          <div class="p-4 bg-linen/50 rounded-[10px] border border-stone space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-medium text-graphite">Aadhaar UID / VID</span>
+              <span class="text-[11px] text-graphite-muted">UIDAI e-KYC</span>
+            </div>
+            <div class="flex items-center justify-between bg-white px-3 py-2 rounded-[8px] border border-stone">
+              <span class="font-mono text-sm tracking-wider font-semibold text-ink tabular-nums">XXXXXX3210</span>
+              <div class="flex items-center gap-2">
+                <button type="button" title="Copy masked value" class="p-1 text-graphite hover:text-ink transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </button>
+                <button type="button" class="text-xs font-medium text-connect hover:underline">Reveal</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER REFERENCE SIGN-OFF -->
+    <footer class="pt-10 border-t border-stone flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-graphite">
+      <div>
+        <p class="font-medium text-ink">ELOKA Platform Design System — Component Specification Sheet</p>
+        <p class="text-graphite-muted mt-0.5">Built strictly following the ELOKA Design System (Quiet Authority, 4px grid, Inter font, tabular figures).</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#buttons" class="hover:text-ink">Back to top ↑</a>
+      </div>
+    </footer>
+
+  </main>
+
+</body>
+</html>

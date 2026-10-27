@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA - Mobile Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#f9f9f6",
+            "on-secondary-container": "#001a88",
+            "on-primary-fixed": "#1c1b1b",
+            "surface-container": "#eeeeeb",
+            "secondary-fixed": "#dee0ff",
+            "primary": "#000000",
+            "surface-dim": "#dadad7",
+            "on-background": "#1a1c1b",
+            "inverse-primary": "#c9c6c5",
+            "surface-container-high": "#e8e8e5",
+            "surface-bright": "#f9f9f6",
+            "primary-fixed": "#e5e2e1",
+            "error-container": "#ffdad6",
+            "background": "#f9f9f6",
+            "outline": "#747878",
+            "secondary-container": "#778afd",
+            "on-surface": "#1a1c1b",
+            "on-primary-fixed-variant": "#474646",
+            "surface-variant": "#e2e3e0",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-primary-container": "#858383",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c4c7c7",
+            "on-tertiary-container": "#84847e",
+            "tertiary": "#000000",
+            "on-tertiary-fixed": "#1b1c18",
+            "secondary": "#4053c4",
+            "inverse-surface": "#2f312f",
+            "tertiary-container": "#1b1c18",
+            "on-tertiary-fixed-variant": "#474742",
+            "inverse-on-surface": "#f1f1ee",
+            "error": "#ba1a1a",
+            "primary-fixed-dim": "#c9c6c5",
+            "surface-container-highest": "#e2e3e0",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-tint": "#5f5e5e",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f4f4f1",
+            "on-secondary-fixed": "#000f5d",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-surface-variant": "#444748",
+            "primary-container": "#1c1b1b",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "space-sm": "8px",
+            "space-xs": "4px",
+            "space-2xl": "32px",
+            "space-3xl": "48px",
+            "space-lg": "16px",
+            "space-xl": "24px",
+            "space-md": "12px",
+            "space-4xl": "64px"
+          },
+          "fontFamily": {
+            "h1": ["Inter"],
+            "display": ["Inter"],
+            "body-sm": ["Inter"],
+            "label": ["Inter"],
+            "display-mobile": ["Inter"],
+            "h3": ["Inter"],
+            "h2": ["Inter"],
+            "body": ["Inter"]
+          },
+          "fontSize": {
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-background font-body antialiased min-h-screen flex flex-col items-center justify-start py-space-2xl px-space-gutter">
+<div class="w-full max-w-[640px] flex flex-col gap-space-3xl">
+<!-- FRAME A — Mobile number -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-space-xl shadow-sm flex flex-col gap-space-xl">
+<!-- Top Bar -->
+<div class="flex justify-between items-center w-full px-0 h-16 bg-surface dark:bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-space-md">
+<button aria-label="Back" class="text-on-surface p-space-xs rounded hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="font-h1 text-h1 text-primary dark:text-inverse-primary">ELOKA</span>
+</div>
+<div>
+<a class="text-body-sm font-medium" href="#" style="color: #11299E;">Help</a>
+</div>
+</div>
+<!-- Chip -->
+<div class="flex items-center justify-between bg-surface-container-low px-space-md py-space-sm rounded-full w-fit gap-space-md border border-outline-variant">
+<span class="text-body-sm text-on-surface-variant">Applying with DigiLocker</span>
+<a class="text-body-sm font-medium" href="#" style="color: #11299E;">Change</a>
+</div>
+<!-- Title & Subtitle -->
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-display text-display-mobile text-on-surface">Your mobile number</h1>
+<p class="text-body-sm text-on-surface-variant">We'll use this number to sign you in and to contact you about this application.</p>
+</div>
+<!-- Form Inputs Group -->
+<div class="flex flex-col gap-space-xl">
+<!-- Standard Input -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-body-sm font-medium text-on-surface">Mobile number</label>
+<div class="flex rounded-lg border border-[#85857F] bg-white overflow-hidden focus-within:ring-2 focus-within:ring-[#11299E]">
+<div class="flex items-center px-space-md bg-surface-container-low border-r border-[#85857F] text-body font-medium text-on-surface">
+              +91
+            </div>
+<input class="w-full px-space-md py-3 border-none focus:ring-0 text-body text-on-surface bg-transparent" type="text" value="98765 43210"/>
+</div>
+<p class="text-body-sm text-on-surface-variant">We'll send a 6-digit code by SMS.</p>
+</div>
+<!-- Validation Error Variant Input -->
+<div class="flex flex-col gap-space-xs">
+<label class="text-body-sm font-medium text-on-surface">Mobile number (Error Variant)</label>
+<div class="flex rounded-lg border border-error bg-white overflow-hidden focus-within:ring-2 focus-within:ring-error">
+<div class="flex items-center px-space-md bg-surface-container-low border-r border-error text-body font-medium text-on-surface">
+              +91
+            </div>
+<input class="w-full px-space-md py-3 border-none focus:ring-0 text-body text-on-surface bg-transparent" type="text" value="98765"/>
+</div>
+<p class="text-body-sm text-error">Enter a valid 10-digit mobile number</p>
+</div>
+</div>
+<!-- Primary Button -->
+<button class="w-full bg-primary text-on-primary py-3 px-space-lg rounded-lg font-h3 text-h3 hover:opacity-90 active:scale-[0.98] transition-all duration-200">
+        Send code
+      </button>
+</div>
+<!-- FRAME B — Code -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-space-xl shadow-sm flex flex-col gap-space-xl">
+<!-- Title & Subtitle with Change -->
+<div class="flex flex-col gap-space-xs">
+<h2 class="font-display text-display-mobile text-on-surface">Enter the code</h2>
+<div class="flex items-center gap-space-sm">
+<p class="text-body-sm text-on-surface-variant">Sent to +91 XXXXXX3210</p>
+<a class="text-body-sm font-medium" href="#" style="color: #11299E;">Change</a>
+</div>
+</div>
+<!-- Six Digit Boxes -->
+<div class="grid grid-cols-6 gap-space-sm">
+<div class="h-12 border border-[#85857F] rounded-lg flex items-center justify-center font-h2 text-h2 bg-white">4</div>
+<div class="h-12 border border-[#85857F] rounded-lg flex items-center justify-center font-h2 text-h2 bg-white">8</div>
+<div class="h-12 border border-[#85857F] rounded-lg flex items-center justify-center font-h2 text-h2 bg-white">2</div>
+<div class="h-12 border border-[#85857F] rounded-lg flex items-center justify-center font-h2 text-h2 bg-white focus-within:ring-2 focus-within:ring-[#11299E]"></div>
+<div class="h-12 border border-[#85857F] rounded-lg flex items-center justify-center font-h2 text-h2 bg-white"></div>
+<div class="h-12 border border-[#85857F] rounded-lg flex items-center justify-center font-h2 text-h2 bg-white"></div>
+</div>
+<!-- Resend timer -->
+<div class="text-body-sm text-on-surface-variant">
+        Resend code in 0:28
+      </div>
+<!-- Inline Message Variants -->
+<div class="flex flex-col gap-space-sm">
+<div class="bg-error-container text-on-error-container p-space-md rounded-lg text-body-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error">warning</span>
+          Incorrect code — 2 attempts left
+        </div>
+<div class="bg-surface-container text-on-surface-variant p-space-md rounded-lg text-body-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined">info</span>
+          Code expired — resend a new one
+        </div>
+</div>
+<!-- Info Card Variant -->
+<div class="bg-surface-container-low border border-outline-variant p-space-md rounded-lg flex items-start justify-between gap-space-md">
+<p class="text-body-sm text-on-surface">This mobile already has an active ELOKA account</p>
+<a class="text-body-sm font-medium whitespace-nowrap" href="#" style="color: #11299E;">Contact support</a>
+</div>
+<!-- Primary Button -->
+<button class="w-full bg-primary text-on-primary py-3 px-space-lg rounded-lg font-h3 text-h3 hover:opacity-90 active:scale-[0.98] transition-all duration-200">
+        Verify
+      </button>
+</div>
+</div>
+</body></html>

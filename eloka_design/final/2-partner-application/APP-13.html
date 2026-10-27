@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA - Set up your platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#f9f9f6",
+            "on-background": "#1a1c1b",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed-variant": "#474742",
+            "background": "#FAFAF7",
+            "secondary-fixed": "#dee0ff",
+            "error": "#ba1a1a",
+            "primary-fixed": "#e5e2e1",
+            "secondary-container": "#778afd",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-primary-fixed": "#1c1b1b",
+            "on-error": "#ffffff",
+            "inverse-surface": "#2f312f",
+            "on-primary-fixed-variant": "#474646",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "surface-tint": "#5f5e5e",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-primary": "#ffffff",
+            "inverse-primary": "#c9c6c5",
+            "on-error-container": "#93000a",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "surface-container": "#eeeeeb",
+            "surface-variant": "#e2e3e0",
+            "secondary": "#11299E",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#e2e3e0",
+            "on-secondary-fixed": "#000f5d",
+            "on-primary-container": "#858383",
+            "primary": "#000000",
+            "inverse-on-surface": "#f1f1ee",
+            "surface": "#ffffff",
+            "on-tertiary-container": "#84847e",
+            "surface-dim": "#dadad7",
+            "tertiary": "#000000",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface-container-high": "#e8e8e5",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#1a1c1b",
+            "outline-variant": "#c4c7c7",
+            "on-secondary-container": "#001a88",
+            "surface-container-low": "#f4f4f1",
+            "tertiary-container": "#1b1c18",
+            "primary-container": "#1c1b1b",
+            "on-surface-variant": "#444748",
+            "outline": "#747878"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-3xl": "48px",
+            "gutter": "1rem",
+            "space-xs": "4px",
+            "space-2xl": "32px",
+            "space-sm": "8px",
+            "space-4xl": "64px",
+            "space-xl": "24px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "margin": "1.5rem"
+          },
+          "fontFamily": {
+            "h3": ["Inter"],
+            "display": ["Inter"],
+            "h2": ["Inter"],
+            "h1": ["Inter"],
+            "body": ["Inter"],
+            "display-mobile": ["Inter"],
+            "label": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased flex justify-center min-h-screen">
+<div class="w-full max-w-[390px] bg-background min-h-screen flex flex-col relative pb-28 shadow-xl">
+<!-- TopAppBar -->
+<header class="bg-surface text-on-surface font-h2 text-h2 flex justify-between items-center w-full px-4 h-16 sticky top-0 z-40">
+<div class="font-h1 text-h1 text-primary tracking-tight">ELOKA</div>
+<button class="text-secondary text-body-sm font-semibold hover:opacity-80 transition-opacity">Help</button>
+</header>
+<!-- Progress & Sub-header -->
+<div class="bg-surface border-b border-outline-variant px-4 pt-2 pb-4">
+<div class="flex items-center justify-between mb-2">
+<button class="flex items-center text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+</button>
+<span class="font-label text-label text-on-surface-variant">Step 11 of 13</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 84%;"></div>
+</div>
+</div>
+<!-- Main Content Container -->
+<main class="flex-1 px-4 py-6 flex flex-col gap-6">
+<!-- Title Section -->
+<div>
+<h1 class="font-display-mobile text-display-mobile text-on-background mb-1">Set up your platform</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Choose your platform's name, web address and look.</p>
+</div>
+<!-- Card 1: Platform name -->
+<section class="bg-surface rounded-xl p-4 border border-outline-variant shadow-sm flex flex-col gap-2">
+<label class="font-h3 text-h3 text-on-surface" for="platform-name">Platform name</label>
+<input class="w-full rounded-lg border border-outline-variant px-3 py-2 text-body text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary outline-none transition-all" id="platform-name" type="text" value="Sample Pay"/>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Shown to your agents and customers. Up to 60 characters.</p>
+</section>
+<!-- Card 2: Web address -->
+<section class="bg-surface rounded-xl p-4 border border-outline-variant shadow-sm flex flex-col gap-3">
+<label class="font-h3 text-h3 text-on-surface" for="web-address">Web address</label>
+<div class="flex items-center rounded-lg border border-outline-variant overflow-hidden focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary transition-all">
+<input class="flex-1 border-none px-3 py-2 text-body text-on-surface outline-none focus:ring-0 bg-transparent" id="web-address" type="text" value="sampletraders"/>
+<span class="bg-surface-container px-3 py-2 text-body-sm text-on-surface-variant border-l border-outline-variant">.eloka.app</span>
+</div>
+<!-- Availability indicator -->
+<div class="flex items-center gap-1.5 text-emerald-600 text-body-sm font-medium">
+<span class="material-symbols-outlined text-base">check_circle</span>
+<span>sampletraders.eloka.app is available</span>
+</div>
+<!-- If taken variant box -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant/50 flex flex-col gap-2 mt-1">
+<p class="font-body-sm text-body-sm text-on-surface-variant">This address is taken. Try one of these:</p>
+<div class="flex flex-wrap gap-2">
+<button class="bg-surface border border-outline-variant rounded-full px-3 py-1 text-body-sm text-secondary hover:border-secondary transition-colors">sampletradersin</button>
+<button class="bg-surface border border-outline-variant rounded-full px-3 py-1 text-body-sm text-secondary hover:border-secondary transition-colors">sample-traders</button>
+<button class="bg-surface border border-outline-variant rounded-full px-3 py-1 text-body-sm text-secondary hover:border-secondary transition-colors">stpay</button>
+</div>
+</div>
+</section>
+<!-- Card 3: Logo (optional) -->
+<section class="bg-surface rounded-xl p-4 border border-outline-variant shadow-sm flex flex-col gap-3">
+<span class="font-h3 text-h3 text-on-surface">Logo (optional)</span>
+<!-- Dashed upload area -->
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-secondary transition-colors bg-surface-container-low/50">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant mb-2">cloud_upload</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Upload logo — PNG or JPG, square works best</span>
+</div>
+<!-- Uploaded file row -->
+<div class="flex items-center justify-between bg-surface-container-low p-2.5 rounded-lg border border-outline-variant/60">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary text-on-secondary flex items-center justify-center font-h3 text-h3">SP</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">logo.png</span>
+</div>
+<button class="text-error text-body-sm font-medium hover:underline">Remove</button>
+</div>
+</section>
+<!-- Card 4: Brand colours -->
+<section class="bg-surface rounded-xl p-4 border border-outline-variant shadow-sm flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="font-h3 text-h3 text-on-surface">Brand colours</span>
+<button class="text-secondary text-body-sm font-semibold hover:underline">Custom</button>
+</div>
+<!-- 3x2 Grid of swatches -->
+<div class="grid grid-cols-3 gap-3">
+<!-- Swatch 1: Selected -->
+<div class="h-14 rounded-lg bg-[#11299E] border-2 border-secondary flex items-center justify-center relative cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-black/10 rounded-lg"></div>
+<span class="material-symbols-outlined text-white z-10 text-xl font-bold">check</span>
+</div>
+<!-- Swatch 2 -->
+<div class="h-14 rounded-lg bg-gradient-to-r from-teal-700 to-amber-400 border border-outline-variant cursor-pointer hover:opacity-90"></div>
+<!-- Swatch 3 -->
+<div class="h-14 rounded-lg bg-gradient-to-r from-rose-900 to-amber-600 border border-outline-variant cursor-pointer hover:opacity-90"></div>
+<!-- Swatch 4 -->
+<div class="h-14 rounded-lg bg-gradient-to-r from-zinc-900 to-emerald-600 border border-outline-variant cursor-pointer hover:opacity-90"></div>
+<!-- Swatch 5 -->
+<div class="h-14 rounded-lg bg-gradient-to-r from-purple-900 to-pink-500 border border-outline-variant cursor-pointer hover:opacity-90"></div>
+<!-- Swatch 6 -->
+<div class="h-14 rounded-lg bg-gradient-to-r from-emerald-900 to-lime-500 border border-outline-variant cursor-pointer hover:opacity-90"></div>
+</div>
+<!-- Navigation style segmented control -->
+<div class="flex bg-surface-container p-1 rounded-lg">
+<button class="flex-1 py-1.5 rounded-md bg-surface text-on-surface font-label text-label shadow-sm text-center font-semibold">Dark</button>
+<button class="flex-1 py-1.5 text-on-surface-variant font-label text-label text-center hover:text-on-surface">Light</button>
+</div>
+<!-- Cream warning note -->
+<div class="bg-amber-50 border border-amber-200/60 rounded-lg p-3 text-amber-900 text-body-sm flex gap-2 items-start">
+<span class="material-symbols-outlined text-amber-700 text-base mt-0.5">info</span>
+<span>Text on this colour may be hard to read. We'll use a darker shade for buttons.</span>
+</div>
+</section>
+<!-- Card 5: Preview -->
+<section class="bg-surface rounded-xl p-4 border border-outline-variant shadow-sm flex flex-col gap-3">
+<span class="font-h3 text-h3 text-on-surface">Preview</span>
+<!-- Mock app frame -->
+<div class="border border-outline-variant rounded-xl overflow-hidden bg-background shadow-sm">
+<!-- Mock Top Bar -->
+<div class="bg-[#11299E] text-white px-3 py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-white text-[#11299E] flex items-center justify-center font-bold text-xs">SP</div>
+<span class="font-h3 text-body-sm text-white font-semibold">Sample Pay</span>
+</div>
+<span class="material-symbols-outlined text-base">menu</span>
+</div>
+<!-- Mock Menu Rows -->
+<div class="bg-surface border-b border-outline-variant flex px-2 py-1.5 gap-2 text-body-sm">
+<div class="bg-secondary/10 text-secondary px-2.5 py-1 rounded-md font-semibold text-xs">Home</div>
+<div class="text-on-surface-variant px-2.5 py-1 text-xs">Transactions</div>
+<div class="text-on-surface-variant px-2.5 py-1 text-xs">Network</div>
+</div>
+<!-- Mock Body Content -->
+<div class="p-3 flex flex-col gap-3 bg-surface-container-lowest">
+<!-- Grey card -->
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/50 flex flex-col gap-1">
+<span class="font-label text-label text-on-surface-variant">Wallet balance</span>
+<span class="font-h1 text-h1 text-on-surface font-bold">₹24,500.00</span>
+</div>
+<!-- Navy button -->
+<div class="bg-[#11299E] text-white py-2 rounded-lg text-center font-h3 text-body-sm font-medium">
+              Continue
+            </div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-surface border-t border-outline-variant p-4 z-50 shadow-lg">
+<button class="w-full bg-primary text-on-primary py-3 px-4 rounded-lg font-h3 text-body text-center hover:opacity-90 active:scale-[0.98] transition-all">
+        Save and continue
+      </button>
+</div>
+</div>
+</body></html>

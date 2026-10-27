@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<title>APP-09 Signatory KYC (desktop)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-background": "#1a1c1b",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed": "#1c1b1b",
+            "secondary": "#4053c4",
+            "on-tertiary-container": "#84847e",
+            "primary": "#000000",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-tertiary-fixed": "#1b1c18",
+            "secondary-fixed": "#dee0ff",
+            "on-surface-variant": "#444748",
+            "on-secondary-fixed-variant": "#2439ab",
+            "outline": "#747878",
+            "inverse-primary": "#c9c6c5",
+            "error": "#ba1a1a",
+            "surface-tint": "#5f5e5e",
+            "on-primary-fixed-variant": "#474646",
+            "inverse-on-surface": "#f1f1ee",
+            "surface-container": "#eeeeeb",
+            "tertiary": "#000000",
+            "on-secondary": "#ffffff",
+            "primary-container": "#1c1b1b",
+            "on-secondary-fixed": "#000f5d",
+            "surface": "#f9f9f6",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-secondary-container": "#001a88",
+            "tertiary-fixed": "#e4e2dc",
+            "outline-variant": "#c4c7c7",
+            "background": "#f9f9f6",
+            "on-error": "#ffffff",
+            "secondary-fixed-dim": "#bbc3ff",
+            "secondary-container": "#778afd",
+            "surface-variant": "#e2e3e0",
+            "primary-fixed-dim": "#c9c6c5",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "tertiary-container": "#1b1c18",
+            "surface-container-highest": "#e2e3e0",
+            "primary-fixed": "#e5e2e1",
+            "on-surface": "#1a1c1b",
+            "on-primary": "#ffffff",
+            "surface-bright": "#f9f9f6",
+            "on-primary-container": "#858383",
+            "inverse-surface": "#2f312f",
+            "surface-dim": "#dadad7",
+            "surface-container-low": "#f4f4f1",
+            "surface-container-high": "#e8e8e5",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "4px",
+            "space-xl": "24px",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-2xl": "32px",
+            "space-4xl": "64px",
+            "margin": "1.5rem",
+            "space-3xl": "48px",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "h3": ["Inter"],
+            "label": ["Inter"],
+            "body": ["Inter"],
+            "h2": ["Inter"],
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"],
+            "display": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1400px] mx-auto">
+<div class="flex items-center gap-3">
+<span class="text-h1 font-h1 font-bold text-primary dark:text-inverse-primary tracking-tight">ELOKA</span>
+<span class="text-xs px-2.5 py-1 bg-surface-container-high rounded-full font-label text-on-surface-variant">Applicant Portal</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label text-sm" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label text-sm" href="#">Help</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label text-sm" href="#">Support</a>
+</nav>
+<div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label text-sm font-semibold active:scale-[0.98] transition-all duration-200">Save & Exit</button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 w-full max-w-[1400px] mx-auto">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col justify-between w-[280px] p-6 shrink-0 bg-surface-container-low dark:bg-inverse-surface border-r border-outline-variant sticky top-[73px] h-[calc(100vh-73px)] overflow-y-auto">
+<div>
+<div class="mb-6">
+<h2 class="text-h2 font-h2 font-semibold text-primary dark:text-inverse-primary">Application Process</h2>
+<p class="text-body-sm text-on-surface-variant mt-1">13 Steps Remaining</p>
+</div>
+<nav class="flex flex-col gap-1">
+<!-- 1. Mobile verification -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">person</span>
+<span class="font-medium">1. Mobile verification</span>
+<span class="material-symbols-outlined ml-auto text-sm text-green-600">check</span>
+</div>
+<!-- 2. Consent -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">contact_page</span>
+<span class="font-medium">2. Consent</span>
+<span class="material-symbols-outlined ml-auto text-sm text-green-600">check</span>
+</div>
+<!-- 3. Program -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">work</span>
+<span class="font-medium">3. Program</span>
+<span class="material-symbols-outlined ml-auto text-sm text-green-600">check</span>
+</div>
+<!-- 4. Business PAN -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">account_balance</span>
+<span class="font-medium">4. Business PAN</span>
+<span class="material-symbols-outlined ml-auto text-sm text-green-600">check</span>
+</div>
+<!-- 5. Business details -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">badge</span>
+<span class="font-medium">5. Business details</span>
+<span class="material-symbols-outlined ml-auto text-sm text-green-600">check</span>
+</div>
+<!-- 6. Email -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">home</span>
+<span class="font-medium">6. Email</span>
+<span class="material-symbols-outlined ml-auto text-sm text-green-600">check</span>
+</div>
+<!-- 7. Signatory KYC (Active) -->
+<div class="flex items-center gap-3 px-3 py-2.5 bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary font-semibold rounded-lg text-sm transition-colors" style="color: #11299E;">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+<span>7. Signatory KYC</span>
+</div>
+<!-- 8. Live photo -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">folder_shared</span>
+<span class="font-medium">8. Live photo</span>
+</div>
+<!-- 9. Documents -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">group</span>
+<span class="font-medium">9. Documents</span>
+</div>
+<!-- 10. Bank account -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">verified_user</span>
+<span class="font-medium">10. Bank account</span>
+</div>
+<!-- 11. White-label setup -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm transition-colors">
+<span class="material-symbols-outlined text-base">description</span>
+<span class="font-medium">11. White-label setup</span>
+</div>
+<!-- 12. Declaration -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant opacity-60 rounded-lg text-sm">
+<span class="material-symbols-outlined text-base">rate_review</span>
+<span class="font-medium">12. Declaration</span>
+<span class="material-symbols-outlined ml-auto text-xs">lock</span>
+</div>
+<!-- 13. Agreement -->
+<div class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant opacity-60 rounded-lg text-sm">
+<span class="material-symbols-outlined text-base">send</span>
+<span class="font-medium">13. Agreement</span>
+<span class="material-symbols-outlined ml-auto text-xs">lock</span>
+</div>
+</nav>
+</div>
+<div class="pt-6 border-t border-outline-variant">
+<button class="w-full py-2 text-center text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">Resume Later</button>
+</div>
+</aside>
+<!-- Main Content Column -->
+<main class="flex-1 flex justify-center items-center p-8 bg-surface">
+<div class="w-full max-w-[720px] flex flex-col gap-6">
+<!-- Header Info -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center text-sm text-on-surface-variant font-label">
+<span>Step 7 of 13</span>
+<span>54% completed</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 54%;"></div>
+</div>
+</div>
+<!-- Titles -->
+<div class="flex flex-col gap-1">
+<h1 class="text-h1 font-h1 text-on-background">Verify the signatory with DigiLocker</h1>
+<p class="text-body text-on-surface-variant">Instant digital identity validation for authorised company signatory.</p>
+</div>
+<!-- Main Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm flex flex-col gap-6">
+<div class="flex flex-col gap-4">
+<h3 class="text-h3 font-h3 text-on-background">How it works</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex flex-col gap-2 p-4 bg-surface-container-low rounded-lg">
+<span class="text-sm font-bold text-secondary">01</span>
+<p class="text-body-sm font-semibold text-on-background">Sign in to DigiLocker</p>
+<p class="text-body-sm text-on-surface-variant">Authenticate securely using your Aadhaar linked credentials.</p>
+</div>
+<div class="flex flex-col gap-2 p-4 bg-surface-container-low rounded-lg">
+<span class="text-sm font-bold text-secondary">02</span>
+<p class="text-body-sm font-semibold text-on-background">Allow access</p>
+<p class="text-body-sm text-on-surface-variant">Grant permission to fetch your verified identity documents.</p>
+</div>
+<div class="flex flex-col gap-2 p-4 bg-surface-container-low rounded-lg">
+<span class="text-sm font-bold text-secondary">03</span>
+<p class="text-body-sm font-semibold text-on-background">You'll come back automatically</p>
+<p class="text-body-sm text-on-surface-variant">Seamless redirect back to complete your application.</p>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-end">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-lg font-label text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all duration-200 flex items-center gap-2">
+<span>Continue to DigiLocker</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Section: Verification State Variants Reference -->
+<div class="flex flex-col gap-4 mt-6">
+<h2 class="text-h2 font-h2 text-on-background">Verification State Variants Reference</h2>
+<!-- Variant 1: Waiting for DigiLocker state -->
+<div class="p-6 rounded-xl border border-blue-200 bg-[#EFF6FF] flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 border-2 border-secondary border-t-transparent rounded-full animate-spin"></div>
+<span class="text-h3 font-h3 text-blue-900">Waiting for DigiLocker response...</span>
+</div>
+<a class="text-sm font-semibold text-secondary hover:underline" href="#">Check again</a>
+</div>
+<p class="text-body-sm text-blue-800 ml-9">We are waiting for authentication to complete in your DigiLocker window.</p>
+</div>
+<!-- Variant 2: Signatory verified success state -->
+<div class="p-6 rounded-xl border border-emerald-200 bg-emerald-50 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<span class="text-h3 font-h3 text-emerald-900">Signatory verified successfully</span>
+</div>
+<button class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors">Continue</button>
+</div>
+<div class="grid grid-cols-2 gap-4 ml-9 mt-2 text-body-sm text-emerald-800">
+<div><span class="font-semibold">Name:</span> RAVI SAMPLE</div>
+<div><span class="font-semibold">Aadhaar:</span> XXXX-XXXX-1234</div>
+</div>
+</div>
+<!-- Variant 3: Error state: DigiLocker failure -->
+<div class="p-6 rounded-xl border border-[#FEF2F2] bg-[#FEF2F2] flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 bg-error text-white rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">error</span>
+</div>
+<span class="text-h3 font-h3 text-error">We couldn't complete the DigiLocker check. 2 attempts left.</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-error text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">Try again</button>
+<a class="text-sm font-semibold text-error hover:underline" href="#">Need assistance?</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

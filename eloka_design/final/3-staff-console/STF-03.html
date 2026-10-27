@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<title>Case View - ELOKA Staff Console</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline": "#747878",
+            "secondary-fixed": "#dee0ff",
+            "tertiary-fixed": "#e4e2dc",
+            "surface-container-low": "#f4f4f1",
+            "primary": "#000000",
+            "on-background": "#1a1c1b",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "surface-dim": "#dadad7",
+            "secondary-container": "#778afd",
+            "primary-container": "#1c1b1b",
+            "secondary-fixed-dim": "#bbc3ff",
+            "tertiary-container": "#1b1c18",
+            "on-primary-container": "#858383",
+            "surface-container-lowest": "#ffffff",
+            "surface-container": "#eeeeeb",
+            "primary-fixed": "#e5e2e1",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface-container-highest": "#e2e3e0",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#2f312f",
+            "inverse-on-surface": "#f1f1ee",
+            "on-tertiary-container": "#84847e",
+            "on-primary": "#ffffff",
+            "secondary": "#4053c4",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-error": "#ffffff",
+            "background": "#f9f9f6",
+            "surface": "#f9f9f6",
+            "surface-bright": "#f9f9f6",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c9c6c5",
+            "inverse-primary": "#c9c6c5",
+            "on-surface-variant": "#444748",
+            "on-secondary-fixed": "#000f5d",
+            "surface-tint": "#5f5e5e",
+            "surface-container-high": "#e8e8e5",
+            "outline-variant": "#c4c7c7",
+            "on-primary-fixed": "#1c1b1b",
+            "surface-variant": "#e2e3e0",
+            "tertiary": "#000000",
+            "on-surface": "#1a1c1b",
+            "on-primary-fixed-variant": "#474646",
+            "error": "#ba1a1a",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-secondary-container": "#001a88",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "space-sm": "8px",
+            "space-lg": "16px",
+            "space-3xl": "48px",
+            "space-md": "12px",
+            "space-4xl": "64px",
+            "space-2xl": "32px",
+            "space-xl": "24px",
+            "space-xs": "4px"
+          },
+          "fontFamily": {
+            "h2": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "h1": ["Inter"],
+            "h3": ["Inter"],
+            "label": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-background font-body antialiased min-h-screen flex">
+<!-- Left Sidebar (240px soft linen) -->
+<aside class="w-[240px] bg-surface-container-low h-screen fixed left-0 top-0 flex flex-col justify-between p-space-xl border-r border-outline-variant z-20">
+<div class="flex flex-col gap-space-xl">
+<!-- Brand Logo -->
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">shield_locked</span>
+<div class="flex flex-col">
+<span class="font-h2 text-h2 text-primary">ELOKA Staff</span>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex flex-col gap-space-xs"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" href="#"><span class="material-symbols-outlined text-xl">queue</span><span class="font-h3 text-h3">Queue</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg bg-secondary-fixed text-on-secondary-fixed font-h3 transition-all" href="#"><span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">assignment</span><span class="font-h3 text-h3">Assigned to me</span></a></nav>
+</div>
+<!-- Sidebar Footer -->
+<div class="flex flex-col gap-space-md pt-space-md border-t border-outline-variant">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-h3 text-body-sm">AS</div>
+<div class="flex flex-col overflow-hidden">
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Asha Sample</span>
+</div>
+</div>
+<a class="flex items-center gap-space-sm text-on-surface-variant hover:text-error transition-all font-body-sm" href="#">
+<span class="material-symbols-outlined text-lg">logout</span>
+<span>Sign out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="ml-[240px] flex-1 flex flex-col min-h-screen">
+<!-- Top Bar / Breadcrumb Header -->
+<header class="sticky top-0 bg-surface/80 backdrop-blur-md z-10 px-space-2xl py-space-lg flex justify-between items-center border-b border-outline-variant">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm text-body-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Applications</a>
+<span>/</span>
+<h1 class="font-h1 text-h1 text-primary inline">Sample Traders Pvt Ltd</h1>
+<span class="px-space-sm py-0.5 bg-surface-container-high rounded text-label font-mono text-on-surface-variant">onb_7Q2K9X</span>
+<span class="px-space-sm py-0.5 bg-secondary-fixed text-on-secondary-fixed rounded-full text-label font-semibold">Under review</span>
+</div>
+<div class="text-body-sm text-on-surface-variant">
+          Private Limited · Submitted 21 Oct 2026 · Assigned to you
+        </div>
+</div>
+<div>
+<button class="px-space-md py-space-sm bg-surface-container-highest hover:bg-surface-dim text-on-surface font-h3 text-body-sm rounded-lg border border-outline-variant transition-all active:scale-98">
+          Release
+        </button>
+</div>
+</header>
+<!-- Main Workspace Layout -->
+<main class="flex-1 p-space-2xl flex gap-space-2xl items-start max-w-[1400px]">
+<!-- Left Fluid Content Area -->
+<div class="flex-1 flex flex-col gap-space-2xl min-w-0">
+<!-- 1. Flags Card -->
+<div class="border rounded-xl p-space-xl flex flex-col gap-space-md shadow-sm bg-amber-50 border-amber-200">
+<div class="flex items-center gap-space-sm text-error"><span class="material-symbols-outlined text-xl text-amber-800" style="font-variation-settings: 'FILL' 1;">warning</span><h2 class="font-h2 text-h2 text-amber-900">Flags</h2></div>
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-md bg-surface p-space-md rounded-lg border border-error/20">
+<span class="material-symbols-outlined text-error text-lg">error</span>
+<span class="font-body text-body text-on-surface">Business name differs from PAN record</span>
+</div>
+<div class="flex items-center gap-space-md bg-surface p-space-md rounded-lg border border-error/20">
+<span class="material-symbols-outlined text-error text-lg">error</span>
+<span class="font-body text-body text-on-surface">Bank account holder differs</span>
+</div>
+</div>
+</div>
+<!-- 2. Business Profile Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-xl flex flex-col gap-space-xl shadow-sm bg-amber-50 border-amber-200">
+<div class="flex items-center justify-between"><h2 class="font-h2 text-h2 text-primary">Business profile</h2></div>
+<div class="grid grid-cols-2 gap-space-xl">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">Business name</span>
+<span class="font-body text-body text-on-surface font-medium">Sample Traders Pvt Ltd</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">Company type</span>
+<span class="font-body text-body text-on-surface font-medium">Private Limited</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">Signatory</span>
+<span class="font-body text-body text-on-surface font-medium">Ravi Sample</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">Contact mobile</span>
+<span class="font-body text-body text-on-surface font-medium">XXXXXX3210</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">Email</span>
+<span class="font-body text-body text-on-surface font-medium">c••••@sampletraders.in</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">PAN</span>
+<div class="flex items-center gap-space-md">
+<span class="font-body text-body text-on-surface font-medium font-mono">XXXXXX1234X</span>
+<button class="px-space-sm py-1 bg-surface-container-high hover:bg-surface-dim text-primary text-label rounded border border-outline-variant transition-all">Reveal</button>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Verifications Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-xl flex flex-col gap-space-lg shadow-sm bg-amber-50 border-amber-200">
+<h2 class="font-h2 text-h2 text-primary">Verifications</h2>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="p-space-md font-h3 text-body-sm text-on-surface-variant">Check</th>
+<th class="p-space-md font-h3 text-body-sm text-on-surface-variant">Status</th>
+<th class="p-space-md font-h3 text-body-sm text-on-surface-variant">Confidence/Name match</th>
+<th class="p-space-md font-h3 text-body-sm text-on-surface-variant">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/60">
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="p-space-md font-body text-body text-on-surface font-medium">Business PAN</td>
+<td class="p-space-md">
+<span class="inline-flex items-center gap-space-xs px-2.5 py-0.5 rounded-full text-label font-semibold bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Succeeded
+                    </span>
+</td>
+<td class="p-space-md font-body text-body text-on-surface">92%</td>
+<td class="p-space-md text-on-surface-variant">—</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="p-space-md font-body text-body text-on-surface font-medium">Email</td>
+<td class="p-space-md">
+<span class="inline-flex items-center gap-space-xs px-2.5 py-0.5 rounded-full text-label font-semibold bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Succeeded
+                    </span>
+</td>
+<td class="p-space-md text-on-surface-variant">—</td>
+<td class="p-space-md text-on-surface-variant">—</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="p-space-md font-body text-body text-on-surface font-medium">Signatory KYC</td>
+<td class="p-space-md">
+<span class="inline-flex items-center gap-space-xs px-2.5 py-0.5 rounded-full text-label font-semibold bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Succeeded
+                    </span>
+</td>
+<td class="p-space-md font-body text-body text-on-surface">88%</td>
+<td class="p-space-md text-on-surface-variant">—</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="p-space-md font-body text-body text-on-surface font-medium">Bank account</td>
+<td class="p-space-md">
+<span class="inline-flex items-center gap-space-xs px-2.5 py-0.5 rounded-full text-label font-semibold bg-amber-100 text-amber-800">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Needs review
+                    </span>
+</td>
+<td class="p-space-md font-body text-body text-on-surface">71%</td>
+<td class="p-space-md">
+<div class="flex items-center gap-space-sm">
+<button class="px-space-sm py-1 bg-primary text-on-primary rounded text-label font-semibold hover:opacity-90 transition-all">Accept</button>
+<button class="px-space-sm py-1 bg-surface-container-high text-error rounded text-label font-semibold hover:bg-error-container transition-all">Reject</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- 4. Documents Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-xl flex flex-col gap-space-lg shadow-sm bg-amber-50 border-amber-200">
+<h2 class="font-h2 text-h2 text-primary">Documents</h2>
+<div class="flex flex-col gap-space-md">
+<!-- Doc 1 -->
+<div class="flex items-center justify-between p-space-md bg-surface-container-low rounded-lg border border-outline-variant/60">
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface">Address proof</span>
+<span class="text-label text-amber-700 font-medium">Waiting for review</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-sm py-1 bg-surface-container-highest text-primary rounded text-label font-semibold hover:bg-surface-dim transition-all">View</button>
+<button class="px-space-sm py-1 bg-primary text-on-primary rounded text-label font-semibold hover:opacity-90 transition-all">Verify</button>
+<button class="px-space-sm py-1 bg-surface-container-high text-error rounded text-label font-semibold hover:bg-error-container transition-all">Reject</button>
+</div>
+</div>
+<!-- Doc 2 -->
+<div class="flex items-center justify-between p-space-md bg-surface-container-low rounded-lg border border-outline-variant/60">
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface">Certificate of incorporation</span>
+<span class="text-label text-emerald-700 font-medium">Verified</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-sm py-1 bg-surface-container-highest text-primary rounded text-label font-semibold hover:bg-surface-dim transition-all">View</button>
+</div>
+</div>
+<!-- Doc 3 -->
+<div class="flex flex-col p-space-md bg-surface-container-low rounded-lg border border-outline-variant/60 gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface">Bank proof</span>
+<span class="text-label text-error font-medium">Rejected</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-sm py-1 bg-surface-container-highest text-primary rounded text-label font-semibold hover:bg-surface-dim transition-all">View</button>
+</div>
+</div>
+<div class="text-body-sm text-error bg-error-container/30 px-space-sm py-1 rounded">
+                Note: Image is blurred
+              </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sticky Decision Card (320px) -->
+<div class="w-[320px] sticky top-[100px] flex flex-col gap-space-lg">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-xl flex flex-col gap-space-xl shadow-md bg-amber-50 border-amber-200">
+<h2 class="font-h2 text-h2 text-primary">Decision</h2>
+<!-- Warning Box -->
+<div class="bg-amber-50 border border-amber-200 rounded-lg p-space-md flex flex-col gap-space-xs text-amber-900">
+<div class="flex items-center gap-space-xs font-h3 text-body-sm"><span class="material-symbols-outlined text-xl text-amber-800" style="font-variation-settings: 'FILL' 1;">warning</span><h2 class="font-h2 text-h2 text-amber-900">Can't approve yet</h2></div>
+<ul class="list-disc list-inside text-body-sm flex flex-col gap-1 text-amber-800">
+<li>1 document not verified</li>
+<li>Bank account needs a decision</li>
+<li>No approval recommendation yet</li>
+</ul>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-space-sm">
+<button class="w-full py-space-sm px-space-md bg-surface-container-high hover:bg-surface-dim text-primary font-h3 text-body-sm rounded-lg border border-outline-variant transition-all">
+              Request changes
+            </button>
+<button class="w-full py-space-sm px-space-md bg-surface-container-high hover:bg-surface-dim text-primary font-h3 text-body-sm rounded-lg border border-outline-variant transition-all">
+              Recommend approval
+            </button>
+<button class="w-full py-space-sm px-space-md bg-surface-container-high hover:bg-surface-dim text-primary font-h3 text-body-sm rounded-lg border border-outline-variant transition-all">
+              Recommend rejection
+            </button>
+<button class="w-full py-space-sm px-space-md bg-surface-dim text-on-surface-variant font-h3 text-body-sm rounded-lg cursor-not-allowed opacity-60" disabled="">
+              Approve
+            </button>
+<button class="w-full py-space-sm px-space-md bg-surface text-error font-h3 text-body-sm rounded-lg border border-error hover:bg-error-container/20 transition-all">
+              Reject
+            </button>
+<button class="w-full py-space-sm px-space-md bg-surface-container-high hover:bg-surface-dim text-primary font-h3 text-body-sm rounded-lg border border-outline-variant transition-all">
+              Put on hold
+            </button>
+</div>
+<!-- Footer note -->
+<div class="text-label text-on-surface-variant text-center border-t border-outline-variant/60 pt-space-md">
+            You can't approve a case you claimed or recommended.
+          </div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

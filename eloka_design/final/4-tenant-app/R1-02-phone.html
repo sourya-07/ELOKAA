@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA Tenant - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed": "#dee0ff",
+            "error": "#ba1a1a",
+            "primary": "#001573",
+            "on-secondary": "#ffffff",
+            "inverse-surface": "#2f312f",
+            "tertiary": "#242521",
+            "surface-dim": "#dadad7",
+            "secondary-fixed": "#ffddba",
+            "primary-fixed-dim": "#bbc3ff",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-surface-variant": "#454653",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-tint": "#4053c4",
+            "tertiary-container": "#3a3a36",
+            "outline": "#757685",
+            "on-primary-fixed": "#000f5d",
+            "error-container": "#ffdad6",
+            "secondary": "#875200",
+            "surface-bright": "#f9f9f6",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#f4f4f1",
+            "on-tertiary-container": "#a5a49e",
+            "inverse-primary": "#bbc3ff",
+            "background": "#f9f9f6",
+            "surface-variant": "#e2e3e0",
+            "secondary-container": "#fc9e00",
+            "on-secondary-container": "#653c00",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface": "#f9f9f6",
+            "inverse-on-surface": "#f1f1ee",
+            "outline-variant": "#c5c5d5",
+            "primary-container": "#11299e",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-secondary-fixed": "#2b1700",
+            "on-secondary-fixed-variant": "#673d00",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "secondary-fixed-dim": "#ffb865",
+            "surface-container-highest": "#e2e3e0",
+            "surface-container": "#eeeeeb",
+            "on-primary-high": "#e8e8e5",
+            "on-primary-container": "#8d9cff",
+            "on-primary-fixed-variant": "#2439ab",
+            "surface-container-high": "#e8e8e5",
+            "on-background": "#1a1c1b",
+            "on-error-container": "#93000a",
+            "on-surface": "#1a1c1b"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF7] text-[#0A0A0A] font-body antialiased flex justify-center items-center min-h-screen">
+<div class="w-[390px] min-h-[844px] bg-[#FAFAF7] flex flex-col justify-between p-6 shadow-xl relative overflow-hidden">
+<!-- Top Brand Header -->
+<div class="flex items-center justify-between pt-4 pb-6">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-[#11299E] flex items-center justify-center text-white font-bold text-sm">SP</div>
+<span class="text-lg font-bold tracking-tight text-[#0A0A0A]">Sample Pay</span>
+</div>
+<div class="flex items-center gap-1 bg-[#E5E5E0] px-2.5 py-1 rounded-full text-xs font-medium text-[#5C5C57]">
+<span class="material-symbols-outlined text-sm">shield</span>
+<span>Secure Login</span>
+</div>
+</div>
+<!-- Main Stacked Content Cards -->
+<div class="flex flex-col gap-6 my-auto">
+<!-- Card 1: Welcome back mobile number -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 shadow-sm">
+<div class="mb-4">
+<h1 class="text-xl font-bold tracking-tight text-[#0A0A0A]">Welcome back</h1>
+<p class="text-sm text-[#5C5C57] mt-1">Enter your registered mobile number to continue to your tenant portal.</p>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-medium text-[#5C5C57] mb-1.5">Mobile Number</label>
+<div class="flex rounded-lg border border-[#E5E5E0] overflow-hidden focus-within:border-[#11299E] focus-within:ring-1 focus-within:ring-[#11299E]">
+<span class="bg-[#F4F3EE] px-3 py-3 text-sm text-[#5C5C57] flex items-center border-r border-[#E5E5E0]">+91</span>
+<input class="w-full px-3 py-3 text-sm bg-transparent border-none focus:outline-none text-[#0A0A0A]" placeholder="Enter number" type="tel" value="98765 43210"/>
+</div>
+</div>
+<button class="w-full h-[48px] bg-[#11299E] text-white font-medium rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-[#001573] transition-colors">
+<span>Get Verification Code</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Verify your OTP -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 shadow-sm">
+<div class="mb-4 flex items-center justify-between">
+<div>
+<h2 class="text-lg font-bold tracking-tight text-[#0A0A0A]">Verify your OTP</h2>
+<p class="text-xs text-[#5C5C57] mt-0.5">Code sent to +91 ••••• •3210</p>
+</div>
+<button class="text-xs font-medium text-[#11299E] hover:underline">Resend</button>
+</div>
+<div class="space-y-4">
+<!-- 6 OTP Boxes -->
+<div class="flex justify-between gap-2">
+<input class="w-11 h-12 text-center text-lg font-bold bg-[#F9F9F6] border border-[#E5E5E0] rounded-lg focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E] text-[#0A0A0A]" maxlength="1" type="text" value="4"/>
+<input class="w-11 h-12 text-center text-lg font-bold bg-[#F9F9F6] border border-[#E5E5E0] rounded-lg focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E] text-[#0A0A0A]" maxlength="1" type="text" value="8"/>
+<input class="w-11 h-12 text-center text-lg font-bold bg-[#F9F9F6] border border-[#E5E5E0] rounded-lg focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E] text-[#0A0A0A]" maxlength="1" type="text" value="2"/>
+<input class="w-11 h-12 text-center text-lg font-bold bg-[#F9F9F6] border border-[#E5E5E0] rounded-lg focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E] text-[#0A0A0A]" maxlength="1" type="text" value=""/>
+<input class="w-11 h-12 text-center text-lg font-bold bg-[#F9F9F6] border border-[#E5E5E0] rounded-lg focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E] text-[#0A0A0A]" maxlength="1" type="text" value=""/>
+<input class="w-11 h-12 text-center text-lg font-bold bg-[#F9F9F6] border border-[#E5E5E0] rounded-lg focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E] text-[#0A0A0A]" maxlength="1" type="text" value=""/>
+</div>
+<button class="w-full h-[48px] bg-[#11299E] text-white font-medium rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-[#001573] transition-colors">
+<span>Verify &amp; Proceed</span>
+<span class="material-symbols-outlined text-base">check_circle</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<div class="text-center pb-2">
+<p class="text-xs text-[#5C5C57]">ELOKA Tenant Ecosystem • Protected by Enterprise Grade Security</p>
+</div>
+</div>
+</body></html>

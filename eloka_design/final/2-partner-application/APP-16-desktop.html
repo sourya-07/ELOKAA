@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Applicant Portal - Submitted, under review</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#001a88",
+            "surface-container-high": "#e8e8e5",
+            "secondary-fixed": "#dee0ff",
+            "inverse-surface": "#2f312f",
+            "inverse-on-surface": "#f1f1ee",
+            "on-primary-fixed-variant": "#474646",
+            "on-error-container": "#93000a",
+            "error-container": "#ffdad6",
+            "background": "#f9f9f6",
+            "primary-fixed-dim": "#c9c6c5",
+            "tertiary-fixed": "#e4e2dc",
+            "surface": "#f9f9f6",
+            "on-surface-variant": "#444748",
+            "outline-variant": "#c4c7c7",
+            "on-surface": "#1a1c1b",
+            "surface-container-highest": "#e2e3e0",
+            "surface-container": "#eeeeeb",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "surface-variant": "#e2e3e0",
+            "surface-container-low": "#f4f4f1",
+            "secondary": "#4053c4",
+            "error": "#ba1a1a",
+            "on-background": "#1a1c1b",
+            "inverse-primary": "#c9c6c5",
+            "surface-dim": "#dadad7",
+            "on-tertiary-container": "#84847e",
+            "on-primary-container": "#858383",
+            "secondary-container": "#778afd",
+            "on-tertiary-fixed": "#1b1c18",
+            "on-primary": "#ffffff",
+            "surface-tint": "#5f5e5e",
+            "surface-bright": "#f9f9f6",
+            "primary-fixed": "#e5e2e1",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "primary-container": "#1c1b1b",
+            "tertiary-container": "#1b1c18",
+            "outline": "#747878",
+            "primary": "#000000",
+            "on-primary-fixed": "#1c1b1b",
+            "on-tertiary-fixed-variant": "#474742",
+            "tertiary": "#000000",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-secondary-fixed": "#000f5d",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#2439ab"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "space-3xl": "48px",
+            "margin": "1.5rem",
+            "space-4xl": "64px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-2xl": "32px",
+            "space-xs": "4px",
+            "space-xl": "24px"
+          },
+          "fontFamily": {
+            "display": ["Inter"],
+            "label": ["Inter"],
+            "h3": ["Inter"],
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body": ["Inter"],
+            "h2": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-[#FAFAF7] font-body text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1400px] mx-auto">
+<div class="flex items-center space-x-8">
+<span class="text-h1 font-h1 font-bold text-primary dark:text-inverse-primary tracking-tight">ELOKA</span>
+<nav class="hidden md:flex items-center space-x-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 text-label font-label" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label font-label" href="#">Help</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label font-label" href="#">Support</a>
+</nav>
+</div>
+<div>
+<button class="border border-outline-variant px-4 py-2 rounded-lg text-body-sm font-body-sm hover:bg-surface-container-high transition-colors text-on-surface">
+          Save & Exit
+        </button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-10 flex flex-col space-y-6">
+<!-- Page Header Info -->
+<div class="flex flex-col space-y-1">
+<h1 class="text-display font-display text-on-surface">Application Status</h1>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Reference ID: #ELK-8492-9012</p>
+</div>
+<!-- Main Card: Application submitted -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-8 shadow-sm flex flex-col space-y-6">
+<div class="flex justify-between items-start">
+<div class="flex flex-col space-y-2">
+<span class="text-label font-label text-on-surface-variant uppercase tracking-wider">Current Status</span>
+<h2 class="text-h1 font-h1 text-on-surface">Application submitted</h2>
+<p class="text-body font-body text-on-surface-variant">Your submission has been securely received and queued for review.</p>
+</div>
+<!-- Status Pill -->
+<div class="inline-flex items-center space-x-2 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-label font-label">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Under review</span>
+</div>
+</div>
+<!-- Timestamp -->
+<div class="pt-4 border-t border-outline-variant flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<span>Submitted on October 24, 2023 at 14:22 EST</span>
+<span class="text-primary font-semibold">Verified Secure</span>
+</div>
+</div>
+<!-- What happens next card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-8 shadow-sm flex flex-col space-y-6">
+<h3 class="text-h2 font-h2 text-on-surface">What happens next</h3>
+<div class="space-y-4">
+<div class="flex items-start space-x-3">
+<div class="mt-0.5 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-body font-body text-on-surface">Initial automated compliance and format verification checks have successfully cleared.</p>
+</div>
+<div class="flex items-start space-x-3">
+<div class="mt-0.5 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-body font-body text-on-surface">A designated senior reviewer has been assigned to assess your detailed financial and personal credentials.</p>
+</div>
+<div class="flex items-start space-x-3">
+<div class="mt-0.5 text-on-surface-variant">
+<span class="material-symbols-outlined">radio_button_unchecked</span>
+</div>
+<p class="text-body font-body text-on-surface-variant">Final decision notices and next steps will be transmitted directly via encrypted portal notification within 3-5 business days.</p>
+</div>
+</div>
+</div>
+<!-- Activity Timeline -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-8 shadow-sm flex flex-col space-y-6">
+<h3 class="text-h2 font-h2 text-on-surface">Activity timeline</h3>
+<div class="relative pl-6 space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant">
+<!-- Timeline Item 1 -->
+<div class="relative flex items-start space-x-4">
+<div class="absolute -left-6 mt-1 w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">done</span>
+</div>
+<div class="flex flex-col space-y-1">
+<span class="text-h3 font-h3 text-on-surface">Application submitted</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Oct 24, 2023 - 14:22 EST</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant pt-1">All required documentation uploaded and initial payload validated.</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex items-start space-x-4">
+<div class="absolute -left-6 mt-1 w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">done</span>
+</div>
+<div class="flex flex-col space-y-1">
+<span class="text-h3 font-h3 text-on-surface">Reviewer assigned</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Oct 24, 2023 - 16:05 EST</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant pt-1">Case assigned to Tier-2 Institutional Evaluation Queue.</p>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative flex items-start space-x-4">
+<div class="absolute -left-6 mt-1 w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">done</span>
+</div>
+<div class="flex flex-col space-y-1">
+<span class="text-h3 font-h3 text-on-surface">Document verified</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Oct 25, 2023 - 09:15 EST</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant pt-1">Identity, background check clearances, and proofs of address cleared.</p>
+</div>
+</div>
+<!-- Timeline Item 4 -->
+<div class="relative flex items-start space-x-4">
+<div class="absolute -left-6 mt-1 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center ring-4 ring-secondary-fixed">
+<span class="material-symbols-outlined text-sm animate-spin">sync</span>
+</div>
+<div class="flex flex-col space-y-1">
+<span class="text-h3 font-h3 text-on-surface">Under review</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Current Stage</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant pt-1">Comprehensive profile audit currently underway by the review board.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions Footer -->
+<div class="pt-2 flex justify-end">
+<button class="border border-outline text-on-surface px-6 py-3 rounded-lg text-body font-body font-semibold hover:bg-surface-container-high transition-colors active:scale-98">
+        Withdraw application
+      </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-outline-variant py-6 mt-12 text-center text-body-sm font-body-sm text-on-surface-variant">
+<p>© 2023 ELOKA Institutional Systems. All rights reserved.</p>
+</footer>
+</body></html>

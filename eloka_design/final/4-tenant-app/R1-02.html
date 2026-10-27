@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>R1-02 Tenant login</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "outline-variant": "#c5c5d5",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-background": "#1a1c1b",
+            "inverse-on-surface": "#f1f1ee",
+            "on-tertiary-container": "#a5a49e",
+            "error": "#ba1a1a",
+            "on-primary-container": "#8d9cff",
+            "on-secondary-container": "#653c00",
+            "surface-variant": "#e2e3e0",
+            "surface-dim": "#dadad7",
+            "on-secondary-fixed-variant": "#673d00",
+            "on-primary-fixed-variant": "#2439ab",
+            "on-tertiary-fixed-variant": "#474742",
+            "tertiary": "#242521",
+            "on-surface-variant": "#454653",
+            "inverse-surface": "#2f312f",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#e8e8e5",
+            "surface": "#FAFAF7",
+            "surface-container": "#eeeeeb",
+            "secondary": "#875200",
+            "primary-fixed": "#dee0ff",
+            "primary-container": "#11299E",
+            "on-secondary-fixed": "#2b1700",
+            "secondary-fixed-dim": "#ffb865",
+            "on-tertiary-fixed": "#1b1c18",
+            "inverse-primary": "#bbc3ff",
+            "on-error": "#ffffff",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#3a3a36",
+            "surface-bright": "#FAFAF7",
+            "outline": "#757685",
+            "secondary-container": "#fc9e00",
+            "secondary-fixed": "#ffddba",
+            "on-primary-fixed": "#000f5d",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#bbc3ff",
+            "surface-tint": "#4053c4",
+            "primary": "#11299E",
+            "background": "#FAFAF7",
+            "on-primary": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "surface-container-low": "#f4f4f1",
+            "on-surface": "#1a1c1b",
+            "surface-container-highest": "#e2e3e0"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full bg-[#FAFAF7] text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary">
+<main class="max-w-7xl mx-auto px-6 py-12">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center justify-center">
+<!-- State 1 (Login) -->
+<div class="w-full max-w-[440px] mx-auto bg-[#FFFFFF] rounded-xl p-8 border border-[#E5E5E0] shadow-sm relative flex flex-col justify-between">
+<div>
+<!-- Wordmark -->
+<div class="text-xl font-bold text-primary tracking-tight mb-8">Sample Pay</div>
+<!-- Heading & Subtitle -->
+<h1 class="text-2xl font-headline font-bold text-on-surface tracking-tight mb-2">Welcome back</h1>
+<p class="text-sm text-on-surface-variant mb-6">Log in to continue</p>
+<!-- Form -->
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<div>
+<label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Mobile number</label>
+<div class="flex items-center border border-[#E5E5E0] rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-primary bg-surface transition-all">
+<span class="px-3 py-2.5 bg-surface-container-low text-on-surface-variant text-sm font-medium border-r border-[#E5E5E0]">+91</span>
+<input class="w-full px-3 py-2.5 bg-transparent text-on-surface placeholder:text-outline text-sm focus:outline-none" placeholder="98765 43210" type="tel"/>
+</div>
+</div>
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-medium text-sm rounded-lg hover:opacity-95 transition-all shadow-sm" type="submit">
+              Continue
+            </button>
+</form>
+<!-- Divider -->
+<div class="relative flex py-4 items-center">
+<div class="flex-grow border-t border-[#E5E5E0]"></div>
+<span class="flex-shrink mx-4 text-xs text-on-surface-variant uppercase tracking-wider">or continue with</span>
+<div class="flex-grow border-t border-[#E5E5E0]"></div>
+</div>
+<!-- Secondary Button -->
+<button class="w-full py-3 px-4 bg-surface border border-[#E5E5E0] text-on-surface font-medium text-sm rounded-lg hover:bg-surface-container transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-base" data-icon="public">public</span>
+            Continue with Google
+          </button>
+</div>
+<!-- Footer / Lock line & Privacy -->
+<div class="mt-8 pt-6 border-t border-[#E5E5E0] flex items-center justify-between text-xs text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>Secured by Sample Pay</span>
+</div>
+<a class="hover:text-primary transition-colors underline underline-offset-2" href="#">Privacy Policy</a>
+</div>
+</div>
+<!-- State 2 (Verify OTP) -->
+<div class="w-full max-w-[440px] mx-auto bg-[#FFFFFF] rounded-xl p-8 border border-[#E5E5E0] shadow-sm relative flex flex-col justify-between">
+<div>
+<!-- Top Row: Wordmark & Back -->
+<div class="flex items-center justify-between mb-8">
+<div class="text-xl font-bold text-primary tracking-tight">Sample Pay</div>
+<a class="text-sm font-medium text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+              Back
+            </a>
+</div>
+<!-- Heading & Subtitle -->
+<h1 class="text-2xl font-headline font-bold text-on-surface tracking-tight mb-2">Verify your OTP</h1>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
+<span>Sent to +91 XXXXXX3210</span>
+<button class="text-primary hover:text-primary-container inline-flex items-center gap-0.5 text-xs font-semibold" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+              Change number
+            </button>
+</div>
+<!-- OTP Input Boxes -->
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<div class="flex gap-2 justify-between">
+<input class="w-12 h-12 text-center text-lg font-semibold bg-surface border border-[#E5E5E0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-on-surface" maxlength="1" type="text" value="4"/>
+<input class="w-12 h-12 text-center text-lg font-semibold bg-surface border border-[#E5E5E0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-on-surface" maxlength="1" type="text" value="8"/>
+<input class="w-12 h-12 text-center text-lg font-semibold bg-surface border border-[#E5E5E0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-on-surface" maxlength="1" type="text" value="2"/>
+<input class="w-12 h-12 text-center text-lg font-semibold bg-surface border border-[#E5E5E0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-on-surface" maxlength="1" placeholder="-" type="text"/>
+<input class="w-12 h-12 text-center text-lg font-semibold bg-surface border border-[#E5E5E0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-on-surface" maxlength="1" placeholder="-" type="text"/>
+<input class="w-12 h-12 text-center text-lg font-semibold bg-surface border border-[#E5E5E0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-on-surface" maxlength="1" placeholder="-" type="text"/>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant">
+<span>Resend in 00:28</span>
+<button class="text-primary font-medium hover:underline" type="button">Resend OTP</button>
+</div>
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-medium text-sm rounded-lg hover:opacity-95 transition-all shadow-sm" type="submit">
+              Verify
+            </button>
+</form>
+</div>
+<!-- Footer / Lock line & Privacy -->
+<div class="mt-8 pt-6 border-t border-[#E5E5E0] flex items-center justify-between text-xs text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>Secured by Sample Pay</span>
+</div>
+<a class="hover:text-primary transition-colors underline underline-offset-2" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APP-06 Business PAN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #FAFAF7;
+      color: #0A0A0A;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-mono-tabular {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+  </style>
+</head>
+<body class="bg-[#FAFAF7] text-[#0A0A0A] min-h-screen py-8 px-4 sm:px-6 flex justify-center">
+
+  <!-- Mobile Viewport Container (~390px - 440px wide) -->
+  <div class="w-full max-w-[420px] bg-[#FAFAF7] flex flex-col space-y-6">
+
+    <!-- Screen Spec Header Badge -->
+    <div class="flex items-center justify-between text-xs text-[#5C5C57] pb-1 border-b border-[#E5E5E0]">
+      <div class="flex items-center gap-1.5 font-medium">
+        <span class="w-2 h-2 rounded-full bg-[#11299E]"></span>
+        <span>ELOKA Spec Preview · APP-06</span>
+      </div>
+      <span>Mobile Viewport (Step 4 of 13)</span>
+    </div>
+
+    <!-- MAIN ACTIVE SCREEN VIEW -->
+    <div class="bg-white rounded-2xl border border-[#E5E5E0] shadow-sm overflow-hidden flex flex-col min-h-[720px]">
+      
+      <!-- Top Bar -->
+      <header class="h-14 px-5 border-b border-[#E5E5E0] flex items-center justify-between bg-white">
+        <span class="font-bold text-lg tracking-tight text-[#0A0A0A]">ELOKA</span>
+        <a href="#help" class="text-sm font-medium text-[#5C5C57] hover:text-[#0A0A0A] transition-colors">Help</a>
+      </header>
+
+      <!-- Subheader / Navigation Bar -->
+      <div class="px-5 pt-4 pb-2 flex flex-col gap-3">
+        <!-- Back Link -->
+        <a href="#application" class="inline-flex items-center gap-1 text-sm font-medium text-[#5C5C57] hover:text-[#0A0A0A] transition-colors w-fit">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          <span>Application</span>
+        </a>
+
+        <!-- Progress Indicator -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-medium text-[#5C5C57]">Step 4 of 13</span>
+            <span class="text-[#5C5C57]">31%</span>
+          </div>
+          <!-- 13-step progress bar with step 4 active -->
+          <div class="w-full h-1 bg-[#E5E5E0] rounded-full overflow-hidden">
+            <div class="h-full bg-[#11299E] rounded-full" style="width: 30.76%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Step Content -->
+      <main class="flex-1 px-5 pt-3 pb-6 flex flex-col justify-between">
+        <div class="space-y-5">
+          <!-- Step Title Row with Saved indicator -->
+          <div class="flex items-baseline justify-between pt-1">
+            <h1 class="text-2xl font-bold tracking-tight text-[#0A0A0A]">Business PAN</h1>
+            <span class="inline-flex items-center gap-1 text-xs font-medium text-[#5C5C57] bg-[#F4F3EE] px-2 py-0.5 rounded-full border border-[#E5E5E0]">
+              <svg class="w-3 h-3 text-[#065F46]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Saved</span>
+            </span>
+          </div>
+
+          <!-- Main Form Card -->
+          <div class="bg-white rounded-xl border border-[#E5E5E0] p-4 space-y-4">
+            <div class="space-y-1.5">
+              <label for="pan-input" class="block text-xs font-medium text-[#0A0A0A]">
+                PAN of the business <span class="text-[#991B1B]">*</span>
+              </label>
+              
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="pan-input"
+                  name="pan"
+                  maxlength="10"
+                  value=""
+                  placeholder="ABCDE1234F" 
+                  class="w-full h-12 px-3.5 bg-white border border-[#85857F] rounded-lg text-base font-mono-tabular tracking-wider uppercase text-[#0A0A0A] placeholder-[#85857F] focus:outline-none focus:ring-2 focus:ring-[#11299E] focus:border-transparent transition-all"
+                  autocomplete="off"
+                  autocapitalize="characters"
+                  spellcheck="false"
+                >
+              </div>
+
+              <p class="text-xs text-[#5C5C57] leading-relaxed pt-0.5">
+                For a Private Limited company the 4th letter is C.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sticky / Bottom Primary Action -->
+        <div class="pt-6 mt-auto">
+          <button type="button" class="w-full h-12 bg-[#0A0A0A] hover:bg-[#1F1F1F] active:translate-y-px text-white text-base font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#11299E] focus:ring-offset-2 flex items-center justify-center">
+            Verify PAN
+          </button>
+        </div>
+      </main>
+
+    </div>
+
+    <!-- STATE VARIANTS SECTION DIVIDER -->
+    <div class="pt-4 pb-2">
+      <div class="flex items-center gap-2">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#5C5C57]">State Variants</h2>
+        <div class="h-px flex-1 bg-[#E5E5E0]"></div>
+      </div>
+      <p class="text-xs text-[#5C5C57] mt-0.5">Labelled specifications for pending, success, and validation error states.</p>
+    </div>
+
+    <!-- VARIANT 1: Pending State -->
+    <div class="space-y-1.5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-[#5C5C57]">Variant · Pending check</span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#1E40AF] animate-pulse"></span>
+          Checking
+        </span>
+      </div>
+
+      <div class="bg-[#EFF6FF] border border-[#BFDBFE] rounded-xl p-4">
+        <div class="flex items-start gap-3">
+          <!-- Spinner -->
+          <div class="mt-0.5 flex-shrink-0">
+            <svg class="animate-spin h-5 w-5 text-[#1E40AF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <div class="flex-1 space-y-2">
+            <p class="text-sm font-medium text-[#1E40AF] leading-snug">
+              Checking with the income tax records…
+            </p>
+            <div>
+              <a href="#check-again" class="text-xs font-semibold text-[#11299E] hover:underline inline-flex items-center gap-1">
+                Check again
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VARIANT 2: Success State -->
+    <div class="space-y-1.5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-[#5C5C57]">Variant · Verified success</span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#065F46]"></span>
+          Verified
+        </span>
+      </div>
+
+      <div class="bg-white border border-[#E5E5E0] rounded-xl p-4 space-y-4 shadow-sm">
+        <div class="border-b border-[#E5E5E0] pb-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 rounded-full bg-[#ECFDF5] text-[#065F46] flex items-center justify-center">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span class="text-sm font-semibold text-[#0A0A0A]">PAN verified</span>
+          </div>
+          <span class="text-xs font-mono-tabular text-[#5C5C57]">Just now</span>
+        </div>
+
+        <!-- Label / Value List -->
+        <dl class="space-y-2.5 text-xs">
+          <div class="flex items-baseline justify-between py-1 border-b border-[#F4F3EE]">
+            <dt class="text-[#5C5C57]">PAN</dt>
+            <dd class="font-semibold text-[#0A0A0A] font-mono-tabular bg-[#F4F3EE] px-2 py-0.5 rounded border border-[#E5E5E0]">XXXXX1234X</dd>
+          </div>
+          <div class="flex flex-col gap-0.5 py-1 border-b border-[#F4F3EE]">
+            <dt class="text-[#5C5C57]">Name as per PAN</dt>
+            <dd class="font-semibold text-[#0A0A0A] text-sm">SAMPLE TRADERS PRIVATE LIMITED</dd>
+          </div>
+          <div class="flex items-baseline justify-between py-1">
+            <dt class="text-[#5C5C57]">Holder type</dt>
+            <dd class="font-semibold text-[#0A0A0A]">Company</dd>
+          </div>
+        </dl>
+
+        <!-- Continue CTA -->
+        <button type="button" class="w-full h-11 bg-[#0A0A0A] hover:bg-[#1F1F1F] active:translate-y-px text-white text-sm font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#11299E] focus:ring-offset-2 flex items-center justify-center">
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- VARIANT 3: Error States -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium text-[#5C5C57]">Variant · Error states (inline under field)</span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#FEF2F2] text-[#991B1B] border border-[#FCA5A5]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#991B1B]"></span>
+          Validation errors
+        </span>
+      </div>
+
+      <!-- Error Example 1: Failed verification with attempts -->
+      <div class="bg-white border border-[#E5E5E0] rounded-xl p-4 space-y-2 shadow-sm">
+        <span class="text-[11px] font-medium uppercase tracking-wider text-[#5C5C57] block mb-1">Example A · Verification failure</span>
+        <label class="block text-xs font-medium text-[#0A0A0A]">PAN of the business <span class="text-[#991B1B]">*</span></label>
+        <input 
+          type="text" 
+          value="ABCDE9999Z" 
+          class="w-full h-11 px-3 bg-[#FEF2F2] border-2 border-[#991B1B] rounded-lg text-sm font-mono-tabular uppercase text-[#0A0A0A] focus:outline-none"
+          readonly
+        >
+        <p class="text-xs text-[#991B1B] flex items-center gap-1.5 font-medium pt-0.5">
+          <svg class="w-3.5 h-3.5 flex-shrink-0 text-[#991B1B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>We couldn't verify this PAN. 2 attempts left.</span>
+        </p>
+      </div>
+
+      <!-- Error Example 2: Individual PAN mismatch -->
+      <div class="bg-white border border-[#E5E5E0] rounded-xl p-4 space-y-2 shadow-sm">
+        <span class="text-[11px] font-medium uppercase tracking-wider text-[#5C5C57] block mb-1">Example B · Entity mismatch</span>
+        <label class="block text-xs font-medium text-[#0A0A0A]">PAN of the business <span class="text-[#991B1B]">*</span></label>
+        <input 
+          type="text" 
+          value="ABCPA1234M" 
+          class="w-full h-11 px-3 bg-[#FEF2F2] border-2 border-[#991B1B] rounded-lg text-sm font-mono-tabular uppercase text-[#0A0A0A] focus:outline-none"
+          readonly
+        >
+        <p class="text-xs text-[#991B1B] flex items-center gap-1.5 font-medium pt-0.5">
+          <svg class="w-3.5 h-3.5 flex-shrink-0 text-[#991B1B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>This PAN belongs to an individual. Enter the company's PAN.</span>
+        </p>
+      </div>
+
+      <!-- Error Example 3: Duplicate PAN registered -->
+      <div class="bg-white border border-[#E5E5E0] rounded-xl p-4 space-y-2 shadow-sm">
+        <span class="text-[11px] font-medium uppercase tracking-wider text-[#5C5C57] block mb-1">Example C · Duplicate record</span>
+        <label class="block text-xs font-medium text-[#0A0A0A]">PAN of the business <span class="text-[#991B1B]">*</span></label>
+        <input 
+          type="text" 
+          value="AABCC1234D" 
+          class="w-full h-11 px-3 bg-[#FEF2F2] border-2 border-[#991B1B] rounded-lg text-sm font-mono-tabular uppercase text-[#0A0A0A] focus:outline-none"
+          readonly
+        >
+        <p class="text-xs text-[#991B1B] flex items-center gap-1.5 font-medium pt-0.5">
+          <svg class="w-3.5 h-3.5 flex-shrink-0 text-[#991B1B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>This PAN is already registered with ELOKA. Contact support.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen Footer Notes -->
+    <div class="pt-2 pb-6 text-center text-xs text-[#5C5C57]">
+      <div class="flex items-center justify-center gap-4">
+        <a href="#privacy" class="hover:underline">Privacy</a>
+        <span>·</span>
+        <a href="#terms" class="hover:underline">Terms</a>
+        <span>·</span>
+        <a href="#security" class="hover:underline">Security</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

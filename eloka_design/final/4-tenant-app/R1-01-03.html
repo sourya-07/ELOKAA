@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<title>Sample Pay - Tenant App</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#c5c5d5",
+            "on-secondary-fixed": "#2b1700",
+            "surface-container-low": "#f4f4f1",
+            "surface-container-highest": "#e2e3e0",
+            "on-tertiary-fixed": "#1b1c18",
+            "primary": "#001573",
+            "background": "#f9f9f6",
+            "tertiary": "#242521",
+            "primary-fixed": "#dee0ff",
+            "surface": "#f9f9f6",
+            "on-secondary-fixed-variant": "#673d00",
+            "tertiary-container": "#3a3a36",
+            "primary-container": "#11299e",
+            "secondary-fixed-dim": "#ffb865",
+            "secondary-fixed": "#ffddba",
+            "surface-variant": "#e2e3e0",
+            "outline": "#757685",
+            "surface-bright": "#f9f9f6",
+            "on-background": "#1a1c1b",
+            "on-surface-variant": "#454653",
+            "surface-tint": "#4053c4",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "surface-container": "#eeeeeb",
+            "secondary": "#875200",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "primary-fixed-dim": "#bbc3ff",
+            "on-surface": "#1a1c1b",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e8e8e5",
+            "on-error-container": "#93000a",
+            "surface-dim": "#dadad7",
+            "inverse-primary": "#bbc3ff",
+            "on-tertiary-container": "#a5a49e",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#f1f1ee",
+            "inverse-surface": "#2f312f",
+            "tertiary-fixed": "#e4e2dc",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "on-primary-fixed-variant": "#2439ab",
+            "on-tertiary-fixed-variant": "#474742",
+            "secondary-container": "#fc9e00",
+            "on-primary-fixed": "#000f5d",
+            "on-secondary-container": "#653c00",
+            "on-primary-container": "#8d9cff",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex">
+<!-- Left Sidebar (Navigation style 'dark': sidebar uses brand colour #11299E with white text) -->
+<aside class="w-[250px] bg-primary-container text-white flex flex-col justify-between shrink-0 select-none">
+<div class="p-4 flex flex-col gap-6">
+<!-- Tenant Logo -->
+<div class="flex items-center gap-2 px-2 pt-2">
+<span class="material-symbols-outlined text-secondary-container text-2xl" data-icon="hub">hub</span>
+<span class="font-bold text-lg tracking-tight">Sample Pay</span>
+</div>
+<!-- Small profile row -->
+<div class="bg-white/10 rounded-lg p-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">
+          RS
+        </div>
+<div class="flex flex-col">
+<span class="text-xs text-white/70">Welcome,</span>
+<span class="text-sm font-semibold text-white">Ravi Sample</span>
+</div>
+</div>
+<!-- Balance card -->
+<div class="bg-white/10 rounded-lg p-3 flex flex-col gap-2">
+<div class="flex flex-col">
+<span class="text-xs text-white/70">E-value balance</span>
+<span class="text-base font-bold text-white tracking-wide">₹12,450.00</span>
+</div>
+<div class="text-[11px] text-white/70 flex items-center justify-between border-t border-white/10 pt-2">
+<span>Bank account XXXX4321</span>
+</div>
+<div class="flex gap-2 mt-1">
+<button class="flex-1 bg-white/20 hover:bg-white/30 text-white rounded text-xs py-1 transition-all">Refresh</button>
+<button class="flex-1 bg-secondary-container hover:bg-secondary-container/95 font-semibold rounded text-xs py-1 transition-all" style="color: #0A0A0A;">Load balance</button>
+</div>
+</div>
+<!-- Menu Items -->
+<nav class="flex flex-col gap-1 text-sm">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 text-white font-semibold" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="home">home</span>
+          Home
+        </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="group">group</span>
+          My Network
+        </a>
+<a class="flex items-center justify-between px-3 py-2 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-all" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg" data-icon="account_tree">account_tree</span>
+            Network Transactions
+          </div>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-1.5 py-0.5 rounded">Beta</span>
+</a>
+<!-- Expandable: Transactions -->
+<div class="flex flex-col">
+<div class="flex items-center justify-between px-3 py-2 rounded-lg text-white/80 hover:bg-white/10 hover:text-white cursor-pointer transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg" data-icon="receipt_long">receipt_long</span>
+              Transactions
+            </div>
+<span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</div>
+<div class="flex flex-col pl-9 gap-1 pt-1 text-xs text-white/70">
+<a class="py-1.5 hover:text-white transition-all" href="#">Payments</a>
+<a class="py-1.5 hover:text-white transition-all" href="#">DMT</a>
+<a class="py-1.5 hover:text-white transition-all" href="#">AEPS</a>
+</div>
+</div>
+<!-- Collapsible group: Others -->
+<div class="flex flex-col mt-2">
+<div class="flex items-center justify-between px-3 py-2 rounded-lg text-white/80 hover:bg-white/10 hover:text-white cursor-pointer transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg" data-icon="grid_view">grid_view</span>
+              Others
+            </div>
+<span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</div>
+<div class="flex flex-col pl-9 gap-1 pt-1 text-xs text-white/70">
+<a class="py-1.5 hover:text-white transition-all" href="#">Need cash</a>
+<a class="py-1.5 hover:text-white transition-all" href="#">Query tracker</a>
+<a class="py-1.5 hover:text-white transition-all" href="#">Initiate refund</a>
+<a class="py-1.5 hover:text-white transition-all" href="#">Manage my account</a>
+</div>
+</div>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0">
+<!-- Top Bar (white) -->
+<header class="bg-surface border-b border-surface-variant px-6 py-3 flex items-center justify-between sticky top-0 z-10">
+<div class="flex items-center gap-4 w-96">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border border-surface-variant rounded-lg pl-9 pr-14 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all" placeholder="Search anything…" type="text"/>
+<div class="absolute right-2 top-2 bg-surface-variant text-on-surface-variant text-[10px] font-semibold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+            Ctrl K
+          </div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant text-xl hover:text-primary transition-all" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">3</span>
+</div>
+<div class="h-6 w-[1px] bg-surface-variant"></div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs">
+            RS
+          </div>
+<span class="text-sm font-semibold text-on-surface">Ravi Sample</span>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<main class="flex-1 p-6 overflow-y-auto max-w-7xl w-full mx-auto flex flex-col gap-6">
+<!-- Bento Grid / Card Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- 1. Start here (Span 2) -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-xl p-5 border border-surface-variant shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline font-semibold text-base text-on-surface">Start here</h2>
+<a class="text-xs font-semibold text-primary hover:underline" href="#">Show all</a>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<!-- Product Tile 1 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="payments">payments</span>
+<span class="text-xs font-medium text-on-surface">Money transfer</span>
+</a>
+<!-- Product Tile 2 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="fingerprint">fingerprint</span>
+<span class="text-xs font-medium text-on-surface">AePS cash withdrawal</span>
+</a>
+<!-- Product Tile 3 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="receipt">receipt</span>
+<span class="text-xs font-medium text-on-surface">Bill payments</span>
+</a>
+<!-- Product Tile 4 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="phone_iphone">phone_iphone</span>
+<span class="text-xs font-medium text-on-surface">Recharge</span>
+</a>
+<!-- Product Tile 5 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="badge">badge</span>
+<span class="text-xs font-medium text-on-surface">PAN services</span>
+</a>
+<!-- Product Tile 6 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="security">security</span>
+<span class="text-xs font-medium text-on-surface">Insurance</span>
+</a>
+<!-- Product Tile 7 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="flight">flight</span>
+<span class="text-xs font-medium text-on-surface">Travel</span>
+</a>
+<!-- Product Tile 8 -->
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl mb-1.5 group-hover:scale-110 transition-transform" data-icon="apps">apps</span>
+<span class="text-xs font-medium text-on-surface">More</span>
+</a>
+</div>
+</div>
+<!-- 3. Earning summary -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-surface-variant shadow-sm flex flex-col justify-between">
+<h2 class="font-headline font-semibold text-base text-on-surface mb-3">Earning summary — as of 20 Oct</h2>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col pb-3 border-b border-surface-variant">
+<span class="text-xs text-on-surface-variant">This month till yesterday</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="text-lg font-bold text-on-surface">₹8,240</span>
+<span class="text-xs font-semibold text-emerald-600 flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs" data-icon="arrow_drop_up">arrow_drop_up</span> 12% from last month
+                </span>
+</div>
+</div>
+<div class="flex flex-col pb-3 border-b border-surface-variant">
+<span class="text-xs text-on-surface-variant">Last month's earning</span>
+<span class="text-base font-bold text-on-surface mt-1">₹7,350</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant">Commission due</span>
+<span class="text-base font-bold text-primary mt-1">₹1,120</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Second Row: Recharge, Notifications, Support -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- 2. Recharge & bill payments -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-surface-variant shadow-sm flex flex-col">
+<h2 class="font-headline font-semibold text-base text-on-surface mb-4">Recharge &amp; bill payments</h2>
+<div class="grid grid-cols-3 gap-3">
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform" data-icon="smartphone">smartphone</span>
+<span class="text-xs font-medium text-on-surface">Mobile</span>
+</a>
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform" data-icon="tv">tv</span>
+<span class="text-xs font-medium text-on-surface">DTH</span>
+</a>
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform" data-icon="bolt">bolt</span>
+<span class="text-xs font-medium text-on-surface">Electricity</span>
+</a>
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform" data-icon="water_drop">water_drop</span>
+<span class="text-xs font-medium text-on-surface">Water</span>
+</a>
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform" data-icon="local_fire_department">local_fire_department</span>
+<span class="text-xs font-medium text-on-surface">Gas</span>
+</a>
+<a class="flex flex-col items-center justify-center p-3 rounded-lg bg-surface-container-low hover:bg-primary-fixed/20 transition-all text-center group" href="#">
+<span class="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform" data-icon="grid_view">grid_view</span>
+<span class="text-xs font-medium text-on-surface">More</span>
+</a>
+</div>
+</div>
+<!-- 5. Unread notifications -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-surface-variant shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<h2 class="font-headline font-semibold text-base text-on-surface">Unread notifications</h2>
+<a class="text-xs font-semibold text-primary hover:underline" href="#">Show all</a>
+</div>
+<div class="flex flex-col gap-3 flex-1 justify-center">
+<div class="p-3 rounded-lg bg-surface-container-low flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-lg mt-0.5" data-icon="info">info</span>
+<div class="flex flex-col text-xs">
+<span class="font-semibold text-on-surface">New Commission Structure</span>
+<span class="text-on-surface-variant mt-0.5">Updated AEPS payout slabs are now live for all tier-1 agents.</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary-container text-lg mt-0.5" data-icon="campaign" style="font-variation-settings: 'FILL' 1;">campaign</span>
+<div class="flex flex-col text-xs">
+<span class="font-semibold text-on-surface">Scheduled Maintenance</span>
+<span class="text-on-surface-variant mt-0.5">DMT gateway upgrade scheduled on Sunday 02:00 AM.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. Query card -->
+<div class="bg-primary text-on-primary rounded-xl p-5 shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-9xl" data-icon="support_agent">support_agent</span>
+</div>
+<div class="flex flex-col gap-2 z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-xl" data-icon="support_agent">support_agent</span>
+<h2 class="font-headline font-semibold text-base text-on-primary">Have a question?</h2>
+</div>
+<p class="text-xs text-white/80 leading-relaxed mt-1">
+              Call us on <strong class="text-white font-semibold">1800 000 0000</strong> or write to <strong class="text-white font-semibold">support@samplepay.in</strong>
+</p>
+</div>
+<div class="mt-4 z-10">
+<button class="w-full bg-secondary-container hover:bg-secondary-container/95 font-semibold rounded-lg text-xs py-2 transition-all" style="color: #0A0A0A;">
+              Raise a ticket
+            </button>
+</div>
+</div>
+</div>
+<!-- 4. Recent transactions -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-surface-variant shadow-sm flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline font-semibold text-base text-on-surface">Recent transactions</h2>
+<a class="text-xs font-semibold text-primary hover:underline" href="#">Show all</a>
+</div>
+<!-- Table / Rows -->
+<div class="flex flex-col divide-y divide-surface-variant">
+<!-- Row 1 -->
+<div class="py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="arrow_outgoing">cloud_upload</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-on-surface">Money transfer to XXXX5678</span>
+<span class="text-xs text-on-surface-variant">TID 4471029</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-on-surface">₹5,400.00</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                Success
+              </span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="bolt">bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-on-surface">Electricity Bill Payment</span>
+<span class="text-xs text-on-surface-variant">TID 4471028</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-on-surface">₹1,240.00</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                Pending
+              </span>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="phone_iphone">phone_iphone</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-on-surface">Mobile Recharge Jio</span>
+<span class="text-xs text-on-surface-variant">TID 4471027</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-on-surface">₹719.00</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+                Failed
+              </span>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="fingerprint">fingerprint</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-on-surface">AePS Cash Withdrawal</span>
+<span class="text-xs text-on-surface-variant">TID 4471026</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-on-surface">₹10,000.00</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                Success
+              </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

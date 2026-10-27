@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APP-22 DigiLocker quick path</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline": "#747878",
+            "on-primary": "#ffffff",
+            "primary-fixed": "#e5e2e1",
+            "on-primary-fixed": "#1c1b1b",
+            "primary": "#000000",
+            "on-primary-fixed-variant": "#474646",
+            "surface-tint": "#5f5e5e",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#c9c6c5",
+            "tertiary-container": "#1b1c18",
+            "on-error": "#ffffff",
+            "surface": "#f9f9f6",
+            "on-secondary-container": "#001a88",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-surface": "#1a1c1b",
+            "surface-container-low": "#f4f4f1",
+            "primary-container": "#1c1b1b",
+            "surface-container-highest": "#e2e3e0",
+            "error-container": "#ffdad6",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-tertiary-fixed": "#1b1c18",
+            "inverse-on-surface": "#f1f1ee",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "outline-variant": "#c4c7c7",
+            "on-background": "#1a1c1b",
+            "secondary-container": "#778afd",
+            "error": "#ba1a1a",
+            "background": "#f9f9f6",
+            "surface-bright": "#f9f9f6",
+            "tertiary": "#000000",
+            "surface-dim": "#dadad7",
+            "on-tertiary-container": "#84847e",
+            "inverse-primary": "#c9c6c5",
+            "on-secondary-fixed": "#000f5d",
+            "inverse-surface": "#2f312f",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-surface-variant": "#444748",
+            "surface-variant": "#e2e3e0",
+            "surface-container-high": "#e8e8e5",
+            "secondary-fixed": "#dee0ff",
+            "secondary": "#4053c4",
+            "on-primary-container": "#858383",
+            "on-tertiary-fixed-variant": "#474742",
+            "surface-container": "#eeeeeb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-4xl": "64px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "gutter": "1rem",
+            "space-xl": "24px",
+            "space-sm": "8px",
+            "space-xs": "4px",
+            "space-2xl": "32px",
+            "space-3xl": "48px",
+            "margin": "1.5rem"
+          },
+          "fontFamily": {
+            "h3": ["Inter"],
+            "display": ["Inter"],
+            "h2": ["Inter"],
+            "display-mobile": ["Inter"],
+            "h1": ["Inter"],
+            "body-sm": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          "fontSize": {
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF7] text-on-surface font-body antialiased flex justify-center min-h-screen">
+<div class="w-[390px] min-h-screen bg-[#FAFAF7] flex flex-col pb-24 shadow-2xl relative">
+<!-- Top App Bar -->
+<header class="bg-surface text-on-surface flex justify-between items-center w-full px-4 h-16 sticky top-0 z-40">
+<div class="font-h1 text-h1 text-primary">ELOKA</div>
+<button class="font-body-sm text-secondary font-medium hover:opacity-80">Help</button>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="flex flex-col gap-space-2xl px-4 py-space-xl">
+<!-- FRAME A — Connect DigiLocker -->
+<section class="flex flex-col gap-space-lg">
+<div class="font-label text-label text-outline uppercase tracking-wider">CONNECT</div>
+<!-- Subheader & Progress -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-body-sm text-on-surface-variant">
+<span>Step 2 of 6</span>
+<span>33%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-1/3 rounded-full"></div>
+</div>
+</div>
+<h1 class="font-h1 text-h1 text-on-surface">Connect DigiLocker</h1>
+<!-- Card: What we'll fetch -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<h3 class="font-h3 text-h3 text-on-surface">What we'll fetch</h3>
+<div class="flex flex-col gap-space-md">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-outline mt-0.5" data-icon="check_circle">check_circle</span>
+<p class="font-body-sm text-on-surface">Your name, home address and Aadhaar (last 4 digits only)</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-outline mt-0.5" data-icon="business">business</span>
+<p class="font-body-sm text-on-surface">Business PAN details</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-outline mt-0.5" data-icon="description">description</span>
+<p class="font-body-sm text-on-surface">Documents in your DigiLocker (for example GST or incorporation certificate)</p>
+</div>
+</div>
+</div>
+<!-- Checkbox -->
+<label class="flex items-start gap-space-sm cursor-pointer pt-space-xs">
+<input class="mt-1 rounded border-outline text-primary focus:ring-0" type="checkbox"/>
+<span class="font-body-sm text-on-surface">I allow ELOKA to fetch these details from DigiLocker for this application.</span>
+</label>
+<!-- Primary Button -->
+<button class="w-full bg-primary text-on-primary font-h3 text-h3 py-4 rounded-lg flex items-center justify-center gap-space-sm shadow-sm active:scale-[0.98] transition-all">
+<span>Continue to DigiLocker</span>
+<span class="material-symbols-outlined text-on-primary" data-icon="open_in_new">open_in_new</span>
+</button>
+<!-- State variant card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-md flex items-center justify-between">
+<span class="font-body-sm text-on-surface-variant">Waiting for DigiLocker…</span>
+<button class="font-body-sm text-[#11299E] font-medium hover:underline">Check again</button>
+</div>
+</section>
+<hr class="border-outline-variant"/>
+<!-- FRAME B — Check your details -->
+<section class="flex flex-col gap-space-lg">
+<div class="font-label text-label text-outline uppercase tracking-wider">CHECK DETAILS</div>
+<!-- Subheader & Progress -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-body-sm text-on-surface-variant">
+<span>Step 3 of 6</span>
+<span>50%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-1/2 rounded-full"></div>
+</div>
+</div>
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">Check your details</h1>
+<p class="font-body-sm text-on-surface-variant mt-1">Fetched from DigiLocker on 21 Oct 2026.</p>
+</div>
+<!-- Card You -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<h3 class="font-h3 text-h3 text-on-surface">You</h3>
+<div class="flex flex-col gap-space-sm font-body-sm">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Name</span>
+<span class="font-medium text-on-surface">RAVI SAMPLE</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Aadhaar</span>
+<div class="flex items-center gap-space-xs">
+<span class="font-medium text-on-surface">XXXX-XXXX-1234</span>
+<span class="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2 py-0.5 rounded-full">Verified</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Mobile</span>
+<div class="flex flex-col items-end">
+<span class="font-medium text-on-surface">+91 XXXXXX3210</span>
+<span class="text-[11px] text-outline">From sign-in</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Home address -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex justify-between items-center">
+<h3 class="font-h3 text-h3 text-on-surface">Home address</h3>
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-medium px-2 py-0.5 rounded-full">From DigiLocker</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg font-body-sm text-on-surface border border-outline-variant">
+            Flat 12, Sample Lane, Bandra West, Mumbai 400051
+          </div>
+</div>
+<!-- Card Business -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<h3 class="font-h3 text-h3 text-on-surface">Business</h3>
+<div class="flex flex-col gap-space-sm font-body-sm">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant">Business name</span>
+<div class="flex flex-col items-end text-right">
+<span class="font-medium text-on-surface">SAMPLE TRADERS PRIVATE LIMITED</span>
+<span class="text-[11px] text-outline">From PAN</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">PAN</span>
+<div class="flex items-center gap-space-xs">
+<span class="font-medium text-on-surface">XXXXX1234X</span>
+<span class="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2 py-0.5 rounded-full">Verified</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Company type</span>
+<span class="font-medium text-on-surface">Private Limited</span>
+</div>
+</div>
+</div>
+<!-- Card Business address -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<h3 class="font-h3 text-h3 text-on-surface">Business address</h3>
+<p class="font-body-sm text-on-surface-variant">We couldn't find a business address in DigiLocker.</p>
+<label class="flex items-center gap-space-sm cursor-pointer">
+<input class="rounded border-outline text-primary focus:ring-0" type="checkbox"/>
+<span class="font-body-sm text-on-surface">Same as home address</span>
+</label>
+<div class="flex flex-col gap-space-md pt-space-xs">
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant">Address line 1</label>
+<input class="bg-surface border border-outline-variant rounded-lg p-space-sm font-body-sm text-on-surface focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E]" placeholder="Enter address" type="text"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant">Address line 2 (optional)</label>
+<input class="bg-surface border border-outline-variant rounded-lg p-space-sm font-body-sm text-on-surface focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E]" placeholder="Apartment, suite, unit" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant">District</label>
+<input class="bg-surface border border-outline-variant rounded-lg p-space-sm font-body-sm text-on-surface focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E]" placeholder="District" type="text"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant">State</label>
+<input class="bg-surface border border-outline-variant rounded-lg p-space-sm font-body-sm text-on-surface focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E]" placeholder="State" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant">Pincode</label>
+<input class="bg-surface border border-outline-variant rounded-lg p-space-sm font-body-sm text-on-surface focus:border-[#11299E] focus:ring-1 focus:ring-[#11299E]" placeholder="Pincode" type="text"/>
+</div>
+</div>
+</div>
+<!-- Card Documents fetched -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<h3 class="font-h3 text-h3 text-on-surface">Documents fetched</h3>
+<div class="flex flex-col gap-space-sm">
+<div class="flex justify-between items-center font-body-sm">
+<span class="text-on-surface">Certificate of incorporation</span>
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-medium px-2 py-0.5 rounded-full">Fetched</span>
+</div>
+<div class="flex justify-between items-center font-body-sm">
+<span class="text-on-surface">GST certificate</span>
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-medium px-2 py-0.5 rounded-full">Fetched</span>
+</div>
+</div>
+</div>
+<!-- Primary Button -->
+<button class="w-full bg-primary text-on-primary font-h3 text-h3 py-4 rounded-lg flex items-center justify-center shadow-sm active:scale-[0.98] transition-all">
+          Confirm and continue
+        </button>
+</section>
+<hr class="border-outline-variant"/>
+<!-- FRAME C — Remaining steps -->
+<section class="flex flex-col gap-space-lg">
+<div class="font-label text-label text-outline uppercase tracking-wider">REMAINING STEPS</div>
+<!-- Subheader & Progress -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-body-sm text-on-surface-variant">
+<span>Step 4 of 6</span>
+<span>66%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-2/3 rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<h1 class="font-h1 text-h1 text-on-surface">Almost done</h1>
+<span class="font-label text-label bg-surface-variant text-on-surface-variant px-2 py-1 rounded">onb_7Q2K9X</span>
+</div>
+<!-- Step List -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-outline font-medium w-5">1.</span>
+<span class="text-on-surface">Mobile number</span>
+</div>
+<span class="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2.5 py-0.5 rounded-full">Completed</span>
+</div>
+<div class="flex items-center justify-between font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-outline font-medium w-5">2.</span>
+<span class="text-on-surface">DigiLocker</span>
+</div>
+<span class="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2.5 py-0.5 rounded-full">Completed</span>
+</div>
+<div class="flex items-center justify-between font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-outline font-medium w-5">3.</span>
+<span class="text-on-surface">Check details</span>
+</div>
+<span class="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2.5 py-0.5 rounded-full">Completed</span>
+</div>
+<div class="flex items-center justify-between font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-outline font-medium w-5">4.</span>
+<span class="font-semibold text-on-surface">Bank account</span>
+</div>
+<span class="bg-[#11299E]/10 text-[#11299E] text-[10px] font-medium px-2.5 py-0.5 rounded-full">In progress</span>
+</div>
+<div class="flex items-center justify-between font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-outline font-medium w-5">5.</span>
+<span class="text-outline">Platform setup</span>
+</div>
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-medium px-2.5 py-0.5 rounded-full">Not started</span>
+</div>
+<div class="flex items-center justify-between font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="text-outline font-medium w-5">6.</span>
+<span class="text-outline">Declaration and agreement</span>
+</div>
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-medium px-2.5 py-0.5 rounded-full">Not started</span>
+</div>
+</div>
+<!-- Card Next: Bank account -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<h3 class="font-h3 text-h3 text-on-surface">Next: Bank account</h3>
+<button class="w-full bg-primary text-on-primary font-h3 text-h3 py-4 rounded-lg flex items-center justify-center shadow-sm active:scale-[0.98] transition-all">
+            Continue
+          </button>
+</div>
+<!-- Text Link -->
+<div class="text-center pt-space-xs">
+<button class="font-body-sm text-[#11299E] font-medium hover:underline">Switch to step-by-step application</button>
+</div>
+</section>
+</main>
+</div>
+</body></html>

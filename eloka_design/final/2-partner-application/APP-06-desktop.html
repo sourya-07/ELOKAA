@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-container": "#001a88", "on-surface": "#1a1c1b", "on-background": "#1a1c1b", "outline": "#747878", "surface-container": "#eeeeeb", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "secondary": "#4053c4", "outline-variant": "#c4c7c7", "surface-variant": "#e2e3e0", "secondary-fixed-dim": "#bbc3ff", "on-surface-variant": "#444748", "on-primary-container": "#858383", "on-tertiary-fixed-variant": "#474742", "inverse-surface": "#2f312f", "error": "#ba1a1a", "inverse-on-surface": "#f1f1ee", "surface-bright": "#f9f9f6", "primary-fixed": "#e5e2e1", "surface-container-high": "#e8e8e5", "background": "#f9f9f6", "surface-tint": "#5f5e5e", "tertiary": "#000000", "on-error": "#ffffff", "on-secondary": "#ffffff", "surface-container-highest": "#e2e3e0", "primary-fixed-dim": "#c9c6c5", "on-secondary-fixed": "#000f5d", "primary-container": "#1c1b1b", "on-tertiary": "#ffffff", "secondary-fixed": "#dee0ff", "on-tertiary-container": "#84847e", "tertiary-fixed": "#e4e2dc", "on-primary-fixed-variant": "#474646", "surface-dim": "#dadad7", "inverse-primary": "#c9c6c5", "surface": "#f9f9f6", "error-container": "#ffdad6", "surface-container-low": "#f4f4f1", "on-primary-fixed": "#1c1b1b", "primary": "#000000", "on-tertiary-fixed": "#1b1c18", "secondary-container": "#778afd", "on-primary": "#ffffff", "on-secondary-fixed-variant": "#2439ab", "tertiary-container": "#1b1c18", "tertiary-fixed-dim": "#c8c6c0" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "16px", "space-md": "12px", "margin": "1.5rem", "space-xl": "24px", "space-xs": "4px", "gutter": "1rem", "space-4xl": "64px", "space-3xl": "48px", "space-sm": "8px", "space-2xl": "32px" }, "fontFamily": { "body": ["Inter"], "h1": ["Inter"], "display": ["Inter"], "h3": ["Inter"], "body-sm": ["Inter"], "h2": ["Inter"], "label": ["Inter"], "display-mobile": ["Inter"] }, "fontSize": { "body": ["16px", {"lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400"}], "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "h3": ["16px", {"lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600"}], "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400"}], "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600"}], "label": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}], "display-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}] } } } };</script></head><body class="bg-surface font-body text-on-surface antialiased selection:bg-surface-container-high"><header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest border-b border-surface-variant z-50"><div class="w-full max-w-[1280px] mx-auto px-space-xl h-full flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="font-h1 text-h1 text-primary tracking-tight font-bold">ELOKA</span><span class="h-4 w-px bg-outline-variant"></span><span class="font-label text-label text-on-surface-variant uppercase tracking-wider">Onboarding Portal</span></div><div class="flex items-center gap-space-xl"><nav class="flex items-center gap-space-lg" data-active-classes="text-primary font-h3"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="help-support" href="#">Help</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="sign-out" href="#">Sign out</a></nav><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed top-16 left-0 bottom-0 w-[280px] bg-surface-container-lowest border-r border-surface-variant z-40 overflow-y-auto"><div class="p-space-xl border-b border-surface-variant"><div class="flex items-center justify-between mb-space-xs"><h2 class="font-h3 text-h3 text-on-surface">Your application</h2><span class="font-label text-label text-on-surface-variant">Step 1 of 13</span></div><div class="w-full bg-surface-container h-1 rounded-full overflow-hidden"><div class="bg-primary h-full w-[8%]"></div></div></div><nav class="p-space-md flex flex-col gap-space-xs" data-active-classes="bg-surface-container-low text-primary font-semibold"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-low text-primary font-semibold" data-path="personal-details" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">1</span><span class="font-body-sm text-body-sm truncate">Personal Details</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="identity-verification" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">2</span><span class="font-body-sm text-body-sm truncate">Identity Verification</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="contact-information" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">3</span><span class="font-body-sm text-body-sm truncate">Contact Information</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="citizenship-residency" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">4</span><span class="font-body-sm text-body-sm truncate">Citizenship &amp; Residency</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="employment-history" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">5</span><span class="font-body-sm text-body-sm truncate">Employment History</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="financial-profile" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">6</span><span class="font-body-sm text-body-sm truncate">Financial Profile</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="tax-residency" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">7</span><span class="font-body-sm text-body-sm truncate">Tax Residency</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="source-of-funds" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">8</span><span class="font-body-sm text-body-sm truncate">Source of Funds</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="regulatory-disclosures" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">9</span><span class="font-body-sm text-body-sm truncate">Regulatory Disclosures</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="document-upload" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">10</span><span class="font-body-sm text-body-sm truncate">Document Upload</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="security-credentials" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">11</span><span class="font-body-sm text-body-sm truncate">Security Credentials</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="application-review" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">12</span><span class="font-body-sm text-body-sm truncate">Application Review</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="consent-and-submission" href="#"><span class="font-label text-label w-5 h-5 rounded-full border border-outline flex items-center justify-center shrink-0">13</span><span class="font-body-sm text-body-sm truncate">Consent &amp; Submission</span></a></nav></aside><div class="pl-[280px]"><main class="pt-16 min-h-screen bg-surface"><div class="max-w-[720px] mx-auto px-space-xl py-space-2xl"><div class="flex flex-col w-full">
+<!-- Client Context & Live Preview Rail sync (Modifying shell aside dynamically to mirror APP-06 Step 4 requirements) -->
+<script>
+    (function() {
+      // Synchronize left navigation rail with APP-06 Step 4 configuration
+      const aside = document.querySelector('aside');
+      if (aside) {
+        aside.innerHTML = `
+          <div class="p-space-xl bg-surface-container-lowest">
+            <div class="flex items-center justify-between mb-space-xs">
+              <h2 class="font-h3 text-h3 text-on-surface">Your application</h2>
+              <span class="font-label text-label px-2 py-0.5 rounded-full bg-surface-container font-mono text-on-surface-variant text-[11px]">onb_7Q2K9X</span>
+            </div>
+            <div class="flex items-baseline justify-between mb-2">
+              <span class="font-label text-label text-on-surface-variant font-medium">Step 4 of 13</span>
+              <span class="font-label text-label text-on-surface-variant text-[11px]">31% completed</span>
+            </div>
+            <div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+              <div class="bg-secondary h-full w-[31%] transition-all duration-500"></div>
+            </div>
+          </div>
+          <nav class="p-space-md flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-210px)]">
+            <!-- 1. Mobile verification (Done) -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[14px] text-[#065F46] font-bold" style="font-variation-settings: 'wght' 700;">check</span>
+              </span>
+              <span class="font-body-sm text-body-sm text-on-surface">Mobile verification</span>
+            </a>
+            <!-- 2. Consent (Done) -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[14px] text-[#065F46] font-bold" style="font-variation-settings: 'wght' 700;">check</span>
+              </span>
+              <span class="font-body-sm text-body-sm text-on-surface">Consent</span>
+            </a>
+            <!-- 3. Program (Done) -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[14px] text-[#065F46] font-bold" style="font-variation-settings: 'wght' 700;">check</span>
+              </span>
+              <span class="font-body-sm text-body-sm text-on-surface">Program</span>
+            </a>
+            <!-- 4. Business PAN (Active Step) -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg bg-[#E8ECFA] text-secondary font-medium transition-colors shadow-sm">
+              <span class="w-5 h-5 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                <span class="w-2 h-2 rounded-full bg-surface-container-lowest"></span>
+              </span>
+              <span class="font-body-sm text-body-sm text-secondary font-semibold">Business PAN</span>
+            </a>
+            <!-- 5. Business details -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">Business details</span>
+            </a>
+            <!-- 6. Email -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">Email</span>
+            </a>
+            <!-- 7. Signatory KYC -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">Signatory KYC</span>
+            </a>
+            <!-- 8. Live photo -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">Live photo</span>
+            </a>
+            <!-- 9. Documents -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">Documents</span>
+            </a>
+            <!-- 10. Bank account -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">Bank account</span>
+            </a>
+            <!-- 11. White-label setup -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+              <span class="w-5 h-5 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+              </span>
+              <span class="font-body-sm text-body-sm">White-label setup</span>
+            </a>
+            <!-- 12. Declaration (Locked) -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-outline-variant cursor-not-allowed">
+              <span class="w-5 h-5 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[16px] text-outline">lock</span>
+              </span>
+              <span class="font-body-sm text-body-sm">Declaration</span>
+            </a>
+            <!-- 13. Agreement (Locked) -->
+            <a href="#" class="flex items-center gap-space-md px-space-md py-2 rounded-lg text-outline-variant cursor-not-allowed">
+              <span class="w-5 h-5 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[16px] text-outline">lock</span>
+              </span>
+              <span class="font-body-sm text-body-sm">Agreement</span>
+            </a>
+          </nav>
+          <div class="p-space-xl mt-auto">
+            <div class="p-3 rounded-lg bg-surface-container-low flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-[18px] text-secondary mt-0.5">help_outline</span>
+              <div class="text-xs text-on-surface-variant leading-relaxed">
+                Need assistance?<br>
+                <a href="#" class="text-secondary hover:underline font-medium">Contact support</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    })();
+  </script>
+<!-- Step Header & Meta Progress -->
+<div class="mb-space-xl">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label text-label uppercase tracking-wider text-secondary font-semibold">Step 4 of 13</span>
+<span class="font-label text-label text-on-surface-variant font-mono">31% COMPLETED</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden mb-space-lg">
+<div class="bg-secondary h-full w-[31%] rounded-full"></div>
+</div>
+<h1 class="font-h1 text-h1 text-primary tracking-tight font-semibold mb-1">Business PAN</h1>
+<p class="font-body text-body text-on-surface-variant">We check it against the income tax records.</p>
+</div>
+<!-- Primary Interactive Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm mb-space-3xl relative">
+<div class="flex flex-col gap-space-lg">
+<div>
+<label class="block font-body-sm text-body-sm font-semibold text-on-surface mb-2" for="business-pan-input">
+          PAN of the business <span class="text-error">*</span>
+</label>
+<div class="relative">
+<input autocomplete="off" class="w-full h-11 px-3.5 bg-surface-container-lowest rounded-lg font-mono text-base uppercase text-on-surface tracking-wider placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary transition-all shadow-inner" id="business-pan-input" maxlength="10" placeholder="ABCDE1234F" spellcheck="false" type="text"/>
+<div class="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+<span class="font-label text-[11px] font-mono uppercase text-on-surface-variant bg-surface-container px-1.5 py-0.5 rounded">10 chars</span>
+</div>
+</div>
+<p class="mt-2 text-[14px] text-[#5C5C57] leading-5 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-outline">info</span>
+<span>For a Private Limited company the 4th letter is C.</span>
+</p>
+</div>
+<button class="w-full h-11 bg-primary text-on-primary rounded-lg font-h3 text-h3 flex items-center justify-center gap-2 hover:bg-neutral-800 active:translate-y-[1px] transition-all shadow-sm" id="verify-pan-btn" type="button">
+<span>Verify PAN</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Section: Post-Action State Previews -->
+<div class="mt-space-lg mb-space-2xl">
+<div class="flex items-center justify-between mb-space-lg">
+<div>
+<h2 class="font-h2 text-h2 text-primary font-semibold tracking-tight">What the applicant can see next</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">How each result looks to the applicant.</p>
+</div>
+
+</div>
+<!-- Stacked State Preview Cards Container -->
+<div class="flex flex-col gap-space-lg">
+<!-- 1. Checking Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm transition-all hover:shadow-md">
+<div class="flex items-center justify-between mb-space-lg">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EFF6FF] text-[#1E40AF] font-label text-label font-medium">
+<span class="w-2 h-2 rounded-full bg-[#1E40AF] animate-pulse"></span>
+            Checking
+          </span>
+<span class="font-label text-label text-on-surface-variant font-mono">State 01</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-lg flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm">
+<svg class="animate-spin h-4 w-4 text-secondary" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-medium text-on-surface">Checking with the income tax records…</p>
+
+</div>
+</div>
+<a class="font-body-sm text-body-sm text-secondary hover:underline font-medium px-2 py-1 shrink-0" href="#">Check again</a>
+</div>
+</div>
+<!-- 2. Verified Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm transition-all hover:shadow-md">
+<div class="flex items-center justify-between mb-space-lg">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] font-label text-label font-medium">
+<span class="w-2 h-2 rounded-full bg-[#065F46]"></span>
+            Verified
+          </span>
+<span class="font-label text-label text-on-surface-variant font-mono">State 02</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-lg mb-space-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-y-3 gap-x-4">
+<div class="flex flex-col">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider mb-1">PAN</span>
+<div class="inline-flex">
+<span class="font-mono text-body-sm font-semibold text-on-surface bg-surface-container-lowest px-2 py-0.5 rounded shadow-sm">
+                  XXXXX1234X
+                </span>
+</div>
+</div>
+<div class="flex flex-col md:col-span-2">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider mb-1">Name as per PAN</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface tracking-tight">
+                SAMPLE TRADERS PRIVATE LIMITED
+              </span>
+</div>
+<div class="flex flex-col md:col-span-3 pt-2 mt-2 bg-surface-container-high/40 rounded p-2">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider">Holder type</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">Company</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full h-11 bg-primary text-on-primary rounded-lg font-h3 text-h3 flex items-center justify-center gap-2 hover:bg-neutral-800 active:translate-y-[1px] transition-all shadow-sm" type="button">
+<span>Continue</span>
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+</div>
+<!-- 3. Errors Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm transition-all hover:shadow-md">
+<div class="flex items-center justify-between mb-space-lg">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FEF2F2] text-[#991B1B] font-label text-label font-medium">
+<span class="w-2 h-2 rounded-full bg-[#991B1B]"></span>
+            Errors
+          </span>
+<span class="font-label text-label text-on-surface-variant font-mono">State 03 (Scenarios)</span>
+</div>
+<div class="flex flex-col gap-space-lg">
+<!-- Scenario a: Failed Verification / Attempts left -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex items-center justify-between mb-1.5">
+<label class="font-label text-label font-medium text-on-surface">Scenario A — Record Not Found</label>
+
+</div>
+<div class="relative">
+<input class="w-full h-11 px-3.5 bg-error-container/30 rounded-lg font-mono text-base text-on-surface tracking-wider focus:outline-none ring-1 ring-error shadow-inner" readonly="" type="text" value="ABCDE9999Z"/>
+<div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-error">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mt-2 text-[#991B1B]">
+<span class="material-symbols-outlined text-[16px] shrink-0">error</span>
+<span class="font-body-sm text-[13px] leading-tight font-medium">We couldn't verify this PAN. 2 attempts left.</span>
+</div>
+</div>
+<!-- Scenario b: Individual PAN entered for Corporate flow -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex items-center justify-between mb-1.5">
+<label class="font-label text-label font-medium text-on-surface">Scenario B — Entity Structure Mismatch</label>
+
+</div>
+<div class="relative">
+<input class="w-full h-11 px-3.5 bg-error-container/30 rounded-lg font-mono text-base text-on-surface tracking-wider focus:outline-none ring-1 ring-error shadow-inner" readonly="" type="text" value="ABCPA1234M"/>
+<div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-error">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mt-2 text-[#991B1B]">
+<span class="material-symbols-outlined text-[16px] shrink-0">error</span>
+<span class="font-body-sm text-[13px] leading-tight font-medium">This PAN belongs to an individual. Enter the company's PAN.</span>
+</div>
+</div>
+<!-- Scenario c: Duplicate registration -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex items-center justify-between mb-1.5">
+<label class="font-label text-label font-medium text-on-surface">Scenario C — Duplicate Account</label>
+
+</div>
+<div class="relative">
+<input class="w-full h-11 px-3.5 bg-error-container/30 rounded-lg font-mono text-base text-on-surface tracking-wider focus:outline-none ring-1 ring-error shadow-inner" readonly="" type="text" value="AABCC1234D"/>
+<div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-error">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mt-2 text-[#991B1B]">
+<span class="material-symbols-outlined text-[16px] shrink-0">error</span>
+<span class="font-body-sm text-[13px] leading-tight font-medium">This PAN is already registered with ELOKA. Contact support.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive script for sample input handling -->
+<script>
+    (function() {
+      const panInput = document.getElementById('business-pan-input');
+      const verifyBtn = document.getElementById('verify-pan-btn');
+      
+      if (panInput) {
+        panInput.addEventListener('input', function(e) {
+          this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        });
+      }
+
+      if (verifyBtn && panInput) {
+        verifyBtn.addEventListener('click', function() {
+          if (!panInput.value || panInput.value.length < 10) {
+            panInput.focus();
+            panInput.classList.add('ring-2', 'ring-error');
+            setTimeout(() => {
+              panInput.classList.remove('ring-error');
+            }, 1200);
+          }
+        });
+      }
+    })();
+  </script>
+</div></div></main></div></body></html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APP-14 Review your application (desktop)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#FAFAF7',
+            card: '#FFFFFF',
+            ink: '#0A0A0A',
+            graphite: '#5C5C57',
+            stoneBorder: '#E5E5E0',
+            connectBlue: '#11299E',
+            connectWash: '#E8ECFA',
+            successBg: '#ECFDF5',
+            successText: '#065F46',
+            successBorder: '#A7F3D0'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #FAFAF7;
+      color: #0A0A0A;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-canvas text-ink flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <header class="w-full bg-white border-b border-stoneBorder px-8 py-3.5 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-6">
+      <span class="text-xl font-bold tracking-tight text-ink">ELOKA</span>
+    </div>
+    <div class="flex items-center gap-6 text-sm text-graphite font-medium">
+      <a href="#help" class="flex items-center gap-1.5 hover:text-ink transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke-width="2"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01"/>
+        </svg>
+        Help
+      </a>
+      <a href="#signout" class="flex items-center gap-1.5 hover:text-ink transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+        Sign out
+      </a>
+      <div class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center font-semibold text-xs ml-1">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body Layout -->
+  <div class="flex flex-1 w-full max-w-[1400px] mx-auto">
+
+    <!-- 280px Left Rail -->
+    <aside class="w-[280px] shrink-0 border-r border-stoneBorder p-6 flex flex-col justify-between min-h-[calc(100vh-57px)] bg-canvas">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-sm font-semibold text-ink">Your application</h2>
+          <span class="text-[11px] font-mono bg-stoneBorder/50 text-graphite px-2 py-0.5 rounded">onb_7Q2K9X</span>
+        </div>
+        <div class="flex items-center justify-between text-xs text-graphite mb-2">
+          <span>Step 12 of 13</span>
+          <span>92% completed</span>
+        </div>
+        <div class="w-full h-1 bg-stoneBorder rounded-full overflow-hidden mb-6">
+          <div class="h-full bg-connectBlue rounded-full" style="width: 92%"></div>
+        </div>
+
+        <!-- 13 Steps List -->
+        <nav class="space-y-1">
+          <!-- Step 1 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>1. Mobile verification</span>
+          </div>
+
+          <!-- Step 2 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>2. Consent</span>
+          </div>
+
+          <!-- Step 3 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>3. Program</span>
+          </div>
+
+          <!-- Step 4 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>4. Business PAN</span>
+          </div>
+
+          <!-- Step 5 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>5. Business details</span>
+          </div>
+
+          <!-- Step 6 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>6. Email</span>
+          </div>
+
+          <!-- Step 7 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>7. Signatory KYC</span>
+          </div>
+
+          <!-- Step 8 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>8. Live photo</span>
+          </div>
+
+          <!-- Step 9 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>9. Documents</span>
+          </div>
+
+          <!-- Step 10 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>10. Bank account</span>
+          </div>
+
+          <!-- Step 11 Done -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite">
+            <svg class="w-4 h-4 text-connectBlue shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12l2.5 2.5L16 9"/>
+            </svg>
+            <span>11. White-label setup</span>
+          </div>
+
+          <!-- Step 12 Current / Active -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold bg-connectWash text-connectBlue">
+            <span class="w-4 h-4 flex items-center justify-center shrink-0">
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-connectBlue flex items-center justify-center">
+                <span class="w-1.5 h-1.5 rounded-full bg-connectBlue"></span>
+              </span>
+            </span>
+            <span>12. Declaration</span>
+          </div>
+
+          <!-- Step 13 Locked -->
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-graphite opacity-60">
+            <svg class="w-4 h-4 text-graphite shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <rect x="5" y="11" width="14" height="10" rx="2" stroke-width="2"/>
+              <path d="M8 11V7a4 4 0 018 0v4" stroke-width="2"/>
+            </svg>
+            <span>13. Agreement</span>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Assistance Footer -->
+      <div class="pt-6 border-t border-stoneBorder">
+        <p class="text-xs text-graphite mb-1">Need assistance?</p>
+        <a href="#support" class="text-xs font-medium text-connectBlue hover:underline">Contact support</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area: Centered 720px Column -->
+    <main class="flex-1 p-8 lg:p-12 overflow-y-auto">
+      <div class="w-full max-w-[720px] mx-auto">
+
+        <!-- Title & Subtitle (No separate back-arrow progress bar above) -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold tracking-tight text-ink mb-1">Review your application</h1>
+          <p class="text-sm text-graphite">Editing any section will ask you to confirm the declaration and agreement again.</p>
+        </div>
+
+        <!-- Summary Cards Stack -->
+        <div class="space-y-4 mb-6">
+
+          <!-- 1. Business Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">Business</h3>
+              <a href="#edit-business" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <div class="space-y-1.5 text-sm">
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">PAN:</span>
+                <span class="font-mono text-ink font-semibold">PAN XXXXX1234X</span>
+              </div>
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">Name:</span>
+                <span class="text-ink font-medium">SAMPLE TRADERS PRIVATE LIMITED</span>
+              </div>
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">Company type:</span>
+                <span class="text-ink">Private Limited</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. You Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">You</h3>
+              <a href="#edit-you" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <div class="space-y-1.5 text-sm">
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">Signatory:</span>
+                <span class="text-ink font-medium">RAVI SAMPLE</span>
+              </div>
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">Mobile:</span>
+                <span class="font-mono text-ink">+91 XXXXXX3210</span>
+              </div>
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">Email:</span>
+                <span class="text-ink">s••••@sampletraders.in</span>
+              </div>
+              <div class="flex items-baseline">
+                <span class="w-36 text-graphite font-medium">Aadhaar:</span>
+                <span class="font-mono text-ink">XXXX-XXXX-1234</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Home address Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">Home address</h3>
+              <a href="#edit-home-address" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <p class="text-sm text-ink leading-relaxed">Flat 12, Sample Lane, Bandra West, Mumbai 400051</p>
+          </div>
+
+          <!-- 4. Business address Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">Business address</h3>
+              <a href="#edit-business-address" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <p class="text-sm text-ink">Same as home address</p>
+          </div>
+
+          <!-- 5. Documents Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">Documents</h3>
+              <a href="#edit-documents" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <p class="text-sm text-ink">2 uploaded</p>
+          </div>
+
+          <!-- 6. Bank account Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">Bank account</h3>
+              <a href="#edit-bank" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <p class="text-sm font-mono text-ink">XXXXXX4321 · SBIN0001234</p>
+          </div>
+
+          <!-- 7. Platform Card -->
+          <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-stoneBorder/60">
+              <h3 class="text-sm font-semibold text-ink">Platform</h3>
+              <a href="#edit-platform" class="text-xs font-medium text-connectBlue hover:underline">Edit</a>
+            </div>
+            <p class="text-sm text-ink">Sample Pay · <span class="font-mono text-graphite">sampletraders.eloka.app</span></p>
+          </div>
+
+        </div>
+
+        <!-- Declaration Card -->
+        <div class="bg-card border border-stoneBorder rounded-xl p-5 shadow-sm mb-6">
+          <div class="text-[11px] font-semibold tracking-wider text-graphite uppercase mb-3">
+            DECLARATION · VERSION 2026-10-01
+          </div>
+          <label class="flex items-start gap-3 cursor-pointer select-none">
+            <input type="checkbox" checked class="mt-0.5 w-4 h-4 rounded border-stoneBorder text-ink focus:ring-connectBlue accent-ink cursor-pointer">
+            <span class="text-sm text-ink leading-snug">
+              I declare that the information above is true and complete
+            </span>
+          </label>
+        </div>
+
+        <!-- Full-Width Bottom CTA Button -->
+        <div>
+          <button type="button" class="w-full py-3.5 px-6 rounded-lg bg-ink text-white font-semibold text-sm hover:bg-neutral-800 active:scale-[0.99] transition-all duration-150 shadow-sm flex items-center justify-center gap-2">
+            Confirm and continue
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+</body>
+</html>

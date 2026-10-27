@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-container": "#84847e",
+            "surface-container": "#eeeeeb",
+            "secondary-container": "#dee0ff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#000f5d",
+            "inverse-surface": "#2f312f",
+            "tertiary": "#000000",
+            "outline-variant": "#c4c7c7",
+            "on-tertiary-fixed-variant": "#474742",
+            "surface-variant": "#e2e3e0",
+            "on-error": "#ffffff",
+            "surface-bright": "#f9f9f6",
+            "on-primary": "#ffffff",
+            "surface": "#f9f9f6",
+            "primary": "#000000",
+            "surface-tint": "#5f5e5e",
+            "secondary": "#11299E",
+            "surface-container-low": "#f4f4f1",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "tertiary-container": "#1b1c18",
+            "on-secondary-fixed-variant": "#2439ab",
+            "outline": "#747878",
+            "on-background": "#1a1c1b",
+            "surface-dim": "#dadad7",
+            "tertiary-fixed": "#e4e2dc",
+            "surface-container-highest": "#e2e3e0",
+            "secondary-fixed": "#dee0ff",
+            "on-secondary-container": "#001a88",
+            "primary-container": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-tertiary": "#ffffff",
+            "on-surface-variant": "#444748",
+            "on-surface": "#1a1c1b",
+            "on-primary-fixed-variant": "#474646",
+            "inverse-primary": "#c9c6c5",
+            "on-primary-fixed": "#1c1b1b",
+            "on-tertiary-fixed": "#1b1c18",
+            "background": "#f9f9f6",
+            "inverse-on-surface": "#f1f1ee",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#858383",
+            "primary-fixed": "#e5e2e1",
+            "surface-container-high": "#e8e8e5",
+            "secondary-fixed-dim": "#bbc3ff",
+            "error": "#ba1a1a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "16px",
+            "gutter": "1rem",
+            "space-md": "12px",
+            "space-xl": "24px",
+            "space-xs": "4px",
+            "space-4xl": "64px",
+            "space-3xl": "48px",
+            "space-2xl": "32px",
+            "margin": "1.5rem",
+            "space-sm": "8px"
+          },
+          "fontFamily": {
+            "label": ["Inter"],
+            "h3": ["Inter"],
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body": ["Inter"],
+            "body-sm": ["Inter"],
+            "display": ["Inter"],
+            "h2": ["Inter"]
+          },
+          "fontSize": {
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF7] text-on-background font-body antialiased min-h-screen flex flex-col justify-between selection:bg-secondary selection:text-on-secondary">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface flex justify-between items-center w-full px-4 h-16">
+<div class="font-h1 text-h1 text-primary dark:text-inverse-primary tracking-tight">ELOKA</div>
+<button class="font-body-sm text-secondary hover:underline font-medium">Help</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-[390px] mx-auto px-4 py-space-xl flex-1 flex flex-col gap-space-xl">
+<!-- Title Section -->
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-display-mobile text-display-mobile text-on-background">Run your own payments platform</h1>
+<p class="font-body-sm text-on-surface-variant">Your progress is saved, so you can come back any time.</p>
+</div>
+<!-- Heading: How would you like to apply? -->
+<div class="flex flex-col gap-space-md">
+<h2 class="font-h2 text-h2 text-on-background">How would you like to apply?</h2>
+<!-- Card A (Selected) -->
+<div class="relative bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg shadow-sm cursor-pointer transition-all duration-200" onclick="selectCard('card-a')">
+<div class="flex items-start justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<!-- Custom Radio Selected -->
+<div class="w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center mt-0.5 shrink-0"></div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-h3 text-h3 text-on-background">Apply with DigiLocker</span>
+<span class="bg-secondary text-on-secondary font-label text-label px-2 py-0.5 rounded-full">Faster</span>
+</div>
+<p class="font-body-sm text-on-surface-variant">We fetch your identity, home address, PAN details and available documents from DigiLocker.</p>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-md border-t border-outline-variant flex flex-col gap-space-xs">
+<span class="font-label text-label text-on-surface-variant">6 steps</span>
+<div class="flex flex-col gap-space-xs mt-1">
+<div class="flex items-center gap-space-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span>Fewer forms to fill</span>
+</div>
+<div class="flex items-center gap-space-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span>Documents fetched for you</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card B (Not Selected) -->
+<div class="relative bg-surface-container-lowest border-2 border-secondary rounded-xl p-space-lg shadow-sm cursor-pointer transition-all duration-200" onclick="selectCard('card-b')">
+<div class="flex items-start justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<!-- Custom Radio Unselected -->
+<div class="w-5 h-5 rounded-full border-2 border-secondary flex items-center justify-center mt-0.5 shrink-0"><div class="w-2.5 h-2.5 rounded-full bg-secondary"></div></div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-h3 text-h3 text-on-background">Apply step by step</span>
+<p class="font-body-sm text-on-surface-variant">Enter your details and upload documents yourself.</p>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-md border-t border-outline-variant">
+<span class="font-label text-label text-on-surface-variant">13 steps</span>
+</div>
+</div>
+</div>
+<!-- Keep these ready card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<h3 class="font-h3 text-h3 text-on-background">Keep these ready</h3>
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-on-surface-variant text-base">check</span>
+<span>Business PAN</span>
+</div>
+<div class="flex items-center gap-space-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-on-surface-variant text-base">check</span>
+<span>Your Aadhaar-linked mobile (for DigiLocker)</span>
+</div>
+<div class="flex items-center gap-space-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-on-surface-variant text-base">check</span>
+<span>Bank account details</span>
+</div>
+<div class="flex items-center gap-space-sm font-body-sm text-on-surface">
+<span class="material-symbols-outlined text-on-surface-variant text-base">check</span>
+<span>Your logo (optional)</span>
+</div>
+</div>
+</div>
+<!-- Actions Section -->
+<div class="flex flex-col gap-space-md pt-space-xs pb-space-2xl">
+<button class="w-full bg-primary text-on-primary py-3.5 rounded-lg font-h3 text-h3 text-center transition-all duration-200 active:scale-[0.98] shadow-sm">
+        Continue
+      </button>
+<div class="text-center">
+<a class="font-body-sm text-secondary hover:underline font-medium" href="#">Continue an existing application</a>
+</div>
+</div>
+</main>
+<!-- Footer Links -->
+<footer class="w-full py-space-lg px-4 border-t border-outline-variant flex justify-center items-center gap-space-xl bg-surface">
+<a class="font-body-sm text-on-surface-variant hover:text-on-background" href="#">Privacy</a>
+<span class="text-outline-variant">•</span>
+<a class="font-body-sm text-on-surface-variant hover:text-on-background" href="#">Terms</a>
+</footer>
+<script>
+    function selectCard(cardId) {
+      // Interactive radio mock logic if desired
+      const cardA = document.querySelector('.border-2');
+      // For static demonstration, click handler structure is present
+    }
+  </script>
+</body></html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA Tenant - Business Settings & States</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#e2e3e0",
+            "error-container": "#ffdad6",
+            "surface-dim": "#dadad7",
+            "tertiary-fixed": "#e4e2dc",
+            "primary": "#001573",
+            "on-secondary-fixed-variant": "#673d00",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-primary-fixed": "#000f5d",
+            "on-error": "#ffffff",
+            "inverse-on-surface": "#f1f1ee",
+            "outline": "#757685",
+            "on-error-container": "#93000a",
+            "on-background": "#1a1c1b",
+            "error": "#ba1a1a",
+            "on-secondary-container": "#653c00",
+            "inverse-surface": "#2f312f",
+            "secondary-fixed": "#ffddba",
+            "tertiary-container": "#3a3a36",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface": "#f9f9f6",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#fc9e00",
+            "on-primary-fixed-variant": "#2439ab",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "secondary-fixed-dim": "#ffb865",
+            "surface-container": "#eeeeeb",
+            "outline-variant": "#c5c5d5",
+            "surface-container-highest": "#e2e3e0",
+            "on-tertiary-container": "#a5a49e",
+            "on-primary-container": "#8d9cff",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#f4f4f1",
+            "secondary": "#875200",
+            "primary-container": "#11299e",
+            "surface-container-lowest": "#ffffff",
+            "surface-tint": "#4053c4",
+            "on-surface-variant": "#454653",
+            "on-surface": "#1a1c1b",
+            "surface-container-high": "#e8e8e5",
+            "tertiary": "#242521",
+            "on-secondary-fixed": "#2b1700",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#bbc3ff",
+            "surface-bright": "#f9f9f6",
+            "background": "#f9f9f6",
+            "inverse-primary": "#bbc3ff",
+            "primary-fixed": "#dee0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="flex flex-col justify-between w-64 p-4 fixed left-0 top-0 h-full z-40 bg-primary text-on-primary border-r border-outline-variant">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 px-2 py-3">
+<div class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-primary font-bold">SP</div>
+<div>
+<h1 class="text-xl font-black text-on-primary">Sample Pay</h1>
+<p class="text-xs opacity-80">Tenant Admin</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="text-on-primary opacity-80 hover:opacity-100 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-primary-container hover:text-on-primary-container" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+          Dashboard
+        </a>
+<a class="text-on-primary opacity-80 hover:opacity-100 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-primary-container hover:text-on-primary-container" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+          Transactions
+        </a>
+<a class="text-on-primary opacity-80 hover:opacity-100 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-primary-container hover:text-on-primary-container" href="#">
+<span class="material-symbols-outlined">room_service</span>
+          Services
+        </a>
+<a class="text-on-primary opacity-80 hover:opacity-100 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-primary-container hover:text-on-primary-container" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+          Network
+        </a>
+<a class="bg-primary-container text-on-primary-container font-bold rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+          Settings
+        </a>
+</nav>
+</div>
+<div class="pt-4 border-t border-outline-variant/20">
+<button class="w-full py-2 px-3 bg-surface text-primary rounded-lg font-semibold text-sm hover:bg-surface-container transition-colors">
+        View Reports
+      </button>
+</div>
+</aside>
+<!-- Main Wrapper -->
+<div class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 py-3 bg-surface dark:bg-surface border-b border-surface-variant dark:border-outline-variant sticky top-0 z-30">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-sm">search</span>
+<input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search transactions, settings, agents..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant mx-1"></div>
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional portrait photo of a South Asian male admin with short black hair, wearing a navy blue button-down shirt, smiling slightly, set against a soft neutral blurred background in an office environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7yMRGRK1F9qSkg9-Yw1wd9OoVJmwk42BrT9ecxPzZV4wF6pfvIX6hnh7kdEQwUesVIjtqMxTC1bWUtaEuF_tenebGXIaBg_WtD4jZ8oiEU7ETbQtmawkbhJ7D6Uj3F-KFI40SbdgTYeY6DDV0fYmOsLRporngFtBbgYEDi-NN0OxS2KsLiiDi3PJHq5QFFI_LqJSN2sOreJFIpsq5yRq6mf4y5Wijo22DlhpUpAs8D80EeQgcD8ZUwao7wmR60l7rYL30hTB_5YBV"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Ravi Sample Admin</span>
+<span class="text-xs text-on-surface-variant">Tenant Admin</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="flex-1 p-8 max-w-7xl w-full mx-auto flex flex-col gap-12">
+<!-- SECTION A — Business settings (R1-08) -->
+<section class="flex flex-col gap-6">
+<div>
+<h2 class="text-2xl font-bold tracking-tight text-on-surface">Business settings</h2>
+<p class="text-sm text-on-surface-variant mt-1">Manage your enterprise profile, commercial agreements, and regional network configurations.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-200 cursor-pointer group shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">business</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<div class="mt-4">
+<h3 class="font-bold text-on-surface text-base">Company profile — Name, address and contact</h3>
+<p class="text-xs text-on-surface-variant mt-1">Update your legal business name, registered corporate address, and primary support contacts.</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-200 cursor-pointer group shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">description</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<div class="mt-4">
+<h3 class="font-bold text-on-surface text-base">Agreement signing — Sign your partner agreement</h3>
+<p class="text-xs text-on-surface-variant mt-1">Review active terms of service, compliance documents, and execute partner agreements digitally.</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-200 cursor-pointer group shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<div class="mt-4">
+<h3 class="font-bold text-on-surface text-base">Pricing & commissions — Set charges for your network</h3>
+<p class="text-xs text-on-surface-variant mt-1">Configure transaction fee structures, merchant discounts, and agent commission tiers.</p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-200 cursor-pointer group shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<div class="mt-4">
+<h3 class="font-bold text-on-surface text-base">Commission frequency — Monthly, daily or instant payout</h3>
+<p class="text-xs text-on-surface-variant mt-1">Choose how often commission earnings are settled to your linked bank accounts.</p>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-200 cursor-pointer group shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<div class="mt-4">
+<h3 class="font-bold text-on-surface text-base">Notifications — Messages to your agents</h3>
+<p class="text-xs text-on-surface-variant mt-1">Customize automated SMS, WhatsApp, and push broadcast templates for agent alerts.</p>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-5 flex flex-col justify-between hover:border-primary transition-all duration-200 cursor-pointer group shadow-sm">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined">palette</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<div class="mt-4">
+<h3 class="font-bold text-on-surface text-base">Theme & branding — Logo and colours of your app</h3>
+<p class="text-xs text-on-surface-variant mt-1">Upload custom white-label logos and adapt primary accent hues for mobile applications.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION B — Shared states (R1-11) -->
+<section class="flex flex-col gap-6 pt-6 border-t border-[#E5E5E0]">
+<div>
+<h2 class="text-2xl font-bold tracking-tight text-on-surface">Shared states</h2>
+<p class="text-sm text-on-surface-variant mt-1">Standardized empty, error, and fallback feedback UI components.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- 1. Empty state card -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-8 flex flex-col items-center text-center justify-between shadow-sm min-h-[320px]">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mb-4">
+<span class="material-symbols-outlined text-3xl">receipt_long</span>
+</div>
+<div class="flex flex-col gap-1 my-auto">
+<h3 class="font-bold text-on-surface text-lg">No transactions yet</h3>
+<p class="text-xs text-on-surface-variant max-w-[240px]">Transactions you make will show here.</p>
+</div>
+<div class="w-full mt-6">
+<button class="w-full py-2.5 px-4 bg-primary text-on-primary rounded-lg font-semibold text-sm hover:bg-primary-container transition-colors shadow-sm">
+                Start a transaction
+              </button>
+</div>
+</div>
+<!-- 2. Error state card -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-8 flex flex-col items-center text-center justify-between shadow-sm min-h-[320px]">
+<div class="w-16 h-16 rounded-full bg-error-container flex items-center justify-center text-on-error-container mb-4">
+<span class="material-symbols-outlined text-3xl">error</span>
+</div>
+<div class="flex flex-col gap-1 my-auto">
+<h3 class="font-bold text-on-surface text-lg">Something went wrong</h3>
+<p class="text-xs text-on-surface-variant max-w-[240px]">We couldn't load this page. Please try again.</p>
+</div>
+<div class="w-full mt-6 flex flex-col gap-3">
+<button class="w-full py-2.5 px-4 bg-primary text-on-primary rounded-lg font-semibold text-sm hover:bg-primary-container transition-colors shadow-sm">
+                Try again
+              </button>
+<a class="text-xs text-primary font-semibold hover:underline" href="#">Details</a>
+</div>
+</div>
+<!-- 3. Not found state card -->
+<div class="bg-surface-container-lowest border border-[#E5E5E0] rounded-xl p-8 flex flex-col items-center text-center justify-between shadow-sm min-h-[320px]">
+<div class="text-4xl font-black text-primary tracking-tighter mb-2 bg-surface-container px-4 py-2 rounded-lg">404</div>
+<div class="flex flex-col gap-1 my-auto">
+<h3 class="font-bold text-on-surface text-lg">Page not found</h3>
+<p class="text-xs text-on-surface-variant max-w-[240px]">The page you're looking for doesn't exist or has moved.</p>
+</div>
+<div class="w-full mt-6">
+<button class="w-full py-2.5 px-4 bg-primary text-on-primary rounded-lg font-semibold text-sm hover:bg-primary-container transition-colors shadow-sm">
+                Go to home
+              </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Space -->
+<footer class="py-6 px-8 text-center text-xs text-on-surface-variant border-t border-[#E5E5E0] mt-auto">
+      ELOKA Tenant Portal © 2025 Connect Blue Enterprise. All rights reserved.
+    </footer>
+</div>
+</body></html>

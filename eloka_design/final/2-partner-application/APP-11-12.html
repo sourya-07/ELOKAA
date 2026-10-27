@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA Design System - Mobile Onboarding Spec</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#dadad7",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#84847e",
+            "inverse-surface": "#2f312f",
+            "primary-container": "#1c1b1b",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "primary": "#000000",
+            "tertiary-container": "#1b1c18",
+            "surface-container": "#eeeeeb",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#474646",
+            "primary-fixed-dim": "#c9c6c5",
+            "surface-tint": "#5f5e5e",
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-secondary-fixed": "#000f5d",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#dee0ff",
+            "surface-container-low": "#f4f4f1",
+            "on-primary": "#ffffff",
+            "secondary": "#4053c4",
+            "surface-bright": "#f9f9f6",
+            "on-secondary-container": "#001a88",
+            "on-primary-fixed": "#1c1b1b",
+            "on-primary-container": "#858383",
+            "tertiary-fixed": "#e4e2dc",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-background": "#1a1c1b",
+            "secondary-container": "#778afd",
+            "on-error-container": "#93000a",
+            "outline": "#747878",
+            "on-secondary": "#ffffff",
+            "on-surface-variant": "#444748",
+            "outline-variant": "#c4c7c7",
+            "primary-fixed": "#e5e2e1",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#c9c6c5",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-error": "#ffffff",
+            "tertiary": "#000000",
+            "background": "#f9f9f6",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface-container-highest": "#e2e3e0",
+            "surface-variant": "#e2e3e0",
+            "surface": "#f9f9f6",
+            "inverse-on-surface": "#f1f1ee",
+            "on-surface": "#1a1c1b",
+            "surface-container-high": "#e8e8e5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "4px",
+            "space-3xl": "48px",
+            "gutter": "1rem",
+            "space-4xl": "64px",
+            "space-sm": "8px",
+            "space-2xl": "32px",
+            "margin": "1.5rem",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-xl": "24px"
+          },
+          "fontFamily": {
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"],
+            "label": ["Inter"],
+            "h3": ["Inter"],
+            "h2": ["Inter"],
+            "body-sm": ["Inter"],
+            "body": ["Inter"],
+            "display": ["Inter"]
+          },
+          "fontSize": {
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hairline-border {
+      border: 1px solid #E5E5E0;
+    }
+    .field-border {
+      border: 1px solid #85857F;
+    }
+    .whisper-shadow {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen py-space-xl flex flex-col items-center">
+<!-- Spec Canvas Container -->
+<div class="w-full max-w-[640px] px-space-md sm:px-0 flex flex-col gap-space-2xl">
+<!-- Subdued Meta Label Bar -->
+<header class="flex items-center justify-between py-space-sm px-space-md bg-surface-container-lowest hairline-border rounded-lg whisper-shadow">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-on-surface"></span>
+<span class="font-label text-label text-on-surface font-medium tracking-tight">ELOKA Engine · Mobile Core</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label text-label text-on-surface-variant font-medium">APP-11-12</span>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- FRAME A — BUSINESS DOCUMENTS · STEP 9 OF 13 -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest hairline-border rounded-xl whisper-shadow overflow-hidden flex flex-col">
+<!-- Top Bar: Minimal Header -->
+<div class="px-space-lg py-space-md flex items-center justify-between border-b border-[#E5E5E0] bg-surface-container-lowest">
+<span class="font-h3 text-h3 font-semibold text-on-surface tracking-tight">ELOKA</span>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface text-body-sm font-medium transition-colors" type="button">
+<span>Help</span>
+<span class="material-symbols-outlined text-[18px]">help</span>
+</button>
+</div>
+<!-- Sub-navigation row -->
+<div class="px-space-lg py-space-sm flex items-center justify-between bg-surface-container-low/50 border-b border-[#E5E5E0]">
+<button class="flex items-center gap-1 text-on-surface font-body-sm font-medium hover:underline active:translate-y-px" type="button">
+<span>← Application</span>
+</button>
+<!-- Saved Status Chip: #065F46 on #ECFDF5 -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] font-label text-label font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#065F46]"></span>
+<span>Saved</span>
+</div>
+</div>
+<!-- Progress Indicator Row -->
+<div class="px-space-lg pt-space-md pb-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between font-label text-label text-on-surface-variant">
+<span>Step 9 of 13</span>
+<span class="font-medium text-on-surface">69% completed</span>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-[#11299E] rounded-full" style="width: 69%;"></div>
+</div>
+</div>
+<!-- Screen Title & Description -->
+<div class="px-space-lg pt-space-md pb-space-lg flex flex-col gap-space-xs">
+<h1 class="font-h1 text-h1 text-on-surface font-semibold tracking-tight">Business documents</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Private Limited company: we need these 2 documents. JPG, PNG or PDF, up to 10 MB each.
+        </p>
+<!-- Top Notice Banner (Ice/Cream styling) -->
+<div class="mt-space-md p-space-md rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[#1D4ED8] mt-0.5">info</span>
+<div class="flex-1 font-body-sm text-body-sm text-[#1E3A8A]">
+<span class="font-medium">Upload these to continue:</span> Certificate of incorporation
+          </div>
+</div>
+</div>
+<!-- Section: Required -->
+<div class="px-space-lg py-space-sm flex flex-col gap-space-md">
+<div class="font-label text-label font-semibold text-on-surface-variant uppercase tracking-wider">
+          Required
+        </div>
+<!-- Tile 1 (Uploaded state) -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest hairline-border flex flex-col gap-space-sm hover:border-[#C4C7C7] transition-colors">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface flex-shrink-0 border border-[#E5E5E0]">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface font-semibold">Address proof</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">address-proof.pdf · 1.2 MB</span>
+</div>
+</div>
+<!-- Status Pill: Waiting for review (Royal Ink Blue on Ice #EFF6FF) -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF] font-label text-label font-medium whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2563EB]"></span>
+<span>Waiting for review</span>
+</div>
+</div>
+<!-- Action Links -->
+<div class="flex items-center justify-end gap-space-md pt-space-xs border-t border-[#F4F4F1] font-body-sm text-body-sm">
+<button class="text-on-surface font-medium hover:underline" type="button">View</button>
+<span class="text-outline-variant">·</span>
+<button class="text-on-surface font-medium hover:underline" type="button">Replace</button>
+<span class="text-outline-variant">·</span>
+<button class="text-error font-medium hover:underline" type="button">Remove</button>
+</div>
+</div>
+<!-- Tile 2 (Upload Area / Dropzone container) -->
+<div class="p-space-lg rounded-lg border-2 border-dashed border-[#85857F] bg-surface-container-low/40 flex flex-col items-center justify-center text-center gap-space-xs hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest hairline-border flex items-center justify-center text-on-surface mb-1 shadow-sm">
+<span class="material-symbols-outlined">upload_file</span>
+</div>
+<span class="font-h3 text-h3 text-on-surface font-semibold">Certificate of incorporation</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Tap to upload or drag a file here</span>
+<span class="font-label text-label text-on-surface-variant">JPG, PNG or PDF, up to 10 MB</span>
+</div>
+</div>
+<!-- Section: Optional -->
+<div class="px-space-lg pt-space-lg pb-space-md flex flex-col gap-space-md">
+<div class="font-label text-label font-semibold text-on-surface-variant uppercase tracking-wider">
+          Optional
+        </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<!-- PAN Card -->
+<div class="p-space-md rounded-lg hairline-border bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-on-surface-variant">article</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">PAN card</span>
+</div>
+<button class="font-label text-label font-semibold text-on-surface bg-surface-container-low hover:bg-surface-container px-2.5 py-1 rounded border border-[#E5E5E0] transition-colors" type="button">
+              + Upload
+            </button>
+</div>
+<!-- GST Certificate -->
+<div class="p-space-md rounded-lg hairline-border bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-on-surface-variant">verified_user</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">GST certificate</span>
+</div>
+<button class="font-label text-label font-semibold text-on-surface bg-surface-container-low hover:bg-surface-container px-2.5 py-1 rounded border border-[#E5E5E0] transition-colors" type="button">
+              + Upload
+            </button>
+</div>
+<!-- Board Resolution -->
+<div class="p-space-md rounded-lg hairline-border bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-on-surface-variant">corporate_fare</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">Board resolution</span>
+</div>
+<button class="font-label text-label font-semibold text-on-surface bg-surface-container-low hover:bg-surface-container px-2.5 py-1 rounded border border-[#E5E5E0] transition-colors" type="button">
+              + Upload
+            </button>
+</div>
+<!-- Other -->
+<div class="p-space-md rounded-lg hairline-border bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-on-surface-variant">note_add</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">Other</span>
+</div>
+<button class="font-label text-label font-semibold text-on-surface bg-surface-container-low hover:bg-surface-container px-2.5 py-1 rounded border border-[#E5E5E0] transition-colors" type="button">
+              + Upload
+            </button>
+</div>
+</div>
+</div>
+<!-- Primary Action Button -->
+<div class="p-space-lg border-t border-[#E5E5E0] mt-space-md">
+<button class="w-full h-12 rounded-[10px] bg-[#0A0A0A] hover:bg-black text-on-primary font-body font-semibold tracking-tight active:translate-y-px transition-all flex items-center justify-center" type="button">
+          Continue
+        </button>
+</div>
+<!-- Clearly Grouped State Variants for Documents -->
+<div class="mx-space-lg mb-space-lg p-space-md rounded-lg bg-surface-container-low hairline-border flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span class="font-label text-label font-bold tracking-wider uppercase">State Variants · Documents</span>
+</div>
+<!-- 1. Variant · Uploading in progress -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest hairline-border flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary">cloud_sync</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Certificate of incorporation</span>
+</div>
+<span class="font-label text-label font-medium text-on-surface">Uploading... 60%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 60%;"></div>
+</div>
+<div class="flex justify-end">
+<button class="font-label text-label text-on-surface-variant hover:text-error transition-colors" type="button">Cancel</button>
+</div>
+</div>
+<!-- 2. Variant · Rejection with reviewer note -->
+<div class="flex flex-col rounded-lg bg-surface-container-lowest hairline-border overflow-hidden">
+<div class="p-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error">assignment_late</span>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Address proof</span>
+<span class="font-label text-label text-on-surface-variant">address_old.jpg · 2.4 MB</span>
+</div>
+</div>
+<!-- Status Pill: Rejected (Oxblood #991B1B on Blush #FEF2F2) -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FEF2F2] text-[#991B1B] font-label text-label font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
+<span>Rejected</span>
+</div>
+</div>
+<!-- Reviewer Note Strip: Blush with red left border -->
+<div class="px-space-md py-space-sm bg-[#FEF2F2] border-l-4 border-[#DC2626] border-t border-[#FEE2E2] flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#991B1B] text-[18px]">error</span>
+<span class="font-body-sm text-body-sm text-[#991B1B]">The stamp is not readable — upload a clearer scan</span>
+</div>
+<button class="font-body-sm text-body-sm font-semibold text-[#991B1B] hover:underline whitespace-nowrap" type="button">Replace</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- FRAME SEPARATOR                            -->
+<!-- ========================================== -->
+<div class="flex items-center justify-center my-space-xs">
+<div class="h-px bg-outline-variant flex-grow"></div>
+<div class="px-space-md py-1 bg-surface-container-high rounded-full font-label text-label font-semibold text-on-surface tracking-wider uppercase flex items-center gap-1">
+<span>↓ NEXT ONBOARDING STEP · STEP 10 OF 13</span>
+</div>
+<div class="h-px bg-outline-variant flex-grow"></div>
+</div>
+<!-- ========================================== -->
+<!-- FRAME B — SETTLEMENT BANK ACCOUNT · STEP 10 OF 13 -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest hairline-border rounded-xl whisper-shadow overflow-hidden flex flex-col">
+<!-- Top Bar: Minimal Header -->
+<div class="px-space-lg py-space-md flex items-center justify-between border-b border-[#E5E5E0] bg-surface-container-lowest">
+<span class="font-h3 text-h3 font-semibold text-on-surface tracking-tight">ELOKA</span>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface text-body-sm font-medium transition-colors" type="button">
+<span>Help</span>
+<span class="material-symbols-outlined text-[18px]">help</span>
+</button>
+</div>
+<!-- Sub-navigation row -->
+<div class="px-space-lg py-space-sm flex items-center justify-between bg-surface-container-low/50 border-b border-[#E5E5E0]">
+<button class="flex items-center gap-1 text-on-surface font-body-sm font-medium hover:underline active:translate-y-px" type="button">
+<span>← Application</span>
+</button>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] font-label text-label font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#065F46]"></span>
+<span>Saved</span>
+</div>
+</div>
+<!-- Progress Indicator Row -->
+<div class="px-space-lg pt-space-md pb-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between font-label text-label text-on-surface-variant">
+<span>Step 10 of 13</span>
+<span class="font-medium text-on-surface">77% completed</span>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-[#11299E] rounded-full" style="width: 77%;"></div>
+</div>
+</div>
+<!-- Screen Title & Description -->
+<div class="px-space-lg pt-space-md pb-space-md flex flex-col gap-space-xs">
+<h1 class="font-h1 text-h1 text-on-surface font-semibold tracking-tight">Settlement bank account</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Primary account where your business settlements and disbursements will be routed.
+        </p>
+</div>
+<!-- Form Fields (Strictly white inputs, 10px rounded, 1px border #85857F, 48px height) -->
+<form class="px-space-lg flex flex-col gap-space-md" onsubmit="event.preventDefault()">
+<!-- Field 1: Bank -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label font-medium text-on-surface" for="bank_name">Bank *</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant pointer-events-none text-[20px]">search</span>
+<input class="w-full h-12 pl-10 pr-10 rounded-[10px] field-border bg-white text-on-surface font-body text-body placeholder:text-on-surface-variant/70 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-all" id="bank_name" placeholder="Search bank..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[20px]">expand_more</span>
+</div>
+<span class="font-label text-label text-on-surface-variant">Choose your authorized scheduled commercial bank</span>
+</div>
+<!-- Field 2: IFSC -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label font-medium text-on-surface" for="ifsc_code">IFSC *</label>
+<input class="w-full h-12 px-3.5 rounded-[10px] field-border bg-white text-on-surface font-body text-body font-mono uppercase placeholder:text-on-surface-variant/70 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-all" id="ifsc_code" placeholder="ABCD0123456" type="text" value="ABCD0123456"/>
+<span class="font-label text-label text-on-surface-variant">11 characters, e.g. ABCD0123456</span>
+</div>
+<!-- Field 3: Account Number -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label font-medium text-on-surface" for="account_number">Account number *</label>
+<div class="relative flex items-center">
+<input class="w-full h-12 px-3.5 rounded-[10px] field-border bg-white text-on-surface font-body text-body tracking-wider focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-all" id="account_number" placeholder="•••• •••• 4321" type="password" value="123456784321"/>
+<span class="material-symbols-outlined absolute right-3 text-on-surface-variant text-[20px] cursor-pointer">visibility</span>
+</div>
+<span class="font-label text-label text-on-surface-variant">Numbers only, no dashes or spaces</span>
+</div>
+<!-- Field 4: Confirm Account Number -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label font-medium text-on-surface" for="confirm_account_number">Confirm account number *</label>
+<input class="w-full h-12 px-3.5 rounded-[10px] field-border bg-white text-on-surface font-body text-body focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-all" id="confirm_account_number" placeholder="Re-enter account number" type="text"/>
+<span class="font-label text-label text-on-surface-variant">Must exactly match account number entered above</span>
+</div>
+<!-- Field 5: Bank proof (upload tile container) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label font-medium text-on-surface">Bank proof *</label>
+<div class="p-space-md rounded-[10px] field-border bg-white flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface border border-[#E5E5E0]">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Cancelled cheque or statement</span>
+<span class="font-label text-label text-on-surface-variant">JPG, PNG or PDF, up to 10 MB</span>
+</div>
+</div>
+<button class="h-9 px-3.5 rounded-lg border border-[#85857F] hover:bg-surface-container text-on-surface font-body-sm font-semibold transition-colors flex items-center gap-1 active:translate-y-px" type="button">
+<span class="material-symbols-outlined text-[16px]">file_upload</span>
+<span>Upload</span>
+</button>
+</div>
+<span class="font-label text-label text-on-surface-variant">Document must display name, account number, and IFSC</span>
+</div>
+<!-- Security note card/callout (Soft Linen / Ice background with lock icon) -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-[#E5E5E0] flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-on-surface text-[20px]">lock</span>
+<span class="font-body-sm text-body-sm text-on-surface">
+            For your security we'll send a code to your mobile before saving.
+          </span>
+</div>
+<!-- Primary Action Button: Verify account -->
+<div class="pt-space-sm pb-space-lg">
+<button class="w-full h-12 rounded-[10px] bg-[#0A0A0A] hover:bg-black text-on-primary font-body font-semibold tracking-tight active:translate-y-px transition-all flex items-center justify-center" type="button">
+            Verify account
+          </button>
+</div>
+</form>
+<!-- STATE VARIANTS & DIALOG (Under "STATE VARIANTS") -->
+<div class="mx-space-lg mb-space-lg p-space-md rounded-lg bg-surface-container-low hairline-border flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span class="font-label text-label font-bold tracking-wider uppercase">State Variants &amp; Dialog</span>
+</div>
+<!-- 1. Verification Dialog / Modal component ("Confirm it's you") -->
+<div class="bg-surface-container-lowest hairline-border rounded-xl p-space-lg whisper-shadow flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-[#E5E5E0]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface text-[20px]">verified_user</span>
+<span class="font-h3 text-h3 font-semibold text-on-surface">Confirm it's you</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Code sent to <span class="font-semibold text-on-surface">+91 XXXXXX3210</span>
+</p>
+<!-- Six discrete 48px OTP digit boxes -->
+<div class="flex items-center justify-between gap-2 py-space-xs">
+<input class="w-11 h-12 text-center text-h3 font-mono font-bold rounded-lg field-border bg-white focus:outline-none focus:ring-2 focus:ring-secondary text-on-surface" maxlength="1" type="text" value="7"/>
+<input class="w-11 h-12 text-center text-h3 font-mono font-bold rounded-lg field-border bg-white focus:outline-none focus:ring-2 focus:ring-secondary text-on-surface" maxlength="1" type="text" value="4"/>
+<input class="w-11 h-12 text-center text-h3 font-mono font-bold rounded-lg field-border bg-white focus:outline-none focus:ring-2 focus:ring-secondary text-on-surface" maxlength="1" type="text" value="2"/>
+<input class="w-11 h-12 text-center text-h3 font-mono font-bold rounded-lg field-border bg-white focus:outline-none focus:ring-2 focus:ring-secondary text-on-surface" maxlength="1" placeholder="•" type="text"/>
+<input class="w-11 h-12 text-center text-h3 font-mono font-bold rounded-lg field-border bg-white focus:outline-none focus:ring-2 focus:ring-secondary text-on-surface" maxlength="1" placeholder="•" type="text"/>
+<input class="w-11 h-12 text-center text-h3 font-mono font-bold rounded-lg field-border bg-white focus:outline-none focus:ring-2 focus:ring-secondary text-on-surface" maxlength="1" placeholder="•" type="text"/>
+</div>
+<div class="flex items-center justify-between font-label text-label">
+<span class="text-on-surface-variant">Didn't receive code?</span>
+<button class="font-semibold text-secondary hover:underline" type="button">Resend code</button>
+</div>
+<button class="w-full h-11 rounded-[10px] bg-[#0A0A0A] hover:bg-black text-on-primary font-body-sm font-semibold active:translate-y-px transition-all" type="button">
+            Confirm
+          </button>
+</div>
+<!-- 2. Variant · Success state -->
+<div class="p-space-md rounded-lg bg-[#F0FDF4] border border-[#BBF7D0] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#16A34A] text-[20px]">check_circle</span>
+<span class="font-body-sm text-body-sm font-semibold text-[#14532D]">Account verified</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-[#DCFCE7] text-[#15803D] font-label text-label font-medium">Active</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-sm hairline-border flex flex-col gap-1 font-body-sm text-body-sm">
+<div class="flex justify-between py-1 border-b border-[#F4F4F1]">
+<span class="text-on-surface-variant font-label text-label">Account</span>
+<span class="font-mono font-medium text-on-surface">XXXXXX4321</span>
+</div>
+<div class="flex justify-between py-1 border-b border-[#F4F4F1]">
+<span class="text-on-surface-variant font-label text-label">IFSC</span>
+<span class="font-mono font-medium text-on-surface">ABCD0123456</span>
+</div>
+<div class="flex justify-between py-1">
+<span class="text-on-surface-variant font-label text-label">Account holder</span>
+<span class="font-medium text-on-surface text-right">SAMPLE TRADERS PVT LTD</span>
+</div>
+</div>
+</div>
+<!-- 3. Variant · Name mismatch info banner -->
+<div class="p-space-md rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[#1D4ED8] text-[20px] mt-0.5">info</span>
+<div class="font-body-sm text-body-sm text-[#1E3A8A]">
+            The account holder name differs from your business name. Our team will review this.
+          </div>
+</div>
+<!-- 4. Variant · Error state -->
+<div class="p-space-md rounded-lg bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[#B91C1C] text-[20px] mt-0.5">error</span>
+<div class="font-body-sm text-body-sm text-[#7F1D1D] flex-1 flex flex-col">
+<span class="font-semibold">Verification failed</span>
+<span>We couldn't verify this account. 2 attempts left.</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Footer -->
+<footer class="py-space-lg flex flex-col items-center justify-center gap-space-xs text-on-surface-variant">
+<div class="flex items-center gap-space-md font-label text-label">
+<a class="hover:text-on-surface transition-colors" href="#privacy">Privacy</a>
+<span>·</span>
+<a class="hover:text-on-surface transition-colors" href="#terms">Terms</a>
+<span>·</span>
+<a class="hover:text-on-surface transition-colors" href="#security">Security</a>
+</div>
+<p class="font-label text-label text-on-surface-variant/70">
+        Institutional Trust &amp; Compliance Core · Designed according to ELOKA 4px rhythm
+      </p>
+</footer>
+</div>
+</body></html>

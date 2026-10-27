@@ -1,0 +1,263 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Business Settings - ELOKA Tenant Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "surface-tint": "#4053c4",
+              "outline-variant": "#c5c5d5",
+              "on-tertiary-fixed-variant": "#474742",
+              "inverse-surface": "#2f312f",
+              "error-container": "#ffdad6",
+              "surface-container-low": "#f4f4f1",
+              "inverse-on-surface": "#f1f1ee",
+              "background": "#f9f9f6",
+              "primary-fixed-dim": "#bbc3ff",
+              "surface": "#f9f9f6",
+              "on-surface-variant": "#454653",
+              "secondary-fixed-dim": "#ffb865",
+              "on-error": "#ffffff",
+              "tertiary-fixed-dim": "#c8c6c0",
+              "tertiary-container": "#3a3a36",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#dee0ff",
+              "primary": "#11299e",
+              "on-tertiary-fixed": "#1b1c18",
+              "on-primary-fixed-variant": "#2439ab",
+              "error": "#ba1a1a",
+              "surface-variant": "#e2e3e0",
+              "on-secondary-container": "#653c00",
+              "on-primary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "secondary-container": "#fc9e00",
+              "surface-container-highest": "#e2e3e0",
+              "surface-container-high": "#e8e8e5",
+              "surface-container": "#eeeeeb",
+              "on-background": "#1a1c1b",
+              "tertiary": "#242521",
+              "inverse-primary": "#bbc3ff",
+              "on-tertiary-container": "#a5a49e",
+              "secondary": "#875200",
+              "surface-bright": "#f9f9f6",
+              "on-primary-container": "#8d9cff",
+              "secondary-fixed": "#ffddba",
+              "on-secondary-fixed": "#2b1700",
+              "tertiary-fixed": "#e4e2dc",
+              "primary-container": "#11299e",
+              "on-surface": "#1a1c1b",
+              "outline": "#757685",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#000f5d",
+              "surface-dim": "#dadad7",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#673d00"
+            },
+            "borderRadius": {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            "fontFamily": {
+              "headline": ["Inter"],
+              "display": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased flex justify-center min-h-screen">
+<!-- Mobile Frame (390px width container) -->
+<div class="w-[390px] bg-surface min-h-screen pb-24 relative shadow-2xl flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-40 w-full flex justify-between items-center px-4 py-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shadow-sm" data-alt="A professional tenant admin avatar icon representing user profile management on ELOKA platform, set against a clean white background with crisp typography and subtle modern lighting.">
+                    TA
+                </div>
+<span class="text-xl font-black text-primary">ELOKA</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
+<!-- Page Title & Subtitle -->
+<div class="space-y-1.5">
+<h1 class="text-2xl font-bold tracking-tight text-on-surface font-headline">Business settings</h1>
+<p class="text-sm text-on-surface-variant leading-relaxed">Manage your enterprise profile, commercial agreements, and regional network configurations.</p>
+</div>
+<!-- Settings Category Cards -->
+<div class="space-y-3">
+<!-- Company Profile -->
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-primary/40 transition-all duration-200 shadow-sm group" href="#">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">domain</span>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Company profile</h3>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-normal">Legal entity info, tax identifiers, and registered business address.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 ml-2">chevron_right</span>
+</a>
+<!-- Agreement signing -->
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-primary/40 transition-all duration-200 shadow-sm group" href="#">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">handshake</span>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Agreement signing</h3>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-normal">Active commercial terms, digital signature logs, and compliance contracts.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 ml-2">chevron_right</span>
+</a>
+<!-- Pricing & commissions -->
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-primary/40 transition-all duration-200 shadow-sm group" href="#">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Pricing & commissions</h3>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-normal">Tiered rate cards, transaction fees, and revenue share matrices.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 ml-2">chevron_right</span>
+</a>
+<!-- Commission frequency -->
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-primary/40 transition-all duration-200 shadow-sm group" href="#">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Commission frequency</h3>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-normal">Payout schedules, settlement windows, and automated clearing rules.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 ml-2">chevron_right</span>
+</a>
+<!-- Notifications -->
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-primary/40 transition-all duration-200 shadow-sm group" href="#">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Notifications</h3>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-normal">Alert preferences for SMS, webhook triggers, and email digests.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 ml-2">chevron_right</span>
+</a>
+<!-- Theme & branding -->
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl border border-surface-container-high hover:border-primary/40 transition-all duration-200 shadow-sm group" href="#">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">palette</span>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Theme & branding</h3>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-normal">Tenant logo, primary color accents, and portal customization.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 ml-2">chevron_right</span>
+</a>
+</div>
+<!-- Shared States Section (R1-11) -->
+<div class="pt-4 space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-surface tracking-tight">Shared states</h2>
+<span class="text-[10px] font-semibold px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded uppercase tracking-wider">R1-11 Reference</span>
+</div>
+<div class="space-y-3">
+<!-- Empty State Card -->
+<div class="p-5 bg-surface-container-lowest rounded-xl border border-surface-container-high text-center space-y-3 shadow-sm">
+<div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center mx-auto text-on-surface-variant">
+<span class="material-symbols-outlined text-[24px]">folder_open</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-sm font-semibold text-on-surface">No regional sub-networks found</h4>
+<p class="text-xs text-on-surface-variant max-w-[260px] mx-auto">Get started by connecting your primary regional aggregator node or importing partner files.</p>
+</div>
+<button class="px-4 py-2 bg-primary text-on-primary text-xs font-semibold rounded-lg hover:bg-primary/90 transition-colors shadow-sm">
+                            Add sub-network
+                        </button>
+</div>
+<!-- Error State Card -->
+<div class="p-5 bg-surface-container-lowest rounded-xl border border-error/30 text-center space-y-3 shadow-sm">
+<div class="w-12 h-12 bg-error-container text-error rounded-full flex items-center justify-center mx-auto">
+<span class="material-symbols-outlined text-[24px]">error</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-sm font-semibold text-on-surface">Gateway connection timeout</h4>
+<p class="text-xs text-on-surface-variant max-w-[260px] mx-auto">Unable to reach the settlement ledger service. Please check your network connection.</p>
+</div>
+<button class="px-4 py-2 bg-surface-container-high text-on-surface text-xs font-semibold rounded-lg hover:bg-surface-variant transition-colors">
+                            Retry connection
+                        </button>
+</div>
+<!-- 404 State Card -->
+<div class="p-5 bg-surface-container-lowest rounded-xl border border-surface-container-high text-center space-y-3 shadow-sm">
+<div class="w-12 h-12 bg-surface-container-high text-on-surface-variant rounded-full flex items-center justify-center mx-auto font-bold text-sm tracking-tighter">
+                            404
+                        </div>
+<div class="space-y-1">
+<h4 class="text-sm font-semibold text-on-surface">Configuration endpoint missing</h4>
+<p class="text-xs text-on-surface-variant max-w-[260px] mx-auto">The requested business rule parameter bundle could not be located on this cluster.</p>
+</div>
+<button class="px-4 py-2 bg-surface-container-high text-on-surface text-xs font-semibold rounded-lg hover:bg-surface-variant transition-colors">
+                            Return to dashboard
+                        </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="text-[10px] font-medium mt-1 font-label">Home</span>
+</a>
+<!-- Transactions (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[22px]">support_agent</span>
+<span class="text-[10px] font-medium mt-1 font-label">Tickets</span>
+</a>
+<!-- Wallet (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+<span class="text-[10px] font-medium mt-1 font-label">Wallet</span>
+</a>
+<!-- Profile (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-3 py-1.5 transition-all duration-200 scale-0.98" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-[10px] font-bold mt-1 font-label">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

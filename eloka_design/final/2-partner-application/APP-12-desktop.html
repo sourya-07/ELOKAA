@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "on-tertiary": "#ffffff",
+        "secondary-fixed": "#dee0ff",
+        "on-secondary-fixed": "#000f5d",
+        "on-surface-variant": "#444748",
+        "secondary-container": "#778afd",
+        "primary-container": "#1c1b1b",
+        "on-primary-fixed-variant": "#474646",
+        "background": "#f9f9f6",
+        "on-tertiary-fixed-variant": "#474742",
+        "secondary-fixed-dim": "#bbc3ff",
+        "secondary": "#4053c4",
+        "on-error": "#ffffff",
+        "primary": "#000000",
+        "tertiary": "#000000",
+        "outline-variant": "#c4c7c7",
+        "error": "#ba1a1a",
+        "tertiary-fixed-dim": "#c8c6c0",
+        "inverse-surface": "#2f312f",
+        "error-container": "#ffdad6",
+        "inverse-primary": "#c9c6c5",
+        "surface-bright": "#f9f9f6",
+        "tertiary-fixed": "#e4e2dc",
+        "outline": "#747878",
+        "primary-fixed": "#e5e2e1",
+        "surface-tint": "#5f5e5e",
+        "surface": "#f9f9f6",
+        "on-secondary-container": "#001a88",
+        "inverse-on-surface": "#f1f1ee",
+        "on-primary-fixed": "#1c1b1b",
+        "on-primary": "#ffffff",
+        "primary-fixed-dim": "#c9c6c5",
+        "surface-container-lowest": "#ffffff",
+        "tertiary-container": "#1b1c18",
+        "on-primary-container": "#858383",
+        "surface-container": "#eeeeeb",
+        "surface-variant": "#e2e3e0",
+        "on-secondary": "#ffffff",
+        "on-tertiary-fixed": "#1b1c18",
+        "surface-dim": "#dadad7",
+        "surface-container-low": "#f4f4f1",
+        "surface-container-highest": "#e2e3e0",
+        "on-error-container": "#93000a",
+        "on-background": "#1a1c1b",
+        "on-secondary-fixed-variant": "#2439ab",
+        "on-tertiary-container": "#84847e",
+        "surface-container-high": "#e8e8e5",
+        "on-surface": "#1a1c1b"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "space-xl": "24px",
+        "space-2xl": "32px",
+        "space-4xl": "64px",
+        "space-md": "12px",
+        "space-3xl": "48px",
+        "space-lg": "16px",
+        "margin": "1.5rem",
+        "gutter": "1rem",
+        "space-xs": "4px",
+        "space-sm": "8px"
+      },
+      "fontFamily": {
+        "label": ["Inter"],
+        "h1": ["Inter"],
+        "display": ["Inter"],
+        "body": ["Inter"],
+        "display-mobile": ["Inter"],
+        "h2": ["Inter"],
+        "h3": ["Inter"],
+        "body-sm": ["Inter"]
+      },
+      "fontSize": {
+        "label": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+        "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+        "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+        "body": ["16px", {"lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400"}],
+        "display-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+        "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600"}],
+        "h3": ["16px", {"lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600"}],
+        "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400"}]
+      }
+    }
+  }
+}</script></head><body class="bg-surface font-body text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50"><div class="max-w-[1280px] mx-auto h-16 px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="font-h2 text-h2 font-bold tracking-tight text-primary">ELOKA</span></div><div class="flex items-center gap-space-lg"><a class="font-label text-label text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-xs" href="#"><span class="material-symbols-outlined text-[18px]">help_outline</span>Help</a><a class="font-label text-label text-on-surface-variant hover:text-on-surface transition-colors" href="#">Sign out</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><div class="max-w-[1280px] mx-auto flex"><aside class="fixed top-16 w-[280px] h-[calc(100vh-4rem)] bg-surface-container-low flex flex-col justify-between py-space-lg px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 overflow-y-auto"><div class="flex flex-col gap-space-md"><div class="px-space-sm"><div class="flex items-center justify-between"><h2 class="font-h3 text-h3 text-on-surface font-semibold">Your application</h2><span class="font-label text-label px-space-sm py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">onb_7Q2K9X</span></div><div class="mt-space-sm"><div class="flex justify-between items-center text-on-surface-variant font-label text-label mb-space-xs"><span>Step 10 of 13</span><span>77% completed</span></div><div class="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-secondary w-[77%] rounded-full"></div></div></div></div><nav class="flex flex-col gap-0.5 mt-space-sm" data-active-classes="bg-secondary-fixed text-on-secondary-fixed font-semibold rounded-lg"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="mobile-verification" href="#"><span class="font-body-sm text-body-sm truncate">1. Mobile verification</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="consent" href="#"><span class="font-body-sm text-body-sm truncate">2. Consent</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="program" href="#"><span class="font-body-sm text-body-sm truncate">3. Program</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="business-pan" href="#"><span class="font-body-sm text-body-sm truncate">4. Business PAN</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="business-details" href="#"><span class="font-body-sm text-body-sm truncate">5. Business details</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="email" href="#"><span class="font-body-sm text-body-sm truncate">6. Email</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="signatory-kyc" href="#"><span class="font-body-sm text-body-sm truncate">7. Signatory KYC</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="live-photo" href="#"><span class="font-body-sm text-body-sm truncate">8. Live photo</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="documents" href="#"><span class="font-body-sm text-body-sm truncate">9. Documents</span><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 transition-colors bg-secondary-fixed text-on-secondary-fixed font-semibold rounded-lg" data-path="bank-account" href="#"><span class="font-body-sm text-body-sm truncate">10. Bank account</span><span class="material-symbols-outlined text-[16px] text-secondary">radio_button_checked</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="white-label-setup" href="#"><span class="font-body-sm text-body-sm truncate">11. White-label setup</span><span class="material-symbols-outlined text-[16px] text-outline-variant">radio_button_unchecked</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant opacity-60 hover:text-on-surface transition-colors" data-path="declaration" href="#"><span class="font-body-sm text-body-sm truncate">12. Declaration</span><span class="material-symbols-outlined text-[16px] text-outline">lock</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant opacity-60 hover:text-on-surface transition-colors" data-path="agreement" href="#"><span class="font-body-sm text-body-sm truncate">13. Agreement</span><span class="material-symbols-outlined text-[16px] text-outline">lock</span></a></nav></div><div class="px-space-sm pt-space-md border-t border-surface-variant"><p class="font-label text-label text-on-surface-variant">Need assistance?</p><a class="font-label text-label text-secondary hover:underline font-medium" href="#">Contact support</a></div></aside><div class="pl-[280px] w-full min-h-screen"><main class="pt-16 bg-surface min-h-screen flex justify-center px-space-lg pb-space-4xl"><div class="w-full max-w-[720px] pt-space-2xl"><div class="flex flex-col w-full">
+<!-- Progress Header -->
+<div class="flex flex-col gap-space-xs mb-space-xl">
+<div class="flex justify-between items-center text-on-surface-variant font-label text-label tracking-wide uppercase">
+<span>Step 10 of 13</span>
+<span class="font-semibold text-secondary">77% completed</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[77%] rounded-full"></div>
+</div>
+</div>
+<!-- Page Title & Guidance -->
+<div class="flex flex-col gap-space-xs mb-space-xl">
+<h1 class="font-h1 text-h1 text-on-surface">Settlement bank account</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+      Primary account where your business settlements and disbursements will be routed.
+    </p>
+</div>
+<!-- Interactive Form Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-xl flex flex-col gap-space-lg mb-space-2xl">
+<!-- IFSC Code Field -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant" for="ifsc-input">
+        IFSC code
+      </label>
+<div class="relative">
+<input class="w-full h-10 px-space-md bg-surface-container-lowest text-on-surface font-body-sm text-body-sm font-medium tracking-wider uppercase rounded-lg outline-none transition-colors" id="ifsc-input" maxlength="11" onblur="this.style.boxShadow='inset 0 0 0 1px #85857F'" onfocus="this.style.boxShadow='inset 0 0 0 2px #4053c4'" style="box-shadow: inset 0 0 0 1px #85857F;" type="text" value="SBIN0001234"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-secondary pointer-events-none">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+<span class="font-label text-label text-on-surface-variant">11 characters</span>
+<!-- Bank Details Badge -->
+<div class="mt-space-xs bg-surface-container-low rounded-lg p-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">
+              State Bank of India · Bandra branch
+            </span>
+<span class="font-label text-label text-on-surface-variant">
+              RTGS / NEFT / IMPS enabled · Bandra West, Mumbai
+            </span>
+</div>
+</div>
+<span class="font-label text-label px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-medium">
+          Auto-detected
+        </span>
+</div>
+</div>
+<!-- Account Number Field (Single masked input, NO dropdown, NO confirm duplicate) -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant" for="acc-input">
+        Account number
+      </label>
+<div class="relative">
+<input class="w-full h-10 px-space-md bg-surface-container-lowest text-on-surface font-body-sm text-body-sm font-medium tracking-widest rounded-lg outline-none transition-colors" id="acc-input" onblur="this.style.boxShadow='inset 0 0 0 1px #85857F'" onfocus="this.style.boxShadow='inset 0 0 0 2px #4053c4'" style="box-shadow: inset 0 0 0 1px #85857F;" type="password" value="987654321098"/>
+<button aria-label="Toggle account number visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface p-1 rounded transition-colors" onclick="const el = document.getElementById('acc-input'); const icon = document.getElementById('acc-eye'); if(el.type==='password'){ el.type='text'; icon.textContent='visibility_off'; } else { el.type='password'; icon.textContent='visibility'; }" type="button">
+<span class="material-symbols-outlined text-[18px]" id="acc-eye">visibility</span>
+</button>
+</div>
+<span class="font-label text-label text-on-surface-variant">Numbers only, as printed on your cheque leaf</span>
+</div>
+<!-- Bank Proof Upload Area -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-on-surface-variant">
+        Bank proof — cancelled cheque or statement
+      </label>
+<div class="group relative rounded-lg p-space-xl text-center bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center gap-space-sm" style="background-image: repeating-linear-gradient(0deg, #85857F, #85857F 8px, transparent 8px, transparent 16px), repeating-linear-gradient(90deg, #85857F, #85857F 8px, transparent 8px, transparent 16px), repeating-linear-gradient(180deg, #85857F, #85857F 8px, transparent 8px, transparent 16px), repeating-linear-gradient(270deg, #85857F, #85857F 8px, transparent 8px, transparent 16px); background-size: 1.5px 100%, 100% 1.5px, 1.5px 100%, 100% 1.5px; background-position: 0 0, 0 0, 100% 0, 0 100%; background-repeat: no-repeat;">
+<div class="w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-secondary-fixed flex items-center justify-center text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[20px] text-secondary group-hover:scale-110 transition-transform">upload_file</span>
+</div>
+<div class="flex flex-col items-center gap-0.5">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Click to upload or drag and drop</span>
+<span class="font-label text-label text-on-surface-variant">JPG, PNG or PDF, up to 10 MB</span>
+</div>
+<input accept=".jpg,.jpeg,.png,.pdf" class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+</div>
+</div>
+<!-- Security Note Banner -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center gap-space-md">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] text-on-secondary-fixed">lock</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface leading-tight">
+        For your security we'll send a code to your mobile before saving.
+      </p>
+</div>
+<!-- Primary Verify Account CTA -->
+<button class="w-full py-2.5 px-6 rounded-lg bg-primary text-on-primary font-body-sm text-body-sm font-medium hover:bg-neutral-900 active:translate-y-[1px] transition-all flex items-center justify-center gap-space-xs mt-space-xs shadow-sm" type="button">
+<span>Verify account</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Section: Verification Status -->
+<div class="flex flex-col gap-space-md mb-space-xl">
+<div class="flex items-center justify-between">
+<h2 class="font-h3 text-h3 text-on-surface font-semibold tracking-tight">Verification status</h2>
+<span class="font-label text-label text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Penny-drop record
+      </span>
+</div>
+<!-- Account Verified Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-h3 text-h3 text-on-surface font-semibold">Account verified</span>
+</div>
+<span class="font-label text-label px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Active
+        </span>
+</div>
+<!-- Key-Value Metadata Grid -->
+<div class="grid grid-cols-3 gap-space-md bg-surface-container-low rounded-lg p-space-md">
+<div class="flex flex-col gap-0.5 min-w-0">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider">Account</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface truncate font-mono">XXXXXX4321</span>
+</div>
+<div class="flex flex-col gap-0.5 min-w-0">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider">IFSC</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface truncate font-mono">SBIN0001234</span>
+</div>
+<div class="flex flex-col gap-0.5 min-w-0">
+<span class="font-label text-label text-on-surface-variant uppercase tracking-wider">Account holder</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface truncate">SAMPLE TRADERS PVT LTD</span>
+</div>
+</div>
+</div>
+<!-- Name Mismatch Info Callout -->
+<div class="bg-secondary-fixed/50 rounded-lg p-space-md flex gap-space-md items-start">
+<span class="material-symbols-outlined text-[20px] text-secondary shrink-0 mt-0.5">info</span>
+<div class="flex flex-col gap-0.5 min-w-0">
+<p class="font-body-sm text-body-sm font-medium text-on-secondary-fixed">
+          The account holder name differs from your business name. Our team will review this.
+        </p>
+<p class="font-label text-label text-on-secondary-fixed-variant">
+        </p>
+</div>
+</div>
+</div>
+</div></div></main></div></div></body></html>

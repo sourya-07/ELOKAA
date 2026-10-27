@@ -1,0 +1,316 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA Agent Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-background": "#1a1c1b",
+          "background": "#f9f9f6",
+          "primary-fixed-dim": "#bbc3ff",
+          "outline-variant": "#c5c5d5",
+          "outline": "#757685",
+          "on-surface-variant": "#454653",
+          "on-surface": "#1a1c1b",
+          "tertiary-fixed-dim": "#c8c6c0",
+          "primary-container": "#11299e",
+          "inverse-surface": "#2f312f",
+          "secondary-fixed": "#ffddba",
+          "on-primary-fixed": "#000f5d",
+          "surface-dim": "#dadad7",
+          "on-tertiary": "#ffffff",
+          "error-container": "#ffdad6",
+          "error": "#ba1a1a",
+          "tertiary": "#242521",
+          "secondary": "#875200",
+          "on-primary-container": "#8d9cff",
+          "surface-container-lowest": "#ffffff",
+          "on-tertiary-fixed-variant": "#474742",
+          "surface-bright": "#f9f9f6",
+          "on-primary-fixed-variant": "#2439ab",
+          "secondary-container": "#fc9e00",
+          "surface": "#f9f9f6",
+          "on-error-container": "#93000a",
+          "surface-container-high": "#e8e8e5",
+          "inverse-primary": "#bbc3ff",
+          "tertiary-fixed": "#e4e2dc",
+          "secondary-fixed-dim": "#ffb865",
+          "surface-container-low": "#f4f4f1",
+          "primary-fixed": "#dee0ff",
+          "on-primary": "#ffffff",
+          "surface-tint": "#4053c4",
+          "inverse-on-surface": "#f1f1ee",
+          "on-tertiary-fixed": "#1b1c18",
+          "on-secondary-fixed": "#2b1700",
+          "surface-variant": "#e2e3e0",
+          "surface-container": "#eeeeeb",
+          "on-error": "#ffffff",
+          "on-tertiary-container": "#a5a49e",
+          "on-secondary-fixed-variant": "#673d00",
+          "tertiary-container": "#3a3a36",
+          "on-secondary-container": "#653c00",
+          "on-secondary": "#ffffff",
+          "surface-container-highest": "#e2e3e0",
+          "primary": "#001573"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "fontFamily": {
+          "headline": ["Inter"],
+          "display": ["Inter"],
+          "body": ["Inter"],
+          "label": ["Inter"]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    background-color: #FAFAF7;
+    color: #0A0A0A;
+    font-family: 'Inter', sans-serif;
+  }
+  .card-border {
+    border: 1px solid #E5E5E0;
+  }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF7] text-[#0A0A0A] pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface text-primary dark:text-inverse-primary border-b border-surface-container-high dark:border-surface-container-high sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-4 py-3 max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-[#11299E] text-white flex items-center justify-center font-bold text-sm">SP</div>
+<span class="text-xl font-black text-primary dark:text-inverse-primary">ELOKA</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="Professional avatar portrait of a tenant admin user with a neutral expression, wearing formal business attire, set against a softly blurred neutral office background, clean lighting, high-end corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgy41gg8OwnIvyTD8CjocsBZR1mO4PxFuYJMHUB7phV5N_XdmCtar81WxPpTAbSMeun0-bQOzblmQA-fVUqLHvk4iRihG90lO0M75PgmZjTxS6jy0SS6dWLUK-xu8NSC4mVDtjBERUETLBiyZ2Id3kxBbRSsZf-9rc21XmxvshnyfTKDj9HDPDhGLwTaAqkMhPDku_cgNpCrbSvouucQTC9jQ-8vhDMtjzrw4elTS0pEuhze-PW26BGDd0-vfoh9go25VDmKBc53Av"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Container -->
+<main class="max-w-md mx-auto px-4 py-4 space-y-4">
+<!-- Profile Card -->
+<div class="bg-white rounded-xl p-4 card-border shadow-sm space-y-4">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-full bg-surface-variant overflow-hidden flex-shrink-0 border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of Ravi, an Indian retail agent wearing a casual blue collared shirt, smiling warmly, professional headshot style with soft studio lighting and neutral warm background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-aUWCapLr7PtkLXmIQ7ZtKRhf-nh3DEG_qqo30jS6GMo_KZw80zuvRDuVPfhlKbJqNqa9xg8fJZ1X4J7eLc8q7VKyMDF7R3ty1u3YdJttYSxG7O20opzCXog-0DQwUv-FujS6mDGAfPium8hyUiAuSDNzqsXlMppFKW7K_w9WGaIDJvmx_dMpFV4WlgjV3tNI5uTtW-Mv-4TaFchk5uf-_7quabTFYDTKJenjwjZ67Pi6ShAgzmSfP-To_IDtKCZbc6c9zPniECtJ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold text-on-surface truncate">Ravi Sample</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-variant text-on-surface-variant">Retailer</span>
+</div>
+<p class="text-xs text-[#5C5C57]">ID: 10024518</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ID Verified
+          </span>
+</div>
+</div>
+</div>
+<div class="border-t border-[#E5E5E0] pt-3 space-y-2 text-sm">
+<div class="flex items-center justify-between">
+<span class="text-[#5C5C57]">Mobile Number</span>
+<div class="flex items-center gap-2">
+<span class="font-medium">+91 98765 43210</span>
+<button class="text-[#11299E] text-xs font-semibold hover:underline">Edit</button>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[#5C5C57]">Email Address</span>
+<div class="flex items-center gap-2">
+<span class="font-medium truncate max-w-[160px]">ravi.sample@example.com</span>
+<button class="text-[#11299E] text-xs font-semibold hover:underline">Edit</button>
+</div>
+</div>
+</div>
+<div class="border-t border-[#E5E5E0] pt-3 space-y-1.5">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-[#5C5C57]">Profile Completeness</span>
+<span class="text-on-surface font-bold">80%</span>
+</div>
+<div class="w-full bg-[#E5E5E0] h-2 rounded-full overflow-hidden">
+<div class="bg-[#11299E] h-full rounded-full" style="width: 80%;"></div>
+</div>
+</div>
+<div class="border-t border-[#E5E5E0] pt-3 flex items-center justify-between">
+<div>
+<span class="text-xs text-[#5C5C57] block">Membership Plan</span>
+<span class="text-sm font-bold text-on-surface">Standard</span>
+</div>
+<button class="px-3 py-1 text-xs font-semibold text-[#11299E] bg-surface-variant hover:bg-surface-dim rounded-lg transition-colors">Change</button>
+</div>
+</div>
+<!-- Organization Details Card -->
+<div class="bg-white rounded-xl p-4 card-border shadow-sm space-y-3">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-wider text-[#5C5C57]">Organization Details</h3>
+<div class="space-y-2 text-sm">
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">App Name</span>
+<span class="font-medium">Sample Pay</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">Organization Name</span>
+<span class="font-medium">Sample Payments Pvt Ltd</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">Website</span>
+<span class="font-medium text-[#11299E]">samplepay.in</span>
+</div>
+</div>
+<div class="bg-surface-low p-2.5 rounded-lg border border-[#E5E5E0] text-xs text-[#5C5C57] flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-[#11299E] mt-0.5">verified</span>
+<span>Verified tenant partner under ELOKA merchant network agreements.</span>
+</div>
+</div>
+<!-- Earning Summary Card -->
+<div class="bg-white rounded-xl p-4 card-border shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-wider text-[#5C5C57]">Earning Summary</h3>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Live ledger
+      </span>
+</div>
+<div class="grid grid-cols-1 gap-3 pt-1">
+<div class="p-3 bg-surface-low rounded-lg border border-[#E5E5E0] flex items-center justify-between">
+<div>
+<span class="text-xs text-[#5C5C57] block">This month till yesterday</span>
+<span class="text-lg font-bold font-mono text-on-surface">₹8,240.00</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700">+12%</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-3 bg-surface-low rounded-lg border border-[#E5E5E0]">
+<span class="text-xs text-[#5C5C57] block">Last month's earning</span>
+<span class="text-sm font-bold font-mono text-on-surface mt-1 block">₹7,350.00</span>
+</div>
+<div class="p-3 bg-surface-low rounded-lg border border-[#E5E5E0]">
+<span class="text-xs text-[#5C5C57] block">Commission due</span>
+<span class="text-sm font-bold font-mono text-[#11299E] mt-1 block">₹1,120.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- My Shop Details Card -->
+<div class="bg-white rounded-xl p-4 card-border shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-wider text-[#5C5C57]">My Shop Details</h3>
+<button class="text-[#11299E] text-xs font-semibold hover:underline">Edit</button>
+</div>
+<div class="space-y-2 text-sm">
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">Shop Name</span>
+<span class="font-medium">Ravi Mobile Centre</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">Shop Type</span>
+<span class="font-medium">Mobile shop</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">Address</span>
+<span class="font-medium text-right max-w-[180px]">Shop No. 4, Main Bazaar Road</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">City</span>
+<span class="font-medium">Bengaluru</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">State</span>
+<span class="font-medium">Karnataka</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[#5C5C57]">Pincode</span>
+<span class="font-medium font-mono">560001</span>
+</div>
+</div>
+</div>
+<!-- Personal & Account Details Card -->
+<div class="bg-white rounded-xl p-4 card-border shadow-sm space-y-3">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-wider text-[#5C5C57]">Account & Compliance</h3>
+<div class="space-y-3 text-sm">
+<div class="flex justify-between items-center pb-2 border-b border-[#E5E5E0]">
+<span class="text-[#5C5C57]">GSTIN</span>
+<span class="font-mono font-medium text-xs bg-surface-variant px-2 py-1 rounded">29AAAAA0000A1Z5</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-[#E5E5E0]">
+<div>
+<span class="text-on-surface font-medium block">Connected Bank Accounts</span>
+<span class="text-xs text-[#5C5C57]">HDFC Bank •••• 4092</span>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700">Active</span>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="text-on-surface font-medium block">Primary Payout Account</span>
+<span class="text-xs text-[#5C5C57]">Verified active for auto-settlement</span>
+</div>
+<span class="material-symbols-outlined text-[#11299E]">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Manage My Account Section -->
+<div class="bg-white rounded-xl p-4 card-border shadow-sm space-y-2">
+<h3 class="text-sm font-bold text-on-surface uppercase tracking-wider text-[#5C5C57]">Manage My Account</h3>
+<div class="divide-y divide-[#E5E5E0]">
+<button class="w-full py-2.5 flex items-center justify-between text-left text-sm hover:bg-surface-low transition-colors px-1 rounded">
+<span class="text-on-surface">Change secret PIN</span>
+<span class="material-symbols-outlined text-sm text-[#5C5C57]">chevron_right</span>
+</button>
+<button class="w-full py-2.5 flex items-center justify-between text-left text-sm hover:bg-surface-low transition-colors px-1 rounded">
+<span class="text-on-surface">Update registered mobile</span>
+<span class="material-symbols-outlined text-sm text-[#5C5C57]">chevron_right</span>
+</button>
+<button class="w-full py-2.5 flex items-center justify-between text-left text-sm hover:bg-surface-low transition-colors px-1 rounded">
+<span class="text-on-surface">Download agreement</span>
+<span class="material-symbols-outlined text-sm text-[#5C5C57]">download</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface dark:bg-surface border-t border-surface-container-high">
+<!-- Inactive Item: Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-xs font-label mt-0.5">Home</span>
+</a>
+<!-- Inactive Item: Tickets -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="text-xs font-label mt-0.5">Tickets</span>
+</a>
+<!-- Inactive Item: Wallet -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-xs font-label mt-0.5">Wallet</span>
+</a>
+<!-- Active Item: Profile -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-3 py-1.5 transition-all duration-200 scale-0.98" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-xs font-label mt-0.5 font-bold">Profile</span>
+</a>
+</nav>
+</body></html>

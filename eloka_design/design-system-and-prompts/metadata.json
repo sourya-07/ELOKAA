@@ -1,0 +1,443 @@
+{
+	"projectId": "18017913531452476583",
+	"title": "ELOKA Platform",
+	"designSystem": {
+		"assetId": "a88c4be87ed045d89dcdc3d07e9f73d1",
+		"name": "assets/a88c4be87ed045d89dcdc3d07e9f73d1",
+		"displayName": "ELOKA Platform",
+		"source": "client/.stitch/DESIGN.md (uploaded 2026-10-21; theme corrected with update_design_system: primary #0A0A0A, secondary #11299E, tertiary #5C5C57, neutral #FAFAF7, ROUND_EIGHT, Inter)",
+		"designMdScreen": "projects/18017913531452476583/screens/13257695617890929047"
+	},
+	"lastSyncTime": "2026-10-21T18:30:00+05:30",
+	"screens": {
+		"DS-00": {
+			"id": "7fe2c443af1b45ce883a661bbed80411",
+			"sourceScreen": "projects/18017913531452476583/screens/7fe2c443af1b45ce883a661bbed80411",
+			"deviceType": "DESKTOP",
+			"width": 2560,
+			"height": 12996,
+			"files": ["designs/DS-00.png", "designs/DS-00.html"],
+			"status": "approved 2026-10-21 (variant A). Sample text names real providers; copy comes from docs/frontend/UI_UX_PLAN.md, not from this sheet."
+		},
+		"APP-01": {
+			"id": "d03e670968fa4140afcada3c67b96097",
+			"sourceScreen": "projects/18017913531452476583/screens/d03e670968fa4140afcada3c67b96097",
+			"files": ["designs/APP-01.png", "designs/APP-01.html"],
+			"status": "Page 1: entry + choose how to apply, with 'Faster', '6 steps' and '13 steps', no time estimate. Switched 2026-10-22 to this copy (the other lacked the step counts). Awaiting owner review (ST-8b)."
+		},
+		"APP-02": {
+			"id": "76d48a7341804488a3801ea400756566",
+			"sourceScreen": "projects/18017913531452476583/screens/76d48a7341804488a3801ea400756566",
+			"files": ["designs/APP-02.png", "designs/APP-02.html"],
+			"status": "Page 2 of both paths: the partner's mobile + OTP, with the chosen-path chip. Revised 2026-10-22 for the owner's rules (mobile is page 2 of both paths, no time estimates, home + business address, nothing asked twice). Awaiting owner review (ST-8b). The '(Error Variant)' label is Stitch's, not a spec."
+		},
+		"APP-03": {
+			"id": "af2b743bf88e4721988d9f3d1d0e5567",
+			"sourceScreen": "projects/18017913531452476583/screens/af2b743bf88e4721988d9f3d1d0e5567",
+			"files": ["designs/APP-03.png", "designs/APP-03.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b)"
+		},
+		"APP-03-desktop": {
+			"id": "7c81547eb31c4797960e2c35ac0ce768",
+			"sourceScreen": "projects/18017913531452476583/screens/7c81547eb31c4797960e2c35ac0ce768",
+			"files": [
+				"designs/APP-03-desktop.png",
+				"designs/APP-03-desktop.html"
+			],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b); desktop layout with the 13-step rail"
+		},
+		"APP-04-05": {
+			"id": "9dce07c7240e47079313fe5d97d047f7",
+			"sourceScreen": "projects/18017913531452476583/screens/9dce07c7240e47079313fe5d97d047f7",
+			"files": ["designs/APP-04-05.png", "designs/APP-04-05.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b)"
+		},
+		"APP-06": {
+			"id": "460aae2497fe4f47a9e75ef7bfb0b004",
+			"sourceScreen": "projects/18017913531452476583/screens/460aae2497fe4f47a9e75ef7bfb0b004",
+			"files": ["designs/APP-06.png", "designs/APP-06.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b)"
+		},
+		"APP-07": {
+			"id": "ac56a992595a41e9a775be01afc90b80",
+			"sourceScreen": "projects/18017913531452476583/screens/ac56a992595a41e9a775be01afc90b80",
+			"files": ["designs/APP-07.png", "designs/APP-07.html"],
+			"status": "Business details, phone: name from PAN, mobile from sign-in, home address, business address with 'Same as home address', signature JPG/PNG/PDF up to 10 MB. Switched 2026-10-22 to this copy (the other had 'Rahul Sharma' and 'max 2MB'). Awaiting owner review (ST-8b)."
+		},
+		"APP-07-desktop": {
+			"id": "553ce425a4544143a02062cb22962af5",
+			"sourceScreen": "projects/18017913531452476583/screens/553ce425a4544143a02062cb22962af5",
+			"files": [
+				"designs/APP-07-desktop.png",
+				"designs/APP-07-desktop.html"
+			],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b). Only copy with every field right (home + business address, mobile from sign-in, name from PAN, 10 MB)."
+		},
+		"APP-08-10": {
+			"id": "99af10dc97994a6d9e7e2a343cab9929",
+			"sourceScreen": "projects/18017913531452476583/screens/99af10dc97994a6d9e7e2a343cab9929",
+			"files": ["designs/APP-08-10.png", "designs/APP-08-10.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b)"
+		},
+		"APP-11-12": {
+			"id": "0b957f418c3b4192aa7adcd507913340",
+			"sourceScreen": "projects/18017913531452476583/screens/0b957f418c3b4192aa7adcd507913340",
+			"files": ["designs/APP-11-12.png", "designs/APP-11-12.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b) SUPERSEDED IN PART 2026-10-22: the 'PAN card' optional tile is not a spec (PAN is already verified) and the bank frame is replaced by APP-12."
+		},
+		"APP-11": {
+			"id": "e488cca74d96426ea1f8282352cc655c",
+			"sourceScreen": "projects/18017913531452476583/screens/e488cca74d96426ea1f8282352cc655c",
+			"files": ["designs/APP-11.png", "designs/APP-11.html"],
+			"status": "Documents, phone, 2026-10-22: no PAN card tile (PAN already verified). Awaiting owner review (ST-8b). 'STEP 9 OF 13' in capitals is Stitch's; the build uses sentence case."
+		},
+		"APP-11-desktop": {
+			"id": "50e6beba593345dab311aeac3776b776",
+			"sourceScreen": "projects/18017913531452476583/screens/50e6beba593345dab311aeac3776b776",
+			"files": [
+				"designs/APP-11-desktop.png",
+				"designs/APP-11-desktop.html"
+			],
+			"status": "Desktop documents, 2026-10-22: no PAN card tile. Awaiting owner review (ST-8b). Not specs: '13 Steps Remaining', 'Resume Later', '69% completed'."
+		},
+		"APP-12": {
+			"id": "b7d7966ea4174bda9ba305bfc2c46efe",
+			"sourceScreen": "projects/18017913531452476583/screens/b7d7966ea4174bda9ba305bfc2c46efe",
+			"files": ["designs/APP-12.png", "designs/APP-12.html"],
+			"status": "Bank account, phone: IFSC only (bank shown from it), account number once, no confirm field. Revised 2026-10-22 for the owner's rules (mobile is page 2 of both paths, no time estimates, home + business address, nothing asked twice). Awaiting owner review (ST-8b). The '77% completed' label is Stitch's."
+		},
+		"APP-13": {
+			"id": "361dfa817f574afb8a75488977503574",
+			"sourceScreen": "projects/18017913531452476583/screens/361dfa817f574afb8a75488977503574",
+			"files": ["designs/APP-13.png", "designs/APP-13.html"],
+			"status": "Phone layout, generated 2026-10-22 because the desktop one was squeezed in the Stitch phone preview. Awaiting owner review (ST-8b). Not specs: swatches are drawn as gradients (the build shows primary + accent halves), and the 'Navigation style' label and the 'Custom' option position differ from the prompt."
+		},
+		"APP-13-desktop": {
+			"id": "d590c9b21ea14f539dec79945346a611",
+			"sourceScreen": "projects/18017913531452476583/screens/d590c9b21ea14f539dec79945346a611",
+			"files": [
+				"designs/APP-13-desktop.png",
+				"designs/APP-13-desktop.html"
+			],
+			"status": "Desktop layout (form + sticky preview), generated 2026-10-21, awaiting owner review (ST-8b)"
+		},
+		"APP-14": {
+			"id": "efa69ea760104abb8c0ac34a77eeede4",
+			"sourceScreen": "projects/18017913531452476583/screens/efa69ea760104abb8c0ac34a77eeede4",
+			"files": ["designs/APP-14.png", "designs/APP-14.html"],
+			"status": "Review + declaration, phone, with Home address and Business address cards. Revised 2026-10-22 for the owner's rules (mobile is page 2 of both paths, no time estimates, home + business address, nothing asked twice). Awaiting owner review (ST-8b)."
+		},
+		"APP-14-15": {
+			"id": "a0c2053095b04e90bb731b298b8f1c44",
+			"sourceScreen": "projects/18017913531452476583/screens/a0c2053095b04e90bb731b298b8f1c44",
+			"files": ["designs/APP-14-15.png", "designs/APP-14-15.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b) 2026-10-22: the review frame is replaced by APP-14; the agreement frame still applies."
+		},
+		"APP-15-desktop": {
+			"id": "f5ea38e748b145e79106e9353d4d0f0f",
+			"sourceScreen": "projects/18017913531452476583/screens/f5ea38e748b145e79106e9353d4d0f0f",
+			"files": [
+				"designs/APP-15-desktop.png",
+				"designs/APP-15-desktop.html"
+			],
+			"status": "Regenerated 2026-10-22 (ST-7): the rail shows the 13 real steps; the PDF preview is placeholder lines (the real text is the server PDF). Awaiting owner review (ST-8b). 'ELOKA v3.4.2' and 'Page 1 of 4' are Stitch's, not specs."
+		},
+		"APP-16-21": {
+			"id": "65e2e5582db844b391f42c1a0115f656",
+			"sourceScreen": "projects/18017913531452476583/screens/65e2e5582db844b391f42c1a0115f656",
+			"files": ["designs/APP-16-21.png", "designs/APP-16-21.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8b)"
+		},
+		"APP-22": {
+			"id": "d7498148f3f1449fb625a1e209df9711",
+			"sourceScreen": "projects/18017913531452476583/screens/d7498148f3f1449fb625a1e209df9711",
+			"files": ["designs/APP-22.png", "designs/APP-22.html"],
+			"status": "DigiLocker quick path: home address from DigiLocker, business address only if not found, mobile from sign-in. Revised 2026-10-22 for the owner's rules (mobile is page 2 of both paths, no time estimates, home + business address, nothing asked twice). Awaiting owner review (ST-8b)."
+		},
+		"STF-01": {
+			"id": "fcb278f9f19840909d4b1d377aac4e37",
+			"sourceScreen": "projects/18017913531452476583/screens/fcb278f9f19840909d4b1d377aac4e37",
+			"files": ["designs/STF-01.png", "designs/STF-01.html"],
+			"status": "generated 2026-10-21, awaiting owner review (ST-8c)"
+		},
+		"STF-02": {
+			"id": "6ff2a4bd5c5d49a8a931f0ef1b020898",
+			"sourceScreen": "projects/18017913531452476583/screens/6ff2a4bd5c5d49a8a931f0ef1b020898",
+			"files": ["designs/STF-02.png", "designs/STF-02.html"],
+			"status": "Regenerated 2026-10-22 (ST-7): no '+ New application' button, no sidebar subtitle, status and flag pill tones fixed. Awaiting owner review (ST-8c). The empty-state helper line is Stitch's, not a spec."
+		},
+		"STF-04-11": {
+			"id": "f22cc552069b4721af0041ccdef8e81d",
+			"sourceScreen": "projects/18017913531452476583/screens/f22cc552069b4721af0041ccdef8e81d",
+			"files": ["designs/STF-04-11.png", "designs/STF-04-11.html"],
+			"status": "Full staff dialog sheet (document review, verification decision, corrections, recommend, approve / reject / hold, PII reveal, audit trail, permission cards). Switched 2026-10-22 from eb81bb55, which was cut off and had invented sidebar items. Awaiting owner review (ST-8c)."
+		},
+		"STF-03": {
+			"id": "d8bfc4011cdf4b478a75bbe5225123da",
+			"sourceScreen": "projects/18017913531452476583/screens/d8bfc4011cdf4b478a75bbe5225123da",
+			"files": ["designs/STF-03.png", "designs/STF-03.html"],
+			"status": "Refined 2026-10-22 (ST-7): sidebar has only Queue and Assigned to me, email masked, Flags card in the warning tone, invented ID label removed. Awaiting owner review (ST-8c)."
+		},
+		"R1-02": {
+			"id": "4e41a21afe8a43f08857ef260124d50f",
+			"sourceScreen": "projects/18017913531452476583/screens/4e41a21afe8a43f08857ef260124d50f",
+			"files": ["designs/R1-02.png", "designs/R1-02.html"],
+			"status": "Reskin design (tenant DS), refined 2026-10-22 (ST-7): the 'ELOKA / Tenant login workspace' header is gone and the label is sentence case. Awaiting owner review (ST-8d). 'Secured by <org name>' depends on FQ-8."
+		},
+		"R1-01-03": {
+			"id": "78480c3fafa445579798b04849919517",
+			"sourceScreen": "projects/18017913531452476583/screens/78480c3fafa445579798b04849919517",
+			"files": ["designs/R1-01-03.png", "designs/R1-01-03.html"],
+			"status": "Reskin design (tenant DS), refined 2026-10-22 (ST-7): orange (accent) buttons now have dark text. Awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs: menus come from constants/SidebarMenu.ts and the menu API."
+		},
+		"R1-04": {
+			"id": "ab5b9eb709b441298870af0cdb9e356d",
+			"sourceScreen": "projects/18017913531452476583/screens/ab5b9eb709b441298870af0cdb9e356d",
+			"files": ["designs/R1-04.png", "designs/R1-04.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs: menus come from constants/SidebarMenu.ts and the menu API; orange (accent) buttons need dark text."
+		},
+		"R1-05": {
+			"id": "20851f3ae64544b38ee7a9ae6a947511",
+			"sourceScreen": "projects/18017913531452476583/screens/20851f3ae64544b38ee7a9ae6a947511",
+			"files": ["designs/R1-05.png", "designs/R1-05.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs: menus come from constants/SidebarMenu.ts and the menu API; orange (accent) buttons need dark text."
+		},
+		"R1-06": {
+			"id": "c50e847fd8fa4fe7be945dba47b401a3",
+			"sourceScreen": "projects/18017913531452476583/screens/c50e847fd8fa4fe7be945dba47b401a3",
+			"files": ["designs/R1-06.png", "designs/R1-06.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs: menus come from constants/SidebarMenu.ts and the menu API; orange (accent) buttons need dark text."
+		},
+		"R1-07": {
+			"id": "147a7bfa88e949049179aecdfa786b69",
+			"sourceScreen": "projects/18017913531452476583/screens/147a7bfa88e949049179aecdfa786b69",
+			"files": ["designs/R1-07.png", "designs/R1-07.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs: menus come from constants/SidebarMenu.ts and the menu API; orange (accent) buttons need dark text."
+		},
+		"R1-09": {
+			"id": "c80e6ceaf35243fa8bf6d8924c08f0e3",
+			"sourceScreen": "projects/18017913531452476583/screens/c80e6ceaf35243fa8bf6d8924c08f0e3",
+			"files": ["designs/R1-09.png", "designs/R1-09.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs."
+		},
+		"R1-10": {
+			"id": "a37ec0e3054045c48d684682f79c44e5",
+			"sourceScreen": "projects/18017913531452476583/screens/a37ec0e3054045c48d684682f79c44e5",
+			"files": ["designs/R1-10.png", "designs/R1-10.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs."
+		},
+		"R1-08-11": {
+			"id": "cb5bc84ef5424485a2cb396ed1e26d90",
+			"sourceScreen": "projects/18017913531452476583/screens/cb5bc84ef5424485a2cb396ed1e26d90",
+			"files": ["designs/R1-08-11.png", "designs/R1-08-11.html"],
+			"status": "Reskin design (tenant DS), generated 2026-10-21, awaiting owner review (ST-8d). Sidebar items, badges and helper lines Stitch added are not specs."
+		},
+		"APP-02-desktop": {
+			"id": "ed4602d3522d40f3a519b96e4dcc115e",
+			"sourceScreen": "projects/18017913531452476583/screens/ed4602d3522d40f3a519b96e4dcc115e",
+			"files": [
+				"designs/APP-02-desktop.png",
+				"designs/APP-02-desktop.html"
+			],
+			"status": "Desktop page 2 (both paths): mobile number and code side by side, with the chosen-path chip. Generated 2026-10-22. Awaiting owner review (ST-8b)."
+		},
+		"R1-theme-check": {
+			"id": "4508747eaf484b12b5ef5ca785ab2de1",
+			"sourceScreen": "projects/18017913531452476583/screens/4508747eaf484b12b5ef5ca785ab2de1",
+			"files": [
+				"designs/R1-theme-check.png",
+				"designs/R1-theme-check.html"
+			],
+			"status": "Theme check 2026-10-22: the agent home in a second tenant brand (teal #0F766E, amber accent) to show white-label theming. Awaiting owner review (ST-8d). Not specs: 'Today's volume', commission and settlement lines, 'Terminal Online', agent id, version label; the dates (2023) are sample only."
+		},
+		"APP-01-desktop": {
+			"id": "07ea3cd792fb4e40bcfccb009fdec70c",
+			"sourceScreen": "projects/18017913531452476583/screens/07ea3cd792fb4e40bcfccb009fdec70c",
+			"files": [
+				"designs/APP-01-desktop.png",
+				"designs/APP-01-desktop.html"
+			],
+			"status": "Desktop page 1, 2026-10-22: the two path cards side by side with 'Faster' and step counts, no time estimate. Awaiting owner review (ST-8b). LOCAL FIX 2026-10-22: the committed HTML/PNG were corrected by hand (Stitch edits did not save) and re-rendered with headless Chrome, so the Stitch copy is behind; the repo file is the spec."
+		},
+		"APP-22-desktop": {
+			"id": "4da91b4a3fe6453086f759af6dd18cd9",
+			"sourceScreen": "projects/18017913531452476583/screens/4da91b4a3fe6453086f759af6dd18cd9",
+			"files": [
+				"designs/APP-22-desktop.png",
+				"designs/APP-22-desktop.html"
+			],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b). Repo copy edited: header 'Tenant Onboarding' → 'ELOKA', removed Dashboard / Support / Exit."
+		},
+		"APP-04-desktop": {
+			"id": "f363233694024397b311d9bf46981899",
+			"sourceScreen": "projects/18017913531452476583/screens/f363233694024397b311d9bf46981899",
+			"files": [
+				"designs/APP-04-desktop.png",
+				"designs/APP-04-desktop.html"
+			],
+			"status": "Desktop consent step (step 2) with the 13-step rail, 2026-10-22. Program (step 3) has no desktop version; it follows the same layout. Awaiting owner review (ST-8b)."
+		},
+		"APP-09-desktop": {
+			"id": "e4b0dcf62cd04e85a7b69b685bf3a6d6",
+			"sourceScreen": "projects/18017913531452476583/screens/e4b0dcf62cd04e85a7b69b685bf3a6d6",
+			"files": [
+				"designs/APP-09-desktop.png",
+				"designs/APP-09-desktop.html"
+			],
+			"status": "Desktop signatory KYC with DigiLocker (step 7), 2026-10-22. Awaiting owner review (ST-8b). Not specs: 'Need assistance?' link; the manual option is APP-09B."
+		},
+		"APP-16-desktop": {
+			"id": "c44f3a32dd504967b2bc5c0fd910a738",
+			"sourceScreen": "projects/18017913531452476583/screens/c44f3a32dd504967b2bc5c0fd910a738",
+			"files": [
+				"designs/APP-16-desktop.png",
+				"designs/APP-16-desktop.html"
+			],
+			"status": "Generated 2026-10-22 by converting the existing screen. Awaiting owner review (ST-8b). Desktop 'Application submitted / under review'. Not spec: the activity timeline entries are Stitch's; the build shows the real audit events."
+		},
+		"R1-01-03-phone": {
+			"id": "7ae7b173a64f478db4f5c61ede3243e3",
+			"sourceScreen": "projects/18017913531452476583/screens/7ae7b173a64f478db4f5c61ede3243e3",
+			"files": [
+				"designs/R1-01-03-phone.png",
+				"designs/R1-01-03-phone.html"
+			],
+			"status": "Generated 2026-10-22 by converting the existing screen. Awaiting owner review (ST-8d). Phone agent home with bottom navigation. Not specs: earning numbers, the service tiles beyond the menu API, the notification count."
+		},
+		"R1-02-phone": {
+			"id": "d59d08f3f7e247939ba82396ceb84363",
+			"sourceScreen": "projects/18017913531452476583/screens/d59d08f3f7e247939ba82396ceb84363",
+			"files": ["designs/R1-02-phone.png", "designs/R1-02-phone.html"],
+			"status": "Generated 2026-10-22 by converting the existing screen. Awaiting owner review (ST-8d). Phone tenant login + OTP."
+		},
+		"R1-08-11-phone": {
+			"id": "bcf58066307e4da38e74cb2afce13395",
+			"sourceScreen": "projects/18017913531452476583/screens/bcf58066307e4da38e74cb2afce13395",
+			"files": [
+				"designs/R1-08-11-phone.png",
+				"designs/R1-08-11-phone.html"
+			],
+			"status": "Generated 2026-10-22 by converting the existing screen. Awaiting owner review (ST-8d). Phone business settings with shared empty/error/404 states. Not spec: the settings list comes from the app's menus."
+		},
+		"R1-10-phone": {
+			"id": "e469e77b74ad467c8f87e90379d768fc",
+			"sourceScreen": "projects/18017913531452476583/screens/e469e77b74ad467c8f87e90379d768fc",
+			"files": ["designs/R1-10-phone.png", "designs/R1-10-phone.html"],
+			"status": "Generated 2026-10-22 by converting the existing screen. Awaiting owner review (ST-8d). Phone query center with tickets as cards. Not specs: ticket ids, names and the bottom-bar tabs (they come from the app)."
+		},
+		"APP-09B": {
+			"id": "1999928d2d294cf49f3b79b08cbb1816",
+			"sourceScreen": "projects/18017913531452476583/screens/1999928d2d294cf49f3b79b08cbb1816",
+			"files": ["designs/APP-09B.png", "designs/APP-09B.html"],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b). Manual signatory KYC, phone. Backend gap FQ-19."
+		},
+		"APP-09B-desktop": {
+			"id": "5cb2747650af4c5fbefaff384d77a4ac",
+			"sourceScreen": "projects/18017913531452476583/screens/5cb2747650af4c5fbefaff384d77a4ac",
+			"files": [
+				"designs/APP-09B-desktop.png",
+				"designs/APP-09B-desktop.html"
+			],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b). Repo copy edited: removed the invented company footer. Backend gap FQ-19."
+		},
+		"APP-06-desktop": {
+			"id": "34dcd1f8b39d4cf8a674d20ce787c57e",
+			"sourceScreen": "projects/18017913531452476583/screens/34dcd1f8b39d4cf8a674d20ce787c57e",
+			"files": [
+				"designs/APP-06-desktop.png",
+				"designs/APP-06-desktop.html"
+			],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b). Repo copy edited: removed 'NSDL / Income Tax integration', 'SPEC VIEW', the '< 3 seconds' estimate and the error codes."
+		},
+		"APP-12-desktop": {
+			"id": "c06234ba5c3d4d7faa65cfb913cf120d",
+			"sourceScreen": "projects/18017913531452476583/screens/c06234ba5c3d4d7faa65cfb913cf120d",
+			"files": [
+				"designs/APP-12-desktop.png",
+				"designs/APP-12-desktop.html"
+			],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b). Repo copy edited: removed the invented 'Expected legal entity…' line."
+		},
+		"APP-14-desktop": {
+			"id": "91325cba0b9348d79052a7c73482d6a7",
+			"sourceScreen": "projects/18017913531452476583/screens/91325cba0b9348d79052a7c73482d6a7",
+			"files": [
+				"designs/APP-14-desktop.png",
+				"designs/APP-14-desktop.html"
+			],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8b)."
+		},
+		"R1-04-phone": {
+			"id": "525ad62f054e4aebb8bef64e133dbf93",
+			"sourceScreen": "projects/18017913531452476583/screens/525ad62f054e4aebb8bef64e133dbf93",
+			"files": ["designs/R1-04-phone.png", "designs/R1-04-phone.html"],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8d)."
+		},
+		"R1-05-phone": {
+			"id": "63746a8d8e8f4ee89e9618714ab06dfa",
+			"sourceScreen": "projects/18017913531452476583/screens/63746a8d8e8f4ee89e9618714ab06dfa",
+			"files": ["designs/R1-05-phone.png", "designs/R1-05-phone.html"],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8d). Agents shown as cards."
+		},
+		"R1-06-phone": {
+			"id": "1805dc74beb34c908e2b149d03453375",
+			"sourceScreen": "projects/18017913531452476583/screens/1805dc74beb34c908e2b149d03453375",
+			"files": ["designs/R1-06-phone.png", "designs/R1-06-phone.html"],
+			"status": "Created in Stitch by the owner from the hand-off prompts (2026-10-22) and checked against the spec. Awaiting owner review (ST-8d). Transactions shown as cards."
+		},
+		"R1-07-phone": {
+			"id": "5d85e9e2cdae40c9acbea4413476b761",
+			"sourceScreen": "projects/18017913531452476583/screens/5d85e9e2cdae40c9acbea4413476b761",
+			"files": ["designs/R1-07-phone.png", "designs/R1-07-phone.html"],
+			"status": "Phone profile, created in Stitch by the owner (2026-10-22). Awaiting owner review (ST-8d). Not specs: the full mobile number and email (the build masks them), shop and bank details are samples."
+		},
+		"APP-01-manual": {
+			"id": null,
+			"sourceScreen": null,
+			"files": [
+				"designs/APP-01-manual.png",
+				"designs/APP-01-manual.html"
+			],
+			"status": "Page 1 with 'Apply step by step' selected. Step-by-step variant made locally on 2026-10-22 from the APP-01 Stitch HTML (owner: the step-by-step walkthrough must show 'Apply step by step' selected); rendered with headless Chrome, no Stitch id. Awaiting owner review (ST-8b)."
+		},
+		"APP-01-manual-desktop": {
+			"id": null,
+			"sourceScreen": null,
+			"files": [
+				"designs/APP-01-manual-desktop.png",
+				"designs/APP-01-manual-desktop.html"
+			],
+			"status": "Page 1 desktop with 'Apply step by step' selected. Step-by-step variant made locally on 2026-10-22 from the APP-01-desktop Stitch HTML (owner: the step-by-step walkthrough must show 'Apply step by step' selected); rendered with headless Chrome, no Stitch id. Awaiting owner review (ST-8b)."
+		},
+		"APP-02-manual": {
+			"id": null,
+			"sourceScreen": null,
+			"files": [
+				"designs/APP-02-manual.png",
+				"designs/APP-02-manual.html"
+			],
+			"status": "Page 2 with the chip 'Applying step by step'. Step-by-step variant made locally on 2026-10-22 from the APP-02 Stitch HTML (owner: the step-by-step walkthrough must show 'Apply step by step' selected); rendered with headless Chrome, no Stitch id. Awaiting owner review (ST-8b)."
+		},
+		"APP-02-manual-desktop": {
+			"id": null,
+			"sourceScreen": null,
+			"files": [
+				"designs/APP-02-manual-desktop.png",
+				"designs/APP-02-manual-desktop.html"
+			],
+			"status": "Page 2 desktop with the chip 'Applying step by step'. Step-by-step variant made locally on 2026-10-22 from the APP-02-desktop Stitch HTML (owner: the step-by-step walkthrough must show 'Apply step by step' selected); rendered with headless Chrome, no Stitch id. Awaiting owner review (ST-8b)."
+		}
+	},
+	"unusedScreens": {
+		"23d06928b079470490bb7a47a5d4e0c2": "DS-00 variant B (not chosen)",
+		"f6e16129511a40fa93afef516df39674": "failed content edit (no screenshot)",
+		"32dfcb39479842c5b98ee949b9ad4540": "APP-02 duplicate (timed-out run)",
+		"970fa58268a04230a885c799a5e22c8d": "APP-03 early version without the step list"
+	},
+	"tenantDesignSystem": {
+		"assetId": "3874882092193299071",
+		"name": "assets/3874882092193299071",
+		"displayName": "ELOKA Tenant (Connect Blue)",
+		"note": "default tenant preset (primary #11299E, accent #FE9F00) for the Release 1 reskin designs"
+	}
+}

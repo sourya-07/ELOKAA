@@ -1,0 +1,23 @@
+# Repo-wide ignores. client/ and server/ have their own .gitignore files.
+
+# OS / editors
+.DS_Store
+.idea/
+*.iml
+.vscode/
+
+# Secrets and local overrides: never commit
+.env
+.env*.local
+*.pem
+*.key
+
+# Claude Code
+.claude/worktrees/
+.claude/settings.local.json
+
+# Deployment secrets and backups
+deploy/.env
+deploy/.env.*
+!deploy/.env.example
+deploy/backups/

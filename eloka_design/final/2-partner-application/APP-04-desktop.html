@@ -1,0 +1,284 @@
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Applicant Portal - ELOKA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f4f4f1",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "secondary-fixed": "#dee0ff",
+              "surface-bright": "#f9f9f6",
+              "on-tertiary-fixed": "#1b1c18",
+              "on-secondary-fixed": "#000f5d",
+              "secondary-fixed-dim": "#bbc3ff",
+              "on-primary-fixed": "#1c1b1b",
+              "surface-dim": "#dadad7",
+              "error": "#ba1a1a",
+              "tertiary": "#000000",
+              "primary-fixed": "#e5e2e1",
+              "surface-tint": "#5f5e5e",
+              "primary-container": "#1c1b1b",
+              "outline": "#747878",
+              "on-secondary-container": "#001a88",
+              "inverse-on-surface": "#f1f1ee",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed-variant": "#2439ab",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#474646",
+              "primary": "#000000",
+              "outline-variant": "#c4c7c7",
+              "on-tertiary-container": "#84847e",
+              "on-error": "#ffffff",
+              "primary-fixed-dim": "#c9c6c5",
+              "on-background": "#1a1c1b",
+              "surface-container": "#eeeeeb",
+              "secondary-fixed-dim": "#bbc3ff",
+              "on-surface-variant": "#444748",
+              "on-primary-container": "#858383",
+              "tertiary-container": "#1b1c18",
+              "surface-container-high": "#e8e8e5",
+              "secondary": "#4053c4",
+              "error-container": "#ffdad6",
+              "background": "#FAFAF7",
+              "tertiary-fixed": "#e4e2dc",
+              "on-surface": "#1a1c1b",
+              "inverse-surface": "#2f312f",
+              "inverse-primary": "#c9c6c5",
+              "surface-variant": "#e2e3e0",
+              "on-tertiary-fixed-variant": "#474742",
+              "surface-container-highest": "#e2e3e0",
+              "surface": "#FAFAF7"
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px"
+            },
+            spacing: {
+              "space-xs": "4px",
+              "space-md": "12px",
+              "space-2xl": "32px",
+              "gutter": "1rem",
+              "space-3xl": "48px",
+              "space-xl": "24px",
+              "space-lg": "16px",
+              "space-4xl": "64px",
+              "margin": "1.5rem",
+              "space-sm": "8px"
+            },
+            fontFamily: {
+              h3: ["Inter"],
+              label: ["Inter"],
+              h1: ["Inter"],
+              display: ["Inter"],
+              body: ["Inter"]
+            },
+            fontSize: {
+              h3: ["16px", { lineHeight: "24px", letterSpacing: "normal", fontWeight: "600" }],
+              label: ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "500" }],
+              h1: ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+              h2: ["20px", { lineHeight: "28px", letterSpacing: "normal", fontWeight: "600" }],
+              body: ["16px", { lineHeight: "24px", letterSpacing: "normal", fontWeight: "400" }]
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body h-full flex flex-col antialiased selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1400px] mx-auto">
+<div class="flex items-center gap-3">
+<span class="text-h1 font-h1 font-bold text-primary tracking-tight">ELOKA</span>
+<span class="text-label text-on-surface-variant font-medium px-2 py-0.5 bg-surface-container rounded">Applicant Portal</span>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-label text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Dashboard</a>
+<a class="text-label text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Help</a>
+<a class="text-label text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Support</a>
+<div class="h-4 w-[1px] bg-outline-variant"></div>
+<button class="bg-primary text-on-primary text-label px-4 py-2 rounded-lg font-medium hover:bg-primary-container transition-all active:scale-[0.98]">Save &amp; Exit</button>
+</nav>
+</div>
+</header>
+<!-- Main Workspace Layout -->
+<div class="flex-1 flex max-w-[1400px] w-full mx-auto">
+<!-- SideNavBar / Left Rail -->
+<aside class="flex flex-col justify-between w-[280px] p-6 shrink-0 bg-surface-container-low border-r border-outline-variant h-[calc(100vh-73px)] sticky top-[73px] overflow-y-auto">
+<div>
+<div class="mb-6">
+<h2 class="text-h2 font-h2 font-semibold text-primary">Your application</h2>
+<p class="text-label text-on-surface-variant mt-1">12 steps remaining</p>
+</div>
+<nav class="space-y-1">
+<!-- Step 1 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm font-medium" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs font-semibold text-primary">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span>Mobile verification</span>
+</a>
+<!-- Step 2 (Active) -->
+<div class="flex items-center gap-3 px-3 py-2.5 bg-[#11299E] text-white rounded-lg font-semibold shadow-sm text-body-sm">
+<span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs text-white">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span>Consent</span>
+</div>
+<!-- Step 3 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">3</span>
+<span>Program</span>
+</a>
+<!-- Step 4 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">4</span>
+<span>Business PAN</span>
+</a>
+<!-- Step 5 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">5</span>
+<span>Business details</span>
+</a>
+<!-- Step 6 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">6</span>
+<span>Email</span>
+</a>
+<!-- Step 7 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">7</span>
+<span>Signatory KYC</span>
+</a>
+<!-- Step 8 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">8</span>
+<span>Live photo</span>
+</a>
+<!-- Step 9 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">9</span>
+<span>Documents</span>
+</a>
+<!-- Step 10 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">10</span>
+<span>Bank account</span>
+</a>
+<!-- Step 11 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">11</span>
+<span>White-label setup</span>
+</a>
+<!-- Step 12 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">12</span>
+<span>Declaration</span>
+</a>
+<!-- Step 13 -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors text-body-sm" href="#">
+<span class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant">13</span>
+<span>Agreement</span>
+</a>
+</nav>
+</div>
+<div class="pt-6 border-t border-outline-variant mt-4">
+<button class="w-full py-2 px-4 text-center text-label font-medium text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">
+            Resume Later
+          </button>
+</div>
+</aside>
+<!-- Right Column (720px wide centered in available area) -->
+<main class="flex-1 flex justify-center py-10 px-8 bg-background overflow-y-auto">
+<div class="w-full max-w-[720px] space-y-6">
+<!-- Header Area -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-label font-medium text-on-surface-variant uppercase tracking-wider">Step 2 of 13</span>
+<span class="text-label font-semibold text-primary">15% Completed</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[15%] rounded-full transition-all duration-300"></div>
+</div>
+<h1 class="text-h1 font-h1 font-bold text-primary pt-2">Consent and terms</h1>
+<p class="text-body text-on-surface-variant">Review terms and regulatory data authorizations to proceed.</p>
+</div>
+<!-- Notice Banner -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-4 flex items-start gap-3 shadow-sm">
+<span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<div class="text-body-sm text-on-surface font-medium">
+              The terms have been updated. Please read and accept the latest version.
+            </div>
+</div>
+<!-- Compliance Document Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm space-y-6">
+<div class="flex items-center justify-between border-b border-outline-variant pb-4">
+<div class="space-y-1">
+<span class="text-label text-on-surface-variant">Compliance document</span>
+<h3 class="text-h3 font-h3 font-semibold text-primary">Version 2026-10-01</h3>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-label bg-secondary-fixed text-on-secondary-fixed font-medium">
+                Required
+              </span>
+</div>
+<!-- Document Content Section -->
+<div class="space-y-4">
+<h4 class="text-h2 font-h2 font-semibold text-primary">How we use your information</h4>
+<p class="text-body-sm text-on-surface-variant leading-relaxed">
+                ELOKA and its regulated financial partners process legal entity identifiers, beneficial ownership structures, and verified tax entries to comply with international banking regulations and institutional underwriting standards.
+              </p>
+<p class="text-body-sm text-on-surface-variant leading-relaxed">
+                By acknowledging this document, you authorize secure data transmissions across accredited repositories, automated screening pipelines, and national identity verification registries in accordance with data privacy frameworks.
+              </p>
+</div>
+<div class="border-t border-outline-variant pt-4 space-y-3">
+<span class="text-label font-semibold text-primary uppercase tracking-wider">Scope of authorization</span>
+<ul class="space-y-2.5">
+<li class="flex items-start gap-3 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Verify your business and identity details with official sources</span>
+</li>
+<li class="flex items-start gap-3 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Store your documents securely for compliance</span>
+</li>
+<li class="flex items-start gap-3 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Contact you about this application</span>
+</li>
+</ul>
+</div>
+<!-- Interactive Checkbox -->
+<div class="pt-2">
+<label class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="mt-0.5 h-4 w-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-body-sm text-on-surface font-medium select-none">
+                  I have read and agree to the terms and the consent above
+                </span>
+</label>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="pt-4 flex items-center justify-end gap-4">
+<button class="w-full h-[40px] bg-primary text-on-primary rounded-lg font-medium text-body-sm hover:bg-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
+<span>Agree and continue</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

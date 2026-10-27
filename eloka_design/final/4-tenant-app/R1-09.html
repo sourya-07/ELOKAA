@@ -1,0 +1,292 @@
+<html class="h-full bg-surface"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>R1-09 Agent onboarding - Sample Pay</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#e4e2dc",
+            "on-primary-fixed": "#000f5d",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "surface": "#f9f9f6",
+            "primary-fixed-dim": "#bbc3ff",
+            "surface-dim": "#dadad7",
+            "tertiary": "#242521",
+            "surface-container-low": "#f4f4f1",
+            "on-primary-fixed-variant": "#2439ab",
+            "secondary-fixed": "#ffddba",
+            "on-tertiary-fixed": "#1b1c18",
+            "background": "#f9f9f6",
+            "on-surface-variant": "#454653",
+            "on-error-container": "#93000a",
+            "on-secondary-container": "#653c00",
+            "on-tertiary": "#ffffff",
+            "inverse-on-surface": "#f1f1ee",
+            "on-primary-container": "#8d9cff",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#bbc3ff",
+            "primary-fixed": "#dee0ff",
+            "tertiary-container": "#3a3a36",
+            "on-secondary-fixed-variant": "#673d00",
+            "error-container": "#ffdad6",
+            "surface-container-highest": "#e2e3e0",
+            "surface-bright": "#f9f9f6",
+            "on-background": "#1a1c1b",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#11299e",
+            "primary": "#001573",
+            "on-surface": "#1a1c1b",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#a5a49e",
+            "on-error": "#ffffff",
+            "secondary-container": "#fc9e00",
+            "outline-variant": "#c5c5d5",
+            "secondary": "#875200",
+            "surface-container-high": "#e8e8e5",
+            "outline": "#757685",
+            "inverse-surface": "#2f312f",
+            "surface-tint": "#4053c4",
+            "secondary-fixed-dim": "#ffb865",
+            "surface-variant": "#e2e3e0",
+            "surface-container": "#eeeeeb",
+            "on-secondary-fixed": "#2b1700",
+            "error": "#ba1a1a"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased min-h-full flex flex-col items-center py-10 px-4">
+<!-- Top App Bar Navigation Shell -->
+<header class="w-full max-w-md bg-surface border-b border-surface-variant px-4 py-3 flex justify-between items-center sticky top-0 z-50 rounded-t-xl">
+<div class="flex items-center gap-2">
+<span class="text-xl font-black text-primary">Sample Pay</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-medium text-on-surface-variant">R1-09 Agent onboarding</span>
+</div>
+</header>
+<!-- Mobile Vertical Canvas Container -->
+<main class="w-full max-w-md flex flex-col gap-10 py-6">
+<!-- FRAME A -->
+<section class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm flex flex-col gap-6 relative">
+<div class="absolute -top-3 left-6 bg-primary-container text-on-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+        FRAME A — Choose your role
+      </div>
+<div class="flex flex-col gap-1 mt-2">
+<h1 class="text-xl font-bold tracking-tight text-on-surface">How will you use Sample Pay?</h1>
+<p class="text-sm text-on-surface-variant">Select your operational profile to continue setup.</p>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Radio Card 1 (Selected) -->
+<label class="border-2 border-primary-container bg-surface-container-low/50 rounded-lg p-4 flex items-start gap-3 cursor-pointer transition-all">
+<input checked="" class="mt-1 text-primary-container focus:ring-primary-container" name="role" type="radio"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Retailer — serve customers at your shop</span>
+<span class="text-xs text-on-surface-variant mt-0.5">Enable micro-ATMs, cash withdrawal, and bill payments for walk-in customers.</span>
+</div>
+</label>
+<!-- Radio Card 2 -->
+<label class="border border-outline-variant/60 bg-surface-container-lowest hover:border-outline rounded-lg p-4 flex items-start gap-3 cursor-pointer transition-all">
+<input class="mt-1 text-primary-container focus:ring-primary-container" name="role" type="radio"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Distributor — manage a network of retailers</span>
+<span class="text-xs text-on-surface-variant mt-0.5">Onboard and manage merchant accounts, fund wallets, and track commissions.</span>
+</div>
+</label>
+</div>
+<button class="w-full bg-primary-container text-on-primary py-3 px-4 rounded-lg font-bold text-sm shadow hover:opacity-95 transition-all text-center">
+        Continue
+      </button>
+</section>
+<!-- FRAME B -->
+<section class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm flex flex-col gap-6 relative">
+<div class="absolute -top-3 left-6 bg-primary-container text-on-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+        FRAME B — Retailer steps hub
+      </div>
+<div class="flex flex-col gap-1 mt-2">
+<h2 class="text-xl font-bold tracking-tight text-on-surface">Complete your KYC</h2>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Verification progress</span>
+<span class="font-bold text-primary-container">3 of 7 done</span>
+</div>
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden mt-1">
+<div class="bg-primary-container h-full w-[42%] rounded-full"></div>
+</div>
+</div>
+<!-- Vertical Step List -->
+<div class="flex flex-col gap-2">
+<!-- Step 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/30 border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-700 text-lg">check_circle</span>
+<span class="text-sm font-medium text-on-surface">Aadhaar</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Completed
+          </span>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/30 border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-700 text-lg">check_circle</span>
+<span class="text-sm font-medium text-on-surface">PAN</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Completed
+          </span>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/30 border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-700 text-lg">check_circle</span>
+<span class="text-sm font-medium text-on-surface">Selfie</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Completed
+          </span>
+</div>
+<!-- Step 4 (Highlighted Row) -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-primary-fixed/20 border border-primary-container/40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container text-lg">radio_button_checked</span>
+<span class="text-sm font-bold text-on-surface">Business details</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-primary-container text-on-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary"></span> In progress
+          </span>
+</div>
+<!-- Step 5 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/30 border border-outline-variant/20 opacity-70">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-lg">panorama_fish_eye</span>
+<span class="text-sm font-medium text-on-surface">Bank account</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-surface-variant text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Not started
+          </span>
+</div>
+<!-- Step 6 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/30 border border-outline-variant/20 opacity-70">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-lg">panorama_fish_eye</span>
+<span class="text-sm font-medium text-on-surface">Secret PIN</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-surface-variant text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Not started
+          </span>
+</div>
+<!-- Step 7 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/30 border border-outline-variant/20 opacity-70">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-lg">panorama_fish_eye</span>
+<span class="text-sm font-medium text-on-surface">Agreement</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-surface-variant text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Not started
+          </span>
+</div>
+</div>
+<button class="w-full bg-primary-container text-on-primary py-3 px-4 rounded-lg font-bold text-sm shadow hover:opacity-95 transition-all text-center">
+        Continue
+      </button>
+</section>
+<!-- FRAME C -->
+<section class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-6 shadow-sm flex flex-col gap-6 relative mb-16">
+<div class="absolute -top-3 left-6 bg-primary-container text-on-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+        FRAME C — Business details step
+      </div>
+<div class="flex flex-col gap-1 mt-2">
+<h3 class="text-xl font-bold tracking-tight text-on-surface">Business details</h3>
+<p class="text-sm text-on-surface-variant">Provide your shop and address information.</p>
+</div>
+<!-- Location Verification Chip -->
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-lg p-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-lg">my_location</span>
+<span class="text-xs font-medium text-on-surface">GPS Coordinate Sync</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Location captured
+        </span>
+</div>
+<!-- Form Fields -->
+<div class="flex flex-col gap-4">
+<!-- Shop Name -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-on-surface">Shop name</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-sm text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="e.g. Sharma General Store" type="text"/>
+</div>
+<!-- Shop Type -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-on-surface">Shop type</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-sm text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option>Select shop type</option>
+<option>General Store / Kirana</option>
+<option>Mobile Recharge &amp; Services</option>
+<option>Pharmacy / Medical</option>
+<option>Garments &amp; Apparel</option>
+</select>
+</div>
+<!-- Shop Address -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-on-surface">Shop address</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Street address, landmark, area" rows="2"></textarea>
+</div>
+<!-- Pincode & City Grid -->
+<div class="grid grid-cols-2 gap-3">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-on-surface">Pincode</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-sm text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="110001" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-on-surface">City</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-sm text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="New Delhi" type="text"/>
+</div>
+</div>
+<!-- State -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-on-surface">State</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-sm text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option>Select state</option>
+<option>Delhi</option>
+<option>Uttar Pradesh</option>
+<option>Maharashtra</option>
+<option>Karnataka</option>
+</select>
+</div>
+</div>
+<!-- Sticky primary button inside Frame C -->
+<div class="sticky bottom-4 pt-4 bg-surface-container-lowest/90 backdrop-blur-sm">
+<button class="w-full bg-primary-container text-on-primary py-3 px-4 rounded-lg font-bold text-sm shadow hover:opacity-95 transition-all text-center">
+          Save and continue
+        </button>
+</div>
+</section>
+</main>
+</body></html>

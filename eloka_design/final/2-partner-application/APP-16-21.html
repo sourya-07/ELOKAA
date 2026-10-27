@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APP-16-21 Status, corrections, outcomes and dialogs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#dadad7",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-surface-variant": "#444748",
+            "inverse-surface": "#2f312f",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "tertiary-container": "#1b1c18",
+            "secondary-container": "#dee0ff",
+            "background": "#f9f9f6",
+            "on-primary": "#ffffff",
+            "on-background": "#1a1c1b",
+            "outline-variant": "#c4c7c7",
+            "on-surface": "#1a1c1b",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "primary": "#000000",
+            "on-tertiary-container": "#84847e",
+            "error": "#ba1a1a",
+            "tertiary-fixed": "#e4e2dc",
+            "primary-fixed": "#e5e2e1",
+            "on-tertiary-fixed": "#1b1c18",
+            "secondary": "#4053c4",
+            "primary-container": "#1c1b1b",
+            "on-secondary": "#ffffff",
+            "outline": "#747878",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-primary-fixed-variant": "#474646",
+            "on-primary-fixed": "#1c1b1b",
+            "surface-container": "#eeeeeb",
+            "surface-variant": "#e2e3e0",
+            "surface-container-highest": "#e2e3e0",
+            "secondary-fixed-dim": "#bbc3ff",
+            "inverse-primary": "#c9c6c5",
+            "on-tertiary": "#ffffff",
+            "inverse-on-surface": "#f1f1ee",
+            "surface-container-high": "#e8e8e5",
+            "on-error-container": "#93000a",
+            "surface-bright": "#f9f9f6",
+            "surface": "#f9f9f6",
+            "on-secondary-container": "#001a88",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f4f4f1",
+            "on-secondary-fixed": "#000f5d",
+            "surface-tint": "#5f5e5e",
+            "on-primary-container": "#858383",
+            "tertiary": "#000000",
+            "secondary-fixed": "#dee0ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-4xl": "64px",
+            "space-xs": "4px",
+            "space-3xl": "48px",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "space-2xl": "32px",
+            "margin": "1.5rem",
+            "space-md": "12px",
+            "gutter": "1rem",
+            "space-xl": "24px"
+          },
+          "fontFamily": {
+            "h3": ["Inter"],
+            "h1": ["Inter"],
+            "h2": ["Inter"],
+            "label": ["Inter"],
+            "display-mobile": ["Inter"],
+            "display": ["Inter"],
+            "body-sm": ["Inter"],
+            "body": ["Inter"]
+          },
+          "fontSize": {
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased pb-20">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-40 flex justify-between items-center w-full px-4 py-3 shadow-sm">
+<div class="flex items-center space-x-3">
+<button aria-label="menu" class="p-1 hover:bg-surface-variant rounded transition-all duration-200">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<span class="font-h1 text-h1 text-primary">ELOKA</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-on-surface-variant text-body-sm font-medium hidden sm:inline">Help</span>
+<button aria-label="notifications" class="p-1 hover:bg-surface-variant rounded transition-all duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-4 py-space-xl space-y-space-2xl">
+<!-- Page Title -->
+<div>
+<h1 class="font-display text-display-mobile sm:text-display text-primary">APP-16-21 Status, corrections, outcomes and dialogs</h1>
+<p class="text-on-surface-variant text-body-sm mt-space-xs">Comprehensive review of verification workflows, application states, and interactive resolution dialogs.</p>
+</div>
+<!-- A — Application submitted -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-sm">
+<div class="flex items-center justify-between">
+<h2 class="font-h2 text-h2 text-primary">A — Application submitted</h2>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Under review
+        </span>
+</div>
+<!-- Card What happens next -->
+<div class="bg-surface-container-low p-space-lg rounded-lg border border-outline-variant space-y-space-sm">
+<h3 class="font-h3 text-h3 text-primary">What happens next</h3>
+<ul class="space-y-space-xs text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-primary mt-0.5">check_circle</span>
+<span>Our team checks your details and documents</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-primary mt-0.5">info</span>
+<span>We may ask you to change something</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-primary mt-0.5">mail</span>
+<span>We'll email and SMS you with the decision</span>
+</li>
+</ul>
+</div>
+<div class="text-body-sm text-on-surface-variant font-medium">
+        Timestamp: "Submitted 21 Oct 2026, 10:42"
+      </div>
+<!-- Activity timeline -->
+<div class="space-y-space-md pt-2 border-t border-outline-variant">
+<h4 class="font-h3 text-h3 text-primary">Activity timeline</h4>
+<div class="relative pl-6 space-y-space-lg before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant">
+<div class="relative flex items-center justify-between">
+<span class="absolute -left-6 w-3 h-3 rounded-full bg-primary ring-4 ring-background"></span>
+<div>
+<p class="text-body-sm font-semibold text-primary">Application submitted</p>
+<p class="text-label text-on-surface-variant">21 Oct, 10:42</p>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface text-label">Completed</span>
+</div>
+<div class="relative flex items-center justify-between">
+<span class="absolute -left-6 w-3 h-3 rounded-full bg-secondary ring-4 ring-background"></span>
+<div>
+<p class="text-body-sm font-semibold text-primary">Reviewer assigned</p>
+<p class="text-label text-on-surface-variant">21 Oct, 14:15</p>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label">Info</span>
+</div>
+<div class="relative flex items-center justify-between">
+<span class="absolute -left-6 w-3 h-3 rounded-full bg-primary ring-4 ring-background"></span>
+<div>
+<p class="text-body-sm font-semibold text-primary">Document verified</p>
+<p class="text-label text-on-surface-variant">22 Oct, 09:30</p>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface text-label">Completed</span>
+</div>
+<div class="relative flex items-center justify-between">
+<span class="absolute -left-6 w-3 h-3 rounded-full bg-secondary ring-4 ring-background"></span>
+<div>
+<p class="text-body-sm font-semibold text-primary">Under review</p>
+<p class="text-label text-on-surface-variant">22 Oct, 16:05</p>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label">Info</span>
+</div>
+</div>
+</div>
+<div>
+<button class="w-full py-2.5 px-4 rounded-lg border border-outline text-primary font-h3 text-h3 hover:bg-surface-variant transition-all duration-200">
+          Withdraw application
+        </button>
+</div>
+</section>
+<!-- B — Corrections required -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-sm">
+<h2 class="font-h2 text-h2 text-primary">B — Corrections required</h2>
+<!-- Warning banner -->
+<div class="bg-tertiary-fixed text-on-tertiary-fixed p-space-md rounded-lg flex items-start gap-3 border border-outline-variant">
+<span class="material-symbols-outlined text-amber-800">warning</span>
+<div class="text-body-sm">
+          Our team asked for 2 changes — please fix by 5 Nov 2026 (6 days left)
+        </div>
+</div>
+<div class="space-y-space-md">
+<h3 class="font-h3 text-h3 text-primary">Needs changes</h3>
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface-container-low border border-outline-variant">
+<span class="text-body-sm text-primary pr-2">Documents — Certificate of incorporation: the stamp is not readable</span>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-body-sm font-medium shrink-0 hover:opacity-90">Fix</button>
+</div>
+<div class="flex items-center justify-between p-space-md rounded-lg bg-surface-container-low border border-outline-variant">
+<span class="text-body-sm text-primary pr-2">Bank account — please upload a recent statement</span>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-body-sm font-medium shrink-0 hover:opacity-90">Fix</button>
+</div>
+</div>
+</div>
+<div class="space-y-space-sm pt-2">
+<h3 class="font-h3 text-h3 text-primary">Also needs a quick re-check</h3>
+<div class="flex gap-2 flex-wrap">
+<span class="px-3 py-1 bg-surface-variant text-on-surface text-body-sm rounded-lg">Declaration</span>
+<span class="px-3 py-1 bg-surface-variant text-on-surface text-body-sm rounded-lg">Agreement</span>
+</div>
+</div>
+<div>
+<button class="w-full py-3 px-4 rounded-lg bg-surface-variant text-on-surface-variant font-h3 text-h3 cursor-not-allowed opacity-60" disabled="">
+          Resubmit application
+        </button>
+</div>
+</section>
+<!-- C — Outcomes -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-sm">
+<h2 class="font-h2 text-h2 text-primary">C — Outcomes</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Approved -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-outline-variant flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-700">verified</span>
+<h3 class="font-h3 text-h3 text-primary">Approved</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">We're setting up your platform at sampletraders.eloka.app. We'll contact you when it's ready.</p>
+</div>
+<button class="self-start text-secondary font-h3 text-body-sm hover:underline">Contact support</button>
+</div>
+<!-- Rejected -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-outline-variant flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error">cancel</span>
+<h3 class="font-h3 text-h3 text-primary">Rejected</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">We couldn't approve your application</p>
+</div>
+<button class="self-start text-secondary font-h3 text-body-sm hover:underline">Contact support</button>
+</div>
+<!-- Withdrawn -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-outline-variant flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">remove_circle</span>
+<h3 class="font-h3 text-h3 text-primary">Withdrawn</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">You withdrew this application</p>
+</div>
+<button class="self-start text-secondary font-h3 text-body-sm hover:underline">Start a new application</button>
+</div>
+<!-- Expired -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-outline-variant flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-700">timer_off</span>
+<h3 class="font-h3 text-h3 text-primary">Expired</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">This application expired after 30 days without activity</p>
+</div>
+<button class="self-start text-secondary font-h3 text-body-sm hover:underline">Start again</button>
+</div>
+</div>
+</section>
+<!-- D — Dialogs -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-sm">
+<h2 class="font-h2 text-h2 text-primary">D — Dialogs (Design Spec Cards)</h2>
+<!-- Dialog 1 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-md">
+<h3 class="font-h2 text-h2 text-primary">Confirm it's you</h3>
+<p class="text-body-sm text-on-surface-variant">code sent to +91 XXXXXX3210</p>
+<div class="flex justify-between gap-2 max-w-xs">
+<input class="w-12 h-12 text-center text-h2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none" maxlength="1" type="text" value="4"/>
+<input class="w-12 h-12 text-center text-h2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none" maxlength="1" type="text" value="8"/>
+<input class="w-12 h-12 text-center text-h2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none" maxlength="1" type="text" value="9"/>
+<input class="w-12 h-12 text-center text-h2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none" maxlength="1" placeholder="—" type="text"/>
+<input class="w-12 h-12 text-center text-h2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none" maxlength="1" placeholder="—" type="text"/>
+<input class="w-12 h-12 text-center text-h2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none" maxlength="1" placeholder="—" type="text"/>
+</div>
+<div class="flex gap-3 justify-end pt-2">
+<button class="px-4 py-2 rounded-lg border border-outline text-primary font-h3 text-body-sm hover:bg-surface-variant transition-all">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-h3 text-body-sm hover:opacity-90">Confirm</button>
+</div>
+</div>
+<!-- Dialog 2 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-md">
+<h3 class="font-h2 text-h2 text-primary">Withdraw application?</h3>
+<p class="text-body-sm text-on-surface-variant">explains the web address will be released</p>
+<div class="space-y-space-xs">
+<label class="block text-label font-medium text-on-surface">Reason</label>
+<select class="w-full rounded-lg border-outline-variant bg-surface-container-lowest text-body-sm py-2 px-3 focus:ring-2 focus:ring-secondary">
+<option>Select a reason...</option>
+<option>Changing business plans</option>
+<option>Applying with a different entity</option>
+<option>Other reasons</option>
+</select>
+</div>
+<div class="flex gap-3 justify-end pt-2">
+<button class="px-4 py-2 rounded-lg border border-outline text-primary font-h3 text-body-sm hover:bg-surface-variant transition-all">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-error text-on-error font-h3 text-body-sm hover:opacity-90">Withdraw</button>
+</div>
+</div>
+</section>
+<!-- E — System notices -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-space-lg space-y-space-lg shadow-sm">
+<h2 class="font-h2 text-h2 text-primary">E — System notices</h2>
+<div class="space-y-space-md">
+<!-- Info notice -->
+<div class="p-space-md rounded-lg bg-secondary-fixed text-on-secondary-fixed border border-outline-variant flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary">info</span>
+<p class="text-body-sm">This application was updated in another tab. We've loaded the latest version.</p>
+</div>
+<!-- Danger notice -->
+<div class="p-space-md rounded-lg bg-error-container text-on-error-container border border-outline-variant flex items-start gap-3">
+<span class="material-symbols-outlined text-error">error</span>
+<p class="text-body-sm">This step is locked after too many attempts. Contact support with ID onb_7Q2K9X.</p>
+</div>
+<!-- Neutral notice -->
+<div class="p-space-md rounded-lg bg-surface-container-high text-on-surface border border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">help</span>
+<p class="text-body-sm">Your session ended. Sign in again to continue where you left off.</p>
+</div>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-body-sm font-medium shrink-0 hover:opacity-90 self-start sm:self-auto">Sign in</button>
+</div>
+<!-- Warning notice -->
+<div class="p-space-md rounded-lg bg-tertiary-fixed text-on-tertiary-fixed border border-outline-variant flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-800">warning</span>
+<p class="text-body-sm">This check isn't available right now. Please try again later.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-2" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label text-label mt-1">Status</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-variant rounded-2xl transition-all" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label text-label mt-1">Corrections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-variant rounded-2xl transition-all" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label text-label mt-1">Notices</span>
+</a>
+</nav>
+</body></html>

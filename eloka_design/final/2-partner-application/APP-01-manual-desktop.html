@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verification - ELOKA</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface-variant": "#444748",
+            "on-secondary-container": "#001a88",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "inverse-on-surface": "#f1f1ee",
+            "surface-container": "#eeeeeb",
+            "on-background": "#1a1c1b",
+            "on-tertiary-fixed": "#1b1c18",
+            "on-primary-fixed": "#1c1b1b",
+            "tertiary": "#000000",
+            "primary-fixed": "#e5e2e1",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#e8e8e5",
+            "on-tertiary-container": "#84847e",
+            "inverse-surface": "#2f312f",
+            "background": "#FAFAF7",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-primary": "#ffffff",
+            "secondary-container": "#778afd",
+            "surface-container-highest": "#e2e3e0",
+            "tertiary-container": "#1b1c18",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "inverse-primary": "#c9c6c5",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "secondary-fixed": "#dee0ff",
+            "error": "#ba1a1a",
+            "surface-bright": "#f9f9f6",
+            "on-tertiary-fixed-variant": "#474742",
+            "on-secondary-fixed": "#000f5d",
+            "on-primary-container": "#858383",
+            "surface-dim": "#dadad7",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#f9f9f6",
+            "on-surface": "#1a1c1b",
+            "surface-tint": "#5f5e5e",
+            "primary-container": "#1c1b1b",
+            "on-primary-fixed-variant": "#474646",
+            "outline": "#747878",
+            "secondary-fixed-dim": "#bbc3ff",
+            "secondary": "#4053c4",
+            "surface-variant": "#e2e3e0",
+            "primary": "#000000",
+            "tertiary-fixed": "#e4e2dc",
+            "outline-variant": "#c4c7c7",
+            "surface-container-low": "#f4f4f1",
+            "connect-blue": "#11299E",
+            "warm-bg": "#FAFAF7",
+            "hairline": "#E5E5E0"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "24px",
+            "space-xs": "4px",
+            "space-md": "12px",
+            "space-4xl": "64px",
+            "margin": "1.5rem",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "space-2xl": "32px",
+            "space-3xl": "48px",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "label": ["Inter"],
+            "display": ["Inter"],
+            "h2": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body-sm": ["Inter"],
+            "h3": ["Inter"],
+            "h1": ["Inter"],
+            "body": ["Inter"]
+          },
+          "fontSize": {
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+</head>
+<body class="bg-[#FAFAF7] text-on-background font-body antialiased flex flex-col min-h-screen m-0 p-0">
+<div class="w-full max-w-[1280px] min-h-screen mx-auto bg-[#FAFAF7] flex flex-col justify-between relative shadow-xl overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface text-primary dark:text-inverse-primary font-h3 text-h3 flex justify-between items-center w-full px-8 h-20 border-b border-[#E5E5E0]">
+<span class="font-bold tracking-tight text-xl text-primary">ELOKA</span>
+<button class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Help</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-[720px] mx-auto px-4 py-10 pb-24">
+<!-- Titles -->
+<div class="mb-8 text-center">
+<h1 class="font-display text-display text-on-background mb-3">Run your own payments platform</h1>
+<p class="font-body text-body text-on-surface-variant">Your progress is saved, so you can come back any time.</p>
+</div>
+<!-- Section Heading -->
+<h2 class="font-h2 text-h2 text-on-background mb-4">How would you like to apply?</h2>
+<!-- Radio Cards Container (2-Column Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+<!-- Radio Card 1 (Selected) -->
+<div class="bg-surface border border-[#E5E5E0] rounded-lg p-5 relative shadow-sm cursor-pointer transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="font-h3 text-h3 text-on-background">Apply with DigiLocker</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#E8EBFA] text-[#11299E]">Faster</span>
+</div>
+<!-- Custom Radio Selected -->
+<div class="w-5 h-5 rounded-full border-2 border-outline flex items-center justify-center shrink-0">
+
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">
+            We fetch your identity, home address, PAN details and available documents from DigiLocker.
+          </p>
+<p class="font-label text-label text-on-surface-variant mb-3">6 steps</p>
+</div>
+<div class="border-t border-[#E5E5E0] pt-3 flex flex-col gap-2">
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-emerald-600" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>Fewer forms to fill</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-emerald-600" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>Documents fetched for you</span>
+</div>
+</div>
+</div>
+<!-- Radio Card 2 -->
+<div class="bg-surface border-2 border-[#11299E] rounded-lg p-5 relative shadow-sm cursor-pointer transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between mb-3">
+<span class="font-h3 text-h3 text-on-background">Apply step by step</span>
+<!-- Custom Radio Unselected -->
+<div class="w-5 h-5 rounded-full border-2 border-[#11299E] flex items-center justify-center shrink-0"><div class="w-2.5 h-2.5 rounded-full bg-[#11299E]"></div></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Enter your details and upload documents yourself.
+          </p>
+<p class="font-label text-label text-on-surface-variant mt-4">13 steps</p>
+</div>
+</div>
+</div>
+<!-- Keep these ready Card -->
+<div class="bg-surface border border-[#E5E5E0] rounded-lg p-5 mb-6 shadow-sm">
+<h3 class="font-h3 text-h3 text-on-background mb-3">Keep these ready</h3>
+<ul class="flex flex-col gap-2.5 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Business PAN</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Your Aadhaar-linked mobile (for DigiLocker)</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Bank account details</span>
+</li>
+<li class="flex items-center gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Your logo (optional)</span>
+</li>
+</ul>
+</div>
+<!-- Secondary Action Link -->
+<div class="text-center mb-6">
+<a class="font-body-sm text-body-sm text-[#11299E] font-medium hover:underline" href="#">Continue an existing application</a>
+</div>
+</main>
+<!-- Bottom Action Bar / Shell -->
+<div class="w-full bg-surface px-8 py-4 border-t border-[#E5E5E0] flex flex-col gap-3">
+<div class="max-w-[720px] w-full mx-auto flex flex-col gap-3">
+<button class="w-full h-12 bg-primary text-on-primary rounded-lg font-h3 text-h3 flex items-center justify-center active:scale-[0.98] transition-all duration-200">
+        Continue
+      </button>
+<!-- Footer Links -->
+<footer class="flex justify-center items-center gap-2 text-xs text-on-surface-variant">
+<a class="hover:underline" href="#">Privacy</a>
+<span>·</span>
+<a class="hover:underline" href="#">Terms</a>
+</footer>
+</div>
+</div>
+</div>
+</body></html>

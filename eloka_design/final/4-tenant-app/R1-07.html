@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sample Pay - Agent Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed": "#2b1700",
+            "on-tertiary-fixed-variant": "#474742",
+            "inverse-surface": "#2f312f",
+            "inverse-primary": "#bbc3ff",
+            "on-primary": "#ffffff",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "secondary-fixed-dim": "#ffb865",
+            "tertiary": "#242521",
+            "surface-container-high": "#e8e8e5",
+            "on-surface-variant": "#5c5c57",
+            "on-primary-container": "#8d9cff",
+            "on-background": "#0a0a0a",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#875200",
+            "tertiary-fixed": "#e4e2dc",
+            "on-error": "#ffffff",
+            "surface-dim": "#dadad7",
+            "surface-variant": "#e2e3e0",
+            "primary-container": "#11299e",
+            "primary": "#11299e",
+            "outline": "#757685",
+            "on-surface": "#0a0a0a",
+            "secondary-container": "#fc9e00",
+            "on-secondary": "#ffffff",
+            "surface-bright": "#f9f9f6",
+            "primary-fixed": "#dee0ff",
+            "outline-variant": "#E5E5E0",
+            "inverse-on-surface": "#f1f1ee",
+            "on-secondary-container": "#653c00",
+            "background": "#FAFAF7",
+            "primary-fixed-dim": "#bbc3ff",
+            "surface-tint": "#11299e",
+            "on-tertiary-container": "#a5a49e",
+            "surface-container-low": "#f4f4f1",
+            "on-primary-fixed": "#000f5d",
+            "secondary-fixed": "#ffddba",
+            "on-primary-fixed-variant": "#2439ab",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed": "#1b1c18",
+            "surface-container": "#eeeeeb",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#3a3a36",
+            "surface-container-highest": "#e2e3e0",
+            "surface": "#ffffff",
+            "on-secondary-fixed-variant": "#673d00"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex selection:bg-primary-container selection:text-on-primary">
+<!-- SideNavBar -->
+<aside class="flex flex-col justify-between w-[250px] h-screen fixed left-0 top-0 bg-primary-container text-on-primary border-r border-primary-container z-20">
+<div class="p-4 flex flex-col gap-6">
+<div class="flex items-center h-12 px-2">
+<span class="text-xl font-black text-on-primary tracking-tight">Sample Pay</span>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-primary/80 hover:text-on-primary px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary-container/50" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary/80 hover:text-on-primary px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary-container/50" href="#">
+<span class="material-symbols-outlined text-xl">business</span>
+<span class="text-sm font-medium">My Network</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary/80 hover:text-on-primary px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary-container/50" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="text-sm font-medium">Transactions</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary/80 hover:text-on-primary px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary-container/50" href="#">
+<span class="material-symbols-outlined text-xl">store</span>
+<span class="text-sm font-medium">Services</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-lg px-3 py-2 transition-all duration-200 shadow-sm" href="#" style="background-color: rgba(255,255,255,0.15); color: #ffffff;">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="text-sm font-bold">Settings</span>
+</a>
+</nav>
+</div>
+<div class="p-4 border-t border-white/10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<img class="w-9 h-9 rounded-full object-cover border border-white/2" data-alt="Professional studio portrait of an Indian male admin named Ravi with a warm friendly smile, wearing a clean crisp blue collared shirt, set against a softly blurred neutral office background with professional studio lighting highlighting his features." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMXhdrmTnD98QmmHaIwwBHqleC8eDTA7Hz_l_42xSstkYiRyqC_06rW7qLBocWmbKba-NW-Xv_qiwURbyMhRZUi0_a2AYeCvnv_y8LWZK-Y09LEdhkQ1wDciWtQICmseZduwNw4WIAzOEgVdyZ_ENj8ATx84RzJhKG6dY6kldP3NZMZfjV48BAse9Juy8DY9omCgewBEyJso-gEY672BaIjH0IwpQm5XtnG_vYBRCWyu8nroNZ3154Hihq7HzZEWvzjWiGQBt4Lt6_"/>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-white">Ravi Sample</span>
+<span class="text-[10px] text-white/70">Tenant Admin</span>
+</div>
+</div>
+<button class="text-white/70 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Wrapper -->
+<div class="flex-1 flex flex-col pl-[250px]">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 h-16 bg-surface dark:bg-inverse-surface border-b border-outline-variant sticky top-0 z-10">
+<div class="flex items-center gap-4 flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-1.5 text-xs text-on-surface focus:outline-none focus:border-primary transition-all" placeholder="Search transactions, agents, services..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button aria-label="Notifications" class="relative p-2 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary-container rounded-full"></span>
+</button>
+<button aria-label="Help" class="p-2 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-xl">help</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant mx-1"></div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-bold text-on-surface">Ravi Sample Admin</span>
+<img class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A clean professional headshot of Ravi Sample Admin against a minimalist light gray studio background, wearing a tailored navy blue business suit with a crisp white shirt, captured with soft balanced lighting highlighting a confident and trustworthy expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjUVB09kg3Vw85BopydifDYiPwXx13wHBajAVL0vAhC5bOCRmJtXODvTbCJH7-JnaS-K6zXiYpVUueP2YWEgVneWBsBgU_pYn9dXb_To1Eo6EDITExpkCDrI3zYakT_tddATK0Vu-Nusiz6wHzwVLInqQodvD_JV5L2KaAHJuhy6I_fFWGR-lFTZWmlbCTs2YJrNOYJ8-BywPWaIbQRgewyMLHXrAud7dPBoido4N-f8X1000R9oO_mnwt1fvLMQwk6u8seMM-fU-p"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-8 max-w-[1200px] w-full mx-auto flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex justify-between items-center">
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-on-background">Agent Profile</h1>
+<p class="text-xs text-on-surface-variant mt-1">Manage your personal information, shop details, and account settings.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-surface-container-high text-on-surface border border-outline-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+            Active Agent
+          </span>
+</div>
+</div>
+<!-- 2-Column Card Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+<!-- 1. Profile card -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-outline-variant" data-alt="Close-up portrait of Ravi Sample, an Indian male retail shop owner with short neat hair and a pleasant expression, wearing a casual formal collared shirt, shot with professional soft studio lighting against a clean white backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACgbQBu983UdNQ8Y8OJLz3HMNVyJRHiaryqkUc66d-p4dwOTkqSqBBj9cYgRY5wYzbOo7RyNU3ZfHHXVYL6dtQzHve-eHkf5Qtet2TlL7OskucwMsBalwEH95Lz7JiF-Lk58YuJMHeas2tpXEwPl_7cEhT7F75vW-phMW78ye7_wlzBgSwrSpy4vkoiw2tSJyHc1z4vrAyfW28XWmY6dVRYA_xmsTNgZi9Gsh-8g7OegsXasFamnujlSf62S83ZAtJxdGJzEGpOIpx"/>
+<div>
+<h2 class="text-base font-bold text-on-background">Ravi Sample</h2>
+<p class="text-xs text-on-surface-variant font-medium">Retailer</p>
+<div class="flex items-center gap-1.5 mt-1 text-xs text-on-surface-variant">
+<span>User code 10024518</span>
+<button class="hover:text-primary transition-colors inline-flex items-center" title="Copy code">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded bg-surface-container-low border border-outline-variant text-[10px] font-semibold text-on-surface">ID Verified</span>
+</div>
+<div class="border-t border-outline-variant pt-4 flex flex-col gap-2.5">
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-surface-variant">Mobile</span>
+<div class="flex items-center gap-2">
+<span class="font-medium text-on-surface tabular-nums">XXXXXX3210</span>
+<button class="text-primary hover:underline text-[11px] font-semibold">Edit</button>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-surface-variant">Email</span>
+<div class="flex items-center gap-2">
+<span class="font-medium text-on-surface">s••••@sample.in</span>
+<button class="text-primary hover:underline text-[11px] font-semibold">Edit</button>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 flex flex-col gap-2">
+<div class="flex justify-between items-center text-xs">
+<span class="font-semibold text-on-surface">Profile completeness</span>
+<span class="font-bold text-primary">80%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-4/5"></div>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 flex items-center justify-between bg-surface-container-low -mx-6 -mb-6 p-6 rounded-b-xl border-b-0">
+<div>
+<p class="text-xs text-on-surface-variant">Membership plan</p>
+<p class="text-sm font-bold text-on-surface mt-0.5">Standard</p>
+</div>
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container text-xs font-semibold text-on-surface transition-all">
+              Change
+            </button>
+</div>
+</div>
+<!-- 2. Organization details -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">apartment</span>
+              Organization details
+            </h2>
+</div>
+<div class="flex flex-col gap-3 text-xs">
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">App name</span>
+<span class="font-semibold text-on-surface">Sample Pay</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Organization name</span>
+<span class="font-semibold text-on-surface">Sample Payments Pvt Ltd</span>
+</div>
+<div class="flex justify-between py-2">
+<span class="text-on-surface-variant">Website</span>
+<a class="font-semibold text-primary hover:underline" href="#">samplepay.in</a>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3.5 border border-outline-variant flex items-start gap-3 mt-auto">
+<span class="material-symbols-outlined text-secondary-container text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">
+              Organization details are verified against corporate registry documents. Contact tenant support for modifications.
+            </p>
+</div>
+</div>
+<!-- 3. Earning summary -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">payments</span>
+              Earning summary
+            </h2>
+<span class="text-[11px] font-semibold text-secondary px-2 py-0.5 bg-secondary-fixed/30 rounded">Live ledger</span>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant flex flex-col gap-1">
+<span class="text-xs text-on-surface-variant">This month till yesterday</span>
+<div class="flex items-baseline justify-between">
+<span class="text-xl font-bold text-on-background tabular-nums">₹8,240.00</span>
+<span class="inline-flex items-center text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                  ▲ 12% <span class="text-[10px] text-on-surface-variant ml-1 font-normal">from last month</span>
+</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant flex flex-col gap-1">
+<span class="text-xs text-on-surface-variant">Last month's earning</span>
+<span class="text-sm font-bold text-on-background tabular-nums">₹7,350.00</span>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant flex flex-col gap-1">
+<span class="text-xs text-on-surface-variant">Commission due</span>
+<span class="text-sm font-bold text-primary tabular-nums">₹1,120.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 4. My shop details -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">storefront</span>
+              My shop details
+            </h2>
+<button class="text-primary hover:underline text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+            </button>
+</div>
+<div class="flex flex-col gap-3 text-xs">
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Shop name</span>
+<span class="font-semibold text-on-surface">Ravi Mobile Centre</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Shop type</span>
+<span class="font-semibold text-on-surface">Mobile shop</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Address</span>
+<span class="font-semibold text-on-surface">Shop 4, MG Road</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">City</span>
+<span class="font-semibold text-on-surface">Pune</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">State</span>
+<span class="font-semibold text-on-surface">Maharashtra</span>
+</div>
+<div class="flex justify-between py-2">
+<span class="text-on-surface-variant">Pincode</span>
+<span class="font-semibold text-on-surface tabular-nums">411001</span>
+</div>
+</div>
+</div>
+<!-- 5. Personal details -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">person</span>
+              Personal details
+            </h2>
+<button class="text-primary hover:underline text-xs font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span> Edit
+            </button>
+</div>
+<div class="flex flex-col gap-3 text-xs">
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Gender</span>
+<span class="font-semibold text-on-surface">Male</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Date of birth</span>
+<span class="font-semibold text-on-surface">12 Mar 1990</span>
+</div>
+<div class="flex justify-between py-2 border-b border-outline-variant">
+<span class="text-on-surface-variant">Qualification</span>
+<span class="font-semibold text-on-surface">Graduate</span>
+</div>
+<div class="flex justify-between py-2">
+<span class="text-on-surface-variant">Marital status</span>
+<span class="font-semibold text-on-surface">Married</span>
+</div>
+</div>
+<div class="mt-4 pt-2"></div>
+</div>
+<!-- 6. Account details -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">account_balance</span>
+              Account details
+            </h2>
+</div>
+<div class="flex flex-col gap-3 text-xs">
+<div class="flex justify-between py-2.5 border-b border-outline-variant items-center">
+<span class="text-on-surface-variant">GSTIN</span>
+<span class="font-mono font-semibold text-on-surface bg-surface-container-low px-2 py-1 rounded border border-outline-variant">27AAAAA0000A1Z5</span>
+</div>
+<div class="flex justify-between py-2.5 items-center">
+<span class="text-on-surface-variant">Connected bank accounts</span>
+<span class="font-semibold text-on-surface">Sample Bank (A/c XXXX4321)</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3.5 border border-outline-variant flex items-center justify-between mt-auto">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-lg">verified</span>
+<span class="text-xs font-semibold text-on-surface">Primary payout account verified</span>
+</div>
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">Active</span>
+</div>
+</div>
+<!-- 7. Manage my account -->
+<div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-5 md:col-span-2">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">settings_suggest</span>
+              Manage my account
+            </h2>
+<span class="text-xs text-on-surface-variant">Security &amp; Compliance settings</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+<a class="p-4 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary transition-all flex items-center justify-between group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-lg">lock_reset</span>
+<span class="font-semibold text-on-surface group-hover:text-primary transition-colors">Change secret PIN</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</a>
+<a class="p-4 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary transition-all flex items-center justify-between group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-lg">phone_android</span>
+<span class="font-semibold text-on-surface group-hover:text-primary transition-colors">Update registered mobile</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</a>
+<a class="p-4 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary transition-all flex items-center justify-between group" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-lg">description</span>
+<span class="font-semibold text-on-surface group-hover:text-primary transition-colors">Download agreement</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="pt-8 pb-12 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-4 mt-auto text-xs text-on-surface-variant">
+<div>
+<span>© 2025 Sample Payments Pvt Ltd. All rights reserved.</span>
+</div>
+<div class="flex items-center gap-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of service</a>
+<a class="hover:text-primary transition-colors" href="#">Support center</a>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

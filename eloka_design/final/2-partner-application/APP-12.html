@@ -1,0 +1,217 @@
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bank Verification - ELOKA</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#bbc3ff",
+            "on-secondary-container": "#001a88",
+            "outline": "#747878",
+            "surface-container": "#eeeeeb",
+            "inverse-on-surface": "#f1f1ee",
+            "primary": "#000000",
+            "on-tertiary-fixed": "#1b1c18",
+            "outline-variant": "#c4c7c7",
+            "on-tertiary-container": "#84847e",
+            "surface-tint": "#5f5e5e",
+            "on-surface": "#1a1c1b",
+            "on-primary-fixed": "#1c1b1b",
+            "on-background": "#1a1c1b",
+            "on-surface-variant": "#444748",
+            "surface-dim": "#dadad7",
+            "secondary": "#4053c4",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "error-container": "#ffdad6",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#2f312f",
+            "tertiary": "#000000",
+            "secondary-fixed": "#dee0ff",
+            "on-error": "#ffffff",
+            "surface": "#f9f9f6",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-secondary-fixed": "#000f5d",
+            "tertiary-container": "#1b1c18",
+            "surface-container-low": "#f4f4f1",
+            "primary-fixed": "#e5e2e1",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e8e8e5",
+            "on-tertiary-fixed-variant": "#474742",
+            "inverse-primary": "#c9c6c5",
+            "primary-container": "#1c1b1b",
+            "primary-fixed-dim": "#c9c6c5",
+            "on-secondary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-3xl": "48px",
+            "margin": "1.5rem",
+            "gutter": "1rem",
+            "space-xl": "24px",
+            "space-4xl": "64px",
+            "space-2xl": "32px",
+            "space-xs": "4px",
+            "space-lg": "16px"
+          },
+          "fontFamily": {
+            "label": ["Inter"],
+            "display": ["Inter"],
+            "h3": ["Inter"],
+            "body-sm": ["Inter"],
+            "body": ["Inter"],
+            "h2": ["Inter"],
+            "h1": ["Inter"],
+            "display-mobile": ["Inter"]
+          },
+          "fontSize": {
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body h-full flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top App Bar -->
+<header class="bg-surface text-on-surface font-h1 text-h1 w-full px-4 py-3 max-w-2xl mx-auto flex justify-between items-center z-50">
+<div class="flex items-center gap-3">
+<button class="text-on-surface p-1 rounded-lg hover:bg-surface-container transition-all duration-200 active:scale-98">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="font-bold tracking-tight">ELOKA</span>
+</div>
+<button class="text-on-surface-variant font-label text-label hover:text-on-surface transition-colors">
+      Help
+    </button>
+</header>
+<!-- Main Content Container -->
+<main class="w-full max-w-xl mx-auto px-4 py-6 flex-1 pb-28">
+<!-- Progress & Step Header -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-label text-on-surface-variant">Step 10 of 13</span>
+<span class="font-label text-label text-secondary">77% completed</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 77%;"></div>
+</div>
+</div>
+<!-- Page Heading -->
+<h1 class="font-h1 text-h1 text-on-surface mb-6">Settlement bank account</h1>
+<!-- Form Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm mb-6 space-y-5">
+<!-- IFSC Field -->
+<div>
+<label class="block font-label text-label text-on-surface-variant mb-1.5">IFSC code</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3.5 py-2.5 text-on-surface font-body focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all outline-none" placeholder="Enter IFSC" type="text" value="SBIN0001234"/>
+</div>
+<p class="mt-1 font-label text-label text-on-surface-variant">11 characters</p>
+</div>
+<!-- Read-only Bank Branch Row -->
+<div class="bg-surface-container-low border border-outline-variant/60 rounded-lg p-3.5 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-h3 text-h3 text-on-surface">State Bank of India</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Bandra branch</span>
+</div>
+</div>
+<!-- Account Number Field -->
+<div>
+<label class="block font-label text-label text-on-surface-variant mb-1.5">Account number</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3.5 py-2.5 text-on-surface font-body focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all outline-none" placeholder="Enter account number" type="password" value="12345678904321"/>
+</div>
+</div>
+<!-- Dashed Border Upload Card -->
+<div>
+<label class="block font-label text-label text-on-surface-variant mb-1.5">Bank proof — cancelled cheque or statement</label>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-6 text-center hover:border-secondary transition-colors bg-surface-container-low/50 cursor-pointer">
+<div class="w-10 h-10 mx-auto mb-2 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">upload_file</span>
+</div>
+<p class="font-h3 text-h3 text-on-surface mb-1">Click to upload or drag and drop</p>
+<p class="font-label text-label text-on-surface-variant">JPG, PNG or PDF, up to 10 MB</p>
+</div>
+</div>
+<!-- Security Note -->
+<div class="flex items-start gap-2.5 pt-1">
+<span class="material-symbols-outlined text-secondary mt-0.5" style="font-variation-settings: 'FILL' 1;">lock</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">For your security we'll send a code to your mobile before saving.</p>
+</div>
+<!-- Solid Black Button -->
+<button class="w-full bg-primary text-on-primary font-h3 text-h3 py-3 rounded-lg hover:opacity-90 active:scale-98 transition-all duration-200 mt-2">
+        Verify account
+      </button>
+</div>
+<!-- Success Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm mb-4">
+<div class="flex items-center gap-2.5 mb-3 text-emerald-700">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-h3 text-h3">Account verified</span>
+</div>
+<div class="space-y-2 font-body-sm text-body-sm text-on-surface-variant border-t border-outline-variant/40 pt-3">
+<div class="flex justify-between">
+<span>Account</span>
+<span class="font-semibold text-on-surface">XXXXXX4321</span>
+</div>
+<div class="flex justify-between">
+<span>IFSC</span>
+<span class="font-semibold text-on-surface">SBIN0001234</span>
+</div>
+<div class="flex justify-between">
+<span>Account holder</span>
+<span class="font-semibold text-on-surface">SAMPLE TRADERS PVT LTD</span>
+</div>
+</div>
+</div>
+<!-- Info Card -->
+<div class="bg-secondary-fixed/30 border border-secondary/30 rounded-xl p-4 flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="font-body-sm text-body-sm text-on-secondary-fixed-variant leading-relaxed">
+        The account holder name differs from your business name. Our team will review this.
+      </p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl p-2 cursor-pointer transition-all duration-200 active:scale-98">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label text-label">Details</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant p-2 cursor-pointer hover:bg-surface-container transition-all duration-200 active:scale-98">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-label text-label">Security</span>
+</div>
+</nav>
+</body></html>

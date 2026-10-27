@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container": "#eeeeeb", "primary-fixed-dim": "#bbc3ff", "on-tertiary-container": "#a5a49e", "tertiary": "#242521", "on-primary-fixed": "#000f5d", "outline-variant": "#c5c5d5", "surface-container-lowest": "#ffffff", "on-primary-container": "#8d9cff", "tertiary-fixed-dim": "#c8c6c0", "error": "#ba1a1a", "on-surface-variant": "#454653", "tertiary-container": "#3a3a36", "on-primary": "#ffffff", "surface-container-high": "#e8e8e5", "primary": "#001573", "surface-variant": "#e2e3e0", "on-surface": "#1a1c1b", "secondary": "#875200", "inverse-surface": "#2f312f", "inverse-primary": "#bbc3ff", "surface-tint": "#4053c4", "secondary-fixed-dim": "#ffb865", "surface": "#f9f9f6", "inverse-on-surface": "#f1f1ee", "error-container": "#ffdad6", "surface-container-highest": "#e2e3e0", "background": "#f9f9f6", "surface-bright": "#f9f9f6", "on-tertiary-fixed-variant": "#474742", "on-background": "#1a1c1b", "on-secondary": "#ffffff", "primary-fixed": "#dee0ff", "on-secondary-fixed-variant": "#673d00", "primary-container": "#11299e", "tertiary-fixed": "#e4e2dc", "on-tertiary": "#ffffff", "on-error": "#ffffff", "secondary-fixed": "#ffddba", "surface-dim": "#dadad7", "surface-container-low": "#f4f4f1", "on-primary-fixed-variant": "#2439ab", "secondary-container": "#fc9e00", "on-secondary-container": "#653c00", "on-secondary-fixed": "#2b1700", "outline": "#757685", "on-tertiary-fixed": "#1b1c18", "on-error-container": "#93000a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: {}, fontFamily: { "headline": ["Inter"], "display": ["Inter"], "body": ["Inter"], "label": ["Inter"] }, fontSize: {} } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;font-family:'Inter',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body text-on-surface min-h-screen flex flex-col antialiased selection:bg-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2.5 min-w-0"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center shrink-0 shadow-sm"><span class="material-symbols-outlined text-on-primary text-[20px]">payments</span></div><div class="flex flex-col min-w-0"><div class="flex items-center gap-1.5"><span class="text-sm font-semibold tracking-tight text-on-surface truncate font-headline">Sample Pay</span><span class="w-1.5 h-1.5 rounded-full bg-secondary-container shrink-0"></span></div><span class="text-[11px] font-medium text-on-surface-variant uppercase tracking-wider">Tenant Admin</span></div></div><div class="flex items-center gap-2 shrink-0"><button aria-label="Notifications" class="relative w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary-container ring-2 ring-surface-container-lowest"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface"><div class="flex flex-col w-full px-4 py-4 space-y-4">
+<!-- Top Bar / Header Action -->
+<div class="flex items-start justify-between gap-3 pt-1">
+<div class="flex flex-col min-w-0">
+<h1 class="text-xl font-bold tracking-tight text-on-surface font-headline">My Network</h1>
+<p class="text-xs text-on-surface-variant mt-0.5 leading-relaxed">Manage and view your distribution channel hierarchy and agents.</p>
+</div>
+<button class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary-container text-xs font-semibold shadow-sm hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">swap_horiz</span>
+<span>Change roles</span>
+</button>
+</div>
+<!-- Search & View Toggle -->
+<div class="space-y-3">
+<!-- Search Field -->
+<div class="relative w-full">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[19px]">search</span>
+</span>
+<input class="w-full h-11 pl-10 pr-3 rounded-xl bg-surface-container-lowest text-xs text-on-surface placeholder:text-outline shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/20 transition-all" placeholder="Search by name, mobile number or user" type="text"/>
+</div>
+<!-- Segment Control & Quick Actions -->
+<div class="flex items-center justify-between gap-2">
+<!-- Toggle: List vs Tree -->
+<div class="inline-flex p-1 rounded-xl bg-surface-container-high/70 shadow-inner">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[15px]">format_list_bulleted</span>
+<span>List view</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-on-surface-variant text-xs font-medium hover:text-on-surface transition-all" type="button">
+<span class="material-symbols-outlined text-[15px]">account_tree</span>
+<span>Tree view</span>
+</button>
+</div>
+<!-- Action buttons -->
+<div class="flex items-center gap-1.5">
+<button class="h-9 px-2.5 rounded-lg bg-surface-container-lowest text-on-surface text-xs font-medium inline-flex items-center gap-1.5 shadow-sm hover:bg-surface-container active:scale-95 transition-all" id="filterToggleBtn" type="button">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">tune</span>
+<span>Filter</span>
+</button>
+<button class="h-9 px-2.5 rounded-lg bg-surface-container-lowest text-on-surface text-xs font-medium inline-flex items-center gap-1.5 shadow-sm hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">download</span>
+<span>Export</span>
+</button>
+</div>
+</div>
+<!-- Filter chips bar / clear link -->
+<div class="flex items-center justify-between px-0.5 text-xs">
+<span class="text-on-surface-variant">Showing all matching entities</span>
+<button class="text-primary-container font-medium hover:underline text-[11px]" type="button">Clear filter</button>
+</div>
+</div>
+<!-- Agent Cards Stack (6 Cards) -->
+<div class="space-y-3">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-2 pb-2.5 border-b-0">
+<div class="flex items-start gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center shrink-0 text-on-primary-fixed font-semibold text-xs">
+            RS
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="text-sm font-semibold text-on-surface truncate">Ravi Sample</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">Retailer</span>
+</div>
+<div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span>Active</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-surface-container-low/60 p-2.5 rounded-lg">
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">User Code</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">10024518</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Mobile</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">XXXXXX3210</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Balance</span>
+<p class="font-mono text-on-surface font-bold text-xs mt-0.5 text-primary-container">₹12,450.00</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Onboarded</span>
+<p class="text-on-surface text-[11px] mt-0.5">12 Sep 2026</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant px-0.5">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+          Commission: <strong class="text-on-surface font-medium">Monthly</strong>
+</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+          Pune
+        </span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-2 pb-2.5">
+<div class="flex items-start gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 text-on-secondary-fixed font-semibold text-xs">
+            AD
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="text-sm font-semibold text-on-surface truncate">Anita Desai</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">Distributor</span>
+</div>
+<div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 text-[10px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+<span>Pending approval</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-surface-container-low/60 p-2.5 rounded-lg">
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">User Code</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">10024519</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Mobile</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">XXXXXX9842</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Balance</span>
+<p class="font-mono text-on-surface font-bold text-xs mt-0.5 text-primary-container">₹48,200.00</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Onboarded</span>
+<p class="text-on-surface text-[11px] mt-0.5">10 Sep 2026</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant px-0.5">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+          Commission: <strong class="text-on-surface font-medium">Weekly</strong>
+</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+          Mumbai
+        </span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-2 pb-2.5">
+<div class="flex items-start gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 text-on-surface-variant font-semibold text-xs">
+            SK
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="text-sm font-semibold text-on-surface truncate">Suresh Kumar</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">Retailer</span>
+</div>
+<div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 text-[10px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+<span>Inactive</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-surface-container-low/60 p-2.5 rounded-lg">
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">User Code</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">10024520</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Mobile</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">XXXXXX1122</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Balance</span>
+<p class="font-mono text-on-surface font-bold text-xs mt-0.5">₹0.00</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Onboarded</span>
+<p class="text-on-surface text-[11px] mt-0.5">05 Aug 2026</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant px-0.5">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+          Commission: <strong class="text-on-surface font-medium">Monthly</strong>
+</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+          Delhi
+        </span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-2 pb-2.5">
+<div class="flex items-start gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center shrink-0 text-on-primary-fixed font-semibold text-xs">
+            PS
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="text-sm font-semibold text-on-surface truncate">Priya Sharma</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-primary-fixed text-on-primary-fixed">Super Distributor</span>
+</div>
+<div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 text-[10px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+<span>Demo user</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-surface-container-low/60 p-2.5 rounded-lg">
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">User Code</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">10024521</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Mobile</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">XXXXXX7788</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Balance</span>
+<p class="font-mono text-on-surface font-bold text-xs mt-0.5 text-primary-container">₹1,50,000.00</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Onboarded</span>
+<p class="text-on-surface text-[11px] mt-0.5">28 Jul 2026</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant px-0.5">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+          Commission: <strong class="text-on-surface font-medium">Daily</strong>
+</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+          Jaipur
+        </span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-2 pb-2.5">
+<div class="flex items-start gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-on-surface font-semibold text-xs">
+            AP
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="text-sm font-semibold text-on-surface truncate">Amit Patel</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">Retailer</span>
+</div>
+<div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span>Active</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-surface-container-low/60 p-2.5 rounded-lg">
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">User Code</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">10024522</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Mobile</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">XXXXXX4433</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Balance</span>
+<p class="font-mono text-on-surface font-bold text-xs mt-0.5 text-primary-container">₹5,320.00</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Onboarded</span>
+<p class="text-on-surface text-[11px] mt-0.5">15 Jun 2026</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant px-0.5">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+          Commission: <strong class="text-on-surface font-medium">Monthly</strong>
+</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+          Ahmedabad
+        </span>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-2 pb-2.5">
+<div class="flex items-start gap-2.5 min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 text-on-secondary-fixed font-semibold text-xs">
+            NS
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<h2 class="text-sm font-semibold text-on-surface truncate">Neha Singh</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant">Distributor</span>
+</div>
+<div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span>Active</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-surface-container-low/60 p-2.5 rounded-lg">
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">User Code</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">10024523</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Mobile</span>
+<p class="font-mono text-on-surface font-medium text-[11px] mt-0.5">XXXXXX5566</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Balance</span>
+<p class="font-mono text-on-surface font-bold text-xs mt-0.5 text-primary-container">₹84,100.00</p>
+</div>
+<div>
+<span class="text-[10px] uppercase font-medium text-on-surface-variant tracking-wider">Onboarded</span>
+<p class="text-on-surface text-[11px] mt-0.5">01 Jun 2026</p>
+</div>
+</div>
+<div class="mt-2.5 flex items-center justify-between text-[11px] text-on-surface-variant px-0.5">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+          Commission: <strong class="text-on-surface font-medium">Weekly</strong>
+</span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+          Lucknow
+        </span>
+</div>
+</div>
+</div>
+<!-- Pagination Footer -->
+<div class="flex items-center justify-between pt-2 pb-1 text-xs">
+<span class="text-on-surface-variant font-medium">Showing 1–6 of 184</span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low text-outline opacity-60 cursor-not-allowed text-xs font-medium" disabled="" type="button">
+        Previous
+      </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary-container shadow-sm hover:bg-surface-container active:scale-95 transition-all text-xs font-semibold" type="button">
+        Next
+      </button>
+</div>
+</div>
+<!-- Filter Dialog Preview / Spec Sheet -->
+<div class="mt-4 bg-surface-container-lowest rounded-xl p-4 shadow-sm space-y-3.5" id="filterPreviewCard">
+<div class="flex items-center justify-between border-b pb-2.5 border-surface-container">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-md bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[15px]">filter_alt</span>
+</div>
+<h3 class="text-xs font-semibold text-on-surface uppercase tracking-wider">Filter Dialog Preview (Modal State)</h3>
+</div>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-secondary-container/20 text-on-secondary-container font-semibold">Desktop Spec</span>
+</div>
+<!-- Filter Form Fields -->
+<div class="space-y-3 pt-1">
+<!-- User Type Select -->
+<div class="space-y-1">
+<label class="text-[11px] font-medium text-on-surface-variant block">User Type</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface text-xs text-on-surface shadow-sm focus:outline-none appearance-none font-medium">
+<option selected="">All types</option>
+<option>Super Distributor</option>
+<option>Distributor</option>
+<option>Retailer</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-[18px] text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Account Status Checkboxes -->
+<div class="space-y-1.5">
+<label class="text-[11px] font-medium text-on-surface-variant block">Account Status</label>
+<div class="flex items-center gap-4 flex-wrap">
+<label class="inline-flex items-center gap-2 text-xs text-on-surface cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-0 accent-primary-container" type="checkbox"/>
+<span>Active</span>
+</label>
+<label class="inline-flex items-center gap-2 text-xs text-on-surface cursor-pointer">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-0 accent-primary-container" type="checkbox"/>
+<span>In progress</span>
+</label>
+<label class="inline-flex items-center gap-2 text-xs text-on-surface cursor-pointer">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-0 accent-primary-container" type="checkbox"/>
+<span>Inactive</span>
+</label>
+</div>
+</div>
+<!-- Sub-network Search -->
+<div class="space-y-1">
+<label class="text-[11px] font-medium text-on-surface-variant block">Sub-network</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">pin</span>
+</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface text-xs text-on-surface placeholder:text-outline shadow-sm focus:outline-none" placeholder="Enter user code or mobile number" type="text"/>
+</div>
+</div>
+<!-- Filter Controls Footer -->
+<div class="pt-2 flex items-center justify-end gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface text-on-surface-variant text-xs font-medium hover:bg-surface-container" type="button">Reset</button>
+<button class="px-4 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold shadow-sm hover:opacity-95" type="button">Apply Filters</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Micro-interaction for quick filter toggle highlighting
+  const filterBtn = document.getElementById('filterToggleBtn');
+  const filterPreview = document.getElementById('filterPreviewCard');
+
+  if (filterBtn && filterPreview) {
+    filterBtn.addEventListener('click', () => {
+      filterPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      filterPreview.classList.add('ring-2', 'ring-secondary-container');
+      setTimeout(() => {
+        filterPreview.classList.remove('ring-2', 'ring-secondary-container');
+      }, 1200);
+    });
+  }
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.04)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-around items-center h-16 px-2"><a class="flex flex-col items-center justify-center gap-1 min-w-[64px] h-12 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">grid_view</span><span class="text-[11px] tracking-tight">Home</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[64px] h-12 text-on-surface-variant hover:text-on-surface transition-colors" data-path="transactions" href="#"><span class="material-symbols-outlined text-[22px]">receipt_long</span><span class="text-[11px] tracking-tight">Transactions</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-1 min-w-[64px] h-12 transition-colors text-primary-container font-semibold" data-path="network" href="#"><span class="material-symbols-outlined text-[22px]">hub</span><span class="text-[11px] tracking-tight">Network</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[64px] h-12 text-on-surface-variant hover:text-on-surface transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[22px]">person</span><span class="text-[11px] tracking-tight">Profile</span></a></div></nav></body></html>

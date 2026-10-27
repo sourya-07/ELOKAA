@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ELOKA - Check your details</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#dadad7",
+            "on-secondary-fixed-variant": "#2439ab",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#e4e2dc",
+            "surface": "#f9f9f6",
+            "on-tertiary-fixed": "#1b1c18",
+            "inverse-surface": "#2f312f",
+            "surface-variant": "#e2e3e0",
+            "primary-fixed": "#e5e2e1",
+            "outline-variant": "#c4c7c7",
+            "outline": "#747878",
+            "on-tertiary-container": "#84847e",
+            "on-secondary-container": "#001a88",
+            "secondary-fixed": "#dee0ff",
+            "surface-container-low": "#f4f4f1",
+            "on-tertiary-fixed-variant": "#474742",
+            "primary-fixed-dim": "#c9c6c5",
+            "primary": "#000000",
+            "on-surface": "#1a1c1b",
+            "inverse-primary": "#c9c6c5",
+            "secondary-container": "#778afd",
+            "surface-bright": "#f9f9f6",
+            "tertiary-container": "#1b1c18",
+            "surface-container-high": "#e8e8e5",
+            "on-background": "#1a1c1b",
+            "tertiary-fixed-dim": "#c8c6c0",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#858383",
+            "primary-container": "#1c1b1b",
+            "surface-container": "#eeeeeb",
+            "on-surface-variant": "#444748",
+            "on-primary": "#ffffff",
+            "background": "#f9f9f6",
+            "error": "#ba1a1a",
+            "surface-container-highest": "#e2e3e0",
+            "surface-tint": "#5f5e5e",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-primary-fixed-variant": "#474646",
+            "secondary": "#4053c4",
+            "on-primary-fixed": "#1c1b1b",
+            "secondary-fixed-dim": "#bbc3ff",
+            "inverse-on-surface": "#f1f1ee",
+            "tertiary": "#000000",
+            "on-secondary-fixed": "#000f5d",
+            "error-container": "#ffdad6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "24px",
+            "margin": "1.5rem",
+            "space-lg": "16px",
+            "gutter": "1rem",
+            "space-3xl": "48px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "space-4xl": "64px",
+            "space-2xl": "32px"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "h3": ["Inter"],
+            "display-mobile": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"],
+            "h1": ["Inter"],
+            "display": ["Inter"],
+            "h2": ["Inter"]
+          },
+          "fontSize": {
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "600" }],
+            "display-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body": ["16px", { "lineHeight": "24px", "letterSpacing": "normal", "fontWeight": "400" }],
+            "label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "h2": ["20px", { "lineHeight": "28px", "letterSpacing": "normal", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full bg-surface text-on-surface font-body antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface text-primary dark:text-inverse-primary shadow-sm fixed top-0 left-0 right-0 z-50">
+<div class="flex justify-between items-center w-full px-space-2xl max-w-7xl mx-auto h-16">
+<div class="text-h1 font-h1 font-bold text-primary dark:text-inverse-primary tracking-tight">ELOKA</div>
+<div class="flex items-center space-x-space-xl">
+<nav class="hidden md:flex space-x-space-xl">
+
+<a class="text-on-surface-variant" href="#">Help</a>
+</nav>
+
+</div>
+</div>
+</header>
+<!-- Main Layout Container -->
+<div class="flex pt-16 min-h-screen max-w-[1280px] mx-auto bg-surface">
+<!-- SideNavBar (Left Rail - 280px) -->
+<aside class="w-[280px] h-[calc(100vh-4rem)] fixed left-0 top-16 bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant flex flex-col p-space-lg overflow-y-auto">
+<div class="mb-space-xl">
+<h2 class="text-h2 font-h2 font-bold text-primary mb-space-xs">Your application</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Step 3 of 6</p>
+</div>
+<nav class="space-y-space-xs flex-1">
+<!-- Step 1: Mobile number -->
+<div class="flex items-center gap-space-md p-space-md rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined text-success text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm font-body-sm font-medium">Mobile number</span>
+</div>
+<!-- Step 2: DigiLocker -->
+<div class="flex items-center gap-space-md p-space-md rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined text-success text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm font-body-sm font-medium">DigiLocker</span>
+</div>
+<!-- Step 3: Check details (Current) -->
+<div class="flex items-center gap-space-md p-space-md rounded-lg bg-secondary-container text-on-secondary-container font-h3 transition-all duration-200 shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-body-sm font-body-sm font-semibold">Check details</span>
+</div>
+<!-- Step 4: Bank account -->
+<div class="flex items-center gap-space-md p-space-md rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span class="text-body-sm font-body-sm">Bank account</span>
+</div>
+<!-- Step 5: Platform setup -->
+<div class="flex items-center gap-space-md p-space-md rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-body-sm font-body-sm">Platform setup</span>
+</div>
+<!-- Step 6: Declaration and agreement -->
+<div class="flex items-center gap-space-md p-space-md rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all duration-200">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="text-body-sm font-body-sm">Declaration and agreement</span>
+</div>
+</nav>
+<div class="pt-space-lg border-t border-outline-variant mt-auto">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center font-h3 text-primary">RS</div>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">RAVI SAMPLE</div>
+<div class="text-label text-on-surface-variant">Tenant ID: #TN-94821</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Column (720px offset by 280px rail) -->
+<main class="ml-[280px] flex-1 flex justify-center bg-background px-space-2xl py-space-3xl">
+<div class="w-[720px] space-y-space-xl">
+<!-- Header Section -->
+<div>
+<h1 class="text-display font-display text-primary mb-space-xs">Check your details</h1>
+<p class="text-body text-on-surface-variant">Fetched from DigiLocker on 21 Oct 2026.</p>
+</div>
+<!-- Card 1: You -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-space-xl shadow-sm space-y-space-lg">
+<div class="flex justify-between items-center">
+<h2 class="text-h2 font-h2 text-primary flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary">person</span> You
+            </h2>
+<span class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed text-label font-medium">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span> Verified
+            </span>
+</div>
+<div class="grid grid-cols-2 gap-space-xl pt-space-sm border-t border-surface-variant">
+<div>
+<span class="text-label text-on-surface-variant block mb-space-xs">Full Name</span>
+<span class="text-body-sm font-semibold text-on-surface">RAVI SAMPLE</span>
+</div>
+<div>
+<span class="text-label text-on-surface-variant block mb-space-xs">Aadhaar Number</span>
+<span class="text-body-sm font-semibold text-on-surface">XXXX-XXXX-1234</span>
+</div>
+<div class="col-span-2">
+<span class="text-label text-on-surface-variant block mb-space-xs">Mobile Number</span>
+<span class="text-body-sm font-semibold text-on-surface">+91 XXXXXX3210 <span class="text-on-surface-variant font-normal">(From sign-in)</span></span>
+</div>
+</div>
+</section>
+<!-- Card 2: Home address -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-space-xl shadow-sm space-y-space-lg">
+<div class="flex justify-between items-center">
+<h2 class="text-h2 font-h2 text-primary flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary">home</span> Home address
+            </h2>
+<span class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-variant text-on-surface-variant text-label font-medium">
+              From DigiLocker
+            </span>
+</div>
+<div class="pt-space-sm border-t border-surface-variant">
+<span class="text-label text-on-surface-variant block mb-space-xs">Registered Address</span>
+<p class="text-body-sm text-on-surface font-medium leading-relaxed">Flat 12, Sample Lane, Bandra West, Mumbai 400051</p>
+</div>
+</section>
+<!-- Card 3: Business -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-space-xl shadow-sm space-y-space-lg">
+<div class="flex justify-between items-center">
+<h2 class="text-h2 font-h2 text-primary flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary">business</span> Business
+            </h2>
+<span class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed text-label font-medium">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span> Verified
+            </span>
+</div>
+<div class="grid grid-cols-2 gap-space-xl pt-space-sm border-t border-surface-variant">
+<div class="col-span-2">
+<span class="text-label text-on-surface-variant block mb-space-xs">Business Name</span>
+<span class="text-body-sm font-semibold text-on-surface">SAMPLE TRADERS PRIVATE LIMITED <span class="text-on-surface-variant font-normal">(From PAN)</span></span>
+</div>
+<div>
+<span class="text-label text-on-surface-variant block mb-space-xs">PAN Number</span>
+<span class="text-body-sm font-semibold text-on-surface">XXXXX1234X</span>
+</div>
+<div>
+<span class="text-label text-on-surface-variant block mb-space-xs">Company Type</span>
+<span class="text-body-sm font-semibold text-on-surface">Private Limited</span>
+</div>
+</div>
+</section>
+<!-- Card 4: Business address -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-space-xl shadow-sm space-y-space-lg">
+<div class="flex justify-between items-center">
+<h2 class="text-h2 font-h2 text-primary flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary">map</span> Business address
+            </h2>
+</div>
+<!-- Warning Banner -->
+<div class="bg-error-container text-on-error-container p-space-md rounded-lg flex items-start gap-space-md text-body-sm">
+<span class="material-symbols-outlined text-[20px] mt-0.5">warning</span>
+<div>We couldn't find a business address in DigiLocker. Please provide your official operating address below.</div>
+</div>
+<div class="space-y-space-lg pt-space-sm border-t border-surface-variant">
+<!-- Checkbox -->
+<div class="flex items-center gap-space-md">
+<input class="w-5 h-5 rounded border-outline text-secondary focus:ring-secondary cursor-pointer" id="same_as_home" type="checkbox"/>
+<label class="text-body-sm text-on-surface font-medium cursor-pointer" for="same_as_home">Same as home address</label>
+</div>
+<!-- Address fields -->
+<div class="space-y-space-lg">
+<div>
+<label class="block text-label text-on-surface-variant mb-space-xs">Address line 1</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-space-md py-space-md text-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Enter street address" type="text"/>
+</div>
+<div>
+<label class="block text-label text-on-surface-variant mb-space-xs">Address line 2 (optional)</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-space-md py-space-md text-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Apartment, suite, unit, building, floor, etc." type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-space-lg">
+<div>
+<label class="block text-label text-on-surface-variant mb-space-xs">District</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-space-md py-space-md text-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Enter district" type="text"/>
+</div>
+<div>
+<label class="block text-label text-on-surface-variant mb-space-xs">State</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-space-md py-space-md text-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Enter state" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-label text-on-surface-variant mb-space-xs">Pincode</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-space-md py-space-md text-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Enter pincode" type="text"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Card 5: Documents fetched -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-[14px] p-space-xl shadow-sm space-y-space-lg">
+<div class="flex justify-between items-center">
+<h2 class="text-h2 font-h2 text-primary flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary">folder</span> Documents fetched
+            </h2>
+</div>
+<div class="space-y-space-md pt-space-sm border-t border-surface-variant">
+<!-- Doc 1 -->
+<div class="flex justify-between items-center p-space-md bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<span class="text-body-sm font-medium text-on-surface">Certificate of incorporation</span>
+</div>
+<span class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed text-label font-medium">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span> Fetched
+              </span>
+</div>
+<!-- Doc 2 -->
+<div class="flex justify-between items-center p-space-md bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<span class="text-body-sm font-medium text-on-surface">GST certificate</span>
+</div>
+<span class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed text-label font-medium">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span> Fetched
+              </span>
+</div>
+</div>
+</section>
+<!-- Bottom Action -->
+<div class="pt-space-lg pb-space-4xl flex justify-end">
+<button class="h-[40px] px-space-2xl bg-primary text-on-primary rounded-lg font-h3 text-body-sm flex items-center justify-center transition-all duration-200 hover:opacity-90 active:translate-y-[1px]">
+            Confirm and continue
+          </button>
+</div>
+</div>
+</main>
+</div>
+</body></html>
