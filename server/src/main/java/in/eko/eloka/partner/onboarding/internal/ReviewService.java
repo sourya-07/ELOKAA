@@ -68,6 +68,7 @@ class ReviewService {
 	}
 
 	record CaseView(ApplicationSnapshot application, @JsonProperty("assigned_to") String assignedTo,
+			@JsonProperty("assigned_to_id") String assignedToId,
 			String eligibility, List<EvidenceItem> evidence, Map<String, String> address,
 			@JsonProperty("id_numbers") Map<String, String> idNumbers, List<ActionView> actions,
 			@JsonProperty("approval_blockers") List<String> approvalBlockers) {
@@ -148,7 +149,9 @@ class ReviewService {
 			.map(a -> new ActionView(a.getAction(), staffName(a.getStaffId()), a.getDecision(), a.getReasonCode(),
 					a.getNote(), a.getOccurredAt()))
 			.toList();
-		return new CaseView(applicationService.snapshot(application), staffName(application.getAssignedStaffId()),
+		UUID assigned = application.getAssignedStaffId();
+		return new CaseView(applicationService.snapshot(application), staffName(assigned),
+				assigned == null ? null : assigned.toString(),
 				eligibility.latestOutcome(id).name(), evidence, address, numbers, history, blockers(application));
 	}
 
