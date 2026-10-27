@@ -13,7 +13,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-3 | Liveness / face-match provider? EPS has none. | open | live photo is captured in the browser and reviewed by staff; it is not proof of liveness |
 | Q-4 | Hosting target, object storage, staging host | open | encrypted file volume (ADR-0006); deploy jobs are stubs |
 | Q-5 | Retention period per data type; when are documents of ineligible, withdrawn, expired and rejected applications deleted? | open | to be set before production; masked values and audit records stay |
-| Q-6 | Can an ineligible or rejected applicant apply again, and after how long? | open | no new application while one is live; closed ones do not block |
+| Q-6 | Can an ineligible or rejected applicant apply again, and after how long? | open | an open, approved or ineligible application blocks a new one for the same mobile or PAN (so a failed credit check cannot be retried); rejected, withdrawn and expired ones do not |
 
 ## Built on a default (confirm or change)
 

@@ -26,7 +26,11 @@ src/main/java/in/eko/eloka/partner/
 │             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters, fakes, stubs
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
               (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session
-   planned: documents, verification, eligibility, partneronboarding, review, system
+├── onboarding/ partner applications: PartnerStep (prerequisites, invalidation), StepStatus, ApplicationStatus;
+│             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
+│             If-Match + editable check), StepContext, consent records, Idempotency, ExpiryJob,
+│             /v1/partner/applications
+   planned: documents, verification, eligibility, review, system
 src/main/resources/
 ├── application.yaml / application-local.yaml / application-prod.yaml (staging + production)
 ├── logback-spring.xml          prod: ECS JSON on stdout; elsewhere text console + logs/eloka-partner.log; all masked
