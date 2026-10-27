@@ -42,7 +42,7 @@ src/main/java/in/eko/eloka/partner/
     StaffReviewController /v1/admin/applications; review lives here because it changes application and step state)
    identity/ also holds staff accounts (StaffUser, roles REVIEWER/APPROVER), StaffAuthController (Google; OTP
     local/test only), LocalStaffSeed (local/test)
-   planned: system (migrate runner, first staff bootstrap)
+└── system/   MigrateOnlyRunner (profile `migrate`), StaffBootstrapRunner (profile `staff-bootstrap`)
 src/main/resources/
 ├── application.yaml / application-local.yaml / application-prod.yaml (staging + production)
 ├── logback-spring.xml          prod: ECS JSON on stdout; elsewhere text console + logs/eloka-partner.log; all masked

@@ -32,3 +32,10 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-27 | P10–P12 client | minor | `client/src/lib/api.ts` | a retried action got a new Idempotency-Key | fixed: one key per action and application version, reused on retry |
 | 2026-10-27 | P10–P12 client | minor | `client/src/components/CameraCapture.tsx` | live-photo upload failures were not shown | fixed |
 | 2026-10-27 | P10–P12 client | minor | `client/src/features/apply/ApplicationContext.tsx` | a failed load showed a spinner forever | fixed: message and "Try again" |
+| 2026-10-27 | P13–P14 delivery | major | `.github/workflows/deploy.yml` | a job-level `if` cannot read environment variables, so deploys would always be skipped | fixed: the check runs as a step inside the environment |
+| 2026-10-27 | P13–P14 delivery | major | `deploy/docker-compose.yml`, `client/Dockerfile` | the staff Google client id was compiled into the client image, so published images hid Google sign-in | fixed: read per request from `ELOKA_STAFF_GOOGLE_CLIENT_ID`; one image for every environment |
+| 2026-10-27 | P13–P14 delivery | major | `identity/internal/StaffService.java` | the public staff save ran without a transaction (self-call) | fixed: `@Transactional` |
+| 2026-10-27 | P13–P14 delivery | major | `deploy/remote-deploy.sh` | the backup ran after switching to the new release's files | fixed: backup first |
+| 2026-10-27 | P13–P14 delivery | major | `deploy/remote-deploy.sh` | does the public health route exist? | no change: `client/src/pages/api/health.ts`, reached through Caddy |
+| 2026-10-27 | P13–P14 delivery | minor | `deploy/restore.sh` | a relative backup path was resolved after changing directory | fixed |
+| 2026-10-27 | P13–P14 delivery | minor | `docs/deploy/RUNBOOK.md`, `server/load/partner-journey.js` | unset shell variable in the health check; per-IP OTP limit in the load test | fixed / documented |

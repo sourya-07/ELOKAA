@@ -1,4 +1,5 @@
 import { Box, Button, Container, Divider, FormControl, FormLabel, Heading, Input, Stack, Text } from "@chakra-ui/react";
+import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import Script from "next/script";
 import { useRouter } from "next/router";
@@ -9,15 +10,25 @@ import { useAction } from "@/features/apply/useAction";
 import { call } from "@/lib/api";
 import { normaliseMobile } from "@/lib/validation";
 
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_STAFF_GOOGLE_CLIENT_ID;
-const OTP_SIGN_IN = process.env.NEXT_PUBLIC_STAFF_OTP_SIGN_IN === "true";
+interface Props {
+	googleClientId: string | null;
+	otpSignIn: boolean;
+}
+
+/** Sign-in options come from the server's environment at request time (one image for every environment). */
+export const getServerSideProps: GetServerSideProps<Props> = async () => ({
+	props: {
+		googleClientId: process.env.ELOKA_STAFF_GOOGLE_CLIENT_ID || null,
+		otpSignIn: process.env.ELOKA_STAFF_OTP_SIGN_IN === "true",
+	},
+});
 
 interface GoogleAccounts {
 	accounts: { id: { initialize: (o: object) => void; renderButton: (el: HTMLElement, o: object) => void } };
 }
 
 /** Staff sign-in: Google (Workspace accounts with a staff account), or OTP when running locally. */
-export default function StaffSignIn() {
+export default function StaffSignIn({ googleClientId: GOOGLE_CLIENT_ID, otpSignIn: OTP_SIGN_IN }: Props) {
 	const router = useRouter();
 	const [mobile, setMobile] = useState("");
 	const [sent, setSent] = useState(false);
@@ -40,7 +51,7 @@ export default function StaffSignIn() {
 			});
 			g.accounts.id.renderButton(element, { theme: "outline", size: "large", text: "signin_with" });
 		},
-		[router, run],
+		[GOOGLE_CLIENT_ID, router, run],
 	);
 	const [scriptReady, setScriptReady] = useState(false);
 

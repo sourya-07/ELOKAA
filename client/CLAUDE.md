@@ -32,8 +32,10 @@ __tests__/            Jest tests, mirroring src/ (render.tsx wraps the theme, fi
 | Variable | Where | Meaning |
 |---|---|---|
 | `ELOKA_SERVER_URL` | server-side | where the proxy reaches the server (default `http://localhost:8091`) |
-| `NEXT_PUBLIC_STAFF_GOOGLE_CLIENT_ID` | browser | shows the Google sign-in button on `/staff` |
-| `NEXT_PUBLIC_STAFF_OTP_SIGN_IN` | browser | shows the local staff OTP sign-in (`.env.development` sets it) |
+| `ELOKA_STAFF_GOOGLE_CLIENT_ID` | server-side, read per request | shows the Google sign-in button on `/staff` |
+| `ELOKA_STAFF_OTP_SIGN_IN` | server-side, read per request | shows the local staff OTP sign-in (`.env.development` sets it) |
+
+No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one image serves every environment.
 
 ## Rules
 

@@ -1,0 +1,92 @@
+# Release: a version tag (v1.2.3) builds both images, scans them, publishes them to GHCR, deploys
+# to staging, checks it, then waits for an approval on the "production" environment before
+# deploying there (set required reviewers in Settings → Environments). Nothing runs for pull
+# requests, so untrusted code never reaches a host or a secret.
+# Deploy jobs do nothing until the environment's DEPLOY_HOST variable is set (checked in a step:
+# environment variables are not visible to a job-level `if`); until then follow
+# docs/deploy/RUNBOOK.md by hand.
+name: Deploy
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        name: [server, client]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/elokaa-${{ matrix.name }}:${GITHUB_REF_NAME}"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+          docker build -t "$image" ${{ matrix.name }}
+      - name: Scan with Trivy (fail on fixable HIGH/CRITICAL)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.IMAGE }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivyignores: ${{ matrix.name == 'server' && 'server/.trivyignore' || '' }}
+          exit-code: "1"
+      - name: Publish
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker push "$IMAGE"
+
+  staging:
+    needs: images
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Check the environment is set up
+        id: check
+        run: echo "configured=${{ vars.DEPLOY_HOST != '' }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: steps.check.outputs.configured == 'true'
+      - name: Deploy
+        if: steps.check.outputs.configured == 'true'
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_DIR: ${{ vars.DEPLOY_DIR }}
+          SITE: ${{ vars.SITE_URL }}
+        run: deploy/remote-deploy.sh "$GITHUB_REF_NAME"
+
+  production:
+    needs: staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check the environment is set up
+        id: check
+        run: echo "configured=${{ vars.DEPLOY_HOST != '' }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: steps.check.outputs.configured == 'true'
+      - name: Deploy
+        if: steps.check.outputs.configured == 'true'
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_DIR: ${{ vars.DEPLOY_DIR }}
+          SITE: ${{ vars.SITE_URL }}
+        run: deploy/remote-deploy.sh "$GITHUB_REF_NAME"

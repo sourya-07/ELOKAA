@@ -1,0 +1,27 @@
+# TLS edge (Caddy 2). Certificates are automatic (Let's Encrypt) for one host name.
+#   https://{$ELOKA_DOMAIN} → client:3000 (pages and the /api proxy; the server is not exposed)
+{
+	email {$ELOKA_ACME_EMAIL}
+	# ELOKA_CADDY_GLOBAL=local_certs gives self-signed certificates for a smoke test without DNS
+	{$ELOKA_CADDY_GLOBAL}
+}
+
+{$ELOKA_DOMAIN} {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		-Server
+	}
+	# Two documents of 10 MB plus form fields
+	request_body {
+		max_size 25MB
+	}
+	log {
+		output stdout
+		format json
+	}
+	reverse_proxy client:3000 {
+		header_up X-Forwarded-For {remote_host}
+	}
+}

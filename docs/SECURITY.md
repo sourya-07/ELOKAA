@@ -1,0 +1,30 @@
+# Security and privacy
+
+What the system does today, and what still needs a decision. Legal and compliance points are
+questions for counsel, not claims of compliance.
+
+## Built in
+
+| Area | How |
+|---|---|
+| Sessions | opaque 256-bit tokens, only SHA-256 stored; 30-min access, 2-h idle, 12-h absolute; refresh rotation, reuse of an old refresh token ends the session; kept in `HttpOnly; Secure; SameSite=Strict` cookies by the client's proxy (ADR-0003) |
+| CSRF | SameSite=Strict, `X-Requested-With: eloka` and same-origin `Origin` required on writes at the proxy |
+| OTP | code never seen or stored (provider owns it); 5-min expiry, 5 tries, single use, 30-s gap, 5/hour and 10/day per mobile, 10/hour per IP; limits serialised per mobile and IP; unknown staff mobiles get no SMS |
+| Authorization | default deny; `/v1/partner/**` applicant sessions only, `/v1/admin/**` staff only; staff roles read on every request; another applicant's data answers 404 |
+| Server-side rules | step order, verification, the CIBIL rule (700, a constant), submission and approval checked on the server; approval needs every item verified and a second person |
+| Personal data at rest | PAN, mobile, names, dates of birth, addresses, ID numbers encrypted (AES-256-GCM); blind indexes (HMAC) for uniqueness; masked copies for display; never the full Aadhaar number; never the credit report |
+| Uploads | type from the bytes; per-kind formats and sizes; JPEGs decoded and re-encoded (metadata and appended data removed, 40-MP cap); PDFs malware-scanned; encrypted on a private volume; served only to the owner or audited staff, `no-store` |
+| Logs | no request bodies; `PiiMasker` on every line (PAN, mobiles, Aadhaar-like numbers, tokens, OTP fields); a test runs a whole application and checks the logs |
+| Audit | every sign-in, consent, check, credit decision, review action and reveal in a hash-chained table, in the same transaction as the change; free text kept out of it |
+| Headers | CSP with a per-request nonce (no inline scripts), HSTS, `nosniff`, `frame-ancestors 'none'`, camera allowed for this site only |
+| Providers | allow-listed EPS hosts over HTTPS only; fakes and published keys refuse to start in staging and production |
+| Supply chain | Actions pinned by SHA; gitleaks over the full history; Trivy on both images; CodeQL; Dependabot |
+
+## Needs a decision or confirmation
+
+- Credit data: legal route under the Credit Information Companies (Regulation) Act 2005 and consent wording (Q-1).
+- Aadhaar: the masked-image path for step-by-step applicants (Q-9) and DigiLocker via EPS.
+- DPDP Act: consent texts (versions `2026-10-27` are placeholders), retention and deletion periods (Q-5).
+- Liveness / face match (Q-3): live photos are reviewed by a person only.
+- Rate limits are per server process; review when running more than one instance.
+- A penetration test before production.

@@ -3,7 +3,9 @@
 #   docker build -t eloka-partner-client:<version> client/
 #
 # The browser talks only to this app; it reaches the server through its own /api proxy
-# (ADR-0003), so no API address is compiled into the bundle. Runtime settings come from env vars.
+# (ADR-0003), so no API address is compiled into the bundle. ELOKA_SERVER_URL and
+# ELOKA_STAFF_GOOGLE_CLIENT_ID are read at runtime: one image for every environment.
+# .env.development (local defaults, staff OTP sign-in) is not used by a production build.
 
 ## Stage 1: dependencies (dev dependencies are needed for the build)
 FROM node:22-alpine AS deps

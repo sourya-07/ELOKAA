@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import in.eko.eloka.partner.audit.AuditEntry;
 import in.eko.eloka.partner.audit.AuditLog;
+import in.eko.eloka.partner.identity.StaffAdmin;
 import in.eko.eloka.partner.identity.StaffDirectory;
 import in.eko.eloka.partner.identity.StaffProperties;
 import in.eko.eloka.partner.identity.StaffView;
@@ -40,7 +41,7 @@ interface StaffUserRepository extends JpaRepository<StaffUser, UUID> {
  * {@code eloka.staff.otp-login-enabled} (local/test; staging and production refuse to start with it).
  */
 @Service
-class StaffService implements StaffDirectory, SafetyCheck {
+class StaffService implements StaffDirectory, StaffAdmin, SafetyCheck {
 
 	/** Result of a staff sign-in. Unknown and disabled accounts get the same answer. */
 	sealed interface SignIn {
@@ -144,6 +145,12 @@ class StaffService implements StaffDirectory, SafetyCheck {
 		audit.record(new AuditEntry("STAFF_ACCOUNT_SAVED", "SYSTEM", null, "STAFF", user.getId().toString(),
 				Map.of("roles", user.getRoles().toString(), "active", Boolean.toString(active))));
 		return user.view();
+	}
+
+	@Override
+	@Transactional
+	public StaffView save(String email, String displayName, Set<Role> roles, boolean active) {
+		return upsert(email, displayName, null, roles, active);
 	}
 
 	@Override

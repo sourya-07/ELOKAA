@@ -16,7 +16,7 @@ Proven parts are ported from the eloka repo (`sourya-07/eloka`, ADR-0001). Read 
 ELOKAA/
 ├── client/        Next.js 15 (Pages Router) + React 18 + TypeScript + Chakra UI 2
 ├── server/        Java 25 + Spring Boot 4.1 + Spring Modulith + MySQL 8.4 + Flyway
-├── deploy/        Docker Compose + Caddy production stack (planned)
+├── deploy/        Docker Compose + Caddy stack, backup/restore, remote deploy (docs/deploy/RUNBOOK.md)
 ├── docs/          journey, ADRs, open questions
 ├── eloka_design/  Google Stitch designs (png + html); final/ is what we build from
 ├── .github/       CI, security scans, CodeQL, Dependabot
@@ -34,6 +34,8 @@ ELOKAA/
 | Server tests | `make server-test` |
 | Server locally | `make server-run` → <http://localhost:8091/actuator/health> |
 | Both images | `make images` |
+| Load test (server running) | `make load-test` |
+| Production stack | [`docs/deploy/RUNBOOK.md`](docs/deploy/RUNBOOK.md) |
 
 The development Mac has 8 GB RAM: run one heavy job at a time (Gradle, Jest, `next build`, Docker builds, k6). The Makefile targets already limit memory. Gradle needs a JDK 17+ to start: `export JAVA_HOME=/opt/homebrew/opt/openjdk`.
 
