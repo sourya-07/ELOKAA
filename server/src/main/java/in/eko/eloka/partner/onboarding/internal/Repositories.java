@@ -65,3 +65,22 @@ interface IdempotencyRecordRepository extends JpaRepository<IdempotencyRecord, U
 	@Query("delete from IdempotencyRecord r where r.expiresAt < :now")
 	int deleteExpired(@Param("now") Instant now);
 }
+
+interface ApplicationDocumentRepository extends JpaRepository<ApplicationDocument, UUID> {
+
+	List<ApplicationDocument> findByApplicationIdAndRemovedAtIsNullOrderByCreatedAtAsc(UUID applicationId);
+
+	Optional<ApplicationDocument> findByDocumentIdAndApplicationId(UUID documentId, UUID applicationId);
+}
+
+interface PartnerAddressRepository extends JpaRepository<PartnerAddress, UUID> {
+
+	Optional<PartnerAddress> findByApplicationId(UUID applicationId);
+}
+
+interface IdNumberRepository extends JpaRepository<IdNumber, UUID> {
+
+	List<IdNumber> findByApplicationId(UUID applicationId);
+
+	Optional<IdNumber> findByApplicationIdAndType(UUID applicationId, IdNumber.Type type);
+}

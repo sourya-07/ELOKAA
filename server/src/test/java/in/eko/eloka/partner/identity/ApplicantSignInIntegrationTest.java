@@ -68,10 +68,10 @@ class ApplicantSignInIntegrationTest {
 	void secondSignInReusesTheApplicant() throws Exception {
 		String mobile = nextMobile();
 		signIn(mobile);
+		Integer applicants = jdbc.queryForObject("SELECT COUNT(*) FROM applicant", Integer.class);
 		jdbc.update("UPDATE otp_challenge SET created_at = created_at - INTERVAL 1 MINUTE"); // past the resend gap
 		signIn(mobile);
-		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM applicant WHERE mobile_masked = ?", Integer.class,
-				"******" + mobile.substring(6))).isEqualTo(1);
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM applicant", Integer.class)).isEqualTo(applicants);
 	}
 
 	@Test

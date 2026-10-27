@@ -140,6 +140,11 @@ class PartnerApplicationIntegrationTest {
 		jdbc.update("""
 				UPDATE application_step s JOIN partner_application a ON a.id = s.application_id
 				SET s.status = 'COMPLETED' WHERE a.public_id = ?""", id); // as if every check had passed
+		jdbc.update("""
+				INSERT INTO credit_assessment (id, application_id, pan_hash, provider, outcome, score, assessed_at,
+				    version, created_at, updated_at)
+				SELECT UUID_TO_BIN(UUID()), a.id, UNHEX(REPEAT('AB', 32)), 'test', 'ELIGIBLE', 742, NOW(6), 0, NOW(6), NOW(6)
+				FROM partner_application a WHERE a.public_id = ?""", id);
 		String key = UUID.randomUUID().toString();
 		ExecutorService pool = Executors.newFixedThreadPool(2);
 		try {
@@ -169,6 +174,17 @@ class PartnerApplicationIntegrationTest {
 		// Submitted: no more changes
 		consent(id, "\"v1\"", CONSENT).andExpect(status().isConflict())
 			.andExpect(jsonPath("$.code").value("APPLICATION_NOT_EDITABLE"));
+	}
+
+	@Test
+	void submitChecksEligibilityEvenWhenEveryStepLooksDone() throws Exception {
+		String id = start();
+		jdbc.update("""
+				UPDATE application_step s JOIN partner_application a ON a.id = s.application_id
+				SET s.status = 'COMPLETED' WHERE a.public_id = ?""", id);
+		call(post("/v1/partner/applications/" + id + "/submit").header("If-Match", "\"v0\"")
+			.header("Idempotency-Key", UUID.randomUUID().toString())).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("NOT_ELIGIBLE"));
 	}
 
 	@Test

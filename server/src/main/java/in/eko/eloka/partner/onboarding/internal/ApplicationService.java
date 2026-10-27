@@ -14,6 +14,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import in.eko.eloka.partner.audit.AuditEntry;
 import in.eko.eloka.partner.audit.AuditLog;
+import in.eko.eloka.partner.eligibility.EligibilityApi;
+import in.eko.eloka.partner.eligibility.EligibilityOutcome;
 import in.eko.eloka.partner.onboarding.ApplicationStatus;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.onboarding.StepStatus;
@@ -53,14 +55,15 @@ class ApplicationService {
 	private final ApplicationStateMachine stateMachine;
 	private final OnboardingProperties properties;
 	private final AuditLog audit;
+	private final EligibilityApi eligibility;
 	private final JsonMapper json;
 	private final TransactionTemplate transactions;
 	private final Clock clock;
 
 	ApplicationService(PartnerApplicationRepository applications, ApplicationStepRepository steps,
 			ConsentRecordRepository consents, TimelineEntryRepository timeline, ApplicationStateMachine stateMachine,
-			OnboardingProperties properties, AuditLog audit, JsonMapper json, TransactionTemplate transactions,
-			Clock clock) {
+			OnboardingProperties properties, AuditLog audit, EligibilityApi eligibility, JsonMapper json,
+			TransactionTemplate transactions, Clock clock) {
 		this.applications = applications;
 		this.steps = steps;
 		this.consents = consents;
@@ -68,6 +71,7 @@ class ApplicationService {
 		this.stateMachine = stateMachine;
 		this.properties = properties;
 		this.audit = audit;
+		this.eligibility = eligibility;
 		this.json = json;
 		this.transactions = transactions;
 		this.clock = clock;
@@ -243,6 +247,10 @@ class ApplicationService {
 			if (!missing.isEmpty()) {
 				throw new ApiProblem(HttpStatus.CONFLICT, "PREREQUISITE_INCOMPLETE", "Some steps are not complete yet",
 						Map.of("missing_steps", missing));
+			}
+			// Checked again here, independent of the step status (ADR-0005)
+			if (eligibility.latestOutcome(context.applicationId()) != EligibilityOutcome.ELIGIBLE) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "NOT_ELIGIBLE", "The credit check has not been passed");
 			}
 			context.steps().values().forEach(ApplicationStep::lock);
 			stateMachine.apply(context.application(), LifecycleEvent.SUBMIT, "APPLICANT", applicantId.toString());

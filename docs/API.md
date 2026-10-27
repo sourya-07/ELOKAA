@@ -40,6 +40,34 @@ null when nothing is editable), `expires_at`, `submitted_at`, `steps[]` (`step_k
 `attempt_count`, `max_attempts`, `last_error_code`, `summary` with masked values, `reopen_reason_code`,
 `reviewer_message`), `available_actions`. Idle applications expire after 30 days (hourly job).
 
+## Identity, credit check and documents (`onboarding` with `verification`, `eligibility`, `documents`)
+
+All need an applicant session; writes need `If-Match` unless noted. Every step is completed by the server after
+its check; a failed check sets the step to `FAILED` with `last_error_code` and uses one of 3 attempts (then
+`BLOCKED`, `423 STEP_BLOCKED`). Technical failures (`503 PROVIDER_UNAVAILABLE`) change nothing.
+
+| Method + path | Body | Success | Errors / outcomes |
+|---|---|---|---|
+| `POST …/{id}/aadhaar` | multipart `front`, `back` (masked Aadhaar, JPG/PDF ≤ 10 MB), `aadhaar_last4` | `200`, `AADHAAR` done, evidence waits for staff | `409 WRONG_METHOD` (DigiLocker path), `422` |
+| `POST …/{id}/digilocker-sessions` | — | `200 {"url"}`; `AADHAAR` → `PENDING_EXTERNAL` | `409 CONSENT_REQUIRED` (`DIGILOCKER` consent), `409 WRONG_METHOD` |
+| `POST …/{id}/digilocker-sessions/complete` | `{"state"}` (no `If-Match`) | `200` done (home address kept if DigiLocker gave a whole one), `202` still waiting | `422` unknown state, `409 DIGILOCKER_ALREADY_USED`, `410 DIGILOCKER_EXPIRED` (15 min) |
+| `POST …/{id}/pan-verifications` | `{"pan","name","dob"}` (+ `Idempotency-Key`); DigiLocker path: name/dob ignored, DigiLocker's used | `200`, `PAN` done | step fails with `PAN_NAME_MISMATCH`, `PAN_DOB_MISMATCH`, `PAN_INVALID_PAN`, `PAN_ALREADY_USED`; `422` bad PAN / not a personal PAN / under 18 |
+| `POST …/{id}/credit-assessments` | — (+ `Idempotency-Key`) | `200`: eligible → `CREDIT_CHECK` done (+ DigiLocker address); score below 700 → status `INELIGIBLE` | `409 CONSENT_REQUIRED` (`CREDIT_CHECK` consent); step fails with `BUREAU_UNAVAILABLE`, `NO_CREDIT_HISTORY`, `INVALID_SCORE`. The score is never returned |
+| `PUT …/{id}/home-address` | `{"line1","line2","city","district","state","pincode"}` | `200`, `HOME_ADDRESS` done | `422` with `invalid_params` |
+| `POST …/{id}/documents` | multipart `kind`, `file` (no `If-Match`, parallel uploads allowed) | `201 {"document_id","kind","status","file_name","content_type","size","uploaded_at"}` | `422` wrong type/size/too small/malware, `409 PREREQUISITE_INCOMPLETE`, `409 TOO_MANY_DOCUMENTS` (5 computer certificates), `413 FILE_TOO_LARGE` |
+| `GET …/{id}/documents` | — | `200` active files | |
+| `GET …/{id}/documents/{documentId}/content` | — | the file, `Cache-Control: no-store` | `404` (also for another applicant's file) |
+| `DELETE …/{id}/documents/{documentId}` | — | `204` | `409` for Aadhaar images |
+| `POST …/{id}/photos/submit` | — | `200`, `PHOTOS` done | `409 DOCUMENTS_MISSING` (+`missing_documents`) |
+| `POST …/{id}/education/submit` | — | `200`, `EDUCATION` done | `409 DOCUMENTS_MISSING` |
+| `POST …/{id}/id-document/submit` | `{"voter_id_number","driving_licence_number"}` (at least one, with both sides uploaded) | `200`, `ID_DOCUMENT` done | `422`, `409 DOCUMENTS_MISSING` |
+
+Document kinds: `LIVE_PHOTO`, `PASSPORT_PHOTO` (JPG only, ≤ 5 MB, ≥ 300 px a side); `GRADUATION_CERTIFICATE`,
+`COMPUTER_CERTIFICATE`, `VOTER_ID_FRONT`, `VOTER_ID_BACK`, `DRIVING_LICENCE_FRONT`, `DRIVING_LICENCE_BACK`
+(JPG or PDF, ≤ 10 MB). Type is read from the bytes; pictures are re-encoded (metadata and trailing data removed);
+PDFs are malware-scanned. Every upload waits for staff review (`MANUAL_REVIEW_REQUIRED`). Uploading or removing
+a file of a finished step sets it back to `IN_PROGRESS`.
+
 ## Operations
 
 | Path | Auth | Note |

@@ -1,0 +1,407 @@
+package in.eko.eloka.partner.onboarding.internal;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.imageio.ImageIO;
+import in.eko.eloka.partner.ApplicantClient;
+import in.eko.eloka.partner.TestcontainersConfiguration;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
+
+/**
+ * The applicant journey over HTTP with the fake providers (answers chosen by PAN digits, see
+ * FakeIdentityProviders) and real MySQL: both paths, the credit rule, and upload checks.
+ */
+@Import(TestcontainersConfiguration.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class JourneyIntegrationTest {
+
+	private static final String VERSION = "2026-10-27";
+
+	@Autowired
+	MockMvc mvc;
+
+	@Autowired
+	JsonMapper json;
+
+	@Autowired
+	org.springframework.jdbc.core.JdbcTemplate jdbc;
+
+	private ApplicantClient client;
+	private String token;
+	private String id;
+	private long version;
+
+	@BeforeEach
+	void start() throws Exception {
+		client = new ApplicantClient(mvc, json);
+		token = client.signInNewApplicant();
+		track(call(post("/v1/partner/applications")).andExpect(status().isCreated()));
+	}
+
+	@Test
+	void stepByStepJourneyToSubmission() throws Exception {
+		toPan("MANUAL");
+		track(pan(newPan("4321"), "Ravi Kumar", "1990-01-15").andExpect(status().isOk())
+			.andExpect(jsonPath("$.next_step").value("CREDIT_CHECK"))
+			.andExpect(stepSummary("PAN", "pan_masked").exists()));
+		creditCheck().andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("CONSENT_REQUIRED"));
+		consent("CREDIT_CHECK");
+		track(creditCheck().andExpect(status().isOk())
+			.andExpect(jsonPath("$.next_step").value("HOME_ADDRESS"))
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].summary.outcome").value("ELIGIBLE"))
+			.andExpect(stepSummary("CREDIT_CHECK", "outcome").value("ELIGIBLE"))
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].summary.score").doesNotExist()));
+		track(call(put(app("/home-address")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"line1\":\"Flat 12, Sample Lane\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400050\"}"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
+		finishDocumentsAndSubmit();
+		String details = jdbc.queryForObject("SELECT details FROM audit_event WHERE action = 'CREDIT_ASSESSED' "
+				+ "AND target_id = ?", String.class, id);
+		assertThat(details).contains("ELIGIBLE").doesNotContain("score").doesNotContain("742");
+	}
+
+	@Test
+	void digiLockerJourneyFetchesIdentityAndAddress() throws Exception {
+		toMethod("DIGILOCKER");
+		call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("CONSENT_REQUIRED"));
+		consent("DIGILOCKER");
+		String url = client.body(call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isOk()))
+			.get("url").asString();
+		String state = url.substring(url.indexOf("state=") + 6);
+		assertThat(state).startsWith("dls_");
+
+		track(call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"state\":\"" + state + "\"}")).andExpect(status().isOk())
+			.andExpect(stepSummary("AADHAAR", "aadhaar_masked").value("XXXX-XXXX-1234"))
+			.andExpect(stepSummary("AADHAAR", "address_from_digilocker").value(true)));
+		call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"state\":\"" + state + "\"}")).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("DIGILOCKER_ALREADY_USED"));
+		call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"state\":\"dls_forged\"}")).andExpect(status().isUnprocessableContent());
+
+		// Name and date of birth come from DigiLocker, not from the request
+		track(pan(newPan("4321"), null, null).andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK")));
+		consent("CREDIT_CHECK");
+		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS"))
+			.andExpect(stepSummary("HOME_ADDRESS", "source").value("DIGILOCKER")));
+		finishDocumentsAndSubmit();
+	}
+
+	@Test
+	void aScoreBelow700ClosesTheApplicationAndBlocksThatPan() throws Exception {
+		String lowPan = newPan("6990");
+		reachCreditCheck(lowPan);
+		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.status").value("INELIGIBLE"))
+			.andExpect(jsonPath("$.next_step").doesNotExist()));
+		consentCall("CREDIT_CHECK").andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("APPLICATION_NOT_EDITABLE"));
+		call(post("/v1/partner/applications")).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("INELIGIBLE"));
+
+		// The same PAN cannot be tried again by someone else
+		start();
+		toPan("MANUAL");
+		pan(lowPan, "Ravi Kumar", "1990-01-15").andExpect(status().isOk())
+			.andExpect(jsonPath("$.steps[?(@.step_key=='PAN')].last_error_code").value("PAN_ALREADY_USED"));
+	}
+
+	@Test
+	void exactly700IsEligible() throws Exception {
+		reachCreditCheck(newPan("7000"));
+		creditCheck().andExpect(status().isOk()).andExpect(stepSummary("CREDIT_CHECK", "outcome").value("ELIGIBLE"));
+	}
+
+	@Test
+	void bureauFailuresNeverPassAndBlockAfterThreeTries() throws Exception {
+		reachCreditCheck(newPan("9998"));
+		for (int attempt = 1; attempt <= 3; attempt++) {
+			track(call(post(app("/credit-assessments")).header("If-Match", etag())
+				.header("Idempotency-Key", UUID.randomUUID().toString())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status").value("IN_PROGRESS"))
+				.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].last_error_code").value("BUREAU_UNAVAILABLE"))
+				.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].status").value(attempt < 3 ? "FAILED" : "BLOCKED")));
+		}
+		creditCheck().andExpect(status().isLocked());
+		call(post(app("/submit")).header("If-Match", etag()).header("Idempotency-Key", UUID.randomUUID().toString()))
+			.andExpect(status().isConflict());
+	}
+
+	@Test
+	void anOutOfRangeScoreIsNotAPass() throws Exception {
+		reachCreditCheck(newPan("9997"));
+		creditCheck().andExpect(status().isOk())
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].last_error_code").value("INVALID_SCORE"));
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM credit_assessment c JOIN partner_application a "
+				+ "ON a.id = c.application_id WHERE a.public_id = ? AND c.score IS NULL", Integer.class, id)).isEqualTo(1);
+	}
+
+	@Test
+	void noCreditHistoryIsNotAPass() throws Exception {
+		reachCreditCheck(newPan("0001"));
+		creditCheck().andExpect(status().isOk())
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].last_error_code").value("NO_CREDIT_HISTORY"))
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].status").value("FAILED"));
+	}
+
+	@Test
+	void aPanThatDoesNotMatchBlocksTheStepAfterThreeTries() throws Exception {
+		toPan("MANUAL");
+		for (int attempt = 1; attempt <= 3; attempt++) {
+			track(pan(newPan("1111"), "Ravi Kumar", "1990-01-15").andExpect(status().isOk())
+				.andExpect(jsonPath("$.steps[?(@.step_key=='PAN')].last_error_code").value("PAN_NAME_MISMATCH")));
+		}
+		pan(newPan("4321"), "Ravi Kumar", "1990-01-15").andExpect(status().isLocked());
+		pan("ABCDE1234F", "Ravi Kumar", "1990-01-15").andExpect(status().isLocked());
+	}
+
+	@Test
+	void panInputIsValidated() throws Exception {
+		toPan("MANUAL");
+		pan("ABCCE1234F", "Ravi Kumar", "1990-01-15").andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.invalid_params.pan").exists()); // a company PAN
+		pan(newPan("4321"), "Ravi Kumar", "2015-01-01").andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.invalid_params.dob").exists());
+		pan(newPan("4321"), null, "1990-01-15").andExpect(status().isUnprocessableContent());
+	}
+
+	@Test
+	void uploadsAreCheckedByTheirContent() throws Exception {
+		call(multipart(app("/documents")).file(file("file", "me.jpg", jpeg(600, 600, null))).param("kind", "LIVE_PHOTO"))
+			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"));
+		reachPhotos();
+		upload("LIVE_PHOTO", "me.png", png()).andExpect(status().isUnprocessableContent());
+		upload("LIVE_PHOTO", "me.jpg", jpeg(120, 120, null)).andExpect(status().isUnprocessableContent());
+		upload("LIVE_PHOTO", "me.jpg", "MZ not really a picture".getBytes()).andExpect(status().isUnprocessableContent());
+		upload("LIVE_PHOTO", "me.pdf", pdf("")).andExpect(status().isUnprocessableContent());
+		upload("GRADUATION_CERTIFICATE", "degree.pdf",
+				pdf("X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"))
+			.andExpect(status().isUnprocessableContent());
+
+		// Anything appended after the picture is gone once stored
+		byte[] polyglot = jpeg(600, 600, "<script>alert(1)</script>");
+		String documentId = client.body(upload("LIVE_PHOTO", "../../etc/passwd.jpg", polyglot).andExpect(status().isCreated())
+			.andExpect(jsonPath("$.status").value("MANUAL_REVIEW_REQUIRED"))
+			.andExpect(jsonPath("$.file_name").value("______etc_passwd.jpg"))).get("document_id").asString();
+		byte[] stored = call(get(app("/documents/" + documentId + "/content"))).andExpect(status().isOk())
+			.andReturn().getResponse().getContentAsByteArray();
+		assertThat(new String(stored, StandardCharsets.ISO_8859_1)).doesNotContain("<script>");
+
+		refresh();
+		call(post(app("/photos/submit")).header("If-Match", etag())).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.missing_documents[0]").value("PASSPORT_PHOTO"));
+
+		// Another applicant cannot read it
+		String otherToken = client.signInNewApplicant();
+		mvc.perform(get(app("/documents/" + documentId + "/content")).header("Authorization", "Bearer " + otherToken))
+			.andExpect(status().isNotFound());
+	}
+
+	@Test
+	void voterIdOrDrivingLicenceNeedsTheNumberAndBothSides() throws Exception {
+		reachPhotos();
+		uploadPhotosAndEducation();
+		submitId("{}").andExpect(status().isUnprocessableContent());
+		submitId("{\"voter_id_number\":\"ABC1234567\"}").andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("DOCUMENTS_MISSING"));
+		upload("DRIVING_LICENCE_FRONT", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		upload("DRIVING_LICENCE_BACK", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		refresh();
+		submitId("{\"driving_licence_number\":\"bad\"}").andExpect(status().isUnprocessableContent());
+		track(submitId("{\"driving_licence_number\":\"MH01 20110012345\"}").andExpect(status().isOk())
+			.andExpect(stepSummary("ID_DOCUMENT", "driving_licence").value("***********2345"))
+			.andExpect(jsonPath("$.next_step").value("DECLARATION")));
+	}
+
+	// ---- journey helpers ------------------------------------------------------------------------
+
+	private void toMethod(String method) throws Exception {
+		consent("DATA_PROCESSING");
+		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"method\":\"" + method + "\"}")).andExpect(status().isOk()));
+	}
+
+	private void toPan(String method) throws Exception {
+		toMethod(method);
+		if (method.equals("MANUAL")) {
+			track(call(multipart(app("/aadhaar")).file(file("front", "front.jpg", jpeg(800, 500, null)))
+				.file(file("back", "back.jpg", jpeg(800, 500, null)))
+				.param("aadhaar_last4", "4321")
+				.header("If-Match", etag())).andExpect(status().isOk())
+				.andExpect(jsonPath("$.next_step").value("PAN"))
+				.andExpect(stepSummary("AADHAAR", "review").value("MANUAL_REVIEW_REQUIRED")));
+		}
+	}
+
+	private void reachCreditCheck(String pan) throws Exception {
+		toPan("MANUAL");
+		track(pan(pan, "Ravi Kumar", "1990-01-15").andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK")));
+		consent("CREDIT_CHECK");
+	}
+
+	private void reachPhotos() throws Exception {
+		reachCreditCheck(newPan("4321"));
+		track(creditCheck().andExpect(status().isOk()));
+		track(call(put(app("/home-address")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"line1\":\"Flat 12\",\"city\":\"Pune\",\"state\":\"Maharashtra\",\"pincode\":\"411001\"}"))
+			.andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS")));
+	}
+
+	private void uploadPhotosAndEducation() throws Exception {
+		upload("LIVE_PHOTO", "me.jpg", jpeg(600, 600, null)).andExpect(status().isCreated());
+		upload("PASSPORT_PHOTO", "passport.jpg", jpeg(350, 450, null)).andExpect(status().isCreated());
+		refresh();
+		track(call(post(app("/photos/submit")).header("If-Match", etag())).andExpect(status().isOk())
+			.andExpect(jsonPath("$.next_step").value("EDUCATION")));
+		upload("GRADUATION_CERTIFICATE", "degree.pdf", pdf("")).andExpect(status().isCreated());
+		upload("COMPUTER_CERTIFICATE", "ccc.jpg", jpeg(800, 600, null)).andExpect(status().isCreated());
+		refresh();
+		track(call(post(app("/education/submit")).header("If-Match", etag())).andExpect(status().isOk())
+			.andExpect(stepSummary("EDUCATION", "computer_certificates").value(1)));
+	}
+
+	private void finishDocumentsAndSubmit() throws Exception {
+		uploadPhotosAndEducation();
+		upload("VOTER_ID_FRONT", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		upload("VOTER_ID_BACK", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		refresh();
+		track(submitId("{\"voter_id_number\":\"ABC1234567\"}").andExpect(status().isOk()));
+		track(call(post(app("/declaration")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"version\":\"" + VERSION + "\",\"accepted\":true}")).andExpect(status().isOk()));
+		call(post(app("/submit")).header("If-Match", etag()).header("Idempotency-Key", UUID.randomUUID().toString()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("SUBMITTED"))
+			.andExpect(jsonPath("$.steps[?(@.status!='LOCKED')]").isEmpty());
+	}
+
+	// ---- request helpers ------------------------------------------------------------------------
+
+	private ResultActions pan(String pan, String name, String dob) throws Exception {
+		String body = json.writeValueAsString(java.util.Map.of("pan", pan, "name", name == null ? "" : name,
+				"dob", dob == null ? "" : dob));
+		return call(post(app("/pan-verifications")).header("If-Match", etag())
+			.header("Idempotency-Key", UUID.randomUUID().toString())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body));
+	}
+
+	private ResultActions creditCheck() throws Exception {
+		return call(post(app("/credit-assessments")).header("If-Match", etag())
+			.header("Idempotency-Key", UUID.randomUUID().toString()));
+	}
+
+	private void consent(String purpose) throws Exception {
+		track(consentCall(purpose).andExpect(status().isOk()));
+	}
+
+	private ResultActions consentCall(String purpose) throws Exception {
+		return call(post(app("/consents")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"purpose\":\"" + purpose + "\",\"version\":\"" + VERSION + "\"}"));
+	}
+
+	private ResultActions upload(String kind, String name, byte[] bytes) throws Exception {
+		return call(multipart(app("/documents")).file(file("file", name, bytes)).param("kind", kind));
+	}
+
+	private ResultActions submitId(String body) throws Exception {
+		return call(post(app("/id-document/submit")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content(body));
+	}
+
+	private void refresh() throws Exception {
+		track(call(get(app(""))).andExpect(status().isOk()));
+	}
+
+	private void track(ResultActions result) throws Exception {
+		JsonNode snapshot = client.body(result);
+		id = snapshot.get("application_id").asString();
+		version = snapshot.get("version").asLong();
+	}
+
+	private String etag() {
+		return "\"v" + version + "\"";
+	}
+
+	private String app(String path) {
+		return "/v1/partner/applications/" + id + path;
+	}
+
+	private ResultActions call(MockHttpServletRequestBuilder request) throws Exception {
+		return mvc.perform(request.header("Authorization", "Bearer " + token));
+	}
+
+	private ResultActions call(MockMultipartHttpServletRequestBuilder request) throws Exception {
+		return mvc.perform(request.header("Authorization", "Bearer " + token));
+	}
+
+	private static org.springframework.test.web.servlet.result.JsonPathResultMatchers stepSummary(String step,
+			String field) {
+		return jsonPath("$.steps[?(@.step_key=='" + step + "')].summary." + field);
+	}
+
+	/** A personal PAN whose digits pick the fake providers' answer; the letters keep it unique. */
+	private static String newPan(String digits) {
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		StringBuilder pan = new StringBuilder();
+		for (int i = 0; i < 3; i++) {
+			pan.append((char) ('A' + random.nextInt(26)));
+		}
+		pan.append('P').append((char) ('A' + random.nextInt(26))).append(digits).append((char) ('A' + random.nextInt(26)));
+		return pan.toString();
+	}
+
+	private static MockMultipartFile file(String part, String name, byte[] bytes) {
+		return new MockMultipartFile(part, name, "application/octet-stream", bytes);
+	}
+
+	private static byte[] jpeg(int width, int height, String trailer) throws Exception {
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		var graphics = image.createGraphics();
+		graphics.setColor(Color.ORANGE);
+		graphics.fillRect(0, 0, width, height);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ImageIO.write(image, "jpeg", out);
+		if (trailer != null) {
+			out.write(trailer.getBytes(StandardCharsets.UTF_8));
+		}
+		return out.toByteArray();
+	}
+
+	private static byte[] png() throws Exception {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ImageIO.write(new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB), "png", out);
+		return out.toByteArray();
+	}
+
+	private static byte[] pdf(String body) {
+		return ("%PDF-1.4\n1 0 obj << >> endobj\n" + body + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
+	}
+}

@@ -105,6 +105,14 @@ class ApplicationStep extends BaseEntity {
 		}
 	}
 
+	/** New data arrived for a step that was done or reopened; it must be submitted again. */
+	void markInProgress() {
+		if (status == StepStatus.REOPENED || status == StepStatus.COMPLETED || status == StepStatus.NOT_STARTED) {
+			status = StepStatus.IN_PROGRESS;
+			completedAt = null;
+		}
+	}
+
 	/** Application submitted: completed data is frozen. */
 	void lock() {
 		if (status == StepStatus.COMPLETED) {

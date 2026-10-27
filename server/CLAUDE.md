@@ -23,14 +23,22 @@ src/main/java/in/eko/eloka/partner/
 │             SafetyCheck, ElokaProperties), persistence (BaseEntity UUIDv7, PublicIds), time (Clock bean)
 ├── audit/    AuditLog (hash-chained audit_event, same transaction as the change), AuditTrail (read side)
 ├── integration/  provider ports (MobileOtpGateway); internal: ProviderConfig picks fake | eps | none per
-│             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters, fakes, stubs
+│             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters (OTP, PAN Lite,
+│             DigiLocker), fakes, stubs, ClamAV scanner; ports MobileOtpGateway, PanVerifier, DigiLockerProvider,
+│             CreditBureau, MalwareScanner
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
               (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session
 ├── onboarding/ partner applications: PartnerStep (prerequisites, invalidation), StepStatus, ApplicationStatus;
 │             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
 │             If-Match + editable check), StepContext, consent records, Idempotency, ExpiryJob,
 │             /v1/partner/applications
-   planned: documents, verification, eligibility, review, system
+├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode (ImageSanitizer), PDF
+│             malware scan, AES-GCM encrypted storage behind DocumentStorage (filesystem now)
+├── verification/ PAN checks, DigiLocker sessions (single-use state, 15 min), manual Aadhaar; EvidenceStatus;
+│             encrypted values + masked copies + PAN blind index
+├── eligibility/ EligibilityPolicy (MIN_SCORE = 700, a constant), credit assessments (score only, never the report)
+   (onboarding/internal also has IdentitySteps, EligibilityStep, DocumentSteps, StepController)
+   planned: review, system
 src/main/resources/
 ├── application.yaml / application-local.yaml / application-prod.yaml (staging + production)
 ├── logback-spring.xml          prod: ECS JSON on stdout; elsewhere text console + logs/eloka-partner.log; all masked

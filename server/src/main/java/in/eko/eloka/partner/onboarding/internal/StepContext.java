@@ -75,6 +75,20 @@ final class StepContext {
 		record("STEP_COMPLETED", key);
 	}
 
+	/**
+	 * The applicant changed the data of a step that was already done (a new upload): the step must
+	 * be submitted again, and what depends on it is redone.
+	 */
+	void changed(PartnerStep key) {
+		ApplicationStep step = steps.get(key);
+		if (step.getStatus() == StepStatus.COMPLETED || step.getStatus() == StepStatus.REOPENED) {
+			step.invalidate();
+			step.markInProgress();
+			record("STEP_CHANGED", key);
+			invalidateDependents(key, EnumSet.noneOf(PartnerStep.class));
+		}
+	}
+
 	void fail(PartnerStep key, String errorCode) {
 		steps.get(key).fail(errorCode);
 		record("STEP_FAILED", key);
