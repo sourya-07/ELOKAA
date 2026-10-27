@@ -21,3 +21,7 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-27 | P5–P8 server | minor | `onboarding/internal/IdentitySteps.java` | DigiLocker address could try to complete a locked or done step | fixed: skipped when already satisfied |
 | 2026-10-27 | P5–P8 server | minor | `verification/internal/VerificationService.java` | DigiLocker date of birth skipped the 18+ rule | fixed |
 | 2026-10-27 | P5–P8 server | minor | `documents/internal/DocumentService.java` | a re-encoded photo could exceed the size limit | fixed: size checked again after re-encoding |
+| 2026-10-27 | P9 staff review | major | `onboarding/internal/ReviewService.java` | the free-text reason for revealing a hidden value went into the audit log (may name people) | fixed: kept in the staff review history only; the audit records the field; test checks |
+| 2026-10-27 | P9 staff review | major | `onboarding/internal/ReviewService.java` | reason codes and the step list could overflow their columns | fixed: reason codes validated (`[A-Z][A-Z0-9_]{1,39}`), target cut to 40 characters |
+| 2026-10-27 | P9 staff review | minor | `identity/StaffView.java` | `/me` used camelCase names | fixed: snake_case |
+| 2026-10-27 | P9 staff review | minor | `integration/internal/GoogleIdTokenVerifier.java` | a failed fetch of Google's keys looked like a bad token; no timeouts | fixed: `503 PROVIDER_UNAVAILABLE`, 5 s / 10 s timeouts |

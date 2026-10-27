@@ -29,6 +29,17 @@ interface PartnerApplicationRepository extends JpaRepository<PartnerApplication,
 	@Query("select a from PartnerApplication a where a.id = :id")
 	Optional<PartnerApplication> lockById(@Param("id") UUID id);
 
+	Optional<PartnerApplication> findByPublicId(String publicId);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("select a from PartnerApplication a where a.publicId = :publicId")
+	Optional<PartnerApplication> lockByPublicId(@Param("publicId") String publicId);
+
+	/** The review queue, oldest submission first. */
+	@Query("select a from PartnerApplication a where a.status in :statuses order by a.submittedAt asc, a.createdAt asc")
+	List<PartnerApplication> findQueue(@Param("statuses") Collection<ApplicationStatus> statuses,
+			org.springframework.data.domain.Pageable page);
+
 	@Query("select a.id from PartnerApplication a where a.status = in.eko.eloka.partner.onboarding.ApplicationStatus.CORRECTION_REQUIRED and a.correctionDueAt < :now")
 	List<UUID> findOverdueCorrections(@Param("now") Instant now);
 
@@ -83,4 +94,9 @@ interface IdNumberRepository extends JpaRepository<IdNumber, UUID> {
 	List<IdNumber> findByApplicationId(UUID applicationId);
 
 	Optional<IdNumber> findByApplicationIdAndType(UUID applicationId, IdNumber.Type type);
+}
+
+interface ReviewActionRepository extends JpaRepository<ReviewAction, UUID> {
+
+	List<ReviewAction> findByApplicationIdOrderByOccurredAtAsc(UUID applicationId);
 }

@@ -82,6 +82,9 @@ public interface VerificationApi {
 	/** The latest attempt per kind. */
 	List<Evidence> evidence(UUID applicationId);
 
+	/** The verified PAN in full, for an audited staff reveal. */
+	Optional<String> revealPan(UUID applicationId);
+
 	/** Staff decision on a check that needs a person. */
 	void decide(UUID applicationId, UUID evidenceId, boolean verified, String reasonCode);
 }

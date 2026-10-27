@@ -1,10 +1,12 @@
 package in.eko.eloka.partner.integration.internal;
 
 import java.time.Clock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import in.eko.eloka.partner.integration.CreditBureau;
 import in.eko.eloka.partner.integration.DigiLockerProvider;
+import in.eko.eloka.partner.integration.GoogleIdentityVerifier;
 import in.eko.eloka.partner.integration.MalwareScanner;
 import in.eko.eloka.partner.integration.MobileOtpGateway;
 import in.eko.eloka.partner.integration.PanVerifier;
@@ -53,6 +55,12 @@ class ProviderConfig {
 			case EPS -> throw new IllegalStateException("eloka.integration.credit-bureau: EPS has no credit bureau API");
 			case NONE -> new UnconfiguredIdentityProviders.Bureau();
 		};
+	}
+
+	/** Staff sign-in; refuses every token while {@code eloka.staff.google-client-id} is empty. */
+	@Bean
+	GoogleIdentityVerifier googleIdentityVerifier(@Value("${eloka.staff.google-client-id:}") String clientId) {
+		return new GoogleIdTokenVerifier(clientId);
 	}
 
 	@Bean

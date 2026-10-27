@@ -14,6 +14,8 @@ logging:
 
 eloka:
   environment: local
+  staff:
+    otp-login-enabled: true # seeded staff 9000000006 (reviewer), …07 (approver), …08 (both); OTP 123456
   cors-allowed-origin-patterns:
     - http://localhost:[*]
   crypto:

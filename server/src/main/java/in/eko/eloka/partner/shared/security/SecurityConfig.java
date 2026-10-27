@@ -47,6 +47,10 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/v1/partner/otp", "/v1/partner/otp/verify",
 								"/v1/partner/session/refresh").permitAll()
 						.requestMatchers("/v1/partner/**").hasAuthority("KIND_" + SessionKind.PARTNER_APPLICANT.name())
+						// Staff: sign-in is public; everything else needs a staff session (roles checked per action)
+						.requestMatchers(HttpMethod.POST, "/v1/admin/auth/google", "/v1/admin/auth/otp",
+								"/v1/admin/auth/otp/verify", "/v1/admin/auth/refresh").permitAll()
+						.requestMatchers("/v1/admin/**").hasAuthority("KIND_" + SessionKind.STAFF.name())
 						.anyRequest().denyAll())
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((request, response, e) -> writeProblem(response,

@@ -24,6 +24,11 @@ Every outside service runs on a fake locally (ADR-0004). Staging and production 
 PANs must be personal (4th letter `P`), for example `ABCPK4321L`. A PAN can be used by one open, approved or
 ineligible application only, so use new letters for each try.
 
+## Staff console sign-in (local)
+
+OTP `123456`: `9000000006` reviewer · `9000000007` approver · `9000000008` both roles. Seeded at start-up in the
+`local` and `test` profiles only.
+
 ## Checks before a commit
 
 ```bash

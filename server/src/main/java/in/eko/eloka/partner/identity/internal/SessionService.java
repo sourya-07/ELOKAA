@@ -22,11 +22,14 @@ class SessionService implements CallerResolver {
 	static final String REFRESH_PREFIX = "ptn_rt_";
 
 	private final AuthSessionRepository sessions;
+	private final StaffUserRepository staff;
 	private final IdentityProperties properties;
 	private final Clock clock;
 
-	SessionService(AuthSessionRepository sessions, IdentityProperties properties, Clock clock) {
+	SessionService(AuthSessionRepository sessions, StaffUserRepository staff, IdentityProperties properties,
+			Clock clock) {
 		this.sessions = sessions;
+		this.staff = staff;
 		this.properties = properties;
 		this.clock = clock;
 	}
@@ -51,10 +54,7 @@ class SessionService implements CallerResolver {
 		Instant now = Instant.now(clock);
 		return sessions.findByAccessTokenHash(Tokens.sha256(bearerToken))
 			.filter(session -> session.acceptsAccessToken(now))
-			.map(session -> {
-				touch(session, now);
-				return toCaller(session);
-			});
+			.flatMap(session -> toCaller(session, now));
 	}
 
 	/**
@@ -97,11 +97,21 @@ class SessionService implements CallerResolver {
 		}
 	}
 
-	private static Caller toCaller(AuthSession session) {
-		Set<Role> roles = switch (session.getKind()) {
-			case PARTNER_APPLICANT -> Set.of(Role.PARTNER_APPLICANT);
-			case STAFF -> Set.of(); // staff roles are read from the staff account once review exists
-		};
-		return new Caller(session.getId(), session.getKind(), session.getSubjectId(), roles);
+	/** Staff roles come from the account on every request: a removed role or a disabled account counts at once. */
+	private Optional<Caller> toCaller(AuthSession session, Instant now) {
+		Set<Role> roles;
+		if (session.getKind() == SessionKind.STAFF) {
+			Optional<StaffUser> member = staff.findById(session.getSubjectId()).filter(StaffUser::isActive);
+			if (member.isEmpty()) {
+				session.revoke(now, "STAFF_NOT_ACTIVE");
+				return Optional.empty();
+			}
+			roles = member.get().getRoles();
+		}
+		else {
+			roles = Set.of(Role.PARTNER_APPLICANT);
+		}
+		touch(session, now);
+		return Optional.of(new Caller(session.getId(), session.getKind(), session.getSubjectId(), roles));
 	}
 }

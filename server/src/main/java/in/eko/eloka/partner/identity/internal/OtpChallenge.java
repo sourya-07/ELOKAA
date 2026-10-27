@@ -16,6 +16,9 @@ import jakarta.persistence.Table;
 class OtpChallenge extends BaseEntity {
 
 	static final String PURPOSE_APPLICANT_SIGN_IN = "APPLICANT_SIGN_IN";
+	static final String PURPOSE_STAFF_SIGN_IN = "STAFF_SIGN_IN";
+	/** Reference of a challenge for which no SMS was sent (unknown staff mobile): no code can match it. */
+	static final String NOT_SENT = "NOT_SENT";
 
 	/** Blind index of the mobile. */
 	@Column(name = "mobile_hash", nullable = false, columnDefinition = "BINARY(32)")

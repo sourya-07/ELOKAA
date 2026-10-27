@@ -62,6 +62,15 @@ class OtpService {
 
 	/** A provider failure removes the reservation, so it does not count against the limits. */
 	void issue(String purpose, String mobile, String clientIp) {
+		issue(purpose, mobile, clientIp, true);
+	}
+
+	/**
+	 * @param send false for a number that must not learn whether it is known (an unknown staff
+	 *        mobile): the challenge and its limits exist, so the answers match a real one, but no SMS
+	 *        goes out and no code can pass
+	 */
+	void issue(String purpose, String mobile, String clientIp, boolean send) {
 		byte[] mobileHash = index.hash("mobile", mobile);
 		byte[] ipHash = clientIp == null ? null : index.hash("ip", clientIp);
 		UUID reserved = transactions.execute(tx -> {
@@ -76,7 +85,7 @@ class OtpService {
 		});
 		MobileOtpGateway.SentOtp sent;
 		try {
-			sent = gateway.send(mobile);
+			sent = send ? gateway.send(mobile) : new MobileOtpGateway.SentOtp(OtpChallenge.NOT_SENT, null);
 		}
 		catch (RuntimeException ex) {
 			transactions.executeWithoutResult(tx -> challenges.deleteById(reserved));
@@ -100,6 +109,7 @@ class OtpService {
 		boolean accepted;
 		try {
 			accepted = given.matches("\\d{" + properties.otpLength() + "}")
+					&& !OtpChallenge.NOT_SENT.equals(attempt.providerRef())
 					&& gateway.verify(mobile, attempt.providerRef(), given);
 		}
 		catch (RuntimeException ex) {

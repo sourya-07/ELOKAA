@@ -10,6 +10,8 @@ logging:
 
 eloka:
   environment: test
+  staff:
+    otp-login-enabled: true
   cors-allowed-origin-patterns:
     - http://localhost:[*]
   crypto:

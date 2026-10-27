@@ -195,6 +195,13 @@ class VerificationService implements VerificationApi {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public Optional<String> revealPan(UUID applicationId) {
+		return latest(applicationId, Kind.PAN).filter(v -> v.getStatus() == EvidenceStatus.VERIFIED)
+			.map(v -> cipher.decrypt(v.getValueEnc()));
+	}
+
+	@Override
 	@Transactional
 	public void decide(UUID applicationId, UUID evidenceId, boolean verified, String reasonCode) {
 		Verification v = verifications.findByIdAndApplicationId(evidenceId, applicationId)

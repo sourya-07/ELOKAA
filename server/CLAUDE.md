@@ -37,8 +37,12 @@ src/main/java/in/eko/eloka/partner/
 ├── verification/ PAN checks, DigiLocker sessions (single-use state, 15 min), manual Aadhaar; EvidenceStatus;
 │             encrypted values + masked copies + PAN blind index
 ├── eligibility/ EligibilityPolicy (MIN_SCORE = 700, a constant), credit assessments (score only, never the report)
-   (onboarding/internal also has IdentitySteps, EligibilityStep, DocumentSteps, StepController)
-   planned: review, system
+   (onboarding/internal also has IdentitySteps, EligibilityStep, DocumentSteps, StepController, and staff review:
+    ReviewService (claim, evidence decisions, corrections, maker-checker approve, reject, hold, PII reveal),
+    StaffReviewController /v1/admin/applications; review lives here because it changes application and step state)
+   identity/ also holds staff accounts (StaffUser, roles REVIEWER/APPROVER), StaffAuthController (Google; OTP
+    local/test only), LocalStaffSeed (local/test)
+   planned: system (migrate runner, first staff bootstrap)
 src/main/resources/
 ├── application.yaml / application-local.yaml / application-prod.yaml (staging + production)
 ├── logback-spring.xml          prod: ECS JSON on stdout; elsewhere text console + logs/eloka-partner.log; all masked

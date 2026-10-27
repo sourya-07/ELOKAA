@@ -68,6 +68,29 @@ Document kinds: `LIVE_PHOTO`, `PASSPORT_PHOTO` (JPG only, ≤ 5 MB, ≥ 300 px a
 PDFs are malware-scanned. Every upload waits for staff review (`MANUAL_REVIEW_REQUIRED`). Uploading or removing
 a file of a finished step sets it back to `IN_PROGRESS`.
 
+## Staff review (`/v1/admin`, staff session)
+
+Roles: `REVIEWER` (claim, decide evidence, corrections, recommend, hold), `APPROVER` (approve, reject, hold,
+reveal hidden values). Roles are read from the account on every request. Applicant sessions get `403` here.
+
+| Method + path | Body | Notes |
+|---|---|---|
+| `POST /v1/admin/auth/google` | `{"id_token"}` | only verified accounts of `eloka.staff.google-domain` with a staff account; others `403 NOT_STAFF` |
+| `POST /v1/admin/auth/otp`, `/auth/otp/verify` | `{"mobile"}`, `{"mobile","otp"}` | local/test only (`404` elsewhere); unknown mobiles get no SMS and can never pass |
+| `POST /v1/admin/auth/refresh`, `DELETE /v1/admin/auth/session`, `GET /v1/admin/me` | | `me` returns roles and masked email |
+| `GET /v1/admin/applications?status=&page=&size=` | | queue (submitted, under review, on hold), oldest first |
+| `GET /v1/admin/applications/{id}` | | case view: snapshot, evidence (masked), address (state, pincode, source, status), ID numbers (masked), eligibility outcome, review history, `approval_blockers` |
+| `POST …/{id}/claim`, `…/release` | | reviewer; release by the claimer only |
+| `POST …/{id}/documents/{documentId}/decision`, `…/verifications/{evidenceId}/decision`, `…/address/decision` | `{"verified", "reason_code"}` | claimer; a rejection needs a reason |
+| `GET …/{id}/documents/{documentId}/content` | | every view is audited |
+| `POST …/{id}/corrections` | `{"steps":[AADHAAR\|PAN\|HOME_ADDRESS\|PHOTOS\|EDUCATION\|ID_DOCUMENT], "reason_code","message","due_in_days"}` | status `CORRECTION_REQUIRED`; the declaration is always asked again; other steps stay frozen |
+| `POST …/{id}/recommendation` | `{"decision": APPROVE\|REJECT, "note"}` | claimer; APPROVE only when nothing blocks |
+| `POST …/{id}/approve` | `{"note"}` | approver who did not recommend (`403 SAME_PERSON`), needs an APPROVE recommendation after the last correction and no blockers |
+| `POST …/{id}/reject` | `{"reason_code","note"}` | approver |
+| `POST …/{id}/holds`, `DELETE …/{id}/holds` | `{"reason_code"}` | |
+| `POST …/{id}/pii-reveal` | `{"field": PAN\|ADDRESS, "reason"}` | approver; audited with the reason, never the value |
+| `GET …/{id}/audit` | | the application's audit trail |
+
 ## Operations
 
 | Path | Auth | Note |
