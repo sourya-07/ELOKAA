@@ -39,3 +39,4 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-27 | P13–P14 delivery | major | `deploy/remote-deploy.sh` | does the public health route exist? | no change: `client/src/pages/api/health.ts`, reached through Caddy |
 | 2026-10-27 | P13–P14 delivery | minor | `deploy/restore.sh` | a relative backup path was resolved after changing directory | fixed |
 | 2026-10-27 | P13–P14 delivery | minor | `docs/deploy/RUNBOOK.md`, `server/load/partner-journey.js` | unset shell variable in the health check; per-IP OTP limit in the load test | fixed / documented |
+| 2026-10-27 | Withdraw + step-up | — | `identity/ApplicantReauth`, `onboarding/internal/ApplicationController`, `client/src/features/apply/WithdrawPanel.tsx` | not reviewed: CodeRabbit hourly limit reached; self-reviewed (missing code counts as wrong, state checked by the state machine) | review with the next CodeRabbit run |

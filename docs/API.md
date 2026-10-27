@@ -12,6 +12,7 @@ Callers are the client's server-side proxy (ADR-0003), not browsers.
 | `POST /v1/partner/otp/verify` | public | `{"otp_ref","otp"}` | `200 {"access_token","refresh_token","token_type":"Bearer","expires_in"}` | `422 OTP_INVALID` (+`attempts_left`), `429 OTP_LOCKED`, `410 OTP_EXPIRED`, `422 VALIDATION_FAILED` (bad `otp_ref`), `503 PROVIDER_UNAVAILABLE` |
 | `POST /v1/partner/session/refresh` | public | `{"refresh_token"}` | `200` new token pair (both rotate) | `401 SESSION_EXPIRED` (a reused old refresh token also ends the session) |
 | `DELETE /v1/partner/session` | applicant | — | `204` | `401 UNAUTHENTICATED` |
+| `POST /v1/partner/reauth` | applicant | — | `202 {"expires_in","otp_length"}`: a fresh code to the applicant's own mobile (step-up before withdrawing) | `429 OTP_LIMIT_REACHED` (+`retry_after` s, same limits as sign-in), `503 PROVIDER_UNAVAILABLE` |
 
 Rules: answers are the same for new and known mobiles; the first verified OTP creates the applicant.
 Limits (defaults, `eloka.identity.*`): OTP valid 5 min, 5 wrong tries, 30 s between sends, 5 per hour and
@@ -33,6 +34,8 @@ current snapshot when stale). Another applicant's id answers `404 APPLICATION_NO
 | `PUT /v1/partner/applications/{id}/method` | `{"method": DIGILOCKER \| MANUAL}` | `200` (a different choice resets the identity steps) | `409 PREREQUISITE_INCOMPLETE`, `422` |
 | `POST /v1/partner/applications/{id}/declaration` | `{"version","accepted":true}` | `200` | `409 DECLARATION_VERSION_OUTDATED`, `409 PREREQUISITE_INCOMPLETE` |
 | `POST /v1/partner/applications/{id}/submit` | — (+ `Idempotency-Key`) | `200` status `SUBMITTED`; a repeat with the same key replays it (`Idempotent-Replayed: true`) | `400 IDEMPOTENCY_KEY_REQUIRED`, `409 PREREQUISITE_INCOMPLETE` (+`missing_steps`), `409 IDEMPOTENCY_IN_PROGRESS`, `422 IDEMPOTENCY_KEY_REUSED` |
+
+| `POST /v1/partner/applications/{id}/withdraw` | `{"otp","reason_code"?}` (code from `POST /v1/partner/reauth`; `reason_code` like `CHANGED_MIND`, anything else is stored as `NONE`) | `200` status `WITHDRAWN` (from `IN_PROGRESS`, `SUBMITTED`, `CORRECTION_REQUIRED`) | `410 OTP_EXPIRED` (no live code), `422 OTP_INVALID` (+`attempts_left`), `429 OTP_LOCKED`, `409 INVALID_STATE_TRANSITION` |
 
 Any write on a submitted or closed application: `409 APPLICATION_NOT_EDITABLE`. Snapshot fields:
 `application_id`, `status`, `version`, `method`, `next_step` (server's answer to "where do I continue",

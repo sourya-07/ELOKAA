@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import in.eko.eloka.partner.identity.ApplicantReauth;
 import in.eko.eloka.partner.shared.crypto.BlindIndex;
 import in.eko.eloka.partner.shared.error.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,11 +31,24 @@ class ApplicationController {
 	private final ApplicationService applications;
 	private final Idempotency idempotency;
 	private final BlindIndex index;
+	private final ApplicantReauth reauth;
 
-	ApplicationController(ApplicationService applications, Idempotency idempotency, BlindIndex index) {
+	ApplicationController(ApplicationService applications, Idempotency idempotency, BlindIndex index,
+			ApplicantReauth reauth) {
 		this.applications = applications;
 		this.idempotency = idempotency;
 		this.index = index;
+		this.reauth = reauth;
+	}
+
+	/** Withdraws the application. Needs a fresh code from {@code POST /v1/partner/reauth}. */
+	@PostMapping("/{id}/withdraw")
+	ResponseEntity<ApplicationSnapshot> withdraw(@PathVariable String id, @RequestBody WithdrawRequest body,
+			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+		long version = WebSupport.expectedVersion(ifMatch);
+		UUID applicantId = WebSupport.applicantId();
+		reauth.verify(applicantId, body == null ? null : body.otp());
+		return WebSupport.ok(applications.withdraw(applicantId, id, version, body == null ? null : body.reasonCode()));
 	}
 
 	record ConsentRequest(String purpose, String version) {
@@ -44,6 +58,9 @@ class ApplicationController {
 	}
 
 	record DeclarationRequest(String version, boolean accepted) {
+	}
+
+	record WithdrawRequest(String otp, @JsonProperty("reason_code") String reasonCode) {
 	}
 
 	record TimelineItem(@JsonProperty("event_type") String eventType, @JsonProperty("step_key") String stepKey,

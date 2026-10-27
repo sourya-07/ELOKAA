@@ -261,6 +261,28 @@ class ApplicationService {
 	}
 
 	/**
+	 * Withdraws after a fresh OTP (step-up), from in progress, submitted or correction required.
+	 * Checked against the current version like every write.
+	 */
+	@Transactional
+	ApplicationSnapshot withdraw(UUID applicantId, String publicId, long expectedVersion, String reasonCode) {
+		PartnerApplication application = applications.lockByPublicIdAndApplicantId(publicId, applicantId)
+			.orElseThrow(ApplicationService::notFound);
+		if (application.getVersion() != expectedVersion) {
+			throw new ApiProblem(HttpStatus.PRECONDITION_FAILED, "PRECONDITION_FAILED",
+					"This application changed in another tab or device. Here is the latest version.",
+					Map.of("current", snapshot(application)));
+		}
+		stateMachine.apply(application, LifecycleEvent.WITHDRAW, "APPLICANT", applicantId.toString());
+		String reason = reasonCode == null || !reasonCode.trim().toUpperCase().matches("[A-Z][A-Z0-9_]{1,39}") ? "NONE"
+				: reasonCode.trim().toUpperCase();
+		audit.record(new AuditEntry("APPLICATION_WITHDRAW_REASON", "APPLICANT", applicantId.toString(),
+				"PARTNER_APPLICATION", publicId, Map.of("reason_code", reason)));
+		applications.saveAndFlush(application);
+		return snapshot(application);
+	}
+
+	/**
 	 * Expires one application (called by {@link ExpiryJob}, one transaction each). In progress:
 	 * after the idle window. Waiting for a correction: on the correction's due date only.
 	 */

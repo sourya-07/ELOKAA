@@ -63,7 +63,7 @@ flowchart TD
 | — | OTP verified, no live application | `IN_PROGRESS` | mobile has no live or approved application |
 | `IN_PROGRESS` | credit result below 700 | `INELIGIBLE` | result bound to this applicant's verified PAN and consent |
 | `IN_PROGRESS`, `CORRECTION_REQUIRED` | `SUBMIT` | `SUBMITTED` | all required steps satisfied, eligibility `ELIGIBLE`, current declaration, `If-Match`, `Idempotency-Key` |
-| `IN_PROGRESS`, `SUBMITTED`, `CORRECTION_REQUIRED` | `WITHDRAW` | `WITHDRAWN` | fresh re-authentication |
+| `IN_PROGRESS`, `SUBMITTED`, `CORRECTION_REQUIRED` | `WITHDRAW` | `WITHDRAWN` | a fresh OTP to the applicant's own mobile (`POST /v1/partner/reauth`); the status page offers it when `available_actions` has `WITHDRAW` |
 | `IN_PROGRESS`, `CORRECTION_REQUIRED` | `EXPIRE` (job) | `EXPIRED` | idle or correction deadline passed |
 | `SUBMITTED` | `CLAIM` | `UNDER_REVIEW` | reviewer role |
 | `UNDER_REVIEW` | `RELEASE` | `SUBMITTED` | the claiming reviewer |

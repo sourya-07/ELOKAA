@@ -22,6 +22,10 @@ class Applicant extends BaseEntity {
 	protected Applicant() {
 	}
 
+	byte[] getMobileEnc() {
+		return mobileEnc;
+	}
+
 	Applicant(byte[] mobileEnc, byte[] mobileHash, String mobileMasked) {
 		this.mobileEnc = mobileEnc;
 		this.mobileHash = mobileHash;

@@ -20,7 +20,7 @@ src/middleware.ts     per-request CSP nonce (pages render per request so the non
 src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy rules, unit-tested), steps.ts
                       (pages per path, routeFor), types.ts, validation.ts, consent.ts, states.ts
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest), guards, PanForm,
-                      SubmitStep, useDocuments, useAction, withApplication
+                      SubmitStep, useDocuments, useAction, withApplication, WithdrawPanel (step-up code, then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section, OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md

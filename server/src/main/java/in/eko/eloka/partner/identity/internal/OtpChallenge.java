@@ -17,6 +17,8 @@ class OtpChallenge extends BaseEntity {
 
 	static final String PURPOSE_APPLICANT_SIGN_IN = "APPLICANT_SIGN_IN";
 	static final String PURPOSE_STAFF_SIGN_IN = "STAFF_SIGN_IN";
+	/** Step-up before withdrawing, to the applicant's own mobile. */
+	static final String PURPOSE_REAUTH = "APPLICANT_REAUTH";
 	/** Reference of a challenge for which no SMS was sent (unknown staff mobile): no code can match it. */
 	static final String NOT_SENT = "NOT_SENT";
 

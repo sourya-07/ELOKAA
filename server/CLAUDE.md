@@ -27,7 +27,8 @@ src/main/java/in/eko/eloka/partner/
 │             DigiLocker), fakes, stubs, ClamAV scanner; ports MobileOtpGateway, PanVerifier, DigiLockerProvider,
 │             CreditBureau, MalwareScanner
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
-              (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session
+              (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session,
+              /reauth (step-up code before withdrawing, `ApplicantReauth`)
 ├── onboarding/ partner applications: PartnerStep (prerequisites, invalidation), StepStatus, ApplicationStatus;
 │             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
 │             If-Match + editable check), StepContext, consent records, Idempotency, ExpiryJob,

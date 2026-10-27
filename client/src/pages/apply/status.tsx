@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { ApplyShell, Section } from "@/components/ApplyShell";
 import { StatusPill } from "@/components/StatusPill";
 import { useApplication } from "@/features/apply/ApplicationContext";
+import { WithdrawPanel } from "@/features/apply/WithdrawPanel";
 import { withApplication } from "@/features/apply/withApplication";
 import { routeFor } from "@/lib/steps";
 import type { ApplicationStatus } from "@/lib/types";
@@ -43,6 +44,7 @@ function StatusPage() {
 			{["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status) && (
 				<Button onClick={() => router.push(routeFor(snapshot))}>Continue</Button>
 			)}
+			{snapshot.available_actions.includes("WITHDRAW") && <WithdrawPanel />}
 			{snapshot.status === "EXPIRED" && (
 				<Button as={NextLink} href="/apply/continue">
 					Start a new application

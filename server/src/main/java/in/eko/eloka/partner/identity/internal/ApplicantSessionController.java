@@ -36,14 +36,16 @@ class ApplicantSessionController {
 
 	private final ApplicantSignIn signIn;
 	private final SessionService sessions;
+	private final ApplicantReauthService reauth;
 	private final FieldCipher cipher;
 	private final IdentityProperties properties;
 	private final Clock clock;
 
-	ApplicantSessionController(ApplicantSignIn signIn, SessionService sessions, FieldCipher cipher,
-			IdentityProperties properties, Clock clock) {
+	ApplicantSessionController(ApplicantSignIn signIn, SessionService sessions, ApplicantReauthService reauth,
+			FieldCipher cipher, IdentityProperties properties, Clock clock) {
 		this.signIn = signIn;
 		this.sessions = sessions;
+		this.reauth = reauth;
 		this.cipher = cipher;
 		this.properties = properties;
 		this.clock = clock;
@@ -104,6 +106,15 @@ class ApplicantSessionController {
 			.map(TokenResponse::of)
 			.orElseThrow(() -> new ApiProblem(HttpStatus.UNAUTHORIZED, "SESSION_EXPIRED",
 					"Your session has expired. Please sign in again."));
+	}
+
+	/** Step-up: a code to the applicant's own mobile before withdrawing. */
+	@PostMapping("/reauth")
+	ResponseEntity<Map<String, Object>> reauth(HttpServletRequest request) {
+		Caller caller = CallerContext.require();
+		reauth.sendCode(caller.subjectId(), request.getRemoteAddr());
+		return ResponseEntity.accepted().body(Map.of("expires_in", properties.otpTtl().toSeconds(), "otp_length",
+				properties.otpLength()));
 	}
 
 	@DeleteMapping("/session")
