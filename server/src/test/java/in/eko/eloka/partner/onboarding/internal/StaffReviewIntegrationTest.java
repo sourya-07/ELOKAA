@@ -129,6 +129,39 @@ class StaffReviewIntegrationTest {
 	}
 
 	@Test
+	void staffCanUnblockAStepAfterFollowingUp() throws Exception {
+		JourneyDriver applicant = new JourneyDriver(mvc, json); // still filling in
+		String id = applicant.id();
+		long before = applicant.refresh().get("version").asLong();
+		jdbc.update("UPDATE application_step s JOIN partner_application a ON a.id = s.application_id "
+				+ "SET s.status = 'BLOCKED', s.attempt_count = 3, s.last_error_code = 'PAN_NAME_MISMATCH' "
+				+ "WHERE a.public_id = ? AND s.step_key IN ('PAN', 'CREDIT_CHECK')", id);
+		String reviewer = staffToken(REVIEWER);
+		staff(reviewer, get("/v1/admin/applications?status=BLOCKED")).andExpect(status().isOk())
+			.andExpect(jsonPath("$[?(@.application_id=='" + id + "')]").isNotEmpty());
+
+		String unblock = "/v1/admin/applications/" + id + "/steps/%s/unblock";
+		staff(reviewer, post(unblock.formatted("PAN")).contentType(MediaType.APPLICATION_JSON).content("{}"))
+			.andExpect(status().isUnprocessableContent());
+		staff(reviewer, post(unblock.formatted("CREDIT_CHECK")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"reason_code\":\"SPOKE_TO_APPLICANT\"}")).andExpect(status().isForbidden());
+		staff(reviewer, post(unblock.formatted("PAN")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"reason_code\":\"SPOKE_TO_APPLICANT\",\"note\":\"Name spelling confirmed\"}"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.application.steps[?(@.step_key=='PAN')].status").value("IN_PROGRESS"))
+			.andExpect(jsonPath("$.application.steps[?(@.step_key=='PAN')].attempt_count").value(0));
+		staff(reviewer, post(unblock.formatted("PAN")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"reason_code\":\"SPOKE_TO_APPLICANT\"}")).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("STEP_NOT_BLOCKED"));
+		staff(staffToken(APPROVER), post(unblock.formatted("CREDIT_CHECK")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"reason_code\":\"SPOKE_TO_APPLICANT\"}")).andExpect(status().isOk());
+		// the applicant's open page sees a new version
+		assertThat(applicant.refresh().get("version").asLong()).isGreaterThan(before);
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE target_id = ? AND action = 'REVIEW_UNBLOCK'",
+				Integer.class, id)).isEqualTo(2);
+	}
+
+	@Test
 	void correctionsSendStepsBackAndFreezeTheRest() throws Exception {
 		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String reviewer = staffToken(REVIEWER);

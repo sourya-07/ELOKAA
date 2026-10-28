@@ -89,6 +89,7 @@ class ReviewService {
 	private final PartnerAddressRepository addresses;
 	private final IdNumberRepository idNumbers;
 	private final PhotoLocationRepository locations;
+	private final TimelineEntryRepository timeline;
 	private final ReviewActionRepository actions;
 	private final ApplicationStateMachine stateMachine;
 	private final VerificationApi verification;
@@ -102,7 +103,8 @@ class ReviewService {
 
 	ReviewService(PartnerApplicationRepository applications, ApplicationService applicationService,
 			ApplicationStepRepository steps, ApplicationDocumentRepository documents, PartnerAddressRepository addresses,
-			IdNumberRepository idNumbers, PhotoLocationRepository locations, ReviewActionRepository actions,
+			IdNumberRepository idNumbers, PhotoLocationRepository locations, TimelineEntryRepository timeline,
+			ReviewActionRepository actions,
 			ApplicationStateMachine stateMachine, VerificationApi verification, EligibilityApi eligibility,
 			DocumentApi documentApi, StaffDirectory staff, AuditLog audit, AuditTrail auditTrail, FieldCipher cipher,
 			Clock clock) {
@@ -113,6 +115,7 @@ class ReviewService {
 		this.addresses = addresses;
 		this.idNumbers = idNumbers;
 		this.locations = locations;
+		this.timeline = timeline;
 		this.actions = actions;
 		this.stateMachine = stateMachine;
 		this.verification = verification;
@@ -128,9 +131,13 @@ class ReviewService {
 	@Transactional(readOnly = true)
 	List<QueueItem> queue(Caller caller, String status, int page, int size) {
 		requireAnyRole(caller);
-		Set<ApplicationStatus> statuses = status == null || status.isBlank() ? QUEUE
-				: EnumSet.of(parse(ApplicationStatus.class, status, "status"));
-		return applications.findQueue(statuses, PageRequest.of(Math.max(0, page), Math.min(Math.max(1, size), 100)))
+		PageRequest paging = PageRequest.of(Math.max(0, page), Math.min(Math.max(1, size), 100));
+		// "BLOCKED": applications still with the applicant that need staff to follow up
+		List<PartnerApplication> found = "BLOCKED".equalsIgnoreCase(status)
+				? applications.findBlocked(EnumSet.of(ApplicationStatus.IN_PROGRESS, ApplicationStatus.CORRECTION_REQUIRED), paging)
+				: applications.findQueue(status == null || status.isBlank() ? QUEUE
+						: EnumSet.of(parse(ApplicationStatus.class, status, "status")), paging);
+		return found
 			.stream()
 			.map(a -> new QueueItem(a.getPublicId(), a.getStatus().name(), a.getMethod() == null ? null : a.getMethod().name(),
 					a.getSubmittedAt(), staffName(a.getAssignedStaffId()), blockers(a).size()))
@@ -168,6 +175,37 @@ class ReviewService {
 				assigned == null ? null : assigned.toString(),
 				eligibility.latestOutcome(id).name(), evidence, address, numbers, history, blockers(application),
 				photoLocation(id), CORRECTABLE.stream().sorted().map(Enum::name).toList());
+	}
+
+	/**
+	 * Gives a blocked step its tries back after staff followed up with the applicant (D5). Only while
+	 * the application is with the applicant; a new credit check is a new bureau enquiry, so only an
+	 * approver may unblock that one. The applicant's version changes, so an open page reloads.
+	 */
+	@Transactional
+	CaseView unblock(Caller caller, String publicId, String stepName, String reasonCode, String note) {
+		requireAnyRole(caller);
+		PartnerStep key = parse(PartnerStep.class, stepName, "step");
+		if (key == PartnerStep.CREDIT_CHECK) {
+			requireRole(caller, Role.APPROVER);
+		}
+		String reason = code(reasonCode);
+		PartnerApplication application = applications.lockByPublicIdAndBumpVersion(publicId).orElseThrow(ReviewService::notFound);
+		if (!application.getStatus().isEditableByApplicant()) {
+			throw new ApiProblem(HttpStatus.CONFLICT, "INVALID_STATE_TRANSITION", "Only an application with the applicant can be unblocked",
+					Map.of("current_status", application.getStatus().name()));
+		}
+		ApplicationStep step = steps.findByApplicationId(application.getId())
+			.stream()
+			.filter(s -> s.getStepKey() == key)
+			.findFirst()
+			.orElseThrow(() -> new NotFoundException("STEP_NOT_FOUND", "This application has no such step"));
+		Instant now = Instant.now(clock);
+		step.unblock(now);
+		timeline.save(new TimelineEntry(application.getId(), "STEP_UNBLOCKED", key, null, null, "STAFF", now));
+		record(application, caller, "UNBLOCK", null, reason, note, key.name());
+		applications.saveAndFlush(application);
+		return caseView(caller, publicId);
 	}
 
 	private PhotoLocationView photoLocation(UUID applicationId) {

@@ -189,7 +189,7 @@ class IdentitySteps {
 			if (step.getStatus() == StepStatus.BLOCKED) {
 				throw new ApiProblem(HttpStatus.LOCKED, "STEP_BLOCKED", "Too many failed attempts on this step. Please contact support.");
 			}
-			if (verification.alternateIdFailures(context.applicationId()).getOrDefault(type, 0L) >= properties.maxAttempts()) {
+			if (verification.alternateIdFailures(context.applicationId(), step.getUnblockedAt()).getOrDefault(type, 0L) >= properties.maxAttempts()) {
 				throw new ApiProblem(HttpStatus.CONFLICT, "ID_TYPE_EXHAUSTED",
 						"This document could not be verified. Try the other one.", Map.of("type", type.name()));
 			}

@@ -35,6 +35,18 @@ interface PartnerApplicationRepository extends JpaRepository<PartnerApplication,
 	@Query("select a from PartnerApplication a where a.publicId = :publicId")
 	Optional<PartnerApplication> lockByPublicId(@Param("publicId") String publicId);
 
+	/** For a staff change the applicant must see (unblocking a step): the row lock plus a new version. */
+	@Lock(LockModeType.PESSIMISTIC_FORCE_INCREMENT)
+	@Query("select a from PartnerApplication a where a.publicId = :publicId")
+	Optional<PartnerApplication> lockByPublicIdAndBumpVersion(@Param("publicId") String publicId);
+
+	/** Applications still with the applicant that have a step blocked after too many failures: staff follow up. */
+	@Query("select a from PartnerApplication a where a.status in :statuses and exists (select s.id from ApplicationStep s "
+			+ "where s.applicationId = a.id and s.status = in.eko.eloka.partner.onboarding.StepStatus.BLOCKED) "
+			+ "order by a.lastApplicantActivityAt desc")
+	List<PartnerApplication> findBlocked(@Param("statuses") Collection<ApplicationStatus> statuses,
+			org.springframework.data.domain.Pageable page);
+
 	/** The review queue, oldest submission first. */
 	@Query("select a from PartnerApplication a where a.status in :statuses order by a.submittedAt asc, a.createdAt asc")
 	List<PartnerApplication> findQueue(@Param("statuses") Collection<ApplicationStatus> statuses,

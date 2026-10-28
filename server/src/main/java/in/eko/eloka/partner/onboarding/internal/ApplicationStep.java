@@ -61,6 +61,10 @@ class ApplicationStep extends BaseEntity {
 	@Column(name = "data_hash", columnDefinition = "BINARY(32)")
 	private byte[] dataHash;
 
+	/** When staff last gave a blocked step its tries back; failures before it no longer count. */
+	@Column(name = "unblocked_at")
+	private Instant unblockedAt;
+
 	protected ApplicationStep() {
 	}
 
@@ -100,6 +104,21 @@ class ApplicationStep extends BaseEntity {
 		requireAttemptAllowed();
 		this.status = StepStatus.BLOCKED;
 		this.lastErrorCode = errorCode;
+	}
+
+	/** Staff give a blocked step its tries back (after following up with the applicant). */
+	void unblock(Instant now) {
+		if (status != StepStatus.BLOCKED) {
+			throw new ApiProblem(HttpStatus.CONFLICT, "STEP_NOT_BLOCKED", "This step is not blocked");
+		}
+		this.status = StepStatus.IN_PROGRESS;
+		this.attemptCount = 0;
+		this.lastErrorCode = null;
+		this.unblockedAt = now;
+	}
+
+	Instant getUnblockedAt() {
+		return unblockedAt;
 	}
 
 	/** Waiting for a provider (redirect, async check). */

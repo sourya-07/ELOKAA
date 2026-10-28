@@ -6,7 +6,8 @@ import { StaffShell } from "@/features/staff/StaffShell";
 import type { QueueItem } from "@/features/staff/types";
 import { call } from "@/lib/api";
 
-const FILTERS = ["", "SUBMITTED", "UNDER_REVIEW", "ON_HOLD", "CORRECTION_REQUIRED", "APPROVED", "REJECTED"];
+// "BLOCKED": applications still with the applicant that have a step blocked (staff follow up)
+const FILTERS = ["", "SUBMITTED", "UNDER_REVIEW", "ON_HOLD", "CORRECTION_REQUIRED", "BLOCKED", "APPROVED", "REJECTED"];
 
 /** Applications waiting for review, oldest first. */
 export default function QueuePage() {

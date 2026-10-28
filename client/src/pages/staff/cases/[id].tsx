@@ -48,6 +48,9 @@ export default function CasePage() {
 	const [reason, setReason] = useState(REASONS[0]);
 	const [correction, setCorrection] = useState<{ steps: string[]; message: string }>({ steps: [], message: "" });
 	const [reveal, setReveal] = useState<{ field: string; reason: string; value?: string }>({ field: "PAN", reason: "" });
+	// Approve and reject ask for a second click: they close the application
+	const [confirming, setConfirming] = useState<"approve" | "reject" | null>(null);
+	const [unblockNote, setUnblockNote] = useState("");
 	const { busy, error, run } = useAction();
 	const base = `/v1/admin/applications/${id}`;
 
@@ -147,6 +150,20 @@ export default function CasePage() {
 											</Flex>
 										</Flex>
 									)}
+									{view.photo_location && (
+										<Stack spacing={0} borderTop="1px solid" borderColor="border.hairline" pt={3}>
+											<Text fontWeight={600}>live photo location</Text>
+											<Text fontSize="sm" color="text.muted">
+												{view.photo_location.latitude.toFixed(5)}, {view.photo_location.longitude.toFixed(5)} · within about {view.photo_location.accuracy_m} m ·{" "}
+												{new Date(view.photo_location.captured_at).toLocaleString("en-IN")}
+											</Text>
+											{view.photo_location.flags && (
+												<Text fontSize="sm" color="status.warn.fg">
+													{view.photo_location.flags.split(",").map((f) => f.toLowerCase().replace(/_/g, " ")).join(", ")} (the browser&apos;s location: a sign, not proof)
+												</Text>
+											)}
+										</Stack>
+									)}
 									{Object.entries(view.id_numbers).map(([type, masked]) => (
 										<Text key={type} fontSize="sm">
 											{type.replace(/_/g, " ").toLowerCase()}: {masked}
@@ -166,6 +183,32 @@ export default function CasePage() {
 								</Panel>
 							</Stack>
 							<Stack spacing={6} minW={0}>
+								{["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(status) && view.application.steps.some((step) => step.status === "BLOCKED") && (
+									<Panel title="Blocked steps">
+										<Text fontSize="sm" color="text.muted">
+											Too many failed tries. Speak to the applicant first; unblocking gives the step its tries back.
+										</Text>
+										<Input size="sm" placeholder="What you agreed with the applicant" value={unblockNote} onChange={(event) => setUnblockNote(event.target.value)} aria-label="Note" />
+										{view.application.steps
+											.filter((step) => step.status === "BLOCKED")
+											.map((step) => (
+												<Flex key={step.step_key} justify="space-between" align="center" gap={3} wrap="wrap">
+													<Text fontSize="sm">
+														{step.step_key.toLowerCase().replace(/_/g, " ")} · {step.last_error_code?.toLowerCase().replace(/_/g, " ")}
+													</Text>
+													<Button
+														size="sm"
+														variant="outline"
+														isDisabled={step.step_key === "CREDIT_CHECK" && !approver}
+														title={step.step_key === "CREDIT_CHECK" && !approver ? "An approver unblocks the credit check (a new bureau enquiry)" : undefined}
+														onClick={() => act(`/steps/${step.step_key}/unblock`, { reason_code: "SPOKE_TO_APPLICANT", note: unblockNote || undefined })}
+													>
+														Unblock
+													</Button>
+												</Flex>
+											))}
+									</Panel>
+								)}
 								<Panel title="Actions">
 									{view.approval_blockers.length > 0 && (
 										<Box fontSize="sm" color="text.muted">
@@ -191,15 +234,32 @@ export default function CasePage() {
 												</Button>
 											</>
 										)}
-										{approver && status === "UNDER_REVIEW" && (
-											<Button size="sm" onClick={() => act("/approve", {})}>
+										{approver && status === "UNDER_REVIEW" && confirming !== "approve" && (
+											<Button size="sm" onClick={() => setConfirming("approve")}>
 												Approve
 											</Button>
 										)}
-										{approver && (status === "UNDER_REVIEW" || status === "ON_HOLD") && (
-											<Button size="sm" variant="outline" onClick={() => act("/reject", { reason_code: reason })}>
+										{approver && (status === "UNDER_REVIEW" || status === "ON_HOLD") && confirming !== "reject" && (
+											<Button size="sm" variant="outline" onClick={() => setConfirming("reject")}>
 												Reject
 											</Button>
+										)}
+										{confirming && (
+											<>
+												<Button
+													size="sm"
+													colorScheme={confirming === "reject" ? "red" : undefined}
+													onClick={() => {
+														setConfirming(null);
+														void act(confirming === "approve" ? "/approve" : "/reject", confirming === "approve" ? {} : { reason_code: reason });
+													}}
+												>
+													{confirming === "approve" ? "Yes, approve" : `Yes, reject (${reason.toLowerCase().replace(/_/g, " ")})`}
+												</Button>
+												<Button size="sm" variant="ghost" onClick={() => setConfirming(null)}>
+													Cancel
+												</Button>
+											</>
 										)}
 										{status === "UNDER_REVIEW" && (
 											<Button size="sm" variant="outline" onClick={() => act("/holds", { reason_code: "NEEDS_MORE_INFO" })}>

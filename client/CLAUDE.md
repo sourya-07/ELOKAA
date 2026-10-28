@@ -21,7 +21,7 @@ src/pages/            routes only: index, apply/* (journey: index = contact deta
 src/middleware.ts     per-request CSP nonce (pages render per request so the nonce is real)
 src/lib/              api.ts (fetch through the proxy, ApiError, uploadWithProgress (XHR, for upload progress)), documents.ts (kind labels), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
                       (PAGES: step → page#anchor, routeFor, safeNext for ?next= after sign-in), tasks.ts (step status →
-                      task state), milestones.ts (progress = finished parts, from server step
+                      task state), blockers.ts (submit blockers → sentence + fix link), milestones.ts (progress = finished parts, from server step
                       statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest; loads once per
                       session, never goes back to an older snapshot), guards, PanForm, SubmitStep, useDocuments,

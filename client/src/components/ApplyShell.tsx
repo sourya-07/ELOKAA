@@ -24,6 +24,9 @@ interface Props {
 /** Page frame of the applicant journey: brand bar, step counter and one focused column. */
 export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, mark, children }: Props) {
 	const heading = useRef<HTMLHeadingElement>(null);
+	const router = useRouter();
+	// Came here from "Fix" or "Change" on the review page: one click back
+	const backToReview = router?.query?.return === "review" && router.pathname !== "/apply/review";
 	useEffect(() => {
 		// After moving between pages, start screen readers and keyboards at the new page's title
 		if (navigated) {
@@ -58,6 +61,11 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 				{/* A new page (or a new part of one) enters in order instead of appearing all at once */}
 				<Stack spacing={6} sx={staggerChildren()}>
 					{progress && <Milestones states={milestonesOf(progress)} />}
+					{backToReview && (
+						<Text as={NextLink} href="/apply/review" fontSize="sm" color="text.link" alignSelf="flex-start">
+							← Back to review
+						</Text>
+					)}
 					{/* Its own box: the page's entrance moves the box, the mark animates inside it */}
 					{mark && <Box>{mark}</Box>}
 					<Stack spacing={2}>

@@ -101,6 +101,15 @@ class StaffReviewController {
 		return review.decideAddress(staff(), id, body.verified(), body.reasonCode());
 	}
 
+	record Unblock(@JsonProperty("reason_code") String reasonCode, String note) {
+	}
+
+	@PostMapping("/{id}/steps/{step}/unblock")
+	ReviewService.CaseView unblock(@PathVariable String id, @PathVariable String step,
+			@RequestBody(required = false) Unblock body) {
+		return review.unblock(staff(), id, step, body == null ? null : body.reasonCode(), body == null ? null : body.note());
+	}
+
 	@PostMapping("/{id}/corrections")
 	ReviewService.CaseView corrections(@PathVariable String id, @RequestBody CorrectionRequest body) {
 		return review.requestCorrection(staff(), id, body.steps(), body.reasonCode(), body.message(), body.dueInDays());

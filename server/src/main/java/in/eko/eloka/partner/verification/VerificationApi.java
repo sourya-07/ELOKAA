@@ -130,8 +130,8 @@ public interface VerificationApi {
 	 */
 	AlternateIdOutcome verifyAlternateId(UUID applicationId, AlternateType type, String number);
 
-	/** Failed record checks so far, per document type (outages are not counted). */
-	java.util.Map<AlternateType, Long> alternateIdFailures(UUID applicationId);
+	/** Failed record checks per document type since {@code since} (all when null); outages are not counted. */
+	java.util.Map<AlternateType, Long> alternateIdFailures(UUID applicationId, java.time.Instant since);
 
 	/** The document types verified for this application (the uploaded images must be of one of them). */
 	java.util.Set<AlternateType> verifiedAlternateIds(UUID applicationId);

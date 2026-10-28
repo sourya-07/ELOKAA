@@ -87,7 +87,8 @@ reveal hidden values). Roles are read from the account on every request. Applica
 | `POST /v1/admin/auth/google` | `{"id_token"}` | only verified accounts of `eloka.staff.google-domain` with a staff account; others `403 NOT_STAFF` |
 | `POST /v1/admin/auth/otp`, `/auth/otp/verify` | `{"mobile"}`, `{"mobile","otp"}` | local/test only (`404` elsewhere); unknown mobiles get no SMS and can never pass |
 | `POST /v1/admin/auth/refresh`, `DELETE /v1/admin/auth/session`, `GET /v1/admin/me` | | `me` returns roles and masked email |
-| `GET /v1/admin/applications?status=&page=&size=` | | queue (submitted, under review, on hold), oldest first |
+| `GET /v1/admin/applications?status=&page=&size=` | | queue (submitted, under review, on hold), oldest first; `status=BLOCKED`: applications still with the applicant that have a blocked step |
+| `POST /v1/admin/applications/{id}/steps/{step}/unblock` | `{"reason_code","note"?}` | gives a blocked step its tries back (failures before it stop counting); only while the application is with the applicant; `CREDIT_CHECK` needs an approver (a new bureau enquiry); the applicant's version changes; audited `REVIEW_UNBLOCK`. Errors: `409 STEP_NOT_BLOCKED`, `409 INVALID_STATE_TRANSITION`, `403`, `422` without a reason |
 | `GET /v1/admin/applications/{id}` | | case view: snapshot, evidence (masked), address (state, pincode, source, status), ID numbers (masked), eligibility outcome, review history, `approval_blockers`, `photo_location` (latitude, longitude, `accuracy_m`, `captured_at`, `flags` of the live photo), `correctable_steps` |
 | `POST …/{id}/claim`, `…/release` | | reviewer; release by the claimer only |
 | `POST …/{id}/documents/{documentId}/decision`, `…/verifications/{evidenceId}/decision`, `…/address/decision` | `{"verified", "reason_code"}` | claimer; a rejection needs a reason |

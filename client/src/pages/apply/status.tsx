@@ -7,7 +7,7 @@ import { SuccessMark } from "@/components/SuccessMark";
 import { useApplication } from "@/features/apply/ApplicationContext";
 import { WithdrawPanel } from "@/features/apply/WithdrawPanel";
 import { withApplication } from "@/features/apply/withApplication";
-import { routeFor } from "@/lib/steps";
+import { PAGES, routeFor } from "@/lib/steps";
 import type { ApplicationStatus } from "@/lib/types";
 
 const TEXT: Record<ApplicationStatus, { title: string; body: string }> = {
@@ -28,6 +28,11 @@ function StatusPage() {
 	const router = useRouter();
 	const text = TEXT[snapshot.status];
 	const reopened = snapshot.steps.filter((s) => s.status === "REOPENED" && s.reviewer_message);
+	const stepTitle = (key: string) => PAGES.find((p) => p.step === key)?.title ?? key.toLowerCase().replace(/_/g, " ");
+	const date = (value: string | null) =>
+		value ? new Date(value).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : null;
+	const submitted = date(snapshot.submitted_at);
+	const correctionDue = snapshot.status === "CORRECTION_REQUIRED" ? date(snapshot.expires_at) : null;
 	return (
 		<ApplyShell
 			signedIn
@@ -40,13 +45,24 @@ function StatusPage() {
 					<Text color="text.muted">Application {snapshot.application_id}</Text>
 					<StatusPill status={snapshot.status === "CORRECTION_REQUIRED" ? "REOPENED" : snapshot.status} />
 				</Stack>
+				{submitted && <Text color="text.muted">Submitted on {submitted}</Text>}
+				{correctionDue && <Text>Please make the changes by {correctionDue}, or the application will expire.</Text>}
 				{reopened.map((step) => (
 					<Stack key={step.step_key} spacing={1}>
-						<Text fontWeight={600}>{step.step_key.toLowerCase().replace(/_/g, " ")}</Text>
+						<Text fontWeight={600}>{stepTitle(step.step_key)}</Text>
 						<Text>{step.reviewer_message}</Text>
 					</Stack>
 				))}
 			</Section>
+			{["SUBMITTED", "UNDER_REVIEW", "ON_HOLD"].includes(snapshot.status) && (
+				<Section label="What happens next">
+					<Stack as="ol" spacing={2} pl={5} sx={{ listStyleType: "decimal" }}>
+						<Text as="li">A reviewer checks your details and documents.</Text>
+						<Text as="li">A second person in our team approves it (two people always look at an application).</Text>
+						<Text as="li">We tell you the outcome on your mobile and email. If something needs a change, you will see it here.</Text>
+					</Stack>
+				</Section>
+			)}
 			{["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status) && (
 				<Button onClick={() => router.push(routeFor(snapshot))}>Continue</Button>
 			)}

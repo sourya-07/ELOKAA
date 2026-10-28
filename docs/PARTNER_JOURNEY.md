@@ -111,3 +111,16 @@ Re-doing a step **with different data** resets later steps that depend on it (ea
 ## Eligibility
 
 See ADR-0005. `ELIGIBLE` only for a verified score of 700 or more. `UNABLE_TO_ASSESS` is retried at most 3 times, then the step is `BLOCKED` until staff act. It never counts as eligible.
+
+## Blocked steps
+
+A step that used up its tries (PAN, DigiLocker, credit check, voter ID / driving licence, under 18) is `BLOCKED`.
+Staff find these applications in the queue under "Blocked", speak to the applicant, and unblock the step with a
+reason (`POST …/steps/{step}/unblock`): its tries start again. Unblocking the credit check is a new bureau
+enquiry, so only an approver can. An under-18 block should not be unblocked until the person is 18.
+
+## Review page
+
+Before submitting, the applicant sees what still stops submission (the snapshot's `submit_blockers`), each with
+a link to the part to fix; links and "Change" carry `?return=review`, and those pages offer "Back to review".
+Submitting asks for confirmation once, then sends one request.

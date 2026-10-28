@@ -97,6 +97,11 @@ manager, never next to the backups.
 
 `ELOKA_ENV_FILE=.env.<environment> deploy/restore.sh <backup-dir> <STAMP>` replaces the database and the uploads (it asks first).
 
+## Blocked applications
+
+Staff console → queue → "Blocked": applications still being filled in with a step blocked after too many
+failed tries. Contact the applicant, then "Unblock" on the case page (the credit check needs an approver).
+
 ## Logs and health
 
 - `docker compose … logs -f server`: JSON (ECS) lines with `request_id`, personal data masked.

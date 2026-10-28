@@ -1,84 +1,191 @@
-import { Button, Checkbox, Flex, Link, Stack, Text } from "@chakra-ui/react";
+import {
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogContent,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogOverlay,
+	Box,
+	Button,
+	Checkbox,
+	Flex,
+	Heading,
+	Link,
+	ListItem,
+	Stack,
+	Text,
+	UnorderedList,
+	useDisclosure,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ApplyShell, Section } from "@/components/ApplyShell";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { StatusPill } from "@/components/StatusPill";
 import { useApplication, useStepGuard } from "@/features/apply/ApplicationContext";
 import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
+import { describeBlocker } from "@/lib/blockers";
 import { DECLARATION_VERSION } from "@/lib/consent";
+import { MILESTONES } from "@/lib/milestones";
 import { PAGES } from "@/lib/steps";
+import { canChange } from "@/lib/tasks";
 import { isDone } from "@/lib/types";
 
 const SUMMARY: Record<string, (s: Record<string, unknown>) => string> = {
 	EMAIL_VERIFICATION: (s) => `Mobile verified, email ${s.email_masked ?? ""}`,
-	AADHAAR: (s) => `Aadhaar ${s.aadhaar_masked ?? ""}`,
+	AADHAAR: (s) => `Aadhaar ${s.aadhaar_masked ?? ""} from DigiLocker`,
+	HOME_ADDRESS: (s) => `${s.state ?? ""} ${s.pincode ?? ""}${s.source === "DIGILOCKER" ? " (from DigiLocker)" : ""}`,
 	PAN: (s) => `PAN ${s.pan_masked ?? ""}`,
-	CREDIT_CHECK: () => "Eligible",
-	HOME_ADDRESS: (s) => `${s.state ?? ""} ${s.pincode ?? ""}`,
-	PHOTOS: () => "Live photo and passport-size photo",
+	CREDIT_CHECK: () => "Eligible: CIBIL score meets 700",
 	ALTERNATE_ID: (s) => `${s.type === "DRIVING_LICENCE" ? "Driving licence" : "Voter ID"} ${s.number_masked ?? ""}`,
+	PHOTOS: () => "Live photo (with location) and passport-size photo",
 	KYC_DOCUMENTS: (s) => `Aadhaar front and back, PAN card, ${s.id_document === "DRIVING_LICENCE" ? "driving licence" : "voter ID"}`,
 	EDUCATION: (s) =>
 		`Class 10 and 12 marksheets, ${s.degree === "DIPLOMA" ? "diploma" : "graduation"} certificate${Number(s.computer_certificates) ? `, ${s.computer_certificates} computer certificate(s)` : ""}`,
 };
 
-/** Review everything, accept the declaration and submit (once, even on a double click). */
+/**
+ * Everything at a glance before submitting: what still stops submission comes first, each with a
+ * link to fix it (which brings the applicant back here); then every part, grouped as the progress
+ * line names them. Submitting asks once more, then sends one request (a repeat replays it).
+ */
 function ReviewPage() {
 	const { snapshot, write } = useApplication();
 	const router = useRouter();
-	useStepGuard((s) => ["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(s.status) && (s.next_step === "DECLARATION" || s.next_step === null));
+	useStepGuard((s) => ["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(s.status));
 	const [agreed, setAgreed] = useState(false);
+	const confirm = useDisclosure();
+	const cancel = useRef<HTMLButtonElement>(null);
 	const { busy, error, setError, run } = useAction();
+	const declarationDone = isDone(snapshot.steps.find((s) => s.step_key === "DECLARATION"));
+	const blockers = (snapshot.submit_blockers ?? []).filter((b) => b.step_key !== "DECLARATION");
 
-	const submit = async () => {
-		if (!agreed) {
+	const ask = () => {
+		if (!agreed && !declarationDone) {
 			setError("Confirm the declaration to submit");
 			return;
 		}
-		await run(async () => {
-			if (!isDone(snapshot.steps.find((s) => s.step_key === "DECLARATION"))) {
+		setError(null);
+		confirm.onOpen();
+	};
+
+	const submit = () =>
+		run(async () => {
+			if (!declarationDone) {
 				await write("/declaration", { body: { version: DECLARATION_VERSION, accepted: true } });
 			}
 			await write("/submit", { idempotent: true });
+			confirm.onClose();
 			await router.push("/apply/status");
 		});
-	};
 
-	const pages = PAGES.filter((p) => p.step !== "DECLARATION");
 	return (
 		<ApplyShell title="Review your application" subtitle="Check your details before you submit." progress={snapshot}>
-			<Section>
-				{pages.map((page) => {
-					const step = snapshot.steps.find((s) => s.step_key === page.step);
-					const text = step?.summary ? SUMMARY[page.step]?.(step.summary) : undefined;
-					return (
-						<Flex key={page.path} justify="space-between" align="center" gap={3} wrap="wrap" borderBottom="1px solid" borderColor="border.hairline" pb={3}>
-							<Stack spacing={0} minW={0}>
-								<Text fontWeight={600}>{page.title}</Text>
-								{text && <Text color="text.muted" fontSize="sm">{text}</Text>}
-							</Stack>
-							<Flex gap={3} align="center">
-								{step && <StatusPill status={step.status} />}
-								{page.step !== "CREDIT_CHECK" && step?.status !== "LOCKED" && (
-									<Link as={NextLink} href={page.path} color="text.link" fontSize="sm">
-										Edit
+			{blockers.length > 0 && (
+				<Section label="Still to do before you can submit">
+					<UnorderedList spacing={2} pl={1}>
+						{blockers.map((blocker) => {
+							const item = describeBlocker(blocker);
+							return (
+								<ListItem key={`${blocker.step_key}-${blocker.group ?? blocker.code}`}>
+									<Text as="span" fontWeight={600}>
+										{item.title}:
+									</Text>{" "}
+									{item.text}{" "}
+									<Link as={NextLink} href={item.href} color="text.link">
+										Fix
 									</Link>
-								)}
-							</Flex>
-						</Flex>
-					);
-				})}
-			</Section>
-			<Checkbox isChecked={agreed} onChange={(event) => setAgreed(event.target.checked)} alignItems="flex-start">
-				I declare that the information I have given is true and complete.
-			</Checkbox>
+								</ListItem>
+							);
+						})}
+					</UnorderedList>
+				</Section>
+			)}
+
+			{MILESTONES.filter((m) => m.key !== "REVIEW").map((milestone) => {
+				const pages = PAGES.filter((p) => milestone.steps.includes(p.step) && p.step !== "DECLARATION");
+				return (
+					<Section key={milestone.key} label={milestone.label}>
+						{pages.map((page) => {
+							const step = snapshot.steps.find((s) => s.step_key === page.step);
+							if (!step) {
+								return null;
+							}
+							const text = step.summary ? SUMMARY[page.step]?.(step.summary) : undefined;
+							const editable = page.step !== "CREDIT_CHECK" && canChange(snapshot, page.step);
+							return (
+								<Flex key={page.path} justify="space-between" align="center" gap={3} wrap="wrap">
+									<Stack spacing={0} minW={0}>
+										<Text fontWeight={600}>{page.title}</Text>
+										{text && (
+											<Text color="text.muted" fontSize="sm" fontFamily={/\*{2,}|X{4}/.test(text) ? "mono" : undefined}>
+												{text}
+											</Text>
+										)}
+										{step.reviewer_message && (
+											<Text fontSize="sm" color="status.warn.fg">
+												Our team: {step.reviewer_message}
+											</Text>
+										)}
+									</Stack>
+									<Flex gap={3} align="center">
+										<StatusPill status={step.status} />
+										{editable && (
+											<Link as={NextLink} href={`${page.path.split("#")[0]}?return=review`} color="text.link" fontSize="sm">
+												Change
+											</Link>
+										)}
+									</Flex>
+								</Flex>
+							);
+						})}
+					</Section>
+				);
+			})}
+
+			<Box>
+				<Checkbox isChecked={agreed || declarationDone} isDisabled={declarationDone} onChange={(event) => setAgreed(event.target.checked)} alignItems="flex-start">
+					I declare that the information I have given is true and complete.
+				</Checkbox>
+			</Box>
 			<ErrorBanner message={error} />
-			<Button onClick={submit} isLoading={busy} loadingText="Submitting">
+			<Button onClick={ask} isDisabled={blockers.length > 0} alignSelf="flex-start">
 				Submit application
 			</Button>
+			{blockers.length > 0 && (
+				<Text fontSize="sm" color="text.muted">
+					You can submit once everything above is done.
+				</Text>
+			)}
+
+			<AlertDialog isOpen={confirm.isOpen} leastDestructiveRef={cancel} onClose={confirm.onClose}>
+				<AlertDialogOverlay>
+					<AlertDialogContent mx={4}>
+						<AlertDialogHeader>
+							<Heading as="h2" size="md">
+								Submit your application?
+							</Heading>
+						</AlertDialogHeader>
+						<AlertDialogBody>
+							<Stack spacing={2}>
+								<Text>After you submit, you cannot change your details unless our team asks you to.</Text>
+								<Text color="text.muted">Two people in our team review every application. We will contact you on your mobile and email.</Text>
+								<ErrorBanner message={error} />
+							</Stack>
+						</AlertDialogBody>
+						<AlertDialogFooter gap={3}>
+							<Button ref={cancel} variant="outline" onClick={confirm.onClose} isDisabled={busy}>
+								Not yet
+							</Button>
+							<Button onClick={submit} isLoading={busy} loadingText="Submitting">
+								Submit
+							</Button>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialogOverlay>
+			</AlertDialog>
 		</ApplyShell>
 	);
 }

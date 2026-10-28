@@ -46,7 +46,8 @@ src/main/java/in/eko/eloka/partner/
 │             encrypted values + masked copies + PAN blind index
 ├── eligibility/ EligibilityPolicy (MIN_SCORE = 700, a constant), credit assessments (score only, never the report)
    (onboarding/internal also has IdentitySteps, EligibilityStep, DocumentSteps, StepController, and staff review:
-    ReviewService (claim, evidence decisions, corrections, maker-checker approve, reject, hold, PII reveal),
+    ReviewService (claim, evidence decisions, corrections, maker-checker approve, reject, hold, PII reveal,
+    unblocking a blocked step, the Blocked queue),
     StaffReviewController /v1/admin/applications; review lives here because it changes application and step state)
    identity/ also holds staff accounts (StaffUser, roles REVIEWER/APPROVER), StaffAuthController (Google; OTP
     local/test only), LocalStaffSeed (local/test)

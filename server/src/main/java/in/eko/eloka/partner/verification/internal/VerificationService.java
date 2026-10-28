@@ -219,9 +219,12 @@ class VerificationService implements VerificationApi {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Map<AlternateType, Long> alternateIdFailures(UUID applicationId) {
+	public Map<AlternateType, Long> alternateIdFailures(UUID applicationId, Instant since) {
 		Map<AlternateType, Long> failures = new EnumMap<>(AlternateType.class);
 		for (Verification v : verifications.findByApplicationIdOrderByCreatedAtDesc(applicationId)) {
+			if (since != null && v.getCreatedAt().isBefore(since)) {
+				continue;
+			}
 			if (v.getStatus() == EvidenceStatus.VERIFICATION_FAILED
 					&& (v.getKind() == Kind.VOTER_ID || v.getKind() == Kind.DRIVING_LICENCE)) {
 				failures.merge(AlternateType.valueOf(v.getKind().name()), 1L, Long::sum);
