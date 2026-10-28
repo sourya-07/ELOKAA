@@ -1,4 +1,5 @@
 import { Badge } from "@chakra-ui/react";
+import { useTurnedOn } from "@/styles/motion";
 
 const TONES: Record<string, { bg: string; color: string; label: string }> = {
 	VERIFIED: { bg: "status.ok.bg", color: "status.ok.fg", label: "Verified" },
@@ -24,10 +25,12 @@ const APPLICANT: Record<string, { bg: string; color: string; label: string }> = 
 
 /** A status as a pill: words, not only colour. Staff see review states; applicants see their own words. */
 export function StatusPill({ status, forApplicant }: { status: string; forApplicant?: boolean }) {
+	const turned = useTurnedOn(status === "VERIFIED" || status === "COMPLETED");
 	const tone = (forApplicant ? APPLICANT[status] : undefined) ?? TONES[status] ?? { bg: "bg.subtle", color: "text.muted", label: status.toLowerCase().replace(/_/g, " ") };
 	return (
-		// keyed by status: in the journey a change (waiting → verified) fades in (journeyFeedback); staff see no motion
-		<Badge key={status} className="status-pill" bg={tone.bg} color={tone.color} borderRadius="full" px={2.5} py={0.5} textTransform="none" fontWeight={500}>
+		// keyed by status: in the journey a change fades in, and one to verified or done grows in a
+		// little (journeyFeedback); staff see no motion
+		<Badge key={status} className="status-pill" data-turned={turned ? "ok" : undefined} bg={tone.bg} color={tone.color} borderRadius="full" px={2.5} py={0.5} textTransform="none" fontWeight={500}>
 			{tone.label}
 		</Badge>
 	);

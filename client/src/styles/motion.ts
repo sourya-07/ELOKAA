@@ -1,5 +1,6 @@
 import type { SystemStyleObject } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Motion for the applicant journey (DESIGN.md: restrained, motion only explains a change of state).
@@ -19,6 +20,10 @@ const rise = keyframes`
 const fade = keyframes`
 	from { opacity: 0; }
 	to { opacity: 1; }
+`;
+const pop = keyframes`
+	from { opacity: 0; transform: scale(0.92); }
+	to { opacity: 1; transform: none; }
 `;
 
 export const REDUCED_MOTION = "@media (prefers-reduced-motion: reduce)";
@@ -41,7 +46,80 @@ export function staggerChildren(): SystemStyleObject {
 		style[`& > *:nth-child(${n})`] = { animationDelay: `${(n - 1) * 50}ms` };
 	}
 	style["& > *:nth-child(n+7)"] = { animationDelay: "250ms" };
-	return style;
+	// Last, so a child that was waiting below the screen rises without the stagger's delay
+	return { ...style, ...revealChildren };
+}
+
+/**
+ * The two states `useRevealOnScroll` gives a child: waiting below the screen (hidden, still in the
+ * layout and readable by screen readers) and revealed (rises in, or fades under reduced motion).
+ * `staggerChildren()` includes it; put it on any other container that uses the hook.
+ */
+export const revealChildren: SystemStyleObject = {
+	"& > [data-reveal=wait]": { opacity: 0, animation: "none" },
+	"& > [data-reveal=in]": enter(0, 300),
+	"@media print": { "& > [data-reveal=wait]": { opacity: 1 } },
+};
+
+/**
+ * Long pages: children that start below the screen wait, hidden, and rise in once when they are
+ * scrolled to (40 px above the bottom edge). Nothing runs while scrolling: an IntersectionObserver
+ * says when a child arrives, and the motion is transform and opacity only, so scrolling never lags.
+ * What is on screen when the page loads keeps the page's own entrance. Children added later (a
+ * task that appears, a list that loads) are looked at after each render. Without
+ * IntersectionObserver everything simply shows. Pair with `staggerChildren()` or `revealChildren`.
+ */
+export function useRevealOnScroll<T extends HTMLElement>() {
+	const ref = useRef<T>(null);
+	const observer = useRef<IntersectionObserver | null>(null);
+	const seen = useRef(new WeakSet<Element>());
+
+	useEffect(() => {
+		if (typeof IntersectionObserver === "undefined") {
+			return;
+		}
+		// A fresh start (React may mount twice in development): every child is looked at again
+		seen.current = new WeakSet();
+		const watcher = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.setAttribute("data-reveal", "in");
+						watcher.unobserve(entry.target);
+					}
+				}
+			},
+			// A fixed 40 px, not a share of the window: on a tall screen a share could keep the last
+			// part of a page (above only its bottom padding) from ever arriving
+			{ rootMargin: "0px 0px -40px 0px" },
+		);
+		observer.current = watcher;
+		return () => watcher.disconnect();
+	}, []);
+
+	useEffect(() => {
+		const container = ref.current;
+		const watcher = observer.current;
+		if (!container || !watcher) {
+			return;
+		}
+		for (const child of Array.from(container.children)) {
+			if (seen.current.has(child)) {
+				continue;
+			}
+			seen.current.add(child);
+			// + 8 px: the page's entrance may still hold the child 8 px low; a sliver on screen stays
+			if (child.getBoundingClientRect().top > window.innerHeight + 8) {
+				child.setAttribute("data-reveal", "wait");
+				watcher.observe(child);
+			} else if (child.getAttribute("data-reveal") === "wait") {
+				// Marked on an earlier pass (a development double mount) but on screen now: never left hidden
+				child.removeAttribute("data-reveal");
+			}
+		}
+	});
+
+	return ref;
 }
 
 /**
@@ -63,6 +141,8 @@ export const journeyFeedback: SystemStyleObject = {
 	"& [role=alert]": enter(0, 200),
 	// A status that changes (waiting → verified) fades in where it is: opacity only, 150 ms
 	"& .status-pill": { animation: `${fade} 150ms ${EASE_OUT} both` },
+	// A status that has just turned to done or verified grows in a little (after the fade above, so it wins)
+	"& [data-turned=ok]": { animation: `${pop} 200ms ${EASE_OUT} both` },
 	// A photo just taken or a preview appears softly instead of popping in
 	"& .camera-preview": { animation: `${fade} 200ms ${EASE_OUT} both` },
 	"& .chakra-button": {
@@ -72,10 +152,29 @@ export const journeyFeedback: SystemStyleObject = {
 	},
 	[PRESSED]: { transform: "scale(0.97)" },
 	// Same selector, so it wins by coming later
-	[REDUCED_MOTION]: { [PRESSED]: { transform: "none" }, "& .status-pill, & .camera-preview": { animation: "none" } },
+	[REDUCED_MOTION]: {
+		[PRESSED]: { transform: "none" },
+		"& .status-pill, & .camera-preview": { animation: "none" },
+		"& [data-turned=ok]": { animation: `${fade} 150ms ease both` },
+	},
 };
 
 /** Reads the reduced-motion setting for animations started from script. */
 export function prefersReducedMotion(): boolean {
 	return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+}
+
+/**
+ * True from the render where `now` turns true until it turns false again; false on the first
+ * render, so a page that loads with something already done or open does not animate it. Drives
+ * one-off motion such as a status turning to done or a task panel opening.
+ */
+export function useTurnedOn(now: boolean): boolean {
+	const [before, setBefore] = useState(now);
+	const [turned, setTurned] = useState(false);
+	if (now !== before) {
+		setBefore(now);
+		setTurned(now);
+	}
+	return turned;
 }

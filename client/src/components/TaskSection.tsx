@@ -1,5 +1,6 @@
 import { Box, Button, Collapse, Flex, Heading, Stack, Text, usePrefersReducedMotion } from "@chakra-ui/react";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
+import { enter, useTurnedOn } from "@/styles/motion";
 
 export type TaskState = "done" | "current" | "todo" | "locked" | "blocked" | "attention";
 
@@ -48,9 +49,14 @@ export function TaskSection({ id, title, state, summary, lockedReason, canChange
 		wasOpen.current = open;
 	}, [open]);
 
+	// Only a change animates: a panel opened (by the applicant or because the server moved on) rises
+	// into place, and a mark that turns to "Done" grows in; nothing moves on the first render
+	const opened = useTurnedOn(open);
+	const finished = useTurnedOn(state === "done");
+
 	const mark = MARK[state];
 	const body = (
-		<Box id={bodyId} pt={4}>
+		<Box id={bodyId} pt={4} sx={opened ? enter(0, 200) : undefined}>
 			<Stack spacing={4}>{children}</Stack>
 		</Box>
 	);
@@ -70,7 +76,7 @@ export function TaskSection({ id, title, state, summary, lockedReason, canChange
 					{title}
 				</Heading>
 				<Flex align="center" gap={3} flexShrink={0}>
-					<Text as="span" role="status" fontSize="xs" fontWeight={600} px={2} py={0.5} borderRadius="full" color={mark.color} bg={mark.bg}>
+					<Text as="span" role="status" data-turned={finished ? "ok" : undefined} fontSize="xs" fontWeight={600} px={2} py={0.5} borderRadius="full" color={mark.color} bg={mark.bg}>
 						{mark.label}
 					</Text>
 					{state === "done" && canChange && (

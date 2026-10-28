@@ -7,7 +7,7 @@ import { useApplicationSession } from "@/features/apply/ApplicationContext";
 import { call } from "@/lib/api";
 import { milestonesOf, type MilestoneState } from "@/lib/milestones";
 import type { Snapshot } from "@/lib/types";
-import { EASE_OUT, prefersReducedMotion, journeyFeedback, staggerChildren } from "@/styles/motion";
+import { EASE_OUT, prefersReducedMotion, journeyFeedback, staggerChildren, useRevealOnScroll } from "@/styles/motion";
 
 interface Props {
 	title: string;
@@ -24,6 +24,7 @@ interface Props {
 /** Page frame of the applicant journey: brand bar, step counter and one focused column. */
 export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, mark, children }: Props) {
 	const heading = useRef<HTMLHeadingElement>(null);
+	const reveal = useRevealOnScroll<HTMLDivElement>();
 	const router = useRouter();
 	// Came here from "Fix" or "Change" on the review page: one click back
 	const backToReview = router?.query?.return === "review" && router.pathname !== "/apply/review";
@@ -74,8 +75,9 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 				</Container>
 			</Box>
 			<Container as="main" id="main" maxW="720px" py={{ base: 6, md: 10 }} sx={journeyFeedback}>
-				{/* A new page (or a new part of one) enters in order instead of appearing all at once */}
-				<Stack spacing={6} sx={staggerChildren()}>
+				{/* A new page (or a new part of one) enters in order instead of appearing all at once; what
+				    starts below the screen rises in when scrolled to */}
+				<Stack ref={reveal} spacing={6} sx={staggerChildren()}>
 					{progress && <Milestones states={milestonesOf(progress)} />}
 					{backToReview && (
 						<Text as={NextLink} href="/apply/review" fontSize="sm" color="text.link" alignSelf="flex-start">

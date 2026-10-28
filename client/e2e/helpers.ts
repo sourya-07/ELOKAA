@@ -33,6 +33,24 @@ export async function jpeg(page: Page, width = 800, height = 600): Promise<{ nam
 	return { name: `file-${Date.now()}.jpg`, mimeType: "image/jpeg", buffer: Buffer.from(base64, "base64") };
 }
 
+/**
+ * A full-page screenshot as a reader would see it: parts below the screen rise in only when
+ * scrolled to (useRevealOnScroll), so scroll through the page once first.
+ */
+export async function screenshotWholePage(page: Page, path: string) {
+	await page.evaluate(async () => {
+		// A third of the screen at a time, pausing so each part is seen arriving (a jump straight past
+		// a part leaves it waiting until it is scrolled back to, as for a reader)
+		for (let y = 0; y < document.documentElement.scrollHeight; y += window.innerHeight / 3) {
+			window.scrollTo(0, y);
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+		window.scrollTo(0, 0);
+	});
+	await page.waitForFunction(() => !document.querySelector("[data-reveal=wait]") && document.getAnimations().every((animation) => animation.playState !== "running"), undefined, { polling: 100, timeout: 10_000 });
+	await page.screenshot({ path, fullPage: true });
+}
+
 /** No serious or critical accessibility problems on the page as it is now. */
 export async function expectAccessible(page: Page) {
 	// Let entrance animations finish: text caught mid-fade would read as low contrast

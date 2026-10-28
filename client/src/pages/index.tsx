@@ -1,7 +1,7 @@
 import { Box, Button, Container, Heading, List, ListItem, OrderedList, Stack, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import { staggerChildren } from "@/styles/motion";
+import { revealChildren, staggerChildren, useRevealOnScroll } from "@/styles/motion";
 
 /** One part of the application, as the progress line names it. */
 const PARTS = [
@@ -24,13 +24,17 @@ const PARTS = [
  * application asks for, and the way in.
  */
 export default function Home() {
+	// The page's parts, and the items of its two lists, rise in as they are scrolled to
+	const page = useRevealOnScroll<HTMLDivElement>();
+	const parts = useRevealOnScroll<HTMLOListElement>();
+	const ready = useRevealOnScroll<HTMLUListElement>();
 	return (
 		<>
 			<Head>
 				<title>Become an ELOKA partner</title>
 			</Head>
 			<Container as="main" maxW="640px" py={{ base: 10, md: 16 }}>
-				<Stack spacing={8} sx={staggerChildren()}>
+				<Stack ref={page} spacing={8} sx={staggerChildren()}>
 					<Stack spacing={3}>
 						<Heading as="h1" size="xl" letterSpacing="-0.02em">
 							Become an ELOKA partner
@@ -56,15 +60,11 @@ export default function Home() {
 						</List>
 					</Box>
 
-					<Button as={NextLink} href="/apply" alignSelf="flex-start">
-						Start your application
-					</Button>
-
 					<Stack as="section" aria-labelledby="how" spacing={3}>
 						<Heading as="h2" size="sm" id="how">
 							How it works
 						</Heading>
-						<OrderedList spacing={3} pl={5}>
+						<OrderedList ref={parts} spacing={3} pl={5} sx={revealChildren}>
 							{PARTS.map((part) => (
 								<ListItem key={part.title}>
 									<Text as="span" fontWeight={600}>
@@ -82,7 +82,7 @@ export default function Home() {
 						<Heading as="h2" size="sm" id="ready">
 							Keep these ready
 						</Heading>
-						<List spacing={2} styleType="disc" pl={5}>
+						<List ref={ready} spacing={2} styleType="disc" pl={5} sx={revealChildren}>
 							<ListItem>Your phone, with the mobile number you will use, and your email</ListItem>
 							<ListItem>The mobile number linked to your Aadhaar (for DigiLocker), and your PAN</ListItem>
 							<ListItem>Your Aadhaar card, voter ID or driving licence, to photograph or scan both sides</ListItem>

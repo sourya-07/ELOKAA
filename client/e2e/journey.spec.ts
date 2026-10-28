@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { contactDetails, expectAccessible, identityToEligibility, jpeg, newApplicant } from "./helpers";
+import { contactDetails, expectAccessible, identityToEligibility, jpeg, newApplicant, screenshotWholePage } from "./helpers";
 
 test("an eligible applicant goes from the start page to a submitted application", async ({ page }) => {
 	const applicant = newApplicant("4321");
 	await page.goto("/");
 	await expect(page.getByText("Your CIBIL credit score is 700 or more.")).toBeVisible();
 	await expectAccessible(page);
-	await page.screenshot({ path: "e2e/.results/screens/01-start.png", fullPage: true });
+	await screenshotWholePage(page, "e2e/.results/screens/01-start.png");
 
 	await contactDetails(page, applicant);
 	await expectAccessible(page);
@@ -15,7 +15,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await page.getByRole("radio", { name: "Voter ID" }).check({ force: true }); // Chakra draws its own box over the input
 	await page.getByLabel("Voter ID (EPIC) number").fill(applicant.epic);
 	await page.getByRole("button", { name: "Verify", exact: true }).click();
-	await page.screenshot({ path: "e2e/.results/screens/02-identity.png", fullPage: true });
+	await screenshotWholePage(page, "e2e/.results/screens/02-identity.png");
 	await page.getByRole("button", { name: "Continue" }).click();
 
 	// Photos: the live one with the camera and the location, then the passport one
@@ -28,7 +28,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await page.locator("input[type=file]:not([capture])").setInputFiles(await jpeg(page, 600, 750));
 	await expect(page.getByText("Uploaded")).toBeVisible();
 	await expectAccessible(page);
-	await page.screenshot({ path: "e2e/.results/screens/03-photos.png", fullPage: true });
+	await screenshotWholePage(page, "e2e/.results/screens/03-photos.png");
 	await page.getByRole("button", { name: "Save and continue" }).click();
 
 	// Documents: identity and education
@@ -40,7 +40,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 		await expect(slot.getByText("Uploaded")).toBeVisible();
 	}
 	await expectAccessible(page);
-	await page.screenshot({ path: "e2e/.results/screens/04-documents.png", fullPage: true });
+	await screenshotWholePage(page, "e2e/.results/screens/04-documents.png");
 	await page.getByRole("button", { name: "Save and continue" }).click();
 
 	// Review and submit
@@ -55,7 +55,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await expect(page.getByText("What happens next")).toBeVisible();
 	expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 	await expectAccessible(page);
-	await page.screenshot({ path: "e2e/.results/screens/06-submitted.png", fullPage: true });
+	await screenshotWholePage(page, "e2e/.results/screens/06-submitted.png");
 });
 
 test("a CIBIL score below 700 ends the application respectfully", async ({ page }) => {

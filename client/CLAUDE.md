@@ -68,6 +68,10 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
 - Motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
   (the success tick is the one exception), and a fade-only version under `prefers-reduced-motion`. What
   moves: journey pages enter in order, a finished part of the progress line fills in, task panels open and fold
-  (Chakra Collapse; instant under reduced motion), journey buttons give 0.97 on press, errors, uploaded files,
-  a changed status pill and a camera preview fade in, loading spinners appear only after 400 ms, and a tick draws
-  on "submitted"/"approved". The staff console does not animate (used all day). No looping motion on forms.
+  (Chakra Collapse; instant under reduced motion) and an opened panel's content rises 8 px, journey buttons give
+  0.97 on press, errors, uploaded files, a changed status pill and a camera preview fade in, a status or task mark
+  that turns to verified or done grows in from 0.92 (`useTurnedOn`: never on first render; fade only under reduced
+  motion), loading spinners appear only after 400 ms, and a tick draws
+  on "submitted"/"approved". Scrolling: what starts below the screen waits hidden and rises in once when
+  scrolled to (`useRevealOnScroll` + `staggerChildren()` or `revealChildren`; an IntersectionObserver, nothing
+  runs while scrolling). ApplyShell and the start page have it; give it to any new long page or list. The staff console does not animate (used all day). No looping motion on forms.
