@@ -35,7 +35,7 @@ ELOKAA/
 | Server locally | `make server-run` → <http://localhost:8091/actuator/health> |
 | Both images | `make images` |
 | Load test (server running) | `make load-test` |
-| Production stack | [`docs/deploy/RUNBOOK.md`](docs/deploy/RUNBOOK.md) |
+| Staging / production / test stack | `docker compose -f deploy/docker-compose.yml --env-file deploy/.env.<staging\|production\|test> up -d --wait` ([`docs/deploy/RUNBOOK.md`](docs/deploy/RUNBOOK.md)) |
 
 The development Mac has 8 GB RAM: run one heavy job at a time (Gradle, Jest, `next build`, Docker builds, k6). The Makefile targets already limit memory. Gradle needs a JDK 17+ to start: `export JAVA_HOME=/opt/homebrew/opt/openjdk`.
 

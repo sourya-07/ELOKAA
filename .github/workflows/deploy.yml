@@ -68,6 +68,7 @@ jobs:
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           DEPLOY_DIR: ${{ vars.DEPLOY_DIR }}
           SITE: ${{ vars.SITE_URL }}
+          ENV_FILE: .env.staging
         run: deploy/remote-deploy.sh "$GITHUB_REF_NAME"
 
   production:
@@ -89,4 +90,5 @@ jobs:
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           DEPLOY_DIR: ${{ vars.DEPLOY_DIR }}
           SITE: ${{ vars.SITE_URL }}
+          ENV_FILE: .env.production
         run: deploy/remote-deploy.sh "$GITHUB_REF_NAME"

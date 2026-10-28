@@ -2,7 +2,7 @@
 # Back up the ELOKA partner stack: MySQL (consistent dump, no downtime) + uploaded documents.
 #   deploy/backup.sh [backup-dir]          default dir: deploy/backups, keeps 14 days
 # Restore with deploy/restore.sh. The documents are encrypted with ELOKA_CRYPTO_FIELD_KEY:
-# keep that key (and the rest of deploy/.env) in the secrets manager, NOT next to the backups.
+# keep that key (and the rest of deploy/.env.<environment>; pick it with ELOKA_ENV_FILE) in the secrets manager, NOT next to the backups.
 set -euo pipefail
 
 cd "$(dirname "$0")"
