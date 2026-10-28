@@ -27,6 +27,7 @@ class ApplicationStateMachineTest {
 
 	private static final Map<String, ApplicationStatus> ALLOWED = Map.ofEntries(
 			Map.entry("IN_PROGRESS/MARK_INELIGIBLE", ApplicationStatus.INELIGIBLE),
+			Map.entry("CORRECTION_REQUIRED/MARK_INELIGIBLE", ApplicationStatus.INELIGIBLE),
 			Map.entry("IN_PROGRESS/SUBMIT", ApplicationStatus.SUBMITTED),
 			Map.entry("CORRECTION_REQUIRED/SUBMIT", ApplicationStatus.SUBMITTED),
 			Map.entry("IN_PROGRESS/WITHDRAW", ApplicationStatus.WITHDRAWN),

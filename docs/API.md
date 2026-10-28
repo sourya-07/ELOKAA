@@ -59,7 +59,7 @@ its check; a failed check sets the step to `FAILED` with `last_error_code` and u
 | `PUT …/{id}/home-address` | `{"line1","line2","city","district","state","pincode"}` | `200`, `HOME_ADDRESS` done | `422` with `invalid_params` |
 | `POST …/{id}/documents` | multipart `kind`, `file` (no `If-Match`, parallel uploads allowed) | `201 {"document_id","kind","status","file_name","content_type","size","uploaded_at"}` | `422` wrong type/size/too small/malware, `409 PREREQUISITE_INCOMPLETE`, `409 TOO_MANY_DOCUMENTS` (5 computer certificates), `413 FILE_TOO_LARGE` |
 | `GET …/{id}/documents` | — | `200` active files | |
-| `GET …/{id}/documents/{documentId}/content` | — | the file, `Cache-Control: no-store` | `404` (also for another applicant's file) |
+| `GET …/{id}/documents/{documentId}/content` | — | the file, `Cache-Control: no-store` | `404` (also for another applicant's file, and for a file that was replaced or removed) |
 | `DELETE …/{id}/documents/{documentId}` | — | `204` | `409` for Aadhaar images |
 | `POST …/{id}/photos/submit` | — | `200`, `PHOTOS` done | `409 DOCUMENTS_MISSING` (+`missing_documents`) |
 | `POST …/{id}/education/submit` | — | `200`, `EDUCATION` done | `409 DOCUMENTS_MISSING` |

@@ -78,7 +78,7 @@ export default function StaffSignIn({ googleClientId: GOOGLE_CLIENT_ID, otpSignI
 			<Head>
 				<title>Staff sign-in · ELOKA</title>
 			</Head>
-			{GOOGLE_CLIENT_ID && <Script src="https://accounts.google.com/gsi/client" onLoad={() => setScriptReady(true)} />}
+			{GOOGLE_CLIENT_ID && <Script src="https://accounts.google.com/gsi/client" onReady={() => setScriptReady(true)} />}
 			<Container maxW="440px" py={16}>
 				<Stack spacing={6} bg="bg.surface" border="1px solid" borderColor="border.hairline" borderRadius="card" p={8}>
 					<Heading as="h1" size="md">

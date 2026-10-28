@@ -82,8 +82,7 @@ class VerificationService implements VerificationApi {
 		if (pan.charAt(3) != 'P') {
 			throw ValidationException.field("pan", "This is not a personal PAN. Use the PAN issued to you as a person.");
 		}
-		Optional<Verification> digiLockerIdentity = latest(applicationId, Kind.AADHAAR)
-			.filter(v -> v.getMethod() == Method.DIGILOCKER && v.getStatus() == EvidenceStatus.VERIFIED);
+		Optional<Verification> digiLockerIdentity = latestVerifiedDigiLocker(applicationId);
 		String name;
 		LocalDate dob;
 		if (digiLockerIdentity.isPresent()) {
@@ -177,9 +176,7 @@ class VerificationService implements VerificationApi {
 		if (pan.isEmpty()) {
 			return Optional.empty();
 		}
-		Verification person = latest(applicationId, Kind.AADHAAR)
-			.filter(v -> v.getMethod() == Method.DIGILOCKER && v.getStatus() == EvidenceStatus.VERIFIED)
-			.orElse(pan.get());
+		Verification person = latestVerifiedDigiLocker(applicationId).orElse(pan.get());
 		return Optional.of(new Identity(cipher.decrypt(person.getNameEnc()),
 				LocalDate.parse(cipher.decrypt(person.getDobEnc())), cipher.decrypt(pan.get().getValueEnc())));
 	}
@@ -210,6 +207,19 @@ class VerificationService implements VerificationApi {
 			throw new ConflictException("EVIDENCE_NOT_DECIDABLE", "This check cannot be decided by hand");
 		}
 		v.decide(verified, reasonCode, Instant.now(clock));
+	}
+
+	/**
+	 * The DigiLocker identity on record. A later failed DigiLocker retry must not hide it, so those
+	 * rows are skipped; a later manual Aadhaar (the applicant switched method) does replace it.
+	 */
+	private Optional<Verification> latestVerifiedDigiLocker(UUID applicationId) {
+		return verifications.findByApplicationIdOrderByCreatedAtDesc(applicationId)
+			.stream()
+			.filter(v -> v.getKind() == Kind.AADHAAR)
+			.filter(v -> v.getMethod() != Method.DIGILOCKER || v.getStatus() == EvidenceStatus.VERIFIED)
+			.findFirst()
+			.filter(v -> v.getMethod() == Method.DIGILOCKER);
 	}
 
 	private Optional<Verification> latest(UUID applicationId, Kind kind) {

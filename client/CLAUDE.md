@@ -17,7 +17,7 @@ npm run build
 ```
 src/pages/            routes only: index, apply/* (journey), staff/* (review console), api/health, api/v1/[...path] (BFF)
 src/middleware.ts     per-request CSP nonce (pages render per request so the nonce is real)
-src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy rules, unit-tested), steps.ts
+src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
                       (pages per path, routeFor), types.ts, validation.ts, consent.ts, states.ts
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest), guards, PanForm,
                       SubmitStep, useDocuments, useAction, withApplication, WithdrawPanel (step-up code, then withdraw)

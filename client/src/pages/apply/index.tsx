@@ -7,6 +7,7 @@ import { OtpInput } from "@/components/OtpInput";
 import { useAction } from "@/features/apply/useAction";
 import { ApiError, call } from "@/lib/api";
 import { normaliseMobile } from "@/lib/validation";
+import { clock } from "@/lib/format";
 
 interface Sent {
 	otp_ref: string;
@@ -99,7 +100,7 @@ export default function MobilePage() {
 						</FormControl>
 						{!sent && (
 							<Button type="submit" isLoading={busy} isDisabled={wait > 0}>
-								{wait > 0 ? `Try again in ${wait}s` : "Send code"}
+								{wait > 0 ? `Try again in ${clock(wait)}` : "Send code"}
 							</Button>
 						)}
 					</Stack>
@@ -118,7 +119,7 @@ export default function MobilePage() {
 								Verify
 							</Button>
 							<Button variant="link" size="sm" alignSelf="flex-start" isDisabled={wait > 0 || busy} onClick={() => send()}>
-								{wait > 0 ? `Resend code in 0:${String(wait).padStart(2, "0")}` : "Resend code"}
+								{wait > 0 ? `Resend code in ${clock(wait)}` : "Resend code"}
 							</Button>
 						</Stack>
 					</form>

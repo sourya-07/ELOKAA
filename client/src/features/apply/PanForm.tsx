@@ -18,22 +18,25 @@ export function PanForm({ askPerson }: { askPerson: boolean }) {
 	const [pan, setPan] = useState("");
 	const [name, setName] = useState("");
 	const [dob, setDob] = useState("");
-	const [fieldError, setFieldError] = useState<string | null>(null);
+	// Separate, so each message sits under the field it is about
+	const [panError, setPanError] = useState<string | null>(null);
+	const [nameError, setNameError] = useState<string | null>(null);
+	const [dobError, setDobError] = useState<string | null>(null);
 	const { busy, error, run } = useAction();
 	const blocked = step?.status === "BLOCKED";
 	const stepError = step?.last_error_code && step.status !== "COMPLETED" ? ERROR_TEXT[step.last_error_code] : null;
 
 	const submit = async () => {
 		const value = pan.trim().toUpperCase();
-		if (!isPersonalPan(value)) {
-			setFieldError("Enter your personal PAN, for example ABCPK1234L");
+		const badPan = isPersonalPan(value) ? null : "Enter your personal PAN, for example ABCPK1234L";
+		const badName = askPerson && !name.trim() ? "Enter your name as on your PAN card" : null;
+		const badDob = askPerson && !dob ? "Enter your date of birth as on your PAN card" : null;
+		setPanError(badPan);
+		setNameError(badName);
+		setDobError(badDob);
+		if (badPan || badName || badDob) {
 			return;
 		}
-		if (askPerson && (!name.trim() || !dob)) {
-			setFieldError("Enter your name and date of birth as on your PAN card");
-			return;
-		}
-		setFieldError(null);
 		await run(async () => {
 			const next = await write("/pan-verifications", {
 				body: askPerson ? { pan: value, name: name.trim(), dob } : { pan: value },
@@ -48,22 +51,23 @@ export function PanForm({ askPerson }: { askPerson: boolean }) {
 
 	return (
 		<Stack spacing={4}>
-			<FormControl isInvalid={!!fieldError} isDisabled={blocked}>
+			<FormControl isInvalid={!!panError} isDisabled={blocked}>
 				<FormLabel htmlFor="pan">PAN</FormLabel>
 				<Input id="pan" autoCapitalize="characters" maxLength={10} value={pan} onChange={(event) => setPan(event.target.value.toUpperCase())} />
 				<FormHelperText>Your personal PAN (10 characters).</FormHelperText>
-				{!askPerson && <FormErrorMessage>{fieldError}</FormErrorMessage>}
+				<FormErrorMessage>{panError}</FormErrorMessage>
 			</FormControl>
 			{askPerson && (
 				<>
-					<FormControl isDisabled={blocked}>
+					<FormControl isInvalid={!!nameError} isDisabled={blocked}>
 						<FormLabel htmlFor="name">Name as on your PAN card</FormLabel>
 						<Input id="name" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} />
+						<FormErrorMessage>{nameError}</FormErrorMessage>
 					</FormControl>
-					<FormControl isInvalid={!!fieldError} isDisabled={blocked}>
+					<FormControl isInvalid={!!dobError} isDisabled={blocked}>
 						<FormLabel htmlFor="dob">Date of birth</FormLabel>
 						<Input id="dob" type="date" value={dob} onChange={(event) => setDob(event.target.value)} />
-						<FormErrorMessage>{fieldError}</FormErrorMessage>
+						<FormErrorMessage>{dobError}</FormErrorMessage>
 					</FormControl>
 				</>
 			)}

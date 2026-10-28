@@ -24,8 +24,14 @@ class ExpiryJob {
 	void run() {
 		int expired = 0;
 		for (var id : applications.idleApplicationIds()) {
-			if (applications.expireIfIdle(id)) {
-				expired++;
+			// One bad row must not stop the others, or the job would stall on it every hour
+			try {
+				if (applications.expireIfIdle(id)) {
+					expired++;
+				}
+			}
+			catch (RuntimeException ex) {
+				log.warn("Could not expire application {}", id, ex);
 			}
 		}
 		if (expired > 0) {

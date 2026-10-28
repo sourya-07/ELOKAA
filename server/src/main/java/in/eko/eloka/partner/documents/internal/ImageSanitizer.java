@@ -32,7 +32,8 @@ final class ImageSanitizer {
 	}
 
 	static Clean reencodeJpeg(byte[] original) {
-		BufferedImage image = decode(original);
+		// EXIF is dropped below, so turn the pixels upright first (phone photos carry their rotation there)
+		BufferedImage image = ExifOrientation.upright(decode(original), ExifOrientation.read(original));
 		BufferedImage rgb = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
 		rgb.createGraphics().drawImage(image, 0, 0, java.awt.Color.WHITE, null);
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("jpeg").next();

@@ -49,6 +49,21 @@ export function FileSlot({ label, rule, required, files, onUpload, onRemove, con
 		}
 	};
 
+	const remove = async (documentId: string) => {
+		if (!onRemove) {
+			return;
+		}
+		setError(null);
+		setBusy(true);
+		try {
+			await onRemove(documentId);
+		} catch (e) {
+			setError(messageOf(e));
+		} finally {
+			setBusy(false);
+		}
+	};
+
 	return (
 		<Box border="1px dashed" borderColor="ink.300" borderRadius="control" p={4}>
 			<Stack spacing={3}>
@@ -73,7 +88,7 @@ export function FileSlot({ label, rule, required, files, onUpload, onRemove, con
 						<HStack>
 							<StatusPill status={file.status} />
 							{onRemove && (allowMany || !required) && (
-								<Button size="sm" variant="link" onClick={() => onRemove(file.document_id)} isDisabled={isDisabled}>
+								<Button size="sm" variant="link" onClick={() => remove(file.document_id)} isDisabled={isDisabled || busy}>
 									Remove
 								</Button>
 							)}

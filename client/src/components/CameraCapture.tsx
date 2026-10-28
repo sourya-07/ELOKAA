@@ -26,6 +26,9 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 		setError(null);
 		try {
 			await onCapture(file);
+			// Uploaded: back to the start, so "Use photo" cannot send the same picture twice
+			setPreview(null);
+			setState("idle");
 		} catch (e) {
 			setError(messageOf(e));
 		} finally {

@@ -26,6 +26,8 @@ class ApplicationStateMachine {
 
 	private static final Map<Key, ApplicationStatus> TRANSITIONS = Map.ofEntries(
 			Map.entry(new Key(ApplicationStatus.IN_PROGRESS, LifecycleEvent.MARK_INELIGIBLE), ApplicationStatus.INELIGIBLE),
+			// A PAN corrected after review runs the credit check again
+			Map.entry(new Key(ApplicationStatus.CORRECTION_REQUIRED, LifecycleEvent.MARK_INELIGIBLE), ApplicationStatus.INELIGIBLE),
 			Map.entry(new Key(ApplicationStatus.IN_PROGRESS, LifecycleEvent.SUBMIT), ApplicationStatus.SUBMITTED),
 			Map.entry(new Key(ApplicationStatus.CORRECTION_REQUIRED, LifecycleEvent.SUBMIT), ApplicationStatus.SUBMITTED),
 			Map.entry(new Key(ApplicationStatus.IN_PROGRESS, LifecycleEvent.WITHDRAW), ApplicationStatus.WITHDRAWN),

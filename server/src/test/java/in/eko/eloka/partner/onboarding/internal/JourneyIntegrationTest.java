@@ -110,6 +110,12 @@ class JourneyIntegrationTest {
 		call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"state\":\"dls_forged\"}")).andExpect(status().isUnprocessableContent());
 
+		// A later failed DigiLocker attempt must not hide the identity already verified
+		jdbc.update("INSERT INTO verification (id, application_id, kind, method, status, provider, provider_ref, "
+				+ "failure_code, version, created_at, updated_at) SELECT UUID_TO_BIN(UUID()), id, 'AADHAAR', 'DIGILOCKER', "
+				+ "'VERIFICATION_FAILED', 'digilocker', ?, 'INVALID_REFERENCE', 0, NOW(6) + INTERVAL 1 SECOND, NOW(6) "
+				+ "FROM partner_application WHERE public_id = ?", "failed-redo-" + id, id);
+
 		// Name and date of birth come from DigiLocker, not from the request
 		track(pan(newPan("4321"), null, null).andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK")));
 		consent("CREDIT_CHECK");
@@ -194,6 +200,24 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
+	void switchingToStepByStepDropsTheDigiLockerIdentity() throws Exception {
+		toMethod("DIGILOCKER");
+		consent("DIGILOCKER");
+		String url = client.body(call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isOk()))
+			.get("url").asString();
+		track(call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"state\":\"" + url.substring(url.indexOf("state=") + 6) + "\"}")).andExpect(status().isOk()));
+		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"method\":\"MANUAL\"}")).andExpect(status().isOk()));
+		track(call(multipart(app("/aadhaar")).file(file("front", "front.jpg", jpeg(800, 500, null)))
+			.file(file("back", "back.jpg", jpeg(800, 500, null)))
+			.param("aadhaar_last4", "4321")
+			.header("If-Match", etag())).andExpect(status().isOk()));
+		// Step by step now: the name and date of birth must be typed, the old DigiLocker ones no longer count
+		pan(newPan("4321"), null, null).andExpect(status().isUnprocessableContent());
+	}
+
+	@Test
 	void uploadsAreCheckedByTheirContent() throws Exception {
 		call(multipart(app("/documents")).file(file("file", "me.jpg", jpeg(600, 600, null))).param("kind", "LIVE_PHOTO"))
 			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"));
@@ -223,6 +247,10 @@ class JourneyIntegrationTest {
 		String otherToken = client.signInNewApplicant();
 		mvc.perform(get(app("/documents/" + documentId + "/content")).header("Authorization", "Bearer " + otherToken))
 			.andExpect(status().isNotFound());
+
+		// A replaced photo is no longer the applicant's to fetch
+		upload("LIVE_PHOTO", "again.jpg", jpeg(600, 600, null)).andExpect(status().isCreated());
+		call(get(app("/documents/" + documentId + "/content"))).andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -296,6 +324,8 @@ class JourneyIntegrationTest {
 		track(submitId("{\"voter_id_number\":\"ABC1234567\"}").andExpect(status().isOk()));
 		track(call(post(app("/declaration")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"version\":\"" + VERSION + "\",\"accepted\":true}")).andExpect(status().isOk()));
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE action = 'DECLARATION_ACCEPTED' "
+				+ "AND target_id = ?", Integer.class, id)).isEqualTo(1);
 		call(post(app("/submit")).header("If-Match", etag()).header("Idempotency-Key", UUID.randomUUID().toString()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("SUBMITTED"))

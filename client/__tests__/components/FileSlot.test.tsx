@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { FileSlot } from "@/components/FileSlot";
+import { ApiError } from "@/lib/api";
 import { PHOTO } from "@/lib/validation";
 import { render } from "../render";
 
@@ -35,5 +36,23 @@ describe("FileSlot", () => {
 		);
 		expect(screen.getByText("Rejected: blurry")).toBeInTheDocument();
 		expect(screen.getByText("Optional")).toBeInTheDocument();
+	});
+
+	it("shows why a removal failed instead of failing silently", async () => {
+		const onRemove = jest.fn().mockRejectedValue(new ApiError({ status: 0, code: "NETWORK", detail: "No connection. Check your internet and try again." }));
+		render(
+			<FileSlot
+				label="Computer certificate"
+				rule={PHOTO}
+				allowMany
+				files={[{ document_id: "d1", kind: "COMPUTER_CERTIFICATE", status: "MANUAL_REVIEW_REQUIRED", file_name: "ccc.jpg", content_type: "image/jpeg", size: 10, uploaded_at: "" }]}
+				onUpload={jest.fn()}
+				onRemove={onRemove}
+				contentUrl={(id) => `/api/x/${id}`}
+			/>,
+		);
+		fireEvent.click(screen.getByRole("button", { name: "Remove" }));
+		expect(await screen.findByRole("alert")).toHaveTextContent("No connection");
+		expect(onRemove).toHaveBeenCalledWith("d1");
 	});
 });

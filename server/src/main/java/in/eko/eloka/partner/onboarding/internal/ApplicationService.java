@@ -229,6 +229,9 @@ class ApplicationService {
 			}
 			context.requirePrerequisites(PartnerStep.DECLARATION);
 			context.complete(PartnerStep.DECLARATION, json.writeValueAsString(Map.of("version", version)));
+			// A legal acceptance, so it goes in the hash-chained audit log like a consent
+			audit.record(new AuditEntry("DECLARATION_ACCEPTED", "APPLICANT", applicantId.toString(),
+					"PARTNER_APPLICATION", publicId, Map.of("version", version)));
 			return null;
 		});
 		return get(applicantId, publicId);

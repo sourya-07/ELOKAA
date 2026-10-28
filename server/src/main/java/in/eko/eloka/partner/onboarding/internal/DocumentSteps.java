@@ -132,7 +132,10 @@ class DocumentSteps {
 	@Transactional(readOnly = true)
 	DocumentContent content(UUID applicantId, String publicId, UUID documentId) {
 		PartnerApplication application = applications.find(applicantId, publicId);
-		links.findByDocumentIdAndApplicationId(documentId, application.getId()).orElseThrow(DocumentSteps::notFound);
+		// A replaced or removed file is no longer the applicant's to fetch; staff keep access for review history
+		links.findByDocumentIdAndApplicationId(documentId, application.getId())
+			.filter(ApplicationDocument::isActive)
+			.orElseThrow(DocumentSteps::notFound);
 		return documents.load(applicantId, documentId);
 	}
 

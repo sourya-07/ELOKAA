@@ -32,6 +32,10 @@ export function useApplication(): ApplicationState {
  */
 export function ApplicationProvider({ children }: { children: ReactNode }) {
 	const router = useRouter();
+	// The Pages Router hands out a new router object on every render; keep it out of the load effect
+	// so the application is loaded once, not again on every navigation
+	const routerRef = useRef(router);
+	routerRef.current = router;
 	const [snapshot, setSnapshotState] = useState<Snapshot | null>(null);
 	// The newest version, so back-to-back writes (consent, then the step) each send a current If-Match
 	const latest = useRef<Snapshot | null>(null);
@@ -40,6 +44,10 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 	const [failed, setFailed] = useState(false);
 	const [attempt, setAttempt] = useState(0);
 	const setSnapshot = useCallback((next: Snapshot) => {
+		const known = latest.current;
+		if (known && known.application_id === next.application_id && next.version < known.version) {
+			return; // an older answer (a slow read) never replaces a newer write
+		}
 		latest.current = next;
 		setSnapshotState(next);
 	}, []);
@@ -55,7 +63,7 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 				}
 			} catch (error) {
 				if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
-					router.replace("/apply");
+					routerRef.current.replace("/apply");
 				} else if (error instanceof ApiError && error.code === "ALREADY_APPROVED") {
 					// Already a partner: show that application (the pages route to the status page)
 					const approved = await call<Snapshot>("/v1/partner/applications/current").catch(() => null);
@@ -70,7 +78,7 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 		return () => {
 			active = false;
 		};
-	}, [router, setSnapshot, attempt]);
+	}, [setSnapshot, attempt]);
 
 	const refresh = useCallback(async () => {
 		const id = latest.current?.application_id;
@@ -85,7 +93,8 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 			if (!current) {
 				throw new Error("No application loaded");
 			}
-			const action = `${current.version} ${path}`;
+			// The body is part of the action: a corrected PAN or code is a new request, not a retry
+			const action = `${current.version} ${path} ${JSON.stringify(options.body ?? null)}`;
 			let key: string | undefined;
 			if (options.idempotent) {
 				key = keys.current.get(action) ?? newKey();
@@ -106,12 +115,12 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 					setSnapshot(error.problem.current as Snapshot);
 				}
 				if (error instanceof ApiError && error.status === 401) {
-					router.replace("/apply");
+					routerRef.current.replace("/apply");
 				}
 				throw error;
 			}
 		},
-		[router, setSnapshot],
+		[setSnapshot],
 	);
 
 	const value = useMemo(() => (snapshot ? { snapshot, write, refresh, setSnapshot } : null), [snapshot, write, refresh, setSnapshot]);

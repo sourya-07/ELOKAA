@@ -33,7 +33,7 @@ src/main/java/in/eko/eloka/partner/
 │             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
 │             If-Match + editable check), StepContext, consent records, Idempotency, ExpiryJob,
 │             /v1/partner/applications
-├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode (ImageSanitizer), PDF
+├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode turned upright first (ImageSanitizer, ExifOrientation), PDF
 │             malware scan, AES-GCM encrypted storage behind DocumentStorage (filesystem now)
 ├── verification/ PAN checks, DigiLocker sessions (single-use state, 15 min), manual Aadhaar; EvidenceStatus;
 │             encrypted values + masked copies + PAN blind index

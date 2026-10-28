@@ -32,21 +32,24 @@ export function OtpInput({ length = 6, value, onChange, isInvalid, isDisabled }:
 					aria-label={`Digit ${index + 1} of ${length}`}
 					inputMode="numeric"
 					autoComplete={index === 0 ? "one-time-code" : "off"}
-					maxLength={1}
 					textAlign="center"
 					w="48px"
 					px={0}
 					isInvalid={isInvalid}
 					isDisabled={isDisabled}
 					onChange={(event) => {
+						// No maxLength: SMS autofill puts the whole code into one box and must reach this handler
 						const typed = event.target.value.replace(/\D/g, "");
-						if (typed.length > 1) {
+						const overwrite = typed.length === 2 && digit !== "";
+						if (typed.length > 1 && !overwrite) {
 							onChange(typed.slice(0, length));
 							refs.current[Math.min(typed.length, length) - 1]?.focus();
 							return;
 						}
-						set(index, typed);
-						if (typed && index < length - 1) {
+						// Typing over a filled box: keep the new digit, not the old one
+						const next = overwrite ? (typed[0] === digit ? typed[1] : typed[0]) : typed;
+						set(index, next);
+						if (next && index < length - 1) {
 							refs.current[index + 1]?.focus();
 						}
 					}}

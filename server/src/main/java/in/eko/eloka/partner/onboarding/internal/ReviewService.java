@@ -186,7 +186,7 @@ class ReviewService {
 				.orElseThrow(() -> new NotFoundException("DOCUMENT_NOT_FOUND", "Document not found"));
 			document.decide(verified, reason(verified, reasonCode), Instant.now(clock));
 			record(application, caller, "DOCUMENT_DECISION", verified ? "VERIFIED" : "REJECTED", reason(verified, reasonCode),
-					null, document.getKind().name());
+					null, documentId.toString());
 		});
 	}
 
@@ -197,7 +197,7 @@ class ReviewService {
 			requireReviewing(application, caller);
 			verification.decide(application.getId(), evidenceId, verified, reason(verified, reasonCode));
 			record(application, caller, "VERIFICATION_DECISION", verified ? "VERIFIED" : "REJECTED",
-					reason(verified, reasonCode), null, evidenceId.toString().substring(0, 8));
+					reason(verified, reasonCode), null, evidenceId.toString());
 		});
 	}
 
@@ -352,7 +352,7 @@ class ReviewService {
 		documents.findByDocumentIdAndApplicationId(documentId, application.getId())
 			.orElseThrow(() -> new NotFoundException("DOCUMENT_NOT_FOUND", "Document not found"));
 		audit.record(new AuditEntry("DOCUMENT_VIEWED", "STAFF", caller.subjectId().toString(), "PARTNER_APPLICATION",
-				publicId, Map.of("document", documentId.toString().substring(0, 8))));
+				publicId, Map.of("document", documentId.toString())));
 		return documentApi.loadForReview(documentId);
 	}
 

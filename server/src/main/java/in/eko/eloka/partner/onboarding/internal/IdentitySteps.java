@@ -204,6 +204,12 @@ class IdentitySteps {
 				|| !PINCODE.matcher(from.pincode()).matches()) {
 			return false; // the applicant types it on the address page
 		}
+		if (context.step(PartnerStep.HOME_ADDRESS).getStatus() == StepStatus.LOCKED) {
+			// Frozen during a correction: never overwrite the address (or a reviewer's decision on it)
+			return addresses.findByApplicationId(context.applicationId())
+				.map(existing -> existing.getSource() == PartnerAddress.Source.DIGILOCKER)
+				.orElse(false);
+		}
 		PartnerAddress address = addresses.findByApplicationId(context.applicationId())
 			.orElseGet(() -> new PartnerAddress(context.applicationId()));
 		address.set(cipher.encrypt(line1), null, cipher.encrypt(from.city()), from.district(), from.state(),
