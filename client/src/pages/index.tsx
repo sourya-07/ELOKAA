@@ -5,11 +5,11 @@ import { staggerChildren } from "@/styles/motion";
 
 /** One part of the application, as the progress line names it. */
 const PARTS = [
-	{ title: "Contact details", body: "Verify your mobile number with a one-time code." },
+	{ title: "Contact details", body: "Verify your mobile number and your email address with one-time codes." },
 	{ title: "Identity", body: "Aadhaar through DigiLocker (or by uploading it), your PAN, and your home address." },
 	{
 		title: "Eligibility",
-		body: "With your consent we check your CIBIL credit score. We only see whether it is 700 or more.",
+		body: "With your consent we check your CIBIL credit score. We tell you only whether it is 700 or more, and we never keep your credit report.",
 	},
 	{ title: "Photos", body: "A live photo taken with your camera, and a passport-size photo." },
 	{ title: "Documents", body: "Your graduation certificate, and your voter ID or driving licence." },
@@ -76,7 +76,7 @@ export default function Home() {
 							Keep these ready
 						</Heading>
 						<List spacing={2} styleType="disc" pl={5}>
-							<ListItem>Your phone, with the mobile number you will use</ListItem>
+							<ListItem>Your phone, with the mobile number you will use, and your email</ListItem>
 							<ListItem>Your PAN card</ListItem>
 							<ListItem>Your graduation certificate</ListItem>
 							<ListItem>Your voter ID or driving licence</ListItem>

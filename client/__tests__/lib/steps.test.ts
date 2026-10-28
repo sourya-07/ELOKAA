@@ -3,7 +3,9 @@ import { snapshotAt } from "../fixtures";
 
 describe("routeFor", () => {
 	it("follows the server's next step on each path", () => {
-		expect(routeFor(snapshotAt("CONSENT"))).toBe("/apply/method");
+		expect(routeFor(snapshotAt("EMAIL_VERIFICATION"))).toBe("/apply");
+		expect(routeFor(snapshotAt("CONSENT"))).toBe("/apply");
+		expect(routeFor(snapshotAt("VERIFICATION_METHOD"))).toBe("/apply/method");
 		expect(routeFor(snapshotAt("AADHAAR"))).toBe("/apply/aadhaar");
 		expect(routeFor(snapshotAt("AADHAAR", { method: "DIGILOCKER" }))).toBe("/apply/digilocker");
 		expect(routeFor(snapshotAt("PAN", { method: "DIGILOCKER" }))).toBe("/apply/digilocker");

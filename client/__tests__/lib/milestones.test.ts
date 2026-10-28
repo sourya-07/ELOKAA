@@ -15,8 +15,8 @@ describe("milestones", () => {
 	});
 
 	it("ignores steps a journey version does not have", () => {
-		const snapshot = snapshotAt("PAN");
-		expect(snapshot.steps.some((s) => s.step_key === "EMAIL_VERIFICATION")).toBe(false);
+		const full = snapshotAt("PAN");
+		const snapshot = { ...full, steps: full.steps.filter((s) => s.step_key !== "EMAIL_VERIFICATION") }; // an older application
 		expect(milestonesOf(snapshot).find((s) => s.key === "CONTACT")?.done).toBe(true);
 	});
 });

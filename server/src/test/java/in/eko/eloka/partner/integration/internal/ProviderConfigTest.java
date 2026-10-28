@@ -15,7 +15,7 @@ class ProviderConfigTest {
 
 	@Test
 	void noProviderRefusesInsteadOfPretending() {
-		MobileOtpGateway gateway = config.mobileOtpGateway(new IntegrationProperties(null, null, null, null, null, null, null), Clock.systemUTC());
+		MobileOtpGateway gateway = config.mobileOtpGateway(new IntegrationProperties(null, null, null, null, null, null, null, null, null), Clock.systemUTC());
 		assertThatThrownBy(() -> gateway.send("9876543210")).isInstanceOf(ProviderNotConfiguredException.class);
 		assertThatThrownBy(() -> gateway.verify("9876543210", "r", "123456"))
 			.isInstanceOf(ProviderNotConfiguredException.class);
@@ -24,7 +24,7 @@ class ProviderConfigTest {
 	@Test
 	void theFakeIsMarkedUnsafeSoStagingAndProductionRefuseIt() {
 		MobileOtpGateway gateway = config.mobileOtpGateway(
-				new IntegrationProperties(IntegrationProperties.Provider.FAKE, "654321", null, null, null, null, null), Clock.systemUTC());
+				new IntegrationProperties(IntegrationProperties.Provider.FAKE, "654321", null, null, null, null, null, null, null), Clock.systemUTC());
 		assertThat(gateway).isInstanceOf(UnsafeInProduction.class);
 		assertThat(gateway.verify("9876543210", gateway.send("9876543210").reference(), "654321")).isTrue();
 		assertThat(gateway.verify("9876543210", "r", "123456")).isFalse();
@@ -33,13 +33,13 @@ class ProviderConfigTest {
 	@Test
 	void epsNeedsItsSettings() {
 		assertThatThrownBy(() -> config.mobileOtpGateway(
-				new IntegrationProperties(IntegrationProperties.Provider.EPS, null, null, null, null, null, null), Clock.systemUTC()))
+				new IntegrationProperties(IntegrationProperties.Provider.EPS, null, null, null, null, null, null, null, null), Clock.systemUTC()))
 			.isInstanceOf(IllegalStateException.class);
 	}
 
 	@Test
 	void identityBureauAndScannerRefuseWhenNotConfigured() {
-		IntegrationProperties none = new IntegrationProperties(null, null, null, null, null, null, null);
+		IntegrationProperties none = new IntegrationProperties(null, null, null, null, null, null, null, null, null);
 		assertThatThrownBy(() -> config.panVerifier(none, Clock.systemUTC()).verify("ABCPE1234F", "A B", java.time.LocalDate.of(1990, 1, 1)))
 			.isInstanceOf(ProviderNotConfiguredException.class);
 		assertThatThrownBy(() -> config.digiLockerProvider(none, Clock.systemUTC()).start("DL1", "https://x"))
@@ -52,15 +52,38 @@ class ProviderConfigTest {
 	@Test
 	void epsIsNotACreditBureau() {
 		assertThatThrownBy(() -> config.creditBureau(new IntegrationProperties(null, null, null,
-				IntegrationProperties.Provider.EPS, null, null, null))).isInstanceOf(IllegalStateException.class);
+				IntegrationProperties.Provider.EPS, null, null, null, null, null))).isInstanceOf(IllegalStateException.class);
 	}
 
 	@Test
 	void fakeScannerFlagsTheEicarString() {
 		var scanner = config.malwareScanner(new IntegrationProperties(null, null, null, null,
-				IntegrationProperties.Scanner.FAKE, null, null));
+				IntegrationProperties.Scanner.FAKE, null, null, null, null));
 		assertThat(scanner.scan(("%PDF-1.4 " + FakeMalwareScanner.EICAR).getBytes()))
 			.isEqualTo(in.eko.eloka.partner.integration.MalwareScanner.Verdict.INFECTED);
 		assertThat(scanner.scan("%PDF-1.4 clean".getBytes())).isEqualTo(in.eko.eloka.partner.integration.MalwareScanner.Verdict.CLEAN);
+	}
+
+	@Test
+	void emailIsNotSentUnlessConfigured() {
+		IntegrationProperties none = new IntegrationProperties(null, null, null, null, null, null, null, null, null);
+		var sender = config.emailSender(none, null, "");
+		assertThatThrownBy(() -> sender.send("a@example.com", "Code", "123456"))
+			.isInstanceOf(in.eko.eloka.partner.integration.ProviderNotConfiguredException.class);
+		var fake = config.emailSender(new IntegrationProperties(null, null, null, null, null,
+				IntegrationProperties.Mailer.FAKE, null, null, null), null, "");
+		assertThat(fake).isInstanceOf(in.eko.eloka.partner.shared.config.UnsafeInProduction.class);
+	}
+
+	@Test
+	void smtpWithoutAHostRefusesToStart() {
+		IntegrationProperties smtp = new IntegrationProperties(null, null, null, null, null,
+				IntegrationProperties.Mailer.SMTP, "no-reply@example.com", null, null);
+		org.springframework.beans.factory.ObjectProvider<org.springframework.mail.javamail.JavaMailSender> mail =
+				new org.springframework.beans.factory.support.StaticListableBeanFactory(java.util.Map.of("mail",
+						new org.springframework.mail.javamail.JavaMailSenderImpl()))
+					.getBeanProvider(org.springframework.mail.javamail.JavaMailSender.class);
+		assertThatThrownBy(() -> config.emailSender(smtp, mail, " ")).isInstanceOf(IllegalStateException.class);
+		assertThat(config.emailSender(smtp, mail, "smtp.example.com")).isInstanceOf(SmtpEmailSender.class);
 	}
 }

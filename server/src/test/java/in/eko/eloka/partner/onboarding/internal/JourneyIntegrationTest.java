@@ -288,6 +288,7 @@ class JourneyIntegrationTest {
 	// ---- journey helpers ------------------------------------------------------------------------
 
 	private void toMethod(String method) throws Exception {
+		verifyEmail();
 		consent("DATA_PROCESSING");
 		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"method\":\"" + method + "\"}")).andExpect(status().isOk()));
@@ -365,6 +366,17 @@ class JourneyIntegrationTest {
 	private ResultActions creditCheck() throws Exception {
 		return call(post(app("/credit-assessments")).header("If-Match", etag())
 			.header("Idempotency-Key", UUID.randomUUID().toString()));
+	}
+
+	/** Contact details: a code to a fresh address, then the fixed test code. */
+	private void verifyEmail() throws Exception {
+		String ref = client.body(call(post(app("/email-verifications")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"email\":\"" + id.toLowerCase() + "@example.com\"}")).andExpect(status().isAccepted()))
+			.get("challenge_ref").asString();
+		track(call(post(app("/email-verifications/verify")).header("If-Match", etag())
+			.header("Idempotency-Key", UUID.randomUUID().toString())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("{\"challenge_ref\":\"" + ref + "\",\"otp\":\"123456\"}")).andExpect(status().isOk()));
 	}
 
 	private void consent(String purpose) throws Exception {

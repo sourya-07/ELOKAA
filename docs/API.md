@@ -16,7 +16,8 @@ Callers are the client's server-side proxy (ADR-0003), not browsers.
 
 Rules: answers are the same for new and known mobiles; the first verified OTP creates the applicant.
 Limits (defaults, `eloka.identity.*`): OTP valid 5 min, 5 wrong tries, 30 s between sends, 5 per hour and
-10 per day per mobile, 10 per hour per IP. Sessions: access token 30 min, idle 2 h, absolute 12 h.
+10 per day per mobile, 10 per hour per IP. Email codes use the same limits per address and per application
+(and per IP), valid 10 min; only a keyed hash of the code is stored. Sessions: access token 30 min, idle 2 h, absolute 12 h.
 
 ## Application (`onboarding` module)
 
@@ -30,6 +31,8 @@ current snapshot when stale). Another applicant's id answers `404 APPLICATION_NO
 | `GET /v1/partner/applications/current` | — | `200` latest application | `404 NO_APPLICATION` |
 | `GET /v1/partner/applications/{id}` | — | `200` | `404` |
 | `GET /v1/partner/applications/{id}/timeline` | — | `200 [{"event_type","step_key","to_status","occurred_at"}]` | `404` |
+| `POST /v1/partner/applications/{id}/email-verifications` | `{"email"}` (no `If-Match`: changes nothing yet) | `202 {"challenge_ref","expires_in","resend_after","otp_length","email_masked"}`: a code by email, valid 10 min | `422 VALIDATION_FAILED` (`invalid_params.email`), `409 EMAIL_ALREADY_USED` (another open, approved or ineligible application has it), `409 STEP_NOT_EDITABLE` (frozen during a correction), `429 OTP_LIMIT_REACHED` (+`retry_after`), `409 PROVIDER_NOT_CONFIGURED`, `503 PROVIDER_UNAVAILABLE` |
+| `POST /v1/partner/applications/{id}/email-verifications/verify` | `{"challenge_ref","otp"}` (+ `Idempotency-Key`) | `200`, completes `EMAIL_VERIFICATION` (summary `email_masked`); a different address than before makes the declaration stale | `410 OTP_EXPIRED` (also used or unknown), `422 OTP_INVALID` (+`attempts_left`), `429 OTP_LOCKED`, `409 EMAIL_ALREADY_USED` |
 | `POST /v1/partner/applications/{id}/consents` | `{"purpose": DATA_PROCESSING \| DIGILOCKER \| CREDIT_CHECK, "version"}` | `200` (data-use consent completes `CONSENT`) | `409 CONSENT_VERSION_OUTDATED` (+`current_version`), `409 PREREQUISITE_INCOMPLETE` |
 | `PUT /v1/partner/applications/{id}/method` | `{"method": DIGILOCKER \| MANUAL}` | `200` (a different choice resets the identity steps) | `409 PREREQUISITE_INCOMPLETE`, `422` |
 | `POST /v1/partner/applications/{id}/declaration` | `{"version","accepted":true}` | `200` | `409 DECLARATION_VERSION_OUTDATED`, `409 PREREQUISITE_INCOMPLETE` |

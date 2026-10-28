@@ -3,6 +3,7 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { type ReactNode, useEffect, useRef } from "react";
+import { useApplicationSession } from "@/features/apply/ApplicationContext";
 import { call } from "@/lib/api";
 import { milestonesOf, type MilestoneState } from "@/lib/milestones";
 import type { Snapshot } from "@/lib/types";
@@ -75,6 +76,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 /** Ends the session; leaving the journey pages also drops the loaded application in the browser. */
 function SignOut() {
 	const router = useRouter();
+	const { signOut } = useApplicationSession();
 	return (
 		<Button
 			variant="link"
@@ -83,6 +85,7 @@ function SignOut() {
 			fontWeight={400}
 			onClick={async () => {
 				await call("/v1/partner/session", { method: "DELETE" }).catch(() => undefined);
+				signOut();
 				await router.replace("/apply");
 			}}
 		>

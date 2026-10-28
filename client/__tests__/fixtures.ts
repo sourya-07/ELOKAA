@@ -1,6 +1,6 @@
 import type { Snapshot, StepKey, StepStatus } from "@/lib/types";
 
-const KEYS: StepKey[] = ["MOBILE_VERIFICATION", "CONSENT", "VERIFICATION_METHOD", "AADHAAR", "PAN", "CREDIT_CHECK", "HOME_ADDRESS", "PHOTOS", "EDUCATION", "ID_DOCUMENT", "DECLARATION"];
+const KEYS: StepKey[] = ["MOBILE_VERIFICATION", "EMAIL_VERIFICATION", "CONSENT", "VERIFICATION_METHOD", "AADHAAR", "PAN", "CREDIT_CHECK", "HOME_ADDRESS", "PHOTOS", "EDUCATION", "ID_DOCUMENT", "DECLARATION"];
 
 /** A snapshot where every step before {@code next} is done. */
 export function snapshotAt(next: StepKey | null, overrides: Partial<Snapshot> = {}): Snapshot {

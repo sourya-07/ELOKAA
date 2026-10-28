@@ -37,8 +37,11 @@ class StepController {
 	private final DocumentSteps documents;
 	private final EligibilityStep eligibility;
 	private final Idempotency idempotency;
+	private final ContactSteps contact;
 
-	StepController(IdentitySteps identity, DocumentSteps documents, EligibilityStep eligibility, Idempotency idempotency) {
+	StepController(IdentitySteps identity, DocumentSteps documents, EligibilityStep eligibility, Idempotency idempotency,
+			ContactSteps contact) {
+		this.contact = contact;
 		this.identity = identity;
 		this.documents = documents;
 		this.eligibility = eligibility;
@@ -46,6 +49,33 @@ class StepController {
 	}
 
 	record PanRequest(String pan, String name, String dob) {
+	}
+
+	record EmailRequest(String email) {
+	}
+
+	record EmailCode(@JsonProperty("challenge_ref") String challengeRef, String otp) {
+	}
+
+	/** Sends a code to the address; changes nothing on the application (no {@code If-Match}). */
+	@PostMapping("/email-verifications")
+	ResponseEntity<ContactSteps.EmailCodeSent> sendEmailCode(@PathVariable String id, @RequestBody EmailRequest body,
+			HttpServletRequest request) {
+		return ResponseEntity.accepted()
+			.body(contact.sendEmailCode(WebSupport.applicantId(), id, body == null ? null : body.email(),
+					request.getRemoteAddr()));
+	}
+
+	/** A one-time code: needs {@code If-Match} and {@code Idempotency-Key}, so a lost answer can be replayed. */
+	@PostMapping("/email-verifications/verify")
+	ResponseEntity<?> verifyEmail(@PathVariable String id, @RequestBody EmailCode body,
+			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch,
+			@RequestHeader(value = Idempotency.HEADER, required = false) String key, HttpServletRequest request) {
+		long version = WebSupport.expectedVersion(ifMatch);
+		UUID applicantId = WebSupport.applicantId();
+		return idempotency.run(applicantId, key, WebSupport.fingerprint(request, version + " " + body),
+				() -> WebSupport.ok(contact.verifyEmail(applicantId, id, version, body == null ? null : body.challengeRef(),
+						body == null ? null : body.otp())));
 	}
 
 	record DigiLockerComplete(String state) {

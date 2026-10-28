@@ -13,13 +13,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @param otpMaxPerHour OTPs per mobile per hour
  * @param otpMaxPerDay OTPs per mobile per day
  * @param otpMaxPerIpPerHour OTPs per client IP per hour
+ * @param emailOtpTtl how long an email code is valid (email can arrive slower than SMS); the other
+ *        OTP limits apply to email codes too, counted per address
  * @param sessionIdleTimeout session ends after this much inactivity
  * @param accessTokenTtl an access token works this long; then it is rotated with the refresh token
  * @param sessionAbsoluteTtl session ends this long after sign-in, whatever happens
  */
 @ConfigurationProperties("eloka.identity")
 public record IdentityProperties(int otpLength, Duration otpTtl, int otpMaxAttempts, Duration otpMinGap,
-		int otpMaxPerHour, int otpMaxPerDay, int otpMaxPerIpPerHour, Duration sessionIdleTimeout,
+		int otpMaxPerHour, int otpMaxPerDay, int otpMaxPerIpPerHour, Duration emailOtpTtl, Duration sessionIdleTimeout,
 		Duration sessionAbsoluteTtl, Duration accessTokenTtl) {
 
 	public IdentityProperties {
@@ -30,6 +32,7 @@ public record IdentityProperties(int otpLength, Duration otpTtl, int otpMaxAttem
 		otpMaxPerHour = otpMaxPerHour == 0 ? 5 : otpMaxPerHour;
 		otpMaxPerDay = otpMaxPerDay == 0 ? 10 : otpMaxPerDay;
 		otpMaxPerIpPerHour = otpMaxPerIpPerHour == 0 ? 10 : otpMaxPerIpPerHour;
+		emailOtpTtl = emailOtpTtl == null ? Duration.ofMinutes(10) : emailOtpTtl;
 		sessionIdleTimeout = sessionIdleTimeout == null ? Duration.ofHours(2) : sessionIdleTimeout;
 		sessionAbsoluteTtl = sessionAbsoluteTtl == null ? Duration.ofHours(12) : sessionAbsoluteTtl;
 		accessTokenTtl = accessTokenTtl == null ? Duration.ofMinutes(30) : accessTokenTtl;

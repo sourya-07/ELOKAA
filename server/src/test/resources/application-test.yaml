@@ -22,7 +22,9 @@ eloka:
     identity-provider: fake
     credit-bureau: fake
     malware-scanner: fake
+    email-provider: fake # no email is sent; the email code is the fixed one below
   documents:
     storage-path: build/test-files
   identity:
+    email-fixed-code: "123456" # email codes (no email is sent locally)
     otp-max-per-ip-per-hour: 1000 # every MockMvc request comes from 127.0.0.1

@@ -41,6 +41,9 @@ management:
     health:
       probes:
         enabled: true
+  health:
+    mail:
+      enabled: false # an SMTP outage must not mark the whole server unhealthy
   info:
     env:
       enabled: false
@@ -62,6 +65,7 @@ eloka:
     session-idle-timeout: 2h
     session-absolute-ttl: 12h
     access-token-ttl: 30m
+    email-otp-ttl: 10m # email can arrive slower than SMS
   # Staff console sign-in (Google, Workspace domain only); OTP sign-in is local/test only
   staff:
     google-client-id: ${ELOKA_STAFF_GOOGLE_CLIENT_ID:}
@@ -73,6 +77,7 @@ eloka:
     identity-provider: none # PAN + DigiLocker
     credit-bureau: none     # no bureau contracted yet (docs/OPEN_QUESTIONS.md Q-1)
     malware-scanner: none   # PDFs are refused until a scanner is configured
+    email-provider: none    # email codes; smtp uses spring.mail.* (EPS has no email OTP)
   documents:
     storage-path: ${ELOKA_STORAGE_PATH:data/files}
   # Partner application rules. Open business questions (docs/OPEN_QUESTIONS.md) are settings here.

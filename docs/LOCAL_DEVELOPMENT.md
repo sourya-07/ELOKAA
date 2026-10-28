@@ -20,6 +20,7 @@ Every outside service runs on a fake locally (ADR-0004). Staging and production 
 | Service | How to get each answer |
 |---|---|
 | Mobile OTP | every code is `123456`; no SMS is sent |
+| Email code | every code is `123456`; no email is sent (use any address, one per open application) |
 | DigiLocker | returns at once with the sample person RAVI SAMPLE, Aadhaar `XXXX-XXXX-1234`, an address in Mumbai |
 | PAN check (by the 4 digits of the PAN) | `0000` invalid · `1111` name mismatch · `2222` date-of-birth mismatch · `9999` provider down · anything else matches |
 | Credit score (by the 4 digits of the PAN) | `6990` → 699 (not eligible) · `7000` → 700 (eligible) · `0001` → no credit history · `9997` → 950 (invalid score) · `9998` → bureau down · anything else → 742 |

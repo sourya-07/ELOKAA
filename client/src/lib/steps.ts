@@ -42,7 +42,10 @@ export function routeFor(snapshot: Snapshot): string {
 	if (!next || next === "MOBILE_VERIFICATION") {
 		return "/apply/review";
 	}
-	if (next === "CONSENT" || next === "VERIFICATION_METHOD") {
+	if (next === "EMAIL_VERIFICATION" || next === "CONSENT") {
+		return "/apply"; // contact details: the sign-in page continues with the email
+	}
+	if (next === "VERIFICATION_METHOD") {
 		return "/apply/method";
 	}
 	if (next === "AADHAAR") {

@@ -4,9 +4,10 @@ import { ApplicationProvider, useApplication } from "@/features/apply/Applicatio
 import { snapshotAt } from "../fixtures";
 import { render } from "../render";
 
+const replace = jest.fn();
 jest.mock("next/router", () => ({
 	// a new object on every call, like the Pages Router
-	useRouter: () => ({ push: jest.fn(), replace: jest.fn(), query: {}, pathname: "/apply/pan" }),
+	useRouter: () => ({ push: jest.fn(), replace, query: {}, pathname: "/apply/pan" }),
 }));
 
 function reply(status: number, body: unknown) {
@@ -65,5 +66,22 @@ describe("application provider", () => {
 
 		act(() => fireEvent.click(screen.getByText("stale")));
 		expect(screen.getByText("version 3")).toBeInTheDocument();
+	});
+
+	it("forgets the application when the session has ended", async () => {
+		const fetchMock = jest
+			.fn()
+			.mockResolvedValueOnce(reply(200, snapshotAt("PAN")))
+			.mockResolvedValueOnce(reply(401, { code: "UNAUTHENTICATED" }));
+		global.fetch = fetchMock as unknown as typeof fetch;
+		render(
+			<ApplicationProvider>
+				<Probe />
+			</ApplicationProvider>,
+		);
+		await screen.findByText("version 3");
+		fireEvent.click(screen.getByText("first"));
+		await waitFor(() => expect(replace).toHaveBeenCalledWith("/apply"));
+		expect(screen.queryByText("version 3")).not.toBeInTheDocument();
 	});
 });

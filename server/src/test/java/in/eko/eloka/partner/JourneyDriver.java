@@ -58,6 +58,7 @@ public final class JourneyDriver {
 
 	/** Step by step, all the way to SUBMITTED. */
 	public JourneyDriver submitStepByStep() throws Exception {
+		verifyEmail();
 		consent("DATA_PROCESSING");
 		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"method\":\"MANUAL\"}")).andExpect(status().isOk()));
@@ -116,6 +117,17 @@ public final class JourneyDriver {
 
 	public ResultActions call(MockMultipartHttpServletRequestBuilder request) throws Exception {
 		return mvc.perform(request.header("Authorization", "Bearer " + token));
+	}
+
+	/** Contact details: a code to a fresh address, then the fixed test code. */
+	private void verifyEmail() throws Exception {
+		String ref = client.body(call(post(app("/email-verifications")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"email\":\"" + id.toLowerCase() + "@example.com\"}")).andExpect(status().isAccepted()))
+			.get("challenge_ref").asString();
+		track(call(post(app("/email-verifications/verify")).header("If-Match", etag())
+			.header("Idempotency-Key", UUID.randomUUID().toString())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("{\"challenge_ref\":\"" + ref + "\",\"otp\":\"123456\"}")).andExpect(status().isOk()));
 	}
 
 	private void consent(String purpose) throws Exception {

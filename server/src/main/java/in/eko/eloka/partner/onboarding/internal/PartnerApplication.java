@@ -39,6 +39,16 @@ class PartnerApplication extends BaseEntity {
 	@Column(name = "pan_hash", columnDefinition = "BINARY(32)")
 	private byte[] panHash;
 
+	/** The verified email address (encrypted), its blind index (one live application per address) and a masked copy. */
+	@Column(name = "email_enc", columnDefinition = "VARBINARY(512)")
+	private byte[] emailEnc;
+
+	@Column(name = "email_hash", columnDefinition = "BINARY(32)")
+	private byte[] emailHash;
+
+	@Column(name = "email_masked", length = 80)
+	private String emailMasked;
+
 	@Column(name = "assigned_staff_id", columnDefinition = "BINARY(16)")
 	private UUID assignedStaffId;
 
@@ -95,6 +105,20 @@ class PartnerApplication extends BaseEntity {
 
 	void bindPan(byte[] hash) {
 		this.panHash = hash;
+	}
+
+	void bindEmail(byte[] encrypted, byte[] hash, String masked) {
+		this.emailEnc = encrypted;
+		this.emailHash = hash;
+		this.emailMasked = masked;
+	}
+
+	String getEmailMasked() {
+		return emailMasked;
+	}
+
+	byte[] getEmailEnc() {
+		return emailEnc;
 	}
 
 	boolean isBoundTo(byte[] hash) {

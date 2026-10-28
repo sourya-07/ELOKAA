@@ -6,10 +6,11 @@ import { theme } from "@/styles/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
 	const page = <Component {...pageProps} />;
+	const needs = (Component as ApplicationPage<object>).needsApplication;
 	return (
 		<ChakraProvider theme={theme}>
 			{/* One provider across journey pages: it stays mounted while only the page inside changes */}
-			{(Component as ApplicationPage<object>).needsApplication ? <ApplicationProvider>{page}</ApplicationProvider> : page}
+			{needs ? <ApplicationProvider optional={needs === "optional"}>{page}</ApplicationProvider> : page}
 		</ChakraProvider>
 	);
 }

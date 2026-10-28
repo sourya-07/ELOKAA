@@ -6,8 +6,8 @@ The source of truth for what the applicant sees and what the server allows. The 
 
 | Page | Path (client) | Step key | Both paths? |
 |---|---|---|---|
-| 1 Mobile number + OTP | `/apply` | `MOBILE_VERIFICATION` | yes |
-| 2 Choose how to apply + data-use consent | `/apply/method` | `CONSENT`, `VERIFICATION_METHOD` | yes |
+| 1 Contact details: mobile number + OTP, then email + code and the data-use consent (one card) | `/apply` | `MOBILE_VERIFICATION`, `EMAIL_VERIFICATION`, `CONSENT` | yes |
+| 2 Choose how to apply | `/apply/method` | `VERIFICATION_METHOD` | yes |
 | 3D Connect DigiLocker, check details, enter PAN | `/apply/digilocker` | `AADHAAR`, `HOME_ADDRESS`, `PAN` | DigiLocker |
 | 3 Aadhaar (masked image + last 4 digits) | `/apply/aadhaar` | `AADHAAR` | step by step |
 | 4 PAN + date of birth | `/apply/pan` | `PAN` | step by step |
@@ -21,7 +21,7 @@ The source of truth for what the applicant sees and what the server allows. The 
 
 ```mermaid
 flowchart TD
-  A[1 Mobile + OTP] --> B[2 Choose method + consent]
+  A[1 Mobile + OTP, email + code, consent] --> B[2 Choose method]
   B -->|DigiLocker| D1[Connect DigiLocker] --> D2[Check details + enter PAN]
   B -->|Step by step| M1[3 Aadhaar] --> M2[4 PAN]
   D2 --> PV{PAN verified?}
@@ -82,7 +82,8 @@ Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAI
 | Step | Needs first | Done when |
 |---|---|---|
 | `MOBILE_VERIFICATION` | — | OTP verified |
-| `CONSENT` | mobile | current data-use consent recorded |
+| `EMAIL_VERIFICATION` | mobile | a code sent to the address was entered (one open, approved or ineligible application per address) |
+| `CONSENT` | email | current data-use consent recorded |
 | `VERIFICATION_METHOD` | consent | `DIGILOCKER` or `MANUAL` chosen |
 | `AADHAAR` | method | DigiLocker result verified, or masked images + last 4 digits submitted |
 | `PAN` | Aadhaar | provider says the PAN is valid and the name matches the Aadhaar name |

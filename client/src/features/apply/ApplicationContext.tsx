@@ -17,6 +17,17 @@ interface ApplicationState {
 
 const Context = createContext<ApplicationState | null>(null);
 
+interface SessionState {
+	/** False on a page that allows it (sign-in) while nobody is signed in */
+	signedIn: boolean;
+	/** Loads the application again, e.g. right after signing in */
+	reload: () => void;
+	/** Forgets the application in this browser (after sign-out or an ended session) */
+	signOut: () => void;
+}
+
+const Session = createContext<SessionState>({ signedIn: false, reload: () => undefined, signOut: () => undefined });
+
 export function useApplication(): ApplicationState {
 	const value = useContext(Context);
 	if (!value) {
@@ -25,12 +36,25 @@ export function useApplication(): ApplicationState {
 	return value;
 }
 
+/** The application when signed in, or null (pages that also work signed out: the sign-in page). */
+export function useOptionalApplication(): ApplicationState | null {
+	return useContext(Context);
+}
+
+export function useApplicationSession(): SessionState {
+	return useContext(Session);
+}
+
 /**
  * Loads the applicant's application (starting one after the first sign-in) and keeps the latest
- * snapshot. Signed-out visitors go back to the mobile page. A write that loses a race (412) shows
+ * snapshot. Signed-out visitors go back to the mobile page, unless {@code optional} (the mobile page
+ * itself), where the page shows without an application. A write that loses a race (412) shows
  * the server's current version instead.
  */
-export function ApplicationProvider({ children }: { children: ReactNode }) {
+export function ApplicationProvider({ children, optional = false }: { children: ReactNode; optional?: boolean }) {
+	const optionalRef = useRef(optional);
+	optionalRef.current = optional;
+	const [signedOut, setSignedOut] = useState(false);
 	const router = useRouter();
 	// The Pages Router hands out a new router object on every render; keep it out of the load effect
 	// so the application is loaded once, not again on every navigation
@@ -43,6 +67,13 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 	const keys = useRef(new Map<string, string>());
 	const [failed, setFailed] = useState(false);
 	const [attempt, setAttempt] = useState(0);
+	// One provider stays mounted across journey pages, so an ended session must clear what it holds
+	const forget = useCallback(() => {
+		latest.current = null;
+		keys.current.clear();
+		setSnapshotState(null);
+		setSignedOut(true);
+	}, []);
 	const setSnapshot = useCallback((next: Snapshot) => {
 		const known = latest.current;
 		if (known && known.application_id === next.application_id && next.version < known.version) {
@@ -59,11 +90,17 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 			try {
 				const reply = await call<Snapshot>("/v1/partner/applications", { method: "POST" });
 				if (active) {
+					setSignedOut(false);
 					setSnapshot(reply.data);
 				}
 			} catch (error) {
 				if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
-					routerRef.current.replace("/apply");
+					if (active) {
+						forget();
+					}
+					if (!optionalRef.current) {
+						routerRef.current.replace("/apply");
+					}
 				} else if (error instanceof ApiError && error.code === "ALREADY_APPROVED") {
 					// Already a partner: show that application (the pages route to the status page)
 					const approved = await call<Snapshot>("/v1/partner/applications/current").catch(() => null);
@@ -78,7 +115,7 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 		return () => {
 			active = false;
 		};
-	}, [setSnapshot, attempt]);
+	}, [setSnapshot, attempt, forget]);
 
 	const refresh = useCallback(async () => {
 		const id = latest.current?.application_id;
@@ -115,21 +152,29 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 					setSnapshot(error.problem.current as Snapshot);
 				}
 				if (error instanceof ApiError && error.status === 401) {
+					forget();
 					routerRef.current.replace("/apply");
 				}
 				throw error;
 			}
 		},
-		[setSnapshot],
+		[forget, setSnapshot],
 	);
 
 	const value = useMemo(() => (snapshot ? { snapshot, write, refresh, setSnapshot } : null), [snapshot, write, refresh, setSnapshot]);
+	const session = useMemo(
+		() => ({ signedIn: !!snapshot, reload: () => setAttempt((n) => n + 1), signOut: forget }),
+		[snapshot, forget],
+	);
+	if (!value && signedOut && optional) {
+		return <Session.Provider value={session}>{children}</Session.Provider>;
+	}
 	if (!value && failed) {
 		return (
 			<Center minH="60vh">
 				<Stack spacing={3} align="center">
 					<Text>We could not open your application.</Text>
-					<Button onClick={() => setAttempt(attempt + 1)}>Try again</Button>
+					<Button onClick={() => setAttempt((n) => n + 1)}>Try again</Button>
 				</Stack>
 			</Center>
 		);
@@ -141,7 +186,11 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 			</Center>
 		);
 	}
-	return <Context.Provider value={value}>{children}</Context.Provider>;
+	return (
+		<Session.Provider value={session}>
+			<Context.Provider value={value}>{children}</Context.Provider>
+		</Session.Provider>
+	);
 }
 
 /** Sends the applicant to where the server says they continue, unless this page is that step or one already done. */

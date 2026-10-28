@@ -110,3 +110,9 @@ manager, never next to the backups.
 - EPS adapters (OTP, PAN, DigiLocker) are tested against a mock server only; run the journey on
   EPS UAT in staging first.
 - Retention periods (Q-5) are not decided; nothing is deleted automatically yet.
+- Email codes need an SMTP account (Q-21): set `ELOKA_EMAIL_PROVIDER=smtp`, `ELOKA_EMAIL_FROM` and the
+  `ELOKA_SMTP_*` keys (see `deploy/.env.example`) in each environment's settings file, with SPF and DKIM for
+  the sending domain. With `none`, applicants cannot get past the email step. The filled `.env.staging` and
+  `.env.production` files do not have these keys yet.
+- Upgrading from before journey v2: migration V12 adds the email step. Applications still being filled in
+  ask for an email next; submitted ones are frozen without one.

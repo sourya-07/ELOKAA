@@ -22,8 +22,10 @@ src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy 
                       statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest; loads once per
                       session, never goes back to an older snapshot), guards, PanForm, SubmitStep, useDocuments,
-                      useAction, withApplication (marks a journey page; _app wraps marked pages in ONE shared
-                      provider), WithdrawPanel (step-up code, then withdraw)
+                      useAction, withApplication / withOptionalApplication (marks a journey page; _app wraps marked
+                      pages in ONE shared provider; "optional" pages such as /apply also render signed out),
+                      EmailStage (email code + data-use consent on the /apply card), WithdrawPanel (step-up code,
+                      then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after
                       navigation), TaskSection (one task of a multi-task page: open when current, folded when done),

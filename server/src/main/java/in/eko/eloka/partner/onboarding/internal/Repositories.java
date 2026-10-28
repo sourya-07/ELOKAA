@@ -50,6 +50,11 @@ interface PartnerApplicationRepository extends JpaRepository<PartnerApplication,
 	@Query("select count(a) > 0 from PartnerApplication a where a.panHash = :hash and a.id <> :id and a.status in :blocking")
 	boolean existsBlockingPan(@Param("hash") byte[] hash, @Param("id") UUID excludeId,
 			@Param("blocking") Collection<ApplicationStatus> blocking);
+
+	/** Another application that blocks a new one already has this email. The DB unique key is the backstop. */
+	@Query("select count(a) > 0 from PartnerApplication a where a.emailHash = :hash and a.id <> :id and a.status in :blocking")
+	boolean existsBlockingEmail(@Param("hash") byte[] hash, @Param("id") UUID excludeId,
+			@Param("blocking") Collection<ApplicationStatus> blocking);
 }
 
 interface ApplicationStepRepository extends JpaRepository<ApplicationStep, UUID> {

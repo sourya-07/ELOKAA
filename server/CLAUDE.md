@@ -24,11 +24,13 @@ src/main/java/in/eko/eloka/partner/
 ├── audit/    AuditLog (hash-chained audit_event, same transaction as the change), AuditTrail (read side)
 ├── integration/  provider ports (MobileOtpGateway); internal: ProviderConfig picks fake | eps | none per
 │             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters (OTP, PAN Lite,
-│             DigiLocker), fakes, stubs, ClamAV scanner; ports MobileOtpGateway, PanVerifier, DigiLockerProvider,
-│             CreditBureau, MalwareScanner
+│             DigiLocker), fakes, stubs, ClamAV scanner, SMTP email sender; ports MobileOtpGateway, PanVerifier,
+│             DigiLockerProvider, CreditBureau, MalwareScanner, EmailSender
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
               (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session,
-              /reauth (step-up code before withdrawing, `ApplicantReauth`)
+              /reauth (step-up code before withdrawing, `ApplicantReauth`), email codes (`EmailVerification`: our own
+              code, keyed hash only, mobile-OTP limits per address/application/IP; fixed code via
+              `eloka.identity.email-fixed-code` in local/test only)
 ├── onboarding/ partner applications: PartnerStep (prerequisites, invalidation), StepStatus, ApplicationStatus;
 │             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
 │             If-Match + editable check), StepContext (complete with a fingerprint: same data = no reset of

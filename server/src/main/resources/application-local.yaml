@@ -22,6 +22,7 @@ eloka:
     field-key: cGFydG5lci1sb2NhbC1maWVsZC1rZXktMzItYnl0ZXM=
     index-key: cGFydG5lci1sb2NhbC1pbmRleC1rZXktMzItYnl0ZXM=
   identity:
+    email-fixed-code: "123456" # email codes (no email is sent locally)
     otp-min-gap: 0s
     otp-max-per-hour: 1000
     otp-max-per-day: 1000
@@ -31,3 +32,4 @@ eloka:
     identity-provider: fake # PAN and DigiLocker answers by PAN digits (docs/LOCAL_DEVELOPMENT.md)
     credit-bureau: fake
     malware-scanner: fake
+    email-provider: fake # no email is sent; the email code is the fixed one below

@@ -1,13 +1,18 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputLeftAddon, Stack, Text } from "@chakra-ui/react";
+import { Button, Center, FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputLeftAddon, Spinner, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { type FormEvent, useEffect, useState } from "react";
 import { ApplyShell, Section } from "@/components/ApplyShell";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { OtpInput } from "@/components/OtpInput";
+import { useApplicationSession, useOptionalApplication } from "@/features/apply/ApplicationContext";
+import { EmailStage } from "@/features/apply/EmailStage";
 import { useAction } from "@/features/apply/useAction";
+import { withOptionalApplication } from "@/features/apply/withApplication";
 import { ApiError, call } from "@/lib/api";
 import { normaliseMobile } from "@/lib/validation";
 import { clock } from "@/lib/format";
+import { routeFor } from "@/lib/steps";
+import { delayedAppear } from "@/styles/motion";
 
 interface Sent {
 	otp_ref: string;
@@ -16,9 +21,49 @@ interface Sent {
 	otp_length: number;
 }
 
-/** Page 1: mobile number and the one-time code. */
-export default function MobilePage() {
+const CONTACT_STEPS = ["EMAIL_VERIFICATION", "CONSENT"];
+
+/**
+ * Contact details, on one card: the mobile number (which signs the applicant in), then the email
+ * address and the data-use consent. Once those are done the applicant continues where the server says.
+ */
+function ContactPage() {
+	const application = useOptionalApplication();
+	const { reload } = useApplicationSession();
 	const router = useRouter();
+	const snapshot = application?.snapshot;
+	const editable = !!snapshot && ["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status);
+	const contactOpen = !!snapshot && editable && CONTACT_STEPS.includes(snapshot.next_step ?? "");
+
+	useEffect(() => {
+		if (snapshot && !contactOpen) {
+			router.replace(routeFor(snapshot));
+		}
+	}, [contactOpen, router, snapshot]);
+
+	if (!snapshot) {
+		return <MobileStage onSignedIn={reload} />;
+	}
+	if (!contactOpen) {
+		return (
+			<Center minH="60vh" sx={delayedAppear}>
+				<Spinner label="Opening your application" />
+			</Center>
+		);
+	}
+	return (
+		<ApplyShell title="Your contact details" subtitle="Your email lets us reach you about your application." progress={snapshot}>
+			<Section>
+				<EmailStage />
+			</Section>
+		</ApplyShell>
+	);
+}
+
+export default withOptionalApplication(ContactPage);
+
+/** The mobile number and its one-time code; a correct code signs the applicant in. */
+function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 	const [mobile, setMobile] = useState("");
 	const [mobileError, setMobileError] = useState<string | null>(null);
 	const [sent, setSent] = useState<Sent | null>(null);
@@ -66,7 +111,7 @@ export default function MobilePage() {
 		await run(async () => {
 			try {
 				await call("/v1/partner/otp/verify", { body: { otp_ref: sent.otp_ref, otp: code } });
-				await router.push("/apply/continue");
+				onSignedIn(); // the same card continues with the email once the application is loaded
 			} catch (e) {
 				if (e instanceof ApiError && e.code === "OTP_INVALID") {
 					throw new ApiError({ ...e.problem, detail: `The code is not correct. ${e.problem.attempts_left} attempts left.` });

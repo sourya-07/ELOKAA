@@ -67,8 +67,8 @@ class PartnerApplicationIntegrationTest {
 		JsonNode created = client.body(call(post("/v1/partner/applications")).andExpect(status().isCreated())
 			.andExpect(header().string("ETag", "\"v0\""))
 			.andExpect(jsonPath("$.status").value("IN_PROGRESS"))
-			.andExpect(jsonPath("$.next_step").value("CONSENT"))
-			.andExpect(jsonPath("$.steps.length()").value(11))
+			.andExpect(jsonPath("$.next_step").value("EMAIL_VERIFICATION"))
+			.andExpect(jsonPath("$.steps.length()").value(12))
 			.andExpect(jsonPath("$.steps[0].step_key").value("MOBILE_VERIFICATION"))
 			.andExpect(jsonPath("$.steps[0].status").value("COMPLETED")));
 		String id = created.get("application_id").asString();
@@ -82,14 +82,14 @@ class PartnerApplicationIntegrationTest {
 
 	@Test
 	void stepsMoveInOrderAndTheServerSaysWhatIsNext() throws Exception {
-		String id = start();
-		call(put("/v1/partner/applications/" + id + "/method").header("If-Match", "\"v0\"")
+		String id = startWithEmail();
+		call(put("/v1/partner/applications/" + id + "/method").header("If-Match", "\"v1\"")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content("{\"method\":\"MANUAL\"}")).andExpect(status().isConflict())
 			.andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"))
 			.andExpect(jsonPath("$.missing_steps[0]").value("CONSENT"));
 
-		JsonNode afterConsent = client.body(consent(id, "\"v0\"", CONSENT).andExpect(status().isOk())
+		JsonNode afterConsent = client.body(consent(id, "\"v1\"", CONSENT).andExpect(status().isOk())
 			.andExpect(jsonPath("$.next_step").value("VERIFICATION_METHOD")));
 		call(put("/v1/partner/applications/" + id + "/method")
 			.header("If-Match", "\"v" + afterConsent.get("version").asLong() + "\"")
@@ -101,12 +101,12 @@ class PartnerApplicationIntegrationTest {
 
 	@Test
 	void writesNeedTheCurrentVersion() throws Exception {
-		String id = start();
+		String id = startWithEmail();
 		consent(id, null, CONSENT).andExpect(status().isPreconditionRequired());
-		consent(id, "\"v0\"", CONSENT).andExpect(status().isOk());
-		consent(id, "\"v0\"", CONSENT).andExpect(status().isPreconditionFailed())
+		consent(id, "\"v1\"", CONSENT).andExpect(status().isOk());
+		consent(id, "\"v1\"", CONSENT).andExpect(status().isPreconditionFailed())
 			.andExpect(jsonPath("$.code").value("PRECONDITION_FAILED"))
-			.andExpect(jsonPath("$.current.version").value(1));
+			.andExpect(jsonPath("$.current.version").value(2));
 	}
 
 	@Test
@@ -257,6 +257,20 @@ class PartnerApplicationIntegrationTest {
 
 	private String start() throws Exception {
 		return client.body(call(post("/v1/partner/applications"))).get("application_id").asString();
+	}
+
+	/** Started, with the email verified (version 1): what the consent step needs first. */
+	private String startWithEmail() throws Exception {
+		String id = start();
+		String ref = client.body(call(post("/v1/partner/applications/" + id + "/email-verifications")
+			.contentType(MediaType.APPLICATION_JSON).content("{\"email\":\"" + id.toLowerCase() + "@example.com\"}"))
+			.andExpect(status().isAccepted())).get("challenge_ref").asString();
+		call(post("/v1/partner/applications/" + id + "/email-verifications/verify").header("If-Match", "\"v0\"")
+			.header("Idempotency-Key", UUID.randomUUID().toString())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("{\"challenge_ref\":\"" + ref + "\",\"otp\":\"123456\"}")).andExpect(status().isOk())
+			.andExpect(jsonPath("$.next_step").value("CONSENT"));
+		return id;
 	}
 
 	private ResultActions consent(String id, String ifMatch, String body) throws Exception {

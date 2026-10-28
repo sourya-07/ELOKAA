@@ -12,12 +12,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @param identityProvider PAN and DigiLocker checks: {@code fake}, {@code eps} or {@code none}
  * @param creditBureau CIBIL score: {@code fake} or {@code none} (no real provider yet, docs/OPEN_QUESTIONS.md Q-1)
  * @param malwareScanner {@code fake}, {@code clamav} or {@code none}
+ * @param emailProvider email codes: {@code fake} (local/test only), {@code smtp} ({@code spring.mail.*}) or {@code none}
+ * @param emailFrom sender address for {@code smtp}
  * @param eps EPS connection
  * @param clamav clamd connection
  */
 @ConfigurationProperties("eloka.integration")
 record IntegrationProperties(Provider otpProvider, String fakeOtp, Provider identityProvider, Provider creditBureau,
-		Scanner malwareScanner, Eps eps, ClamAv clamav) {
+		Scanner malwareScanner, Mailer emailProvider, String emailFrom, Eps eps, ClamAv clamav) {
 
 	enum Provider {
 		NONE,
@@ -31,12 +33,19 @@ record IntegrationProperties(Provider otpProvider, String fakeOtp, Provider iden
 		CLAMAV
 	}
 
+	enum Mailer {
+		NONE,
+		FAKE,
+		SMTP
+	}
+
 	IntegrationProperties {
 		otpProvider = otpProvider == null ? Provider.NONE : otpProvider;
 		fakeOtp = fakeOtp == null || fakeOtp.isBlank() ? "123456" : fakeOtp;
 		identityProvider = identityProvider == null ? Provider.NONE : identityProvider;
 		creditBureau = creditBureau == null ? Provider.NONE : creditBureau;
 		malwareScanner = malwareScanner == null ? Scanner.NONE : malwareScanner;
+		emailProvider = emailProvider == null ? Mailer.NONE : emailProvider;
 		eps = eps == null ? new Eps(null, null, null, null, null, null, null) : eps;
 		clamav = clamav == null ? new ClamAv(null, 0, null) : clamav;
 	}
