@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import in.eko.eloka.partner.audit.AuditEntry;
 import in.eko.eloka.partner.audit.AuditLog;
+import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.eligibility.EligibilityApi;
 import in.eko.eloka.partner.eligibility.EligibilityOutcome;
 import in.eko.eloka.partner.onboarding.ApplicationStatus;
@@ -59,12 +60,14 @@ class ApplicationService {
 	private final JsonMapper json;
 	private final TransactionTemplate transactions;
 	private final Clock clock;
+	private final ApplicationDocumentRepository documents;
 
 	ApplicationService(PartnerApplicationRepository applications, ApplicationStepRepository steps,
 			ConsentRecordRepository consents, TimelineEntryRepository timeline, ApplicationStateMachine stateMachine,
 			OnboardingProperties properties, AuditLog audit, EligibilityApi eligibility, JsonMapper json,
-			TransactionTemplate transactions, Clock clock) {
+			TransactionTemplate transactions, Clock clock, ApplicationDocumentRepository documents) {
 		this.applications = applications;
+		this.documents = documents;
 		this.steps = steps;
 		this.consents = consents;
 		this.timeline = timeline;
@@ -175,10 +178,10 @@ class ApplicationService {
 			String version, byte[] clientIpHash) {
 		ConsentRecord.Purpose purpose = parse(ConsentRecord.Purpose.class, purposeName, "purpose");
 		write(applicantId, publicId, expectedVersion, context -> {
-			if (!properties.consentVersion().equals(version)) {
+			if (!properties.consentVersion(purpose).equals(version)) {
 				throw new ApiProblem(HttpStatus.CONFLICT, "CONSENT_VERSION_OUTDATED",
 						"The consent text has changed. Please read it again.",
-						Map.of("current_version", properties.consentVersion()));
+						Map.of("current_version", properties.consentVersion(purpose)));
 			}
 			PartnerStep needs = switch (purpose) {
 				case DATA_PROCESSING -> PartnerStep.CONSENT;
@@ -254,6 +257,11 @@ class ApplicationService {
 			// Checked again here, independent of the step status (ADR-0005)
 			if (eligibility.latestOutcome(context.applicationId()) != EligibilityOutcome.ELIGIBLE) {
 				throw new ApiProblem(HttpStatus.CONFLICT, "NOT_ELIGIBLE", "The credit check has not been passed");
+			}
+			// The file rules again: a step done earlier may no longer match them (a file replaced later)
+			Map<DocumentKind, Long> have = documentCounts(context.applicationId());
+			for (PartnerStep step : PartnerStep.values()) {
+				DocumentRequirements.requireMet(step, have);
 			}
 			context.steps().values().forEach(ApplicationStep::lock);
 			stateMachine.apply(context.application(), LifecycleEvent.SUBMIT, "APPLICANT", applicantId.toString());
@@ -356,14 +364,25 @@ class ApplicationService {
 
 		String next = null;
 		List<String> actions = new ArrayList<>();
+		Map<DocumentKind, Long> have = documentCounts(application.getId());
+		List<ApplicationSnapshot.Blocker> blockers = new ArrayList<>();
 		if (application.getStatus().isEditableByApplicant()) {
+			for (ApplicationStep step : rows) {
+				if (!step.getStatus().isSatisfied()) {
+					blockers.add(new ApplicationSnapshot.Blocker(step.getStepKey().name(), blockerCode(step), null));
+				}
+			}
+			DocumentRequirements.ALL.stream()
+				.filter(requirement -> !requirement.metBy(have))
+				.forEach(requirement -> blockers.add(new ApplicationSnapshot.Blocker(requirement.step().name(),
+						"DOCUMENTS_MISSING", requirement.group())));
 			next = rows.stream()
 				.filter(step -> !step.getStatus().isSatisfied())
 				.filter(step -> step.getStepKey().prerequisites().stream().allMatch(p -> statusByKey.get(p).isSatisfied()))
 				.map(step -> step.getStepKey().name())
 				.findFirst()
 				.orElse(null);
-			if (rows.stream().allMatch(step -> step.getStatus().isSatisfied())) {
+			if (blockers.isEmpty()) {
 				actions.add("SUBMIT");
 			}
 		}
@@ -373,7 +392,25 @@ class ApplicationService {
 		return new ApplicationSnapshot(application.getPublicId(), application.getStatus().name(),
 				application.getVersion(), application.getMethod() == null ? null : application.getMethod().name(), next,
 				application.getExpiresAt(), application.getSubmittedAt(), rows.stream().map(this::stepView).toList(),
-				actions);
+				actions, DocumentRequirements.status(have), blockers);
+	}
+
+	private static String blockerCode(ApplicationStep step) {
+		return switch (step.getStatus()) {
+			case BLOCKED -> "STEP_BLOCKED";
+			case FAILED -> step.getLastErrorCode() == null ? "STEP_FAILED" : step.getLastErrorCode();
+			case REOPENED -> "STEP_REOPENED";
+			case PENDING_EXTERNAL -> "STEP_PENDING";
+			default -> "STEP_NOT_DONE";
+		};
+	}
+
+	/** Active (not replaced or removed) files per kind. */
+	Map<DocumentKind, Long> documentCounts(UUID applicationId) {
+		Map<DocumentKind, Long> counts = new EnumMap<>(DocumentKind.class);
+		documents.findByApplicationIdAndRemovedAtIsNullOrderByCreatedAtAsc(applicationId)
+			.forEach(link -> counts.merge(link.getKind(), 1L, Long::sum));
+		return counts;
 	}
 
 	private ApplicationSnapshot.Step stepView(ApplicationStep step) {

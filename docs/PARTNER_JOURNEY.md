@@ -93,7 +93,7 @@ Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAI
 | `ID_DOCUMENT` | credit check, home address | voter ID or driving licence (or both) submitted |
 | `DECLARATION` | all of the above | current declaration accepted |
 
-Re-doing a step resets later steps that depend on it: a new PAN resets `CREDIT_CHECK` and `DECLARATION`; a new method resets `AADHAAR` and `HOME_ADDRESS`; any document change resets `DECLARATION`.
+Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new PAN resets `CREDIT_CHECK` and `DECLARATION`; a new method resets `AADHAAR` and `HOME_ADDRESS`; any document change resets `DECLARATION`.
 
 ## Evidence status (per document or check)
 

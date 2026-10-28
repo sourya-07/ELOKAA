@@ -60,7 +60,7 @@ class EligibilityStep {
 			}
 			boolean consented = consents
 				.findFirstByApplicationIdAndPurposeOrderByAcceptedAtDesc(context.applicationId(), ConsentRecord.Purpose.CREDIT_CHECK)
-				.filter(consent -> consent.getTextVersion().equals(properties.consentVersion()))
+				.filter(consent -> consent.getTextVersion().equals(properties.consentVersion(ConsentRecord.Purpose.CREDIT_CHECK)))
 				.isPresent();
 			if (!consented) {
 				throw new ApiProblem(HttpStatus.CONFLICT, "CONSENT_REQUIRED",

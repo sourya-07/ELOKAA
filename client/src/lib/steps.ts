@@ -57,13 +57,6 @@ export function routeFor(snapshot: Snapshot): string {
 	return PAGES.find((page) => page.step === next && page.paths.includes(snapshot.method ?? "MANUAL"))?.path ?? "/apply/review";
 }
 
-/** "Step 4 of 10" for a page on the applicant's path. */
-export function position(method: Snapshot["method"], path: string): { index: number; total: number } {
-	const pages = pagesFor(method);
-	const index = pages.findIndex((page) => page.path === path);
-	return { index: index < 0 ? 0 : index + 1, total: pages.length };
-}
-
 /** What a step error code means for the applicant. */
 export const ERROR_TEXT: Record<string, string> = {
 	PAN_NAME_MISMATCH: "The name does not match the PAN records. Use your name exactly as on your PAN card.",

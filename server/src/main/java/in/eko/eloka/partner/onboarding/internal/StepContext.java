@@ -70,8 +70,18 @@ final class StepContext {
 
 	/** Marks the step done and resets the steps that were completed on the old data. */
 	void complete(PartnerStep key, String summaryJson) {
-		steps.get(key).complete(summaryJson, now);
-		invalidateDependents(key, EnumSet.noneOf(PartnerStep.class));
+		complete(key, summaryJson, null);
+	}
+
+	/**
+	 * Marks the step done. Later steps are reset only when {@code fingerprint} (a blind index of
+	 * the data checked) differs from the last completion: redoing a step with the same PAN or the
+	 * same DigiLocker identity does not make the applicant repeat what followed.
+	 */
+	void complete(PartnerStep key, String summaryJson, byte[] fingerprint) {
+		if (steps.get(key).complete(summaryJson, now, fingerprint)) {
+			invalidateDependents(key, EnumSet.noneOf(PartnerStep.class));
+		}
 		record("STEP_COMPLETED", key);
 	}
 

@@ -7,7 +7,6 @@ import { canOpen } from "@/features/apply/guards";
 import { SubmitStep } from "@/features/apply/SubmitStep";
 import { useDocuments } from "@/features/apply/useDocuments";
 import { withApplication } from "@/features/apply/withApplication";
-import { position } from "@/lib/steps";
 import { PAPER } from "@/lib/validation";
 
 /** Voter ID or driving licence: at least one, each with its number and both sides. */
@@ -28,7 +27,7 @@ function IdDocumentPage() {
 		/>
 	);
 	return (
-		<ApplyShell title="Voter ID or driving licence" subtitle="Add at least one. You can add both." step={position(snapshot.method, "/apply/id-document")}>
+		<ApplyShell title="Voter ID or driving licence" subtitle="Add at least one. You can add both." progress={snapshot}>
 			<Section label="Voter ID">
 				<FormControl>
 					<FormLabel htmlFor="voter">EPIC number</FormLabel>

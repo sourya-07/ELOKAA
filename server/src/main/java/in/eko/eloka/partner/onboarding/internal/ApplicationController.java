@@ -103,7 +103,7 @@ class ApplicationController {
 		return applications.timeline(WebSupport.applicantId(), id)
 			.stream()
 			.map(entry -> new TimelineItem(entry.getEventType(),
-					entry.getStepKey() == null ? null : entry.getStepKey().name(),
+					entry.getStepKey(),
 					entry.getToStatus() == null ? null : entry.getToStatus().name(), entry.getOccurredAt()))
 			.toList();
 	}

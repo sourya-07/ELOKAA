@@ -9,7 +9,7 @@ import { useApplication, useStepGuard } from "@/features/apply/ApplicationContex
 import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
 import { DECLARATION_VERSION } from "@/lib/consent";
-import { pagesFor, position } from "@/lib/steps";
+import { pagesFor} from "@/lib/steps";
 import { isDone } from "@/lib/types";
 
 const SUMMARY: Record<string, (s: Record<string, unknown>) => string> = {
@@ -46,7 +46,7 @@ function ReviewPage() {
 
 	const pages = pagesFor(snapshot.method).filter((p) => p.step !== "MOBILE_VERIFICATION" && p.step !== "DECLARATION" && p.step !== "VERIFICATION_METHOD");
 	return (
-		<ApplyShell title="Review your application" subtitle="Check your details before you submit." step={position(snapshot.method, "/apply/review")}>
+		<ApplyShell title="Review your application" subtitle="Check your details before you submit." progress={snapshot}>
 			<Section>
 				{pages.map((page) => {
 					const step = snapshot.steps.find((s) => s.step_key === page.step);

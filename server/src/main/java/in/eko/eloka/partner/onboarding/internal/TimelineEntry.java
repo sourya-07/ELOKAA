@@ -22,9 +22,9 @@ class TimelineEntry extends BaseEntity {
 	@Column(name = "event_type", nullable = false, length = 40)
 	private String eventType;
 
-	@Enumerated(EnumType.STRING)
+	/** A plain string, not the enum: old rows keep naming steps that a later journey version retired. */
 	@Column(name = "step_key", length = 30)
-	private PartnerStep stepKey;
+	private String stepKey;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "from_status", length = 30)
@@ -47,7 +47,7 @@ class TimelineEntry extends BaseEntity {
 			ApplicationStatus toStatus, String actor, Instant occurredAt) {
 		this.applicationId = applicationId;
 		this.eventType = eventType;
-		this.stepKey = stepKey;
+		this.stepKey = stepKey == null ? null : stepKey.name();
 		this.fromStatus = fromStatus;
 		this.toStatus = toStatus;
 		this.actor = actor;
@@ -58,7 +58,7 @@ class TimelineEntry extends BaseEntity {
 		return eventType;
 	}
 
-	PartnerStep getStepKey() {
+	String getStepKey() {
 		return stepKey;
 	}
 

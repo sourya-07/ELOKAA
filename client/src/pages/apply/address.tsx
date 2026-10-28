@@ -9,7 +9,7 @@ import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
 import { ApiError } from "@/lib/api";
 import { STATES } from "@/lib/states";
-import { position, routeFor } from "@/lib/steps";
+import { routeFor } from "@/lib/steps";
 import { isPincode } from "@/lib/validation";
 
 type Field = "line1" | "line2" | "city" | "district" | "state" | "pincode";
@@ -58,7 +58,7 @@ function AddressPage() {
 	);
 
 	return (
-		<ApplyShell title="Home address" subtitle="Where you live now." step={position(snapshot.method, "/apply/address")}>
+		<ApplyShell title="Home address" subtitle="Where you live now." progress={snapshot}>
 			<Section>
 				{field("line1", "House and street", { autoComplete: "address-line1" })}
 				{field("line2", "Area or landmark (optional)", { autoComplete: "address-line2" })}

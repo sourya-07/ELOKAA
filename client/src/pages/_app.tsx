@@ -1,11 +1,15 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import NextApp, { type AppContext, type AppProps } from "next/app";
+import { ApplicationProvider } from "@/features/apply/ApplicationContext";
+import type { ApplicationPage } from "@/features/apply/withApplication";
 import { theme } from "@/styles/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
+	const page = <Component {...pageProps} />;
 	return (
 		<ChakraProvider theme={theme}>
-			<Component {...pageProps} />
+			{/* One provider across journey pages: it stays mounted while only the page inside changes */}
+			{(Component as ApplicationPage<object>).needsApplication ? <ApplicationProvider>{page}</ApplicationProvider> : page}
 		</ChakraProvider>
 	);
 }

@@ -2,6 +2,7 @@
 
 export type StepKey =
 	| "MOBILE_VERIFICATION"
+	| "EMAIL_VERIFICATION"
 	| "CONSENT"
 	| "VERIFICATION_METHOD"
 	| "AADHAAR"
@@ -11,6 +12,8 @@ export type StepKey =
 	| "PHOTOS"
 	| "EDUCATION"
 	| "ID_DOCUMENT"
+	| "ALTERNATE_ID"
+	| "KYC_DOCUMENTS"
 	| "DECLARATION";
 
 export type StepStatus =
@@ -57,6 +60,24 @@ export interface Snapshot {
 	submitted_at: string | null;
 	steps: Step[];
 	available_actions: string[];
+	/** The file checklist (server rules) */
+	requirements?: Requirement[];
+	/** What still stops submission; empty when the applicant can submit */
+	submit_blockers?: SubmitBlocker[];
+}
+
+export interface Requirement {
+	group: string;
+	step_key: StepKey;
+	rule: "ALL" | "ONE_OF";
+	options: string[][];
+	satisfied: boolean;
+}
+
+export interface SubmitBlocker {
+	step_key: StepKey;
+	code: string;
+	group?: string;
 }
 
 export interface DocumentView {

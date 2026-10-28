@@ -54,6 +54,13 @@ class ApplicationStep extends BaseEntity {
 	@Column(name = "completed_at")
 	private Instant completedAt;
 
+	/**
+	 * Blind index of the data the step was last completed with (the PAN, the DigiLocker identity,
+	 * the address). Completing again with the same data does not make later steps stale.
+	 */
+	@Column(name = "data_hash", columnDefinition = "BINARY(32)")
+	private byte[] dataHash;
+
 	protected ApplicationStep() {
 	}
 
@@ -62,6 +69,19 @@ class ApplicationStep extends BaseEntity {
 		this.stepKey = stepKey;
 		this.maxAttempts = maxAttempts;
 		this.status = StepStatus.NOT_STARTED;
+	}
+
+	/**
+	 * Checked and accepted, with the fingerprint of the data it was checked on ({@code null} when
+	 * the step has none).
+	 *
+	 * @return true when the data differs from the last completion, so later steps are stale
+	 */
+	boolean complete(String summaryJson, Instant now, byte[] fingerprint) {
+		boolean changed = fingerprint == null || dataHash == null || !java.security.MessageDigest.isEqual(dataHash, fingerprint);
+		complete(summaryJson, now);
+		this.dataHash = fingerprint;
+		return changed;
 	}
 
 	/** Checked and accepted. */

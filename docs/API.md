@@ -33,7 +33,7 @@ current snapshot when stale). Another applicant's id answers `404 APPLICATION_NO
 | `POST /v1/partner/applications/{id}/consents` | `{"purpose": DATA_PROCESSING \| DIGILOCKER \| CREDIT_CHECK, "version"}` | `200` (data-use consent completes `CONSENT`) | `409 CONSENT_VERSION_OUTDATED` (+`current_version`), `409 PREREQUISITE_INCOMPLETE` |
 | `PUT /v1/partner/applications/{id}/method` | `{"method": DIGILOCKER \| MANUAL}` | `200` (a different choice resets the identity steps) | `409 PREREQUISITE_INCOMPLETE`, `422` |
 | `POST /v1/partner/applications/{id}/declaration` | `{"version","accepted":true}` | `200` | `409 DECLARATION_VERSION_OUTDATED`, `409 PREREQUISITE_INCOMPLETE` |
-| `POST /v1/partner/applications/{id}/submit` | — (+ `Idempotency-Key`) | `200` status `SUBMITTED`; a repeat with the same key replays it (`Idempotent-Replayed: true`) | `400 IDEMPOTENCY_KEY_REQUIRED`, `409 PREREQUISITE_INCOMPLETE` (+`missing_steps`), `409 IDEMPOTENCY_IN_PROGRESS`, `422 IDEMPOTENCY_KEY_REUSED` |
+| `POST /v1/partner/applications/{id}/submit` | — (+ `Idempotency-Key`) | `200` status `SUBMITTED`; a repeat with the same key replays it (`Idempotent-Replayed: true`) | `400 IDEMPOTENCY_KEY_REQUIRED`, `409 PREREQUISITE_INCOMPLETE` (+`missing_steps`), `409 NOT_ELIGIBLE`, `409 DOCUMENTS_MISSING` (+`missing_documents`, the file rules are checked again), `409 IDEMPOTENCY_IN_PROGRESS`, `422 IDEMPOTENCY_KEY_REUSED` |
 
 | `POST /v1/partner/applications/{id}/withdraw` | `{"otp","reason_code"?}` (+ `Idempotency-Key`; code from `POST /v1/partner/reauth`; `reason_code` one of `CHANGED_MIND`, `TAKES_TOO_LONG`, `WILL_APPLY_LATER`, `OTHER`, anything else is stored as `NONE`) | `200` status `WITHDRAWN` (from `IN_PROGRESS`, `SUBMITTED`, `CORRECTION_REQUIRED`); a repeat with the same key replays it without checking the used code again | `412`, `404` and `409 INVALID_STATE_TRANSITION` are checked first, so they do not use up the code; then `410 OTP_EXPIRED` (no live code), `422 OTP_INVALID` (+`attempts_left`), `429 OTP_LOCKED`; `400 IDEMPOTENCY_KEY_REQUIRED` |
 
@@ -41,7 +41,11 @@ Any write on a submitted or closed application: `409 APPLICATION_NOT_EDITABLE`. 
 `application_id`, `status`, `version`, `method`, `next_step` (server's answer to "where do I continue",
 null when nothing is editable), `expires_at`, `submitted_at`, `steps[]` (`step_key`, `status`,
 `attempt_count`, `max_attempts`, `last_error_code`, `summary` with masked values, `reopen_reason_code`,
-`reviewer_message`), `available_actions`. Idle applications expire after 30 days (hourly job).
+`reviewer_message`), `available_actions`, `requirements[]` (the file checklist: `group`, `step_key`, `rule`
+`ALL`/`ONE_OF`, `options` (lists of document kinds), `satisfied`), `submit_blockers[]` (what still stops
+submission: `step_key` + `code` such as `STEP_NOT_DONE`, `STEP_BLOCKED`, a step error code, or
+`DOCUMENTS_MISSING` with the checklist `group`; empty when `SUBMIT` is available). Idle applications expire
+after 30 days (hourly job). Timeline `step_key` is plain text and may name a step a later journey version retired.
 
 ## Identity, credit check and documents (`onboarding` with `verification`, `eligibility`, `documents`)
 

@@ -145,6 +145,9 @@ class PartnerApplicationIntegrationTest {
 				    version, created_at, updated_at)
 				SELECT UUID_TO_BIN(UUID()), a.id, UNHEX(REPEAT('AB', 32)), 'test', 'ELIGIBLE', 742, NOW(6), 0, NOW(6), NOW(6)
 				FROM partner_application a WHERE a.public_id = ?""", id);
+		for (String kind : List.of("LIVE_PHOTO", "PASSPORT_PHOTO", "GRADUATION_CERTIFICATE", "VOTER_ID_FRONT", "VOTER_ID_BACK")) {
+			attachFile(id, kind); // submit checks the file rules too
+		}
 		String key = UUID.randomUUID().toString();
 		ExecutorService pool = Executors.newFixedThreadPool(2);
 		try {
@@ -185,6 +188,22 @@ class PartnerApplicationIntegrationTest {
 		call(post("/v1/partner/applications/" + id + "/submit").header("If-Match", "\"v0\"")
 			.header("Idempotency-Key", UUID.randomUUID().toString())).andExpect(status().isConflict())
 			.andExpect(jsonPath("$.code").value("NOT_ELIGIBLE"));
+	}
+
+	/** A file row as if it had been uploaded (the bytes are not needed for a submit). */
+	private void attachFile(String publicId, String kind) {
+		UUID document = UUID.randomUUID();
+		jdbc.update("""
+				INSERT INTO stored_document (id, owner_id, kind, file_name, content_type, size_bytes, width, height, sha256,
+				    storage_key, version, created_at, updated_at)
+				SELECT UUID_TO_BIN(?), a.applicant_id, ?, 'test.jpg', 'image/jpeg', 1, 1, 1, UNHEX(REPEAT('CD', 32)), ?, 0,
+				    NOW(6), NOW(6)
+				FROM partner_application a WHERE a.public_id = ?""", document.toString(), kind, document.toString(), publicId);
+		jdbc.update("""
+				INSERT INTO application_document (id, application_id, document_id, kind, status, version, created_at,
+				    updated_at)
+				SELECT UUID_TO_BIN(UUID()), a.id, UUID_TO_BIN(?), ?, 'MANUAL_REVIEW_REQUIRED', 0, NOW(6), NOW(6)
+				FROM partner_application a WHERE a.public_id = ?""", document.toString(), kind, publicId);
 	}
 
 	@Test

@@ -30,6 +30,7 @@ function StatusPage() {
 	const reopened = snapshot.steps.filter((s) => s.status === "REOPENED" && s.reviewer_message);
 	return (
 		<ApplyShell
+			signedIn
 			title={text.title}
 			subtitle={text.body}
 			mark={snapshot.status === "SUBMITTED" || snapshot.status === "APPROVED" ? <SuccessMark /> : undefined}

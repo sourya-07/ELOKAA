@@ -13,7 +13,17 @@ import tools.jackson.databind.JsonNode;
 record ApplicationSnapshot(@JsonProperty("application_id") String applicationId, String status, long version,
 		String method, @JsonProperty("next_step") String nextStep, @JsonProperty("expires_at") Instant expiresAt,
 		@JsonProperty("submitted_at") Instant submittedAt, List<Step> steps,
-		@JsonProperty("available_actions") List<String> availableActions) {
+		@JsonProperty("available_actions") List<String> availableActions,
+		List<DocumentRequirements.Status> requirements,
+		@JsonProperty("submit_blockers") List<Blocker> submitBlockers) {
+
+	/**
+	 * Why the applicant cannot submit yet: a step that is not done ({@code code} says why), or a
+	 * file rule not met ({@code group} names the checklist line). Empty when submit is possible.
+	 */
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	record Blocker(@JsonProperty("step_key") String stepKey, String code, String group) {
+	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	record Step(@JsonProperty("step_key") String stepKey, String status,

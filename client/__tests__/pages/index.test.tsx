@@ -8,4 +8,11 @@ describe("Home", () => {
 		expect(screen.getByRole("heading", { name: "Become an ELOKA partner" })).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "Start your application" })).toHaveAttribute("href", "/apply");
 	});
+
+	it("states the credit rule before anyone starts", () => {
+		render(<Home />);
+		expect(screen.getByText("Your CIBIL credit score is 700 or more.")).toBeInTheDocument();
+		expect(screen.getByText(/below 700 you are not eligible/)).toBeInTheDocument();
+		expect(screen.getByRole("heading", { name: "How it works" })).toBeInTheDocument();
+	});
 });

@@ -144,7 +144,7 @@ class DocumentSteps {
 		applications.write(applicantId, publicId, version, context -> {
 			context.requirePrerequisites(PartnerStep.PHOTOS);
 			Map<DocumentKind, Long> have = counts(context);
-			requireAll(have, DocumentKind.LIVE_PHOTO, DocumentKind.PASSPORT_PHOTO);
+			DocumentRequirements.requireMet(PartnerStep.PHOTOS, have);
 			context.complete(PartnerStep.PHOTOS, json.writeValueAsString(Map.of("live_photo", true, "passport_photo", true)));
 			return null;
 		});
@@ -156,7 +156,7 @@ class DocumentSteps {
 		applications.write(applicantId, publicId, version, context -> {
 			context.requirePrerequisites(PartnerStep.EDUCATION);
 			Map<DocumentKind, Long> have = counts(context);
-			requireAll(have, DocumentKind.GRADUATION_CERTIFICATE);
+			DocumentRequirements.requireMet(PartnerStep.EDUCATION, have);
 			context.complete(PartnerStep.EDUCATION, json.writeValueAsString(Map.of("graduation_certificate", true,
 					"computer_certificates", have.getOrDefault(DocumentKind.COMPUTER_CERTIFICATE, 0L))));
 			return null;

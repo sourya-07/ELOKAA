@@ -10,7 +10,7 @@ import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
 import { call } from "@/lib/api";
 import { CONSENT_VERSION } from "@/lib/consent";
-import { ERROR_TEXT, position } from "@/lib/steps";
+import { ERROR_TEXT} from "@/lib/steps";
 import type { Snapshot } from "@/lib/types";
 import { isDone } from "@/lib/types";
 
@@ -67,7 +67,7 @@ function DigiLockerPage() {
 
 	const summary = aadhaar?.summary as { aadhaar_masked?: string; address_from_digilocker?: boolean } | undefined;
 	return (
-		<ApplyShell title="Connect DigiLocker" subtitle="Your name, home address and the last 4 digits of your Aadhaar come from DigiLocker." step={position(snapshot.method, "/apply/digilocker")}>
+		<ApplyShell title="Connect DigiLocker" subtitle="Your name, home address and the last 4 digits of your Aadhaar come from DigiLocker." progress={snapshot}>
 			{!isDone(aadhaar) ? (
 				<Section>
 					<Text>We never see or keep your full Aadhaar number.</Text>

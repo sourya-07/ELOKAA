@@ -48,6 +48,26 @@ class StepRulesTest {
 	}
 
 	@Test
+	void theSamePanAgainKeepsTheCreditCheck() {
+		byte[] pan = new byte[32];
+		pan[0] = 1;
+		List<ApplicationStep> rows = steps();
+		rows.forEach(step -> step.complete("{}", NOW));
+		rows.stream().filter(step -> step.getStepKey() == PartnerStep.PAN).forEach(step -> step.complete("{}", NOW, pan.clone()));
+		StepContext context = new StepContext(application(), rows, mock(TimelineEntryRepository.class), NOW);
+
+		context.complete(PartnerStep.PAN, "{}", pan.clone());
+		assertThat(context.step(PartnerStep.CREDIT_CHECK).getStatus()).isEqualTo(StepStatus.COMPLETED);
+		assertThat(context.step(PartnerStep.DECLARATION).getStatus()).isEqualTo(StepStatus.COMPLETED);
+
+		byte[] otherPan = pan.clone();
+		otherPan[1] = 7;
+		context.complete(PartnerStep.PAN, "{}", otherPan);
+		assertThat(context.step(PartnerStep.CREDIT_CHECK).getStatus()).isEqualTo(StepStatus.IN_PROGRESS);
+		assertThat(context.step(PartnerStep.DECLARATION).getStatus()).isEqualTo(StepStatus.IN_PROGRESS);
+	}
+
+	@Test
 	void missingPrerequisitesAreNamed() {
 		StepContext context = new StepContext(application(), steps(), mock(TimelineEntryRepository.class), NOW);
 		assertThatThrownBy(() -> context.requirePrerequisites(PartnerStep.CREDIT_CHECK))

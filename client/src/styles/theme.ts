@@ -1,4 +1,5 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { inter } from "./font";
 
 /**
  * ELOKA platform design system (eloka_design/design-system-and-prompts/DESIGN.md): warm paper
@@ -10,8 +11,8 @@ const config: ThemeConfig = { initialColorMode: "light", useSystemColorMode: fal
 export const theme = extendTheme({
 	config,
 	fonts: {
-		heading: `Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`,
-		body: `Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`,
+		heading: `${inter.style.fontFamily}, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`,
+		body: `${inter.style.fontFamily}, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`,
 	},
 	colors: {
 		ink: { 900: "#0A0A0A", 700: "#2F312F", 500: "#5C5C57", 300: "#85857F" },

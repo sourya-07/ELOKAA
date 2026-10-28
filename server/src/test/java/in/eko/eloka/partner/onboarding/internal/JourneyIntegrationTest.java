@@ -218,6 +218,22 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
+	void theSnapshotSaysWhatStillStopsSubmissionAndOldTimelineRowsStillLoad() throws Exception {
+		track(call(get(app(""))).andExpect(status().isOk())
+			.andExpect(jsonPath("$.available_actions[?(@=='SUBMIT')]").isEmpty())
+			.andExpect(jsonPath("$.submit_blockers[?(@.step_key=='CONSENT')].code").value("STEP_NOT_DONE"))
+			.andExpect(jsonPath("$.submit_blockers[?(@.group=='PASSPORT_PHOTO')].code").value("DOCUMENTS_MISSING"))
+			.andExpect(jsonPath("$.requirements[?(@.group=='VOTER_ID_OR_DRIVING_LICENCE')].rule").value("ONE_OF")));
+
+		// A step a later journey version retired must not break the timeline of older applications
+		jdbc.update("INSERT INTO application_event (id, application_id, event_type, step_key, actor, occurred_at, version, "
+				+ "created_at, updated_at) SELECT UUID_TO_BIN(UUID()), id, 'STEP_COMPLETED', 'RETIRED_STEP', 'APPLICANT', "
+				+ "NOW(6), 0, NOW(6), NOW(6) FROM partner_application WHERE public_id = ?", id);
+		call(get(app("/timeline"))).andExpect(status().isOk())
+			.andExpect(jsonPath("$[?(@.step_key=='RETIRED_STEP')]").isNotEmpty());
+	}
+
+	@Test
 	void uploadsAreCheckedByTheirContent() throws Exception {
 		call(multipart(app("/documents")).file(file("file", "me.jpg", jpeg(600, 600, null))).param("kind", "LIVE_PHOTO"))
 			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"));
@@ -324,6 +340,9 @@ class JourneyIntegrationTest {
 		track(submitId("{\"voter_id_number\":\"ABC1234567\"}").andExpect(status().isOk()));
 		track(call(post(app("/declaration")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"version\":\"" + VERSION + "\",\"accepted\":true}")).andExpect(status().isOk()));
+		refresh();
+		call(get(app(""))).andExpect(jsonPath("$.submit_blockers").isEmpty())
+			.andExpect(jsonPath("$.available_actions[?(@=='SUBMIT')]").isNotEmpty());
 		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE action = 'DECLARATION_ACCEPTED' "
 				+ "AND target_id = ?", Integer.class, id)).isEqualTo(1);
 		call(post(app("/submit")).header("If-Match", etag()).header("Idempotency-Key", UUID.randomUUID().toString()))

@@ -50,7 +50,7 @@ function MethodPage() {
 	};
 
 	return (
-		<ApplyShell title="How would you like to apply?" subtitle="Your progress is saved, so you can come back any time." step={{ index: 2, total: method === "DIGILOCKER" ? 8 : 10 }}>
+		<ApplyShell title="How would you like to apply?" subtitle="Your progress is saved, so you can come back any time." progress={snapshot}>
 			<SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} role="radiogroup" aria-label="How to apply">
 				{OPTIONS.map((option) => (
 					<Box

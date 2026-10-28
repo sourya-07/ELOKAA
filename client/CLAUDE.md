@@ -18,11 +18,17 @@ npm run build
 src/pages/            routes only: index, apply/* (journey), staff/* (review console), api/health, api/v1/[...path] (BFF)
 src/middleware.ts     per-request CSP nonce (pages render per request so the nonce is real)
 src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
-                      (pages per path, routeFor), types.ts, validation.ts, consent.ts, states.ts
-src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest), guards, PanForm,
-                      SubmitStep, useDocuments, useAction, withApplication, WithdrawPanel (step-up code, then withdraw)
+                      (pages per path, routeFor), milestones.ts (progress = finished parts, from server step
+                      statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts
+src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest; loads once per
+                      session, never goes back to an older snapshot), guards, PanForm, SubmitStep, useDocuments,
+                      useAction, withApplication (marks a journey page; _app wraps marked pages in ONE shared
+                      provider), WithdrawPanel (step-up code, then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
-src/components/       ApplyShell/Section (journey steps link to /apply/status), OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
+src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after
+                      navigation), TaskSection (one task of a multi-task page: open when current, folded when done),
+                      OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
+src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no font requests to third parties
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
 src/styles/motion.ts  the only motion: easing curves, enter/stagger, delayed loading, reduced-motion helpers
 __tests__/            Jest tests, mirroring src/ (render.tsx wraps the theme, fixtures.ts builds snapshots)

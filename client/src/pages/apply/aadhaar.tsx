@@ -7,7 +7,7 @@ import { useApplication, useStepGuard } from "@/features/apply/ApplicationContex
 import { canOpen } from "@/features/apply/guards";
 import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
-import { routeFor, position } from "@/lib/steps";
+import { routeFor} from "@/lib/steps";
 import { checkFile, PAPER } from "@/lib/validation";
 
 /** Step by step: masked Aadhaar front and back, and the last 4 digits. Staff check them by hand. */
@@ -49,7 +49,7 @@ function AadhaarPage() {
 	};
 
 	return (
-		<ApplyShell title="Aadhaar" subtitle="Upload both sides of your Aadhaar card. Our team checks them by hand." step={position(snapshot.method, "/apply/aadhaar")}>
+		<ApplyShell title="Aadhaar" subtitle="Upload both sides of your Aadhaar card. Our team checks them by hand." progress={snapshot}>
 			<Section>
 				<Text fontSize="sm" bg="status.warn.bg" color="status.warn.fg" p={3} borderRadius="control">
 					Cover the first 8 digits of the Aadhaar number before uploading. We send back cards that show the full number.

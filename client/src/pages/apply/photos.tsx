@@ -8,7 +8,6 @@ import { canOpen } from "@/features/apply/guards";
 import { SubmitStep } from "@/features/apply/SubmitStep";
 import { useDocuments } from "@/features/apply/useDocuments";
 import { withApplication } from "@/features/apply/withApplication";
-import { position } from "@/lib/steps";
 import { PHOTO } from "@/lib/validation";
 
 /** Live photo (camera) and passport-size photo (upload), JPG only. */
@@ -18,7 +17,7 @@ function PhotosPage() {
 	const { documents, upload, contentUrl } = useDocuments();
 	const live = documents.filter((d) => d.kind === "LIVE_PHOTO");
 	return (
-		<ApplyShell title="Your photos" subtitle="A live photo taken now, and a passport-size photo." step={position(snapshot.method, "/apply/photos")}>
+		<ApplyShell title="Your photos" subtitle="A live photo taken now, and a passport-size photo." progress={snapshot}>
 			<Section label="Live photo">
 				{live.map((file) => (
 					<Stack key={file.document_id} direction="row" justify="space-between" align="center">

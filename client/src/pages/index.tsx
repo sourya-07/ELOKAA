@@ -1,26 +1,92 @@
-import { Button, Container, Heading, List, ListItem, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, List, ListItem, OrderedList, Stack, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
+import { staggerChildren } from "@/styles/motion";
 
-/** Start page: what the application asks for, and the way in. */
+/** One part of the application, as the progress line names it. */
+const PARTS = [
+	{ title: "Contact details", body: "Verify your mobile number with a one-time code." },
+	{ title: "Identity", body: "Aadhaar through DigiLocker (or by uploading it), your PAN, and your home address." },
+	{
+		title: "Eligibility",
+		body: "With your consent we check your CIBIL credit score. We only see whether it is 700 or more.",
+	},
+	{ title: "Photos", body: "A live photo taken with your camera, and a passport-size photo." },
+	{ title: "Documents", body: "Your graduation certificate, and your voter ID or driving licence." },
+	{ title: "Review and submit", body: "Check everything, then submit. Two people in our team review it." },
+];
+
+/**
+ * Start page: who can apply (the credit rule first, before anyone spends time), what the
+ * application asks for, and the way in.
+ */
 export default function Home() {
 	return (
 		<>
 			<Head>
 				<title>Become an ELOKA partner</title>
 			</Head>
-			<Container maxW="640px" py={16}>
-				<Stack spacing={6}>
-					<Heading as="h1" size="xl" letterSpacing="-0.02em">
-						Become an ELOKA partner
-					</Heading>
-					<Text color="text.muted">Apply online in about ten steps. Your progress is saved, so you can come back any time.</Text>
-					<List spacing={2} styleType="disc" pl={5}>
-						<ListItem>Your mobile number</ListItem>
-						<ListItem>DigiLocker, or your Aadhaar card and PAN</ListItem>
-						<ListItem>Your graduation certificate</ListItem>
-						<ListItem>Your voter ID or driving licence</ListItem>
-					</List>
+			<Container as="main" maxW="640px" py={{ base: 10, md: 16 }}>
+				<Stack spacing={8} sx={staggerChildren()}>
+					<Stack spacing={3}>
+						<Heading as="h1" size="xl" letterSpacing="-0.02em">
+							Become an ELOKA partner
+						</Heading>
+						<Text color="text.muted">
+							Apply online in about 20 minutes. Your progress is saved, so you can stop and come back any time.
+						</Text>
+					</Stack>
+
+					<Box as="section" aria-labelledby="who" bg="bg.surface" border="1px solid" borderColor="border.hairline" borderRadius="card" p={{ base: 4, md: 6 }}>
+						<Heading as="h2" size="sm" id="who" mb={3}>
+							Who can apply
+						</Heading>
+						<List spacing={2} styleType="disc" pl={5}>
+							<ListItem>You are 18 or older and live in India.</ListItem>
+							<ListItem>
+								<Text as="span" fontWeight={600}>
+									Your CIBIL credit score is 700 or more.
+								</Text>{" "}
+								With a score below 700 you are not eligible under our current rules, and the application ends at that check.
+							</ListItem>
+							<ListItem>You have your own Aadhaar, PAN and mobile number.</ListItem>
+						</List>
+					</Box>
+
+					<Stack as="section" aria-labelledby="how" spacing={3}>
+						<Heading as="h2" size="sm" id="how">
+							How it works
+						</Heading>
+						<OrderedList spacing={3} pl={5}>
+							{PARTS.map((part) => (
+								<ListItem key={part.title}>
+									<Text as="span" fontWeight={600}>
+										{part.title}.
+									</Text>{" "}
+									<Text as="span" color="text.muted">
+										{part.body}
+									</Text>
+								</ListItem>
+							))}
+						</OrderedList>
+					</Stack>
+
+					<Stack as="section" aria-labelledby="ready" spacing={3}>
+						<Heading as="h2" size="sm" id="ready">
+							Keep these ready
+						</Heading>
+						<List spacing={2} styleType="disc" pl={5}>
+							<ListItem>Your phone, with the mobile number you will use</ListItem>
+							<ListItem>Your PAN card</ListItem>
+							<ListItem>Your graduation certificate</ListItem>
+							<ListItem>Your voter ID or driving licence</ListItem>
+							<ListItem>A camera on your phone or computer, in good light</ListItem>
+						</List>
+						<Text fontSize="sm" color="text.muted">
+							Photos and documents: JPG photos up to 5 MB; certificates and cards as JPG or PDF up to 10 MB.
+						</Text>
+					</Stack>
+
 					<Button as={NextLink} href="/apply" alignSelf="flex-start">
 						Start your application
 					</Button>

@@ -44,7 +44,13 @@ public interface VerificationApi {
 		}
 
 		/** @param address may have missing parts; the applicant then completes it by hand */
-		record Verified(String aadhaarLast4, Address address) implements DigiLockerOutcome {
+		/**
+		 * @param dob date of birth from DigiLocker (age rules)
+		 * @param identityHash blind index of name, date of birth and Aadhaar last 4: a redo with the
+		 *        same identity does not make the later steps stale
+		 */
+		record Verified(String aadhaarLast4, Address address, java.time.LocalDate dob, byte[] identityHash)
+				implements DigiLockerOutcome {
 		}
 
 		record Failed(String code) implements DigiLockerOutcome {

@@ -8,7 +8,7 @@ import { canOpen } from "@/features/apply/guards";
 import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
 import { CONSENT_VERSION } from "@/lib/consent";
-import { ERROR_TEXT, position, routeFor } from "@/lib/steps";
+import { ERROR_TEXT, routeFor } from "@/lib/steps";
 import { enter } from "@/styles/motion";
 
 /** The CIBIL check right after the PAN. Only the outcome is shown, never the score. */
@@ -37,7 +37,7 @@ function CreditCheckPage() {
 
 	const failure = step?.last_error_code && step.status !== "COMPLETED" ? ERROR_TEXT[step.last_error_code] : null;
 	return (
-		<ApplyShell title="Credit check" subtitle="We check your CIBIL credit report to confirm you are eligible." step={position(snapshot.method, "/apply/credit-check")}>
+		<ApplyShell title="Credit check" subtitle="We check your CIBIL credit report to confirm you are eligible." progress={snapshot}>
 			<Section>
 				{busy ? (
 					<Stack direction="row" align="center" spacing={3} sx={enter(0, 200)}>

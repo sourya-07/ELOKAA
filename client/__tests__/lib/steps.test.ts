@@ -1,4 +1,4 @@
-import { pagesFor, position, routeFor } from "@/lib/steps";
+import { pagesFor, routeFor } from "@/lib/steps";
 import { snapshotAt } from "../fixtures";
 
 describe("routeFor", () => {
@@ -25,9 +25,5 @@ describe("steps of each path", () => {
 		expect(pagesFor("MANUAL")).toHaveLength(10);
 		expect(pagesFor("DIGILOCKER")).toHaveLength(8);
 		expect(pagesFor("DIGILOCKER").map((p) => p.path)).not.toContain("/apply/address");
-	});
-	it("numbers the pages", () => {
-		expect(position("MANUAL", "/apply/credit-check")).toEqual({ index: 5, total: 10 });
-		expect(position("DIGILOCKER", "/apply/credit-check")).toEqual({ index: 4, total: 8 });
 	});
 });

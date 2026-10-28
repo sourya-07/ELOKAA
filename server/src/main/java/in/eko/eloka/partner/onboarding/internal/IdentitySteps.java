@@ -10,6 +10,7 @@ import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.onboarding.StepStatus;
 import in.eko.eloka.partner.onboarding.VerificationMethod;
+import in.eko.eloka.partner.shared.crypto.BlindIndex;
 import in.eko.eloka.partner.shared.crypto.FieldCipher;
 import in.eko.eloka.partner.shared.error.ApiProblem;
 import in.eko.eloka.partner.shared.error.ValidationException;
@@ -44,13 +45,14 @@ class IdentitySteps {
 	private final PartnerApplicationRepository applicationRows;
 	private final OnboardingProperties properties;
 	private final FieldCipher cipher;
+	private final BlindIndex index;
 	private final AuditLog audit;
 	private final JsonMapper json;
 
 	IdentitySteps(ApplicationService applications, DocumentSteps documents, VerificationApi verification,
 			ConsentRecordRepository consents, PartnerAddressRepository addresses,
 			PartnerApplicationRepository applicationRows, OnboardingProperties properties, FieldCipher cipher,
-			AuditLog audit, JsonMapper json) {
+			BlindIndex index, AuditLog audit, JsonMapper json) {
 		this.applications = applications;
 		this.documents = documents;
 		this.verification = verification;
@@ -59,6 +61,7 @@ class IdentitySteps {
 		this.applicationRows = applicationRows;
 		this.properties = properties;
 		this.cipher = cipher;
+		this.index = index;
 		this.audit = audit;
 		this.json = json;
 	}
@@ -91,7 +94,7 @@ class IdentitySteps {
 			context.requirePrerequisites(PartnerStep.AADHAAR);
 			boolean consented = consents
 				.findFirstByApplicationIdAndPurposeOrderByAcceptedAtDesc(context.applicationId(), ConsentRecord.Purpose.DIGILOCKER)
-				.filter(consent -> consent.getTextVersion().equals(properties.consentVersion()))
+				.filter(consent -> consent.getTextVersion().equals(properties.consentVersion(ConsentRecord.Purpose.DIGILOCKER)))
 				.isPresent();
 			if (!consented) {
 				throw new ApiProblem(HttpStatus.CONFLICT, "CONSENT_REQUIRED", "Allow ELOKA to fetch your details from DigiLocker first",
@@ -128,7 +131,7 @@ class IdentitySteps {
 					summary.put("method", "DIGILOCKER");
 					summary.put("aadhaar_masked", "XXXX-XXXX-" + verified.aadhaarLast4());
 					summary.put("address_from_digilocker", addressComplete);
-					context.complete(PartnerStep.AADHAAR, json.writeValueAsString(summary));
+					context.complete(PartnerStep.AADHAAR, json.writeValueAsString(summary), verified.identityHash());
 				}
 			}
 			return false;
@@ -158,7 +161,8 @@ class IdentitySteps {
 				return null;
 			}
 			context.application().bindPan(outcome.panHash());
-			context.complete(PartnerStep.PAN, json.writeValueAsString(Map.of("pan_masked", outcome.panMasked())));
+			context.complete(PartnerStep.PAN, json.writeValueAsString(Map.of("pan_masked", outcome.panMasked())),
+					outcome.panHash());
 			return null;
 		});
 		return applications.get(applicantId, publicId);
@@ -176,7 +180,7 @@ class IdentitySteps {
 					cipher.encrypt(clean.city()), clean.district(), clean.state(), clean.pincode(),
 					PartnerAddress.Source.SELF_DECLARED);
 			addresses.save(address);
-			context.complete(PartnerStep.HOME_ADDRESS, addressSummary(address));
+			context.complete(PartnerStep.HOME_ADDRESS, addressSummary(address), fingerprint(address));
 			return null;
 		});
 		return applications.get(applicantId, publicId);
@@ -195,7 +199,7 @@ class IdentitySteps {
 		}
 		addresses.findByApplicationId(context.applicationId())
 			.filter(address -> address.getSource() == PartnerAddress.Source.DIGILOCKER)
-			.ifPresent(address -> context.complete(PartnerStep.HOME_ADDRESS, addressSummary(address)));
+			.ifPresent(address -> context.complete(PartnerStep.HOME_ADDRESS, addressSummary(address), fingerprint(address)));
 	}
 
 	private boolean saveDigiLockerAddress(StepContext context, VerificationApi.Address from) {
@@ -216,6 +220,14 @@ class IdentitySteps {
 				from.pincode(), PartnerAddress.Source.DIGILOCKER);
 		addresses.save(address);
 		return true;
+	}
+
+	/** The address as a blind index: the same address saved again does not reset later steps. */
+	private byte[] fingerprint(PartnerAddress address) {
+		String line2 = address.getLine2Enc() == null ? "" : cipher.decrypt(address.getLine2Enc());
+		return index.hash("home-address", String.join("|", cipher.decrypt(address.getLine1Enc()), line2,
+				cipher.decrypt(address.getCityEnc()), String.valueOf(address.getDistrict()), address.getState(),
+				address.getPincode()).toUpperCase());
 	}
 
 	private String addressSummary(PartnerAddress address) {

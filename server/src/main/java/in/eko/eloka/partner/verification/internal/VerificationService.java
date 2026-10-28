@@ -153,7 +153,9 @@ class VerificationService implements VerificationApi {
 				DigiLockerProvider.Address a = person.address();
 				Address address = a == null ? new Address(null, null, null, null, null, null)
 						: new Address(a.house(), a.street(), a.city(), a.district(), a.state(), a.pincode());
-				yield new DigiLockerOutcome.Verified(person.aadhaarLast4(), address);
+				byte[] identity = index.hash("aadhaar-identity",
+						person.name().trim().toUpperCase() + "|" + person.dob() + "|" + person.aadhaarLast4());
+				yield new DigiLockerOutcome.Verified(person.aadhaarLast4(), address, person.dob(), identity);
 			}
 		};
 	}
