@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { contactDetails, expectAccessible, identityToEligibility, jpeg, newApplicant, screenshotWholePage } from "./helpers";
+import { contactDetails, expectAccessible, identityToEligibility, jpeg, newApplicant, screenshotWholePage, tick } from "./helpers";
 
 test("an eligible applicant goes from the start page to a submitted application", async ({ page }) => {
 	const applicant = newApplicant("4321");
@@ -12,7 +12,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await expectAccessible(page);
 	await identityToEligibility(page, applicant);
 
-	await page.getByRole("radio", { name: "Voter ID" }).check({ force: true }); // Chakra draws its own box over the input
+	await tick(page.getByRole("radio", { name: "Voter ID" }));
 	await page.getByLabel("Voter ID (EPIC) number").fill(applicant.epic);
 	await page.getByRole("button", { name: "Verify", exact: true }).click();
 	await screenshotWholePage(page, "e2e/.results/screens/02-identity.png");
@@ -46,7 +46,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 	// Review and submit
 	await expect(page).toHaveURL(/\/apply\/review/);
 	await expect(page.getByText("Still to do before you can submit")).toBeHidden();
-	await page.getByRole("checkbox", { name: /information I have given is true/ }).check({ force: true }); // Chakra draws its own box over the input
+	await tick(page.getByRole("checkbox", { name: /information I have given is true/ }));
 	await page.getByRole("button", { name: "Submit application" }).click();
 	await expect(page.getByText("Submit your application?")).toBeVisible();
 	await page.screenshot({ path: "e2e/.results/screens/05-confirm.png" });

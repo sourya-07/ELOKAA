@@ -72,6 +72,7 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
   0.97 on press, errors, uploaded files, a changed status pill and a camera preview fade in, a status or task mark
   that turns to verified or done grows in from 0.92 (`useTurnedOn`: never on first render; fade only under reduced
   motion), loading spinners appear only after 400 ms, and a tick draws
-  on "submitted"/"approved". Scrolling: what starts below the screen waits hidden and rises in once when
-  scrolled to (`useRevealOnScroll` + `staggerChildren()` or `revealChildren`; an IntersectionObserver, nothing
+  on "submitted"/"approved". Scrolling: what is below the screen waits hidden and rises in each time it is
+  scrolled to from above (after scrolling back up past it, it waits again; parts coming in from the top stay
+  still) (`useRevealOnScroll` + `staggerChildren()` or `revealChildren`; IntersectionObservers, nothing
   runs while scrolling). ApplyShell and the start page have it; give it to any new long page or list. The staff console does not animate (used all day). No looping motion on forms.

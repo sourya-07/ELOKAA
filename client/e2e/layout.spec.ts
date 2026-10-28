@@ -37,4 +37,10 @@ test("parts below the screen wait, then rise in when scrolled to", async ({ page
 	await start.scrollIntoViewIfNeeded();
 	await expect(start).toHaveAttribute("data-reveal", "in");
 	await expect.poll(() => start.evaluate((element) => getComputedStyle(element).opacity)).toBe("1");
+	// Back to the top: it waits again, and rises in again on the way down (every time, not once)
+	await page.evaluate(() => window.scrollTo(0, 0));
+	await expect(start).toHaveAttribute("data-reveal", "wait");
+	await start.scrollIntoViewIfNeeded();
+	await expect(start).toHaveAttribute("data-reveal", "in");
+	await expect.poll(() => start.evaluate((element) => getComputedStyle(element).opacity)).toBe("1");
 });

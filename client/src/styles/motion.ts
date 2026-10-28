@@ -52,7 +52,8 @@ export function staggerChildren(): SystemStyleObject {
 
 /**
  * The two states `useRevealOnScroll` gives a child: waiting below the screen (hidden, still in the
- * layout and readable by screen readers) and revealed (rises in, or fades under reduced motion).
+ * layout and readable by screen readers) and revealed (rises in, or fades under reduced motion; it
+ * starts again each time a child goes from waiting to revealed).
  * `staggerChildren()` includes it; put it on any other container that uses the hook.
  */
 export const revealChildren: SystemStyleObject = {
@@ -62,16 +63,18 @@ export const revealChildren: SystemStyleObject = {
 };
 
 /**
- * Long pages: children that start below the screen wait, hidden, and rise in once when they are
- * scrolled to (40 px above the bottom edge). Nothing runs while scrolling: an IntersectionObserver
- * says when a child arrives, and the motion is transform and opacity only, so scrolling never lags.
- * What is on screen when the page loads keeps the page's own entrance. Children added later (a
+ * Long pages: children below the screen wait, hidden, and rise in when scrolled to (40 px above the
+ * bottom edge). It happens every time: a child that leaves through the bottom of the screen (the
+ * reader scrolled back up past it) waits again and rises in again on the way down. Children that
+ * come back in from the top stay still. Nothing runs while scrolling: two IntersectionObservers say
+ * when a child arrives or has left, and the motion is transform and opacity only, so scrolling never
+ * lags. What is on screen when the page loads keeps the page's own entrance. Children added later (a
  * task that appears, a list that loads) are looked at after each render. Without
  * IntersectionObserver everything simply shows. Pair with `staggerChildren()` or `revealChildren`.
  */
 export function useRevealOnScroll<T extends HTMLElement>() {
 	const ref = useRef<T>(null);
-	const observer = useRef<IntersectionObserver | null>(null);
+	const observers = useRef<{ arrive: IntersectionObserver; leave: IntersectionObserver } | null>(null);
 	const seen = useRef(new WeakSet<Element>());
 
 	useEffect(() => {
@@ -80,12 +83,11 @@ export function useRevealOnScroll<T extends HTMLElement>() {
 		}
 		// A fresh start (React may mount twice in development): every child is looked at again
 		seen.current = new WeakSet();
-		const watcher = new IntersectionObserver(
+		const arrive = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries) {
-					if (entry.isIntersecting) {
+					if (entry.isIntersecting && entry.target.getAttribute("data-reveal") === "wait") {
 						entry.target.setAttribute("data-reveal", "in");
-						watcher.unobserve(entry.target);
 					}
 				}
 			},
@@ -93,14 +95,25 @@ export function useRevealOnScroll<T extends HTMLElement>() {
 			// part of a page (above only its bottom padding) from ever arriving
 			{ rootMargin: "0px 0px -40px 0px" },
 		);
-		observer.current = watcher;
-		return () => watcher.disconnect();
+		// Waits again only once wholly below the screen, so nothing visible ever blinks out
+		const leave = new IntersectionObserver((entries) => {
+			for (const entry of entries) {
+				if (!entry.isIntersecting && entry.boundingClientRect.top >= (entry.rootBounds?.bottom ?? window.innerHeight)) {
+					entry.target.setAttribute("data-reveal", "wait");
+				}
+			}
+		});
+		observers.current = { arrive, leave };
+		return () => {
+			arrive.disconnect();
+			leave.disconnect();
+		};
 	}, []);
 
 	useEffect(() => {
 		const container = ref.current;
-		const watcher = observer.current;
-		if (!container || !watcher) {
+		const watchers = observers.current;
+		if (!container || !watchers) {
 			return;
 		}
 		for (const child of Array.from(container.children)) {
@@ -111,11 +124,13 @@ export function useRevealOnScroll<T extends HTMLElement>() {
 			// + 8 px: the page's entrance may still hold the child 8 px low; a sliver on screen stays
 			if (child.getBoundingClientRect().top > window.innerHeight + 8) {
 				child.setAttribute("data-reveal", "wait");
-				watcher.observe(child);
 			} else if (child.getAttribute("data-reveal") === "wait") {
 				// Marked on an earlier pass (a development double mount) but on screen now: never left hidden
 				child.removeAttribute("data-reveal");
 			}
+			// Every child, including those on screen at load: any of them can leave and come back
+			watchers.arrive.observe(child);
+			watchers.leave.observe(child);
 		}
 	});
 

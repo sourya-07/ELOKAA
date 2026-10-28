@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 /** A mobile number, PAN and voter ID nobody else used; the last digits choose the fake answers (docs/LOCAL_DEVELOPMENT.md). */
 export function newApplicant(panDigits = "4321") {
@@ -34,21 +34,25 @@ export async function jpeg(page: Page, width = 800, height = 600): Promise<{ nam
 }
 
 /**
- * A full-page screenshot as a reader would see it: parts below the screen rise in only when
- * scrolled to (useRevealOnScroll), so scroll through the page once first.
+ * A full-page screenshot of the whole layout: parts below the screen wait hidden until scrolled to
+ * (useRevealOnScroll, and again after scrolling back up), so show them all first, as a reader sees
+ * each one once it has arrived.
  */
 export async function screenshotWholePage(page: Page, path: string) {
-	await page.evaluate(async () => {
-		// A third of the screen at a time, pausing so each part is seen arriving (a jump straight past
-		// a part leaves it waiting until it is scrolled back to, as for a reader)
-		for (let y = 0; y < document.documentElement.scrollHeight; y += window.innerHeight / 3) {
-			window.scrollTo(0, y);
-			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-		window.scrollTo(0, 0);
-	});
-	await page.waitForFunction(() => !document.querySelector("[data-reveal=wait]") && document.getAnimations().every((animation) => animation.playState !== "running"), undefined, { polling: 100, timeout: 10_000 });
+	await page.evaluate(() => document.querySelectorAll("[data-reveal=wait]").forEach((part) => part.setAttribute("data-reveal", "in")));
+	await page.waitForFunction(() => document.getAnimations().every((animation) => animation.playState !== "running"), undefined, { polling: 100, timeout: 10_000 });
 	await page.screenshot({ path, fullPage: true });
+}
+
+/**
+ * Ticks a Chakra checkbox or radio. Chakra draws its own box over the input, so the click is forced,
+ * and a forced click skips Playwright's wait for the element to stop moving: let the part finish
+ * rising in (it animates each time it is scrolled to) before clicking where it is.
+ */
+export async function tick(box: Locator) {
+	await box.scrollIntoViewIfNeeded();
+	await box.page().waitForFunction(() => document.getAnimations().every((animation) => animation.playState !== "running"), undefined, { polling: 50 });
+	await box.check({ force: true });
 }
 
 /** No serious or critical accessibility problems on the page as it is now. */
@@ -75,18 +79,18 @@ export async function contactDetails(page: Page, applicant: ReturnType<typeof ne
 	await page.getByRole("button", { name: "Email me a code" }).click();
 	await page.getByLabel("Digit 1 of 6").fill("123456");
 	await page.getByRole("button", { name: "Verify email" }).click();
-	await page.getByRole("checkbox").check({ force: true }); // Chakra draws its own box over the input
+	await tick(page.getByRole("checkbox"));
 	await page.getByRole("button", { name: "Continue" }).click();
 	await expect(page).toHaveURL(/\/apply\/identity/);
 }
 
 /** DigiLocker (the fake comes straight back), PAN and the credit check. */
 export async function identityToEligibility(page: Page, applicant: ReturnType<typeof newApplicant>) {
-	await page.getByRole("checkbox", { name: /fetch these details from DigiLocker/ }).check({ force: true }); // Chakra draws its own box over the input
+	await tick(page.getByRole("checkbox", { name: /fetch these details from DigiLocker/ }));
 	await page.getByRole("button", { name: "Continue to DigiLocker" }).click();
 	await expect(page.getByText("XXXX-XXXX-1234")).toBeVisible();
 	await page.getByRole("textbox", { name: "PAN" }).fill(applicant.pan);
 	await page.getByRole("button", { name: "Verify PAN" }).click();
-	await page.getByRole("checkbox", { name: /credit information/ }).check({ force: true }); // Chakra draws its own box over the input
+	await tick(page.getByRole("checkbox", { name: /credit information/ }));
 	await page.getByRole("button", { name: "Check eligibility" }).click();
 }
