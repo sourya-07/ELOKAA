@@ -1,6 +1,6 @@
 # ELOKA partner onboarding
 
-The web journey through which a prospective ELOKA partner verifies their mobile number, proves their identity (with DigiLocker or step by step), passes a CIBIL eligibility check (score 700 or more), uploads photos and documents, and submits the application for review by Eko staff.
+The web journey through which a prospective ELOKA partner verifies their mobile number, verifies their email, proves their identity through DigiLocker (Aadhaar), PAN and a voter ID or driving licence, passes a CIBIL eligibility check (score 700 or more), uploads photos and documents, and submits the application for review by Eko staff.
 
 > This repository is **public**. Never commit real names, mobile numbers, PAN or Aadhaar numbers, credentials or internal documents.
 
@@ -33,3 +33,5 @@ Java 25, Spring Boot 4.1, Spring Modulith, Spring Security, MySQL 8.4, Flyway ·
 - 2026-10-27: staff review (P9): staff sign-in (Google; OTP locally), roles, queue, case view, evidence decisions, corrections, maker-checker approval, reject, hold, audited reveal of hidden values, Flyway V10.
 - 2026-10-27: client (P10–P12): BFF proxy with HttpOnly session cookies, CSRF checks and token refresh; CSP with a per-request nonce; theme from DESIGN.md; all applicant pages (mobile OTP, method, DigiLocker, Aadhaar, PAN, credit check, address, photos with camera, education, voter ID / DL, review, status); staff console (sign-in, queue, case review).
 - 2026-10-27: delivery (P13–P14): production compose stack (MySQL, migrate job, server, client, ClamAV, Caddy), backup/restore, tag-driven deploy workflow (scan, publish, staging, approved production), runbook, staff bootstrap command, k6 script, log-leak test, architecture/security/testing docs.
+- 2026-10-28: journey v2 (ADR-0007), slices 0–9: existing defects fixed; email OTP; identity through DigiLocker only (the step-by-step path is retired); CIBIL right after PAN; voter ID or driving licence verified through EPS with a name match; live photo with the device location (required); full Aadhaar images and the full document set (ADR-0008); five working pages with six-part progress; review page with blockers and fix links; staff unblock and a Blocked queue; motion and accessibility pass; Playwright end-to-end tests with axe (local fakes only). Flyway V11–V17.
+- Not production-ready: the credit bureau (Q-1), the legal basis for full Aadhaar images (Q-20), an SMTP account (Q-21), EPS UAT runs for every adapter (Q-22, Q-23), hosting (Q-4), retention (Q-5), reviewed consent texts and a penetration test are still open ([`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md)).

@@ -1,6 +1,6 @@
 # ADR-0007: Journey v2: DigiLocker identity, email OTP, verified alternate ID, five working pages
 
-- **Status:** accepted (being built in slices; see "Build order")
+- **Status:** accepted; slices 0–9 built on local fakes (2026-10-28); real providers waiting (see "Build order")
 - **Date:** 2026-10-28
 - **Deciders:** project owner
 
@@ -60,3 +60,7 @@ Vertical slices, each with its tests and docs, so `main` works after every one:
 8. Motion and design pass.
 9. End-to-end tests.
 10. Real providers.
+
+Slices 0–9 were done on 2026-10-28 (with each slice's tests, docs and review). Slice 10 waits on Q-1, Q-20,
+Q-21 and EPS UAT access (Q-22, Q-23). Not done from the plan: a CI job for the browser tests (it needs
+MySQL, the server and the web app in one runner) and updated Stitch screens (below).

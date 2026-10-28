@@ -105,7 +105,7 @@ Re-doing a step **with different data** resets later steps that depend on it (ea
 
 `NOT_STARTED`, `PENDING`, `SUBMITTED`, `VERIFICATION_IN_PROGRESS`, `VERIFIED`, `REJECTED`, `VERIFICATION_FAILED`, `MANUAL_REVIEW_REQUIRED`.
 
-- To move on, an item must be `VERIFIED`, or `SUBMITTED` / `MANUAL_REVIEW_REQUIRED` when only a person can check it (masked Aadhaar, photos, certificates, ID images).
+- To move on, an item must be `VERIFIED`, or `SUBMITTED` / `MANUAL_REVIEW_REQUIRED` when only a person can check it (Aadhaar, PAN and ID images, photos, certificates).
 - **Approval needs every item `VERIFIED`.** Submitting something never makes it verified.
 
 ## Eligibility

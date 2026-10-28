@@ -93,6 +93,13 @@ Names: `APP-` = partner application steps, `STF-` = staff console, `R1-` = exist
 
 ## final/5-partner-journey: Partner journey (14), made 2026-10-27
 
+**Superseded by journey v2 (ADR-0007, 2026-10-28):** the built pages now differ from these screens. There is no
+step-by-step path (PTN-02's choice and PTN-03 are gone), email is verified on the sign-in card, identity, PAN,
+the credit check and the voter ID or driving licence are tasks on one page, the live photo needs the location,
+and documents (full Aadhaar front and back, PAN card, ID images, class 10, class 12, graduation or diploma) have
+their own page. The screens are kept for their look; the running app and docs/PARTNER_JOURNEY.md are the
+reference for content. Not regenerated in Stitch.
+
 The individual partner journey from docs/PARTNER_JOURNEY.md (`PTN-`), adapted from the APP- screens. All awaiting owner review. The repo files are ahead of Stitch: wrong text Stitch added (Skip buttons, PNG as a format, an invented "re-apply after 90 days" rule, dashboard links) was removed locally and re-rendered; `metadata.json` lists every patch and leftover per screen.
 
 | Design | What |

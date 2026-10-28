@@ -11,8 +11,9 @@
 
 - **Rules:** every (status, event) pair of the status machine; prerequisites and invalidation of
   the steps; the CIBIL rule at 299/300/699/700/900/901/no score.
-- **Journeys:** step by step and DigiLocker, end to end over HTTP, through submission and staff
-  approval.
+- **Journeys:** the journey v2 path (mobile and email codes, DigiLocker, PAN, credit check, voter ID
+  or driving licence, photos with location, documents), end to end over HTTP, through submission and
+  staff approval.
 - **Negative paths:** wrong, expired, locked and reused OTPs; parallel OTP sends (one SMS);
   refresh-token reuse; another applicant's application or file (404); skipped steps (409); a
   missing or stale `If-Match`; a double submit (one submission); a score below 700 (closed, PAN
