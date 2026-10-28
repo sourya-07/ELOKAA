@@ -14,10 +14,10 @@ import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.documents.DocumentRef;
 import in.eko.eloka.partner.documents.NewDocument;
 import in.eko.eloka.partner.onboarding.PartnerStep;
-import in.eko.eloka.partner.shared.crypto.FieldCipher;
 import in.eko.eloka.partner.shared.error.ApiProblem;
 import in.eko.eloka.partner.shared.error.NotFoundException;
 import in.eko.eloka.partner.shared.error.ValidationException;
+import in.eko.eloka.partner.verification.VerificationApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +34,6 @@ class DocumentSteps {
 	/** Kinds that may be uploaded once; a new upload replaces the old one. */
 	private static final Set<DocumentKind> SINGLE = EnumSet.complementOf(EnumSet.of(DocumentKind.COMPUTER_CERTIFICATE));
 	private static final int MAX_COMPUTER_CERTIFICATES = 5;
-	private static final java.util.regex.Pattern EPIC = java.util.regex.Pattern.compile("[A-Z]{3}\\d{7}");
-	private static final java.util.regex.Pattern DL = java.util.regex.Pattern.compile("[A-Z]{2}\\d{13}");
 
 	record DocumentView(@JsonProperty("document_id") String documentId, String kind, String status,
 			@JsonProperty("file_name") String fileName, @JsonProperty("content_type") String contentType, long size,
@@ -44,18 +42,16 @@ class DocumentSteps {
 
 	private final ApplicationService applications;
 	private final ApplicationDocumentRepository links;
-	private final IdNumberRepository idNumbers;
 	private final DocumentApi documents;
-	private final FieldCipher cipher;
+	private final VerificationApi verification;
 	private final JsonMapper json;
 
-	DocumentSteps(ApplicationService applications, ApplicationDocumentRepository links, IdNumberRepository idNumbers,
-			DocumentApi documents, FieldCipher cipher, JsonMapper json) {
+	DocumentSteps(ApplicationService applications, ApplicationDocumentRepository links, DocumentApi documents,
+			VerificationApi verification, JsonMapper json) {
 		this.applications = applications;
 		this.links = links;
-		this.idNumbers = idNumbers;
 		this.documents = documents;
-		this.cipher = cipher;
+		this.verification = verification;
 		this.json = json;
 	}
 
@@ -165,38 +161,33 @@ class DocumentSteps {
 	}
 
 	/**
-	 * At least one of voter ID or driving licence, each with its number and both sides. A number
-	 * without its images (or images without the number) is refused, so nothing half-done is kept.
+	 * Both sides of the voter ID or driving licence that was verified in the identity step (or of
+	 * either, when both were). The number itself was checked there; it is not asked again.
 	 */
 	@Transactional
-	ApplicationSnapshot submitIdDocument(UUID applicantId, String publicId, long version, String voterNumber,
-			String licenceNumber) {
+	ApplicationSnapshot submitIdDocument(UUID applicantId, String publicId, long version) {
 		applications.write(applicantId, publicId, version, context -> {
 			context.requirePrerequisites(PartnerStep.ID_DOCUMENT);
 			Map<DocumentKind, Long> have = counts(context);
-			String voter = normalise(voterNumber);
-			String licence = normalise(licenceNumber);
-			boolean voterImages = have.containsKey(DocumentKind.VOTER_ID_FRONT) || have.containsKey(DocumentKind.VOTER_ID_BACK);
-			boolean licenceImages = have.containsKey(DocumentKind.DRIVING_LICENCE_FRONT)
-					|| have.containsKey(DocumentKind.DRIVING_LICENCE_BACK);
-			if (voter == null && licence == null) {
-				throw ValidationException.field("voter_id_number", "Add your voter ID or your driving licence");
-			}
+			java.util.Set<VerificationApi.AlternateType> verified = verification.verifiedAlternateIds(context.applicationId());
+			List<DocumentKind> missing = new java.util.ArrayList<>();
 			Map<String, Object> summary = new LinkedHashMap<>();
-			if (voter != null || voterImages) {
-				if (voter == null || !EPIC.matcher(voter).matches()) {
-					throw ValidationException.field("voter_id_number", "Enter the 10-character voter ID (EPIC) number");
+			for (VerificationApi.AlternateType type : verified) {
+				List<DocumentKind> sides = type == VerificationApi.AlternateType.VOTER_ID
+						? List.of(DocumentKind.VOTER_ID_FRONT, DocumentKind.VOTER_ID_BACK)
+						: List.of(DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK);
+				List<DocumentKind> gap = sides.stream().filter(kind -> !have.containsKey(kind)).toList();
+				if (gap.isEmpty()) {
+					summary.put(type == VerificationApi.AlternateType.VOTER_ID ? "voter_id" : "driving_licence", true);
 				}
-				requireAll(have, DocumentKind.VOTER_ID_FRONT, DocumentKind.VOTER_ID_BACK);
-				summary.put("voter_id", save(context, IdNumber.Type.VOTER_ID, voter));
+				else if (missing.isEmpty() || gap.size() < missing.size()) {
+					missing = new java.util.ArrayList<>(gap);
+				}
 			}
-			if (licence != null || licenceImages) {
-				if (licence == null || !DL.matcher(licence).matches()) {
-					throw ValidationException.field("driving_licence_number",
-							"Enter the driving licence number, for example MH0120110012345");
-				}
-				requireAll(have, DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK);
-				summary.put("driving_licence", save(context, IdNumber.Type.DRIVING_LICENCE, licence));
+			if (summary.isEmpty()) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "DOCUMENTS_MISSING",
+						"Add both sides of the document you verified", Map.of("missing_documents",
+								missing.stream().map(Enum::name).toList()));
 			}
 			context.complete(PartnerStep.ID_DOCUMENT, json.writeValueAsString(summary));
 			return null;
@@ -209,15 +200,6 @@ class DocumentSteps {
 		if (context.step(step).getStatus() == in.eko.eloka.partner.onboarding.StepStatus.LOCKED) {
 			throw new ApiProblem(HttpStatus.CONFLICT, "STEP_NOT_EDITABLE", "This step cannot be changed now");
 		}
-	}
-
-	private String save(StepContext context, IdNumber.Type type, String number) {
-		IdNumber row = idNumbers.findByApplicationIdAndType(context.applicationId(), type)
-			.orElseGet(() -> new IdNumber(context.applicationId(), type));
-		String masked = "*".repeat(number.length() - 4) + number.substring(number.length() - 4);
-		row.set(cipher.encrypt(number), masked);
-		idNumbers.save(row);
-		return masked;
 	}
 
 	private Map<DocumentKind, Long> counts(StepContext context) {
@@ -233,13 +215,6 @@ class DocumentSteps {
 			throw new ApiProblem(HttpStatus.CONFLICT, "DOCUMENTS_MISSING", "Some required files are missing",
 					Map.of("missing_documents", missing));
 		}
-	}
-
-	private static String normalise(String number) {
-		if (number == null || number.isBlank()) {
-			return null;
-		}
-		return number.toUpperCase().replaceAll("[\\s-]", "");
 	}
 
 	private static DocumentKind parseKind(String name) {

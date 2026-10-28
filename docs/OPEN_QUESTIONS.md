@@ -23,17 +23,17 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | ID | Question | Status | Default |
 |---|---|---|---|
 | Q-7 | OTP delivery | default | EPS Mobile/OTP API through `OtpSender` (no DLT setup on our side) |
-| Q-8 | PAN, DigiLocker, voter ID, driving licence checks | default | EPS PAN Lite/Advanced, EPS DigiLocker, EPS voter ID and DL APIs; staff review on top |
+| Q-8 | PAN, DigiLocker, voter ID, driving licence checks | default | EPS PAN Lite, EPS DigiLocker (Aadhaar), EPS Voter ID and Driving Licence APIs plus EPS Name Match (built in journey v2; before it, voter ID and DL were only typed and checked by staff); staff review on top. Mock-tested only, not yet on EPS UAT |
 | Q-10 | Who is the partner after approval? Provisioning? | default | an individual partner; approval ends this project and publishes `PartnerApproved`; no account is created |
 | Q-11 | Staff console in scope? | default | yes, a minimal one ported from eloka (queue, case, decisions) |
 | Q-12 | File formats | default | photos JPEG (.jpg/.jpeg) only, 5 MB; certificates and ID images JPEG or PDF, 10 MB. The whiteboard may also say PNG |
 | Q-13 | Malware scanning | default | ClamAV container in staging and production |
 | Q-14 | Java base package | default | `in.eko.eloka.partner` |
-| Q-15 | Voter ID and driving licence: may an applicant add both? | default | yes; at least one is required |
+| Q-15 | Voter ID and driving licence: may an applicant add both? | default | one verified document is required (`ALTERNATE_ID`); its two sides are uploaded |
 | Q-16 | Optional computer certificates: how many? | default | up to 5 |
 | Q-18 | EPS DigiLocker: the document call needs a `verification_id` the create call does not return | default | we send our own id as `client_ref_id` on create and `verification_id` on fetch; untested against EPS UAT |
 | Q-19 | A person with no credit history (no CIBIL score) | default | `UNABLE_TO_ASSESS` (`NO_CREDIT_HISTORY`): never eligible, the step blocks after 3 tries for staff follow-up |
-| Q-23 | Name-match threshold between the voter ID / driving licence name and the DigiLocker (Aadhaar) name | default | a setting; set from EPS UAT samples |
+| Q-23 | Name-match threshold between the voter ID / driving licence name and the DigiLocker (Aadhaar) name | default | `eloka.verification.name-match-min-score: 0.85` (EPS calls 0.85–0.99 a good partial match); to tune with EPS UAT samples |
 | Q-24 | Live-photo location: accuracy limits, applicants outside India | default | refused above 1000 m; flagged for staff above 100 m and outside India |
 | Q-25 | One email per live application? (refusing reveals that an address is registered) | default | yes, with a neutral message |
 | Q-26 | Must the uploaded voter ID / driving licence images be of the document that was verified? | default | yes |

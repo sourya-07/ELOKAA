@@ -176,6 +176,61 @@ class IdentitySteps {
 	}
 
 	/**
+	 * The second identity document (voter ID or driving licence), checked with its government record
+	 * and against the DigiLocker identity. Each type has its own tries; the step blocks when both are
+	 * used up (staff follow up, nothing is verified from an image alone). An outage changes nothing.
+	 */
+	@Transactional
+	ApplicationSnapshot verifyAlternateId(UUID applicantId, String publicId, long version, String typeName, String number) {
+		VerificationApi.AlternateType type = parseType(typeName);
+		applications.write(applicantId, publicId, version, context -> {
+			context.requirePrerequisites(PartnerStep.ALTERNATE_ID);
+			ApplicationStep step = context.step(PartnerStep.ALTERNATE_ID);
+			if (step.getStatus() == StepStatus.BLOCKED) {
+				throw new ApiProblem(HttpStatus.LOCKED, "STEP_BLOCKED", "Too many failed attempts on this step. Please contact support.");
+			}
+			if (verification.alternateIdFailures(context.applicationId()).getOrDefault(type, 0L) >= properties.maxAttempts()) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "ID_TYPE_EXHAUSTED",
+						"This document could not be verified. Try the other one.", Map.of("type", type.name()));
+			}
+			VerificationApi.AlternateIdOutcome outcome = verification.verifyAlternateId(context.applicationId(), type, number);
+			if (outcome.result() == VerificationApi.AlternateResult.UNAVAILABLE) {
+				context.failTechnically(PartnerStep.ALTERNATE_ID, "ALTERNATE_ID_UNAVAILABLE");
+				return null;
+			}
+			String result = outcome.result() != VerificationApi.AlternateResult.VERIFIED ? type.name() + "_" + outcome.result().name()
+					: applicationRows.existsBlockingIdDocument(outcome.numberHash(), context.applicationId(), applications.blockingStatuses())
+							? "ID_ALREADY_USED" : "VERIFIED";
+			audit.record(new AuditEntry("ALTERNATE_ID_CHECKED", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
+					publicId, Map.of("type", type.name(), "result", result)));
+			if (!result.equals("VERIFIED")) {
+				context.fail(PartnerStep.ALTERNATE_ID, result);
+				return null;
+			}
+			if (type == VerificationApi.AlternateType.VOTER_ID) {
+				context.application().bindVoterId(outcome.numberHash());
+			}
+			else {
+				context.application().bindDrivingLicence(outcome.numberHash());
+			}
+			context.complete(PartnerStep.ALTERNATE_ID,
+					json.writeValueAsString(Map.of("type", type.name(), "number_masked", outcome.numberMasked())),
+					index.hash("alternate-id", type.name() + ":" + java.util.HexFormat.of().formatHex(outcome.numberHash())));
+			return null;
+		});
+		return applications.get(applicantId, publicId);
+	}
+
+	private static VerificationApi.AlternateType parseType(String type) {
+		try {
+			return VerificationApi.AlternateType.valueOf(type == null ? "" : type.trim().toUpperCase());
+		}
+		catch (IllegalArgumentException ex) {
+			throw ValidationException.field("type", "Choose voter ID or driving licence");
+		}
+	}
+
+	/**
 	 * Home address typed by the applicant: only when DigiLocker did not give a whole one, or a
 	 * reviewer asked for it to be corrected. A DigiLocker address is not replaced by a typed one.
 	 */

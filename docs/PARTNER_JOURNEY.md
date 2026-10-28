@@ -9,10 +9,10 @@ One page can hold several steps (ADR-0007). Identity is DigiLocker only; the ste
 | Page | Path (client) | Step keys |
 |---|---|---|
 | Contact details: mobile number + OTP, then email + code and the data-use consent (one card) | `/apply` | `MOBILE_VERIFICATION`, `EMAIL_VERIFICATION`, `CONSENT` |
-| Identity and eligibility, as tasks: Aadhaar through DigiLocker, home address (typed only if DigiLocker's is incomplete), PAN, credit check | `/apply/identity` (`#aadhaar`, `#address`, `#pan`, `#eligibility`) | `AADHAAR`, `HOME_ADDRESS`, `PAN`, `CREDIT_CHECK` |
+| Identity and eligibility, as tasks: Aadhaar through DigiLocker, home address (typed only if DigiLocker's is incomplete), PAN, credit check, then a voter ID or driving licence checked with its government record | `/apply/identity` (`#aadhaar`, `#address`, `#pan`, `#eligibility`, `#alternate-id`) | `AADHAAR`, `HOME_ADDRESS`, `PAN`, `CREDIT_CHECK`, `ALTERNATE_ID` |
 | Live photo + passport-size photo | `/apply/photos` | `PHOTOS` |
 | Graduation certificate (+ optional computer certificates) | `/apply/education` | `EDUCATION` |
-| Voter ID or driving licence | `/apply/id-document` | `ID_DOCUMENT` |
+| Both sides of the verified voter ID or driving licence | `/apply/id-document` | `ID_DOCUMENT` |
 | Review + declaration | `/apply/review` | `DECLARATION` |
 | Status | `/apply/status` | — |
 
@@ -94,12 +94,13 @@ Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAI
 | `HOME_ADDRESS` | Aadhaar | the DigiLocker address, or (only when DigiLocker's is incomplete, or a reviewer reopened it) one typed by the applicant |
 | `PAN` | Aadhaar | provider says the PAN is valid and matches the DigiLocker name and date of birth |
 | `CREDIT_CHECK` | PAN | outcome `ELIGIBLE` |
-| `PHOTOS` | credit check, home address | live photo and passport-size photo submitted |
-| `EDUCATION` | credit check, home address | graduation certificate submitted |
-| `ID_DOCUMENT` | credit check, home address | voter ID or driving licence (or both) submitted |
+| `ALTERNATE_ID` | credit check | a voter ID or driving licence found in its government record (EPS), a licence active, the date of birth (where the record has one) the DigiLocker one, and the holder's name a match for the DigiLocker name (EPS Name Match ≥ `eloka.verification.name-match-min-score`, 0.85); one document per open application. 3 tries per document type; the step blocks when both are used up, and staff follow up (nothing is verified from an image). An outage uses nothing |
+| `PHOTOS` | credit check, home address, alternate ID | live photo and passport-size photo submitted |
+| `EDUCATION` | credit check, home address, alternate ID | graduation certificate submitted |
+| `ID_DOCUMENT` | credit check, home address, alternate ID | both sides of a verified document submitted (the number was checked in `ALTERNATE_ID`) |
 | `DECLARATION` | all of the above | current declaration accepted |
 
-Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new PAN resets `CREDIT_CHECK` and `DECLARATION`; any document change resets `DECLARATION`.
+Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new DigiLocker identity resets `PAN`, `ALTERNATE_ID` and what follows them; a new PAN resets `CREDIT_CHECK` and `DECLARATION`; another verified ID document resets `ID_DOCUMENT` (its images must match) and `DECLARATION`; any document change resets `DECLARATION`.
 
 ## Evidence status (per document or check)
 

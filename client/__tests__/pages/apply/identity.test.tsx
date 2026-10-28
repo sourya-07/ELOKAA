@@ -84,3 +84,22 @@ describe("identity page", () => {
 		expect(replace).not.toHaveBeenCalled(); // the state stays in the address for the next check
 	});
 });
+
+describe("voter ID or driving licence task", () => {
+	it("checks the number format and sends the chosen document", async () => {
+		const write = jest.fn().mockResolvedValue(snapshotAt("PHOTOS"));
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt("ALTERNATE_ID"), write, setSnapshot: jest.fn() });
+		render(<IdentityPage />);
+		fireEvent.change(screen.getByLabelText("Voter ID (EPIC) number"), { target: { value: "AB12" } });
+		fireEvent.click(screen.getByRole("button", { name: "Verify" }));
+		expect(screen.getByText(/exactly as on the card/)).toBeInTheDocument();
+		expect(write).not.toHaveBeenCalled();
+
+		fireEvent.click(screen.getByRole("radio", { name: "Driving licence" }));
+		fireEvent.change(screen.getByLabelText("Driving licence number"), { target: { value: "mh01 20110012345" } });
+		fireEvent.click(screen.getByRole("button", { name: "Verify" }));
+		await waitFor(() =>
+			expect(write).toHaveBeenCalledWith("/alternate-id-verifications", { body: { type: "DRIVING_LICENCE", number: "MH0120110012345" }, idempotent: true }),
+		);
+	});
+});

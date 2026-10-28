@@ -111,7 +111,9 @@ class ApplicationService {
 		fresh.useDigiLocker();
 		PartnerApplication application = applications.saveAndFlush(fresh);
 		for (PartnerStep key : PartnerStep.values()) {
-			ApplicationStep step = new ApplicationStep(application.getId(), key, properties.maxAttempts());
+			// Two document types, each with the usual tries: the step blocks only when both are used up
+			int attempts = key == PartnerStep.ALTERNATE_ID ? 2 * properties.maxAttempts() : properties.maxAttempts();
+			ApplicationStep step = new ApplicationStep(application.getId(), key, attempts);
 			if (key == PartnerStep.MOBILE_VERIFICATION) {
 				step.complete(json.writeValueAsString(Map.of("verified", true)), now); // the session proves it
 			}

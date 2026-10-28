@@ -3,8 +3,12 @@ package in.eko.eloka.partner.integration.internal;
 import java.time.LocalDate;
 import in.eko.eloka.partner.integration.CreditBureau;
 import in.eko.eloka.partner.integration.DigiLockerProvider;
+import in.eko.eloka.partner.integration.DrivingLicenceVerifier;
+import in.eko.eloka.partner.integration.IdDocumentCheck;
+import in.eko.eloka.partner.integration.NameMatcher;
 import in.eko.eloka.partner.integration.PanVerifier;
 import in.eko.eloka.partner.integration.ProviderNotConfiguredException;
+import in.eko.eloka.partner.integration.VoterIdVerifier;
 
 /** No provider in this environment: every call is refused, never passed. */
 final class UnconfiguredIdentityProviders {
@@ -38,6 +42,30 @@ final class UnconfiguredIdentityProviders {
 		@Override
 		public Report fetchScore(Request request) {
 			throw new ProviderNotConfiguredException("Credit check");
+		}
+	}
+
+	static final class VoterId implements VoterIdVerifier {
+
+		@Override
+		public IdDocumentCheck verify(String epicNumber) {
+			throw new ProviderNotConfiguredException("Voter ID verification");
+		}
+	}
+
+	static final class DrivingLicence implements DrivingLicenceVerifier {
+
+		@Override
+		public IdDocumentCheck verify(String licenceNumber, LocalDate dob) {
+			throw new ProviderNotConfiguredException("Driving licence verification");
+		}
+	}
+
+	static final class Names implements NameMatcher {
+
+		@Override
+		public double score(String name1, String name2) {
+			throw new ProviderNotConfiguredException("Name match");
 		}
 	}
 }

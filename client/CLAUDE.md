@@ -29,7 +29,7 @@ src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 sh
                       pages in ONE shared provider; "optional" pages such as /apply also render signed out),
                       EmailStage (email code + data-use consent on the /apply card), DigiLockerTask (explainer, consent,
                       official help links, return with ?state=, automatic re-checks, start again), AddressForm,
-                      PanForm (PAN only), EligibilityTask, WithdrawPanel (step-up code,
+                      PanForm (PAN only), EligibilityTask, AlternateIdTask (voter ID or driving licence number), WithdrawPanel (step-up code,
                       then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after

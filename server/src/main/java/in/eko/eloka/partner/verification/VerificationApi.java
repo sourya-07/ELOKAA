@@ -10,7 +10,36 @@ public interface VerificationApi {
 
 	enum Kind {
 		PAN,
-		AADHAAR
+		AADHAAR,
+		VOTER_ID,
+		DRIVING_LICENCE
+	}
+
+	/** The second identity document: a voter ID or a driving licence, checked with its government record. */
+	enum AlternateType {
+		VOTER_ID,
+		DRIVING_LICENCE;
+
+		public Kind kind() {
+			return Kind.valueOf(name());
+		}
+	}
+
+	/**
+	 * @param numberMasked for display; @param numberHash blind index (one live application per document),
+	 *        only when verified
+	 */
+	record AlternateIdOutcome(AlternateResult result, String numberMasked, byte[] numberHash) {
+	}
+
+	enum AlternateResult {
+		VERIFIED,
+		NOT_FOUND,
+		NAME_MISMATCH,
+		DOB_MISMATCH,
+		NOT_ACTIVE,
+		/** The provider could not answer now: not a result, nothing recorded */
+		UNAVAILABLE
 	}
 
 	enum Method {
@@ -91,6 +120,21 @@ public interface VerificationApi {
 
 	/** Reads the session the state belongs to. A state works once, for its own application, for 15 minutes. */
 	DigiLockerOutcome completeDigiLocker(UUID applicationId, String state);
+
+	/**
+	 * Checks a voter ID or driving licence with its government record, and the holder's name (and
+	 * date of birth where given) against the DigiLocker identity. Records the attempt, except an outage.
+	 *
+	 * @throws in.eko.eloka.partner.shared.error.ValidationException for a number in the wrong format
+	 * @throws in.eko.eloka.partner.shared.error.ApiProblem {@code AADHAAR_NOT_VERIFIED} without a DigiLocker identity
+	 */
+	AlternateIdOutcome verifyAlternateId(UUID applicationId, AlternateType type, String number);
+
+	/** Failed record checks so far, per document type (outages are not counted). */
+	java.util.Map<AlternateType, Long> alternateIdFailures(UUID applicationId);
+
+	/** The document types verified for this application (the uploaded images must be of one of them). */
+	java.util.Set<AlternateType> verifiedAlternateIds(UUID applicationId);
 
 	/** Name and DOB from DigiLocker if used, else from the PAN step; and the verified PAN. */
 	Optional<Identity> verifiedIdentity(UUID applicationId);

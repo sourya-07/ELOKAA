@@ -5,7 +5,7 @@ describe("routeFor", () => {
 	it("follows the server's next step to its page", () => {
 		expect(routeFor(snapshotAt("EMAIL_VERIFICATION"))).toBe("/apply");
 		expect(routeFor(snapshotAt("CONSENT"))).toBe("/apply");
-		for (const step of ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK"] as const) {
+		for (const step of ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK", "ALTERNATE_ID"] as const) {
 			expect(routeFor(snapshotAt(step))).toBe("/apply/identity");
 		}
 		expect(routeFor(snapshotAt("PHOTOS"))).toBe("/apply/photos");
@@ -19,8 +19,8 @@ describe("routeFor", () => {
 });
 
 describe("pages", () => {
-	it("puts the four identity steps on one page", () => {
-		expect(PAGES.filter((page) => page.path.startsWith("/apply/identity"))).toHaveLength(4);
+	it("puts the five identity steps on one page", () => {
+		expect(PAGES.filter((page) => page.path.startsWith("/apply/identity"))).toHaveLength(5);
 	});
 	it("only follows return addresses inside the journey", () => {
 		expect(safeNext("/apply/identity?state=dls_x")).toBe("/apply/identity?state=dls_x");

@@ -72,6 +72,10 @@ public final class JourneyDriver {
 		consent("CREDIT_CHECK");
 		track(call(post(app("/credit-assessments")).header("If-Match", etag())
 			.header("Idempotency-Key", UUID.randomUUID().toString())).andExpect(status().isOk()));
+		track(call(post(app("/alternate-id-verifications")).header("If-Match", etag())
+			.header("Idempotency-Key", UUID.randomUUID().toString())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("{\"type\":\"VOTER_ID\",\"number\":\"" + newEpic("4567") + "\"}")).andExpect(status().isOk()));
 		upload("LIVE_PHOTO", jpeg(600, 600));
 		upload("PASSPORT_PHOTO", jpeg(350, 450));
 		submitStep("/photos/submit", null);
@@ -79,7 +83,7 @@ public final class JourneyDriver {
 		submitStep("/education/submit", null);
 		upload("VOTER_ID_FRONT", jpeg(800, 500));
 		upload("VOTER_ID_BACK", jpeg(800, 500));
-		submitStep("/id-document/submit", "{\"voter_id_number\":\"ABC1234567\"}");
+		submitStep("/id-document/submit", null);
 		return declareAndSubmit();
 	}
 
@@ -147,6 +151,21 @@ public final class JourneyDriver {
 	}
 
 	/** A personal PAN whose digits pick the fake providers' answer; the letters keep it unique. */
+	/** A voter ID nobody else uses; the last 4 digits choose the fake answer (FakeIdentityProviders). */
+	public static String newEpic(String lastFour) {
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		StringBuilder value = new StringBuilder();
+		for (int i = 0; i < 3; i++) {
+			value.append((char) ('A' + random.nextInt(26)));
+		}
+		return value.append(String.format("%03d", random.nextInt(1000))).append(lastFour).toString();
+	}
+
+	/** A driving licence nobody else uses (2 letters + 13 digits); the last 4 digits choose the fake answer. */
+	public static String newLicence(String lastFour) {
+		return "MH" + String.format("%09d", ThreadLocalRandom.current().nextInt(1_000_000_000)) + lastFour;
+	}
+
 	public static String newPan(String digits) {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		StringBuilder value = new StringBuilder();

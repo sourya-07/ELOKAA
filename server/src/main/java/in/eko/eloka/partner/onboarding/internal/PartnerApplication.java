@@ -49,6 +49,13 @@ class PartnerApplication extends BaseEntity {
 	@Column(name = "email_masked", length = 80)
 	private String emailMasked;
 
+	/** Blind indexes of the verified voter ID and driving licence (one live application per document). */
+	@Column(name = "voter_id_hash", columnDefinition = "BINARY(32)")
+	private byte[] voterIdHash;
+
+	@Column(name = "driving_licence_hash", columnDefinition = "BINARY(32)")
+	private byte[] drivingLicenceHash;
+
 	@Column(name = "assigned_staff_id", columnDefinition = "BINARY(16)")
 	private UUID assignedStaffId;
 
@@ -106,6 +113,14 @@ class PartnerApplication extends BaseEntity {
 
 	void bindPan(byte[] hash) {
 		this.panHash = hash;
+	}
+
+	void bindVoterId(byte[] hash) {
+		this.voterIdHash = hash;
+	}
+
+	void bindDrivingLicence(byte[] hash) {
+		this.drivingLicenceHash = hash;
 	}
 
 	void bindEmail(byte[] encrypted, byte[] hash, String masked) {

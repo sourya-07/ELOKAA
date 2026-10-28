@@ -25,7 +25,8 @@ src/main/java/in/eko/eloka/partner/
 ├── integration/  provider ports (MobileOtpGateway); internal: ProviderConfig picks fake | eps | none per
 │             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters (OTP, PAN Lite,
 │             DigiLocker), fakes, stubs, ClamAV scanner, SMTP email sender; ports MobileOtpGateway, PanVerifier,
-│             DigiLockerProvider, CreditBureau, MalwareScanner, EmailSender
+│             DigiLockerProvider, CreditBureau, MalwareScanner, EmailSender, VoterIdVerifier, DrivingLicenceVerifier, NameMatcher
+│             (EPS adapters in EpsIdDocumentVerifiers)
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
               (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session,
               /reauth (step-up code before withdrawing, `ApplicantReauth`), email codes (`EmailVerification`: our own
@@ -39,7 +40,8 @@ src/main/java/in/eko/eloka/partner/
 │             /v1/partner/applications
 ├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode turned upright first (ImageSanitizer, ExifOrientation), PDF
 │             malware scan, AES-GCM encrypted storage behind DocumentStorage (filesystem now)
-├── verification/ PAN checks (against the DigiLocker identity), DigiLocker sessions (single-use state, 15 min, a new
+├── verification/ PAN checks (against the DigiLocker identity), voter ID / driving licence checks (AlternateIdChecks:
+│             record, active, DOB, name match), DigiLocker sessions (single-use state, 15 min, a new
 │             start ends the open one, 10 per hour, outages are not results, under 18 refused); EvidenceStatus;
 │             encrypted values + masked copies + PAN blind index
 ├── eligibility/ EligibilityPolicy (MIN_SCORE = 700, a constant), credit assessments (score only, never the report)

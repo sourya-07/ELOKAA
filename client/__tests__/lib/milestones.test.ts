@@ -4,7 +4,7 @@ import { snapshotAt } from "../fixtures";
 describe("milestones", () => {
 	it("counts finished parts from the server's step statuses", () => {
 		expect(progressOf(snapshotAt("PAN"))).toEqual({ done: 1, total: 6 }); // identity still needs the PAN
-		expect(progressOf(snapshotAt("CREDIT_CHECK"))).toEqual({ done: 2, total: 6 });
+		expect(progressOf(snapshotAt("ALTERNATE_ID"))).toEqual({ done: 2, total: 6 }); // eligibility done, identity waits for the ID
 		expect(progressOf(snapshotAt("PHOTOS"))).toEqual({ done: 3, total: 6 });
 		const states = milestonesOf(snapshotAt("CREDIT_CHECK"));
 		expect(states.find((s) => s.key === "ELIGIBILITY")?.current).toBe(true);

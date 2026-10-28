@@ -24,10 +24,13 @@ Every outside service runs on a fake locally (ADR-0004). Staging and production 
 | DigiLocker | returns at once (straight back to `/apply/identity?state=…`) with the sample person RAVI SAMPLE, born 1990-01-15, Aadhaar `XXXX-XXXX-1234`, a whole address in Mumbai |
 | PAN check (by the 4 digits of the PAN) | `0000` invalid · `1111` name mismatch · `2222` date-of-birth mismatch · `9999` provider down · anything else matches |
 | Credit score (by the 4 digits of the PAN) | `6990` → 699 (not eligible) · `7000` → 700 (eligible) · `0001` → no credit history · `9997` → 950 (invalid score) · `9998` → bureau down · anything else → 742 |
+| Voter ID (by the last 4 digits of the EPIC, e.g. `ABC1234567`) | `0000` no record · `1111` someone else's name · `9999` provider down · anything else RAVI SAMPLE |
+| Driving licence (by its last 4 digits, e.g. `MH0120110014567`) | `0000` no record · `1111` someone else's name · `2222` date of birth does not match · `3333` expired · `9999` provider down · anything else RAVI SAMPLE's active licence |
+| Name match | the same letters (ignoring case, spaces, dots) match; anything else does not |
 | Malware scanner | flags only the EICAR test string |
 
 PANs must be personal (4th letter `P`), for example `ABCPK4321L`. A PAN can be used by one open, approved or
-ineligible application only, so use new letters for each try.
+ineligible application only, so use new letters for each try. The same goes for voter ID and driving licence numbers.
 
 ## Staff console sign-in (local)
 

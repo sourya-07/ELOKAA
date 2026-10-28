@@ -4,8 +4,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 import in.eko.eloka.partner.integration.CreditBureau;
 import in.eko.eloka.partner.integration.DigiLockerProvider;
+import in.eko.eloka.partner.integration.DrivingLicenceVerifier;
+import in.eko.eloka.partner.integration.IdDocumentCheck;
+import in.eko.eloka.partner.integration.NameMatcher;
 import in.eko.eloka.partner.integration.PanVerifier;
 import in.eko.eloka.partner.integration.ProviderUnavailableException;
+import in.eko.eloka.partner.integration.VoterIdVerifier;
 import in.eko.eloka.partner.shared.config.UnsafeInProduction;
 
 /**
@@ -89,6 +93,73 @@ final class FakeIdentityProviders {
 		@Override
 		public String unsafeReason() {
 			return "fake credit bureau is active";
+		}
+	}
+
+	/**
+	 * Voter ID by the last 4 digits of the EPIC number: {@code 0000} no record, {@code 1111} someone
+	 * else's name, {@code 9999} provider down; anything else is RAVI SAMPLE (the fake DigiLocker person).
+	 */
+	static final class VoterId implements VoterIdVerifier, UnsafeInProduction {
+
+		@Override
+		public IdDocumentCheck verify(String epicNumber) {
+			return switch (epicNumber.substring(epicNumber.length() - 4)) {
+				case "0000" -> new IdDocumentCheck.NotFound();
+				case "1111" -> new IdDocumentCheck.Found("ASHA OTHERPERSON", null, true, "fake-voter-" + UUID.randomUUID());
+				case "9999" -> throw new ProviderUnavailableException("Voter ID verification");
+				default -> new IdDocumentCheck.Found("RAVI SAMPLE", LocalDate.of(1990, 1, 15), true,
+						"fake-voter-" + UUID.randomUUID());
+			};
+		}
+
+		@Override
+		public String unsafeReason() {
+			return "fake voter ID verifier is active";
+		}
+	}
+
+	/**
+	 * Driving licence by its last 4 digits: {@code 0000} no record, {@code 1111} someone else's name,
+	 * {@code 2222} date of birth does not match, {@code 3333} expired, {@code 9999} provider down;
+	 * anything else is RAVI SAMPLE's active licence.
+	 */
+	static final class DrivingLicence implements DrivingLicenceVerifier, UnsafeInProduction {
+
+		@Override
+		public IdDocumentCheck verify(String licenceNumber, LocalDate dob) {
+			return switch (licenceNumber.substring(licenceNumber.length() - 4)) {
+				case "0000" -> new IdDocumentCheck.NotFound();
+				case "1111" -> new IdDocumentCheck.Found("ASHA OTHERPERSON", dob, true, "fake-dl-" + UUID.randomUUID());
+				case "2222" -> new IdDocumentCheck.DobMismatch();
+				case "3333" -> new IdDocumentCheck.Found("RAVI SAMPLE", dob, false, "fake-dl-" + UUID.randomUUID());
+				case "9999" -> throw new ProviderUnavailableException("Driving licence verification");
+				default -> new IdDocumentCheck.Found("RAVI SAMPLE", dob, true,
+						"fake-dl-" + UUID.randomUUID());
+			};
+		}
+
+		@Override
+		public String unsafeReason() {
+			return "fake driving licence verifier is active";
+		}
+	}
+
+	/** The same letters (ignoring case, spaces and dots) are a match; anything else is not. */
+	static final class Names implements NameMatcher, UnsafeInProduction {
+
+		@Override
+		public double score(String name1, String name2) {
+			return simple(name1).equals(simple(name2)) ? 1.0 : 0.1;
+		}
+
+		private static String simple(String name) {
+			return name.toUpperCase().replaceAll("[^A-Z]", "");
+		}
+
+		@Override
+		public String unsafeReason() {
+			return "fake name matcher is active";
 		}
 	}
 }

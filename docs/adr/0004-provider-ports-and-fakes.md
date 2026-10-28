@@ -10,7 +10,7 @@ The journey depends on outside services: SMS OTP, PAN, DigiLocker, voter ID, dri
 
 ## Decision
 
-- Each service is an interface in the `integration` module (`OtpSender`, `PanVerifier`, `DigiLockerProvider`, `CreditBureau`, `VoterIdVerifier`, `DrivingLicenceVerifier`, `MalwareScanner`).
+- Each service is an interface in the `integration` module (`MobileOtpGateway`, `EmailSender`, `PanVerifier`, `DigiLockerProvider`, `CreditBureau`, `VoterIdVerifier`, `DrivingLicenceVerifier`, `NameMatcher`, `MalwareScanner`).
 - Each has up to three implementations:
   1. a real adapter (EPS first), enabled by configuration;
   2. a **fake** for the `local` and `test` profiles only. Fakes implement `UnsafeInProduction`;

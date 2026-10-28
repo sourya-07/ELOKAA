@@ -6,7 +6,7 @@ import { staggerChildren } from "@/styles/motion";
 /** One part of the application, as the progress line names it. */
 const PARTS = [
 	{ title: "Contact details", body: "Verify your mobile number and your email address with one-time codes." },
-	{ title: "Identity", body: "Your Aadhaar through DigiLocker (it gives your home address too), then your PAN." },
+	{ title: "Identity", body: "Your Aadhaar through DigiLocker (it gives your home address too), your PAN, and your voter ID or driving licence number." },
 	{
 		title: "Eligibility",
 		body: "With your consent we check your CIBIL credit score. We tell you only whether it is 700 or more, and we never keep your credit report.",

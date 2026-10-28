@@ -13,13 +13,14 @@ export const PAGES: Page[] = [
 	{ path: "/apply/identity#address", title: "Home address", step: "HOME_ADDRESS" },
 	{ path: "/apply/identity#pan", title: "PAN", step: "PAN" },
 	{ path: "/apply/identity#eligibility", title: "Eligibility", step: "CREDIT_CHECK" },
+	{ path: "/apply/identity#alternate-id", title: "Voter ID or driving licence", step: "ALTERNATE_ID" },
 	{ path: "/apply/photos", title: "Photos", step: "PHOTOS" },
 	{ path: "/apply/education", title: "Education", step: "EDUCATION" },
-	{ path: "/apply/id-document", title: "Voter ID or driving licence", step: "ID_DOCUMENT" },
+	{ path: "/apply/id-document", title: "Voter ID or driving licence images", step: "ID_DOCUMENT" },
 	{ path: "/apply/review", title: "Review", step: "DECLARATION" },
 ];
 
-const IDENTITY: StepKey[] = ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK"];
+const IDENTITY: StepKey[] = ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK", "ALTERNATE_ID"];
 
 /** Where the applicant continues: the page of the server's next step. */
 export function routeFor(snapshot: Snapshot): string {
@@ -59,4 +60,13 @@ export const ERROR_TEXT: Record<string, string> = {
 	DIGILOCKER_UNAVAILABLE: "DigiLocker is not answering right now. Nothing was used up; check again in a few minutes.",
 	DIGILOCKER_UNDER_AGE: "You must be 18 or older to become an ELOKA partner.",
 	AADHAAR_NOT_VERIFIED: "Verify your Aadhaar through DigiLocker first.",
+	VOTER_ID_NOT_FOUND: "No voter ID with this number was found. Check the number on your card.",
+	VOTER_ID_NAME_MISMATCH: "The name on this voter ID does not match your Aadhaar.",
+	VOTER_ID_DOB_MISMATCH: "The date of birth on this voter ID does not match your Aadhaar.",
+	DRIVING_LICENCE_NOT_FOUND: "No driving licence with this number was found. Check the number on your licence.",
+	DRIVING_LICENCE_NAME_MISMATCH: "The name on this driving licence does not match your Aadhaar.",
+	DRIVING_LICENCE_DOB_MISMATCH: "The date of birth on this driving licence does not match your Aadhaar.",
+	DRIVING_LICENCE_NOT_ACTIVE: "This driving licence is not active (for example, it has expired).",
+	ID_ALREADY_USED: "This document is already used in another application.",
+	ALTERNATE_ID_UNAVAILABLE: "The government record could not be checked right now. Nothing was used up; please try again in a few minutes.",
 };

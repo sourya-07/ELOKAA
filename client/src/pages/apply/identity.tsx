@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { ApplyShell } from "@/components/ApplyShell";
 import { TaskSection } from "@/components/TaskSection";
 import { AddressForm } from "@/features/apply/AddressForm";
+import { AlternateIdTask } from "@/features/apply/AlternateIdTask";
 import { useApplication, useStepGuard } from "@/features/apply/ApplicationContext";
 import { DigiLockerTask } from "@/features/apply/DigiLockerTask";
 import { EligibilityTask } from "@/features/apply/EligibilityTask";
@@ -13,7 +14,7 @@ import { routeFor } from "@/lib/steps";
 import { canChange, taskState } from "@/lib/tasks";
 import type { StepKey } from "@/lib/types";
 
-const STEPS: StepKey[] = ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK"];
+const STEPS: StepKey[] = ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK", "ALTERNATE_ID"];
 
 /**
  * Identity and eligibility on one page, as a list of tasks in the server's order: Aadhaar through
@@ -28,11 +29,12 @@ function IdentityPage() {
 	const aadhaar = summary("AADHAAR") as { aadhaar_masked?: string };
 	const address = summary("HOME_ADDRESS") as { state?: string; pincode?: string; source?: string };
 	const pan = summary("PAN") as { pan_masked?: string };
+	const alternate = summary("ALTERNATE_ID") as { type?: string; number_masked?: string };
 	const addressState = taskState(snapshot, "HOME_ADDRESS");
 	const nextElsewhere = snapshot.next_step && !STEPS.includes(snapshot.next_step);
 
 	return (
-		<ApplyShell title="Your identity and eligibility" subtitle="Aadhaar through DigiLocker, your PAN, then the credit check." progress={snapshot}>
+		<ApplyShell title="Your identity and eligibility" subtitle="Aadhaar through DigiLocker, your PAN, the credit check, then a voter ID or driving licence." progress={snapshot}>
 			<TaskSection
 				id="aadhaar"
 				title="Aadhaar, through DigiLocker"
@@ -75,6 +77,17 @@ function IdentityPage() {
 				lockedReason="After your PAN is verified"
 			>
 				<EligibilityTask />
+			</TaskSection>
+
+			<TaskSection
+				id="alternate-id"
+				title="Voter ID or driving licence"
+				state={taskState(snapshot, "ALTERNATE_ID")}
+				summary={`${alternate.type === "DRIVING_LICENCE" ? "Driving licence" : "Voter ID"} ${alternate.number_masked ?? ""}`}
+				lockedReason="After your eligibility is confirmed"
+				canChange={canChange(snapshot, "ALTERNATE_ID")}
+			>
+				<AlternateIdTask />
 			</TaskSection>
 
 			{nextElsewhere && (

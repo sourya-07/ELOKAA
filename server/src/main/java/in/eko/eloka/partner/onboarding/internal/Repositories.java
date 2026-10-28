@@ -51,6 +51,12 @@ interface PartnerApplicationRepository extends JpaRepository<PartnerApplication,
 	boolean existsBlockingPan(@Param("hash") byte[] hash, @Param("id") UUID excludeId,
 			@Param("blocking") Collection<ApplicationStatus> blocking);
 
+	/** Another application that blocks a new one already holds this voter ID or driving licence (DB keys are the backstop). */
+	@Query("select count(a) > 0 from PartnerApplication a where (a.voterIdHash = :hash or a.drivingLicenceHash = :hash) "
+			+ "and a.id <> :id and a.status in :blocking")
+	boolean existsBlockingIdDocument(@Param("hash") byte[] hash, @Param("id") UUID excludeId,
+			@Param("blocking") Collection<ApplicationStatus> blocking);
+
 	/** Another application that blocks a new one already has this email. The DB unique key is the backstop. */
 	@Query("select count(a) > 0 from PartnerApplication a where a.emailHash = :hash and a.id <> :id and a.status in :blocking")
 	boolean existsBlockingEmail(@Param("hash") byte[] hash, @Param("id") UUID excludeId,

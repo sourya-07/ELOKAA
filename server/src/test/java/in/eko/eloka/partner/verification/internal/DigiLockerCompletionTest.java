@@ -33,7 +33,7 @@ class DigiLockerCompletionTest {
 	private final DigiLockerSessionRepository sessions = mock(DigiLockerSessionRepository.class);
 	private final DigiLockerProvider provider = mock(DigiLockerProvider.class);
 	private final VerificationService service = new VerificationService(verifications, sessions, mock(PanVerifier.class),
-			provider, mock(FieldCipher.class), mock(BlindIndex.class), Clock.fixed(NOW, ZoneOffset.UTC));
+			provider, mock(AlternateIdChecks.class), mock(FieldCipher.class), mock(BlindIndex.class), Clock.fixed(NOW, ZoneOffset.UTC));
 
 	@Test
 	void anOutageKeepsTheTripOpenSoItCanBeCheckedAgain() {

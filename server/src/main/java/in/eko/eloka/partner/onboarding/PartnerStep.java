@@ -15,6 +15,7 @@ public enum PartnerStep {
 	HOME_ADDRESS,
 	PAN,
 	CREDIT_CHECK,
+	ALTERNATE_ID,
 	PHOTOS,
 	EDUCATION,
 	ID_DOCUMENT,
@@ -29,9 +30,10 @@ public enum PartnerStep {
 			case AADHAAR -> List.of(CONSENT);
 			case HOME_ADDRESS, PAN -> List.of(AADHAAR);
 			case CREDIT_CHECK -> List.of(PAN);
-			case PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(CREDIT_CHECK, HOME_ADDRESS);
-			case DECLARATION -> List.of(EMAIL_VERIFICATION, CONSENT, AADHAAR, HOME_ADDRESS, PAN, CREDIT_CHECK, PHOTOS,
-					EDUCATION, ID_DOCUMENT);
+			case ALTERNATE_ID -> List.of(CREDIT_CHECK);
+			case PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(CREDIT_CHECK, HOME_ADDRESS, ALTERNATE_ID);
+			case DECLARATION -> List.of(EMAIL_VERIFICATION, CONSENT, AADHAAR, HOME_ADDRESS, PAN, CREDIT_CHECK, ALTERNATE_ID,
+					PHOTOS, EDUCATION, ID_DOCUMENT);
 		};
 	}
 
@@ -44,7 +46,10 @@ public enum PartnerStep {
 	 */
 	public List<PartnerStep> invalidates() {
 		return switch (this) {
-			case AADHAAR -> List.of(PAN, DECLARATION);
+			// The PAN and the second ID were matched against the DigiLocker name and date of birth
+			case AADHAAR -> List.of(PAN, ALTERNATE_ID, DECLARATION);
+			// The ID images must be of the verified document
+			case ALTERNATE_ID -> List.of(ID_DOCUMENT, DECLARATION);
 			case PAN -> List.of(CREDIT_CHECK, DECLARATION);
 			case EMAIL_VERIFICATION, CONSENT, HOME_ADDRESS, CREDIT_CHECK, PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(DECLARATION);
 			case MOBILE_VERIFICATION, DECLARATION -> List.of();

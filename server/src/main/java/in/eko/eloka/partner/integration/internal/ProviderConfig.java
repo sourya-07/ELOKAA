@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import in.eko.eloka.partner.integration.CreditBureau;
 import in.eko.eloka.partner.integration.DigiLockerProvider;
+import in.eko.eloka.partner.integration.DrivingLicenceVerifier;
+import in.eko.eloka.partner.integration.NameMatcher;
+import in.eko.eloka.partner.integration.VoterIdVerifier;
 import in.eko.eloka.partner.integration.EmailSender;
 import in.eko.eloka.partner.integration.GoogleIdentityVerifier;
 import in.eko.eloka.partner.integration.MalwareScanner;
@@ -47,6 +50,33 @@ class ProviderConfig {
 			case FAKE -> new FakeIdentityProviders.DigiLocker();
 			case EPS -> new EpsDigiLocker(EpsClient.create(properties.eps(), clock));
 			case NONE -> new UnconfiguredIdentityProviders.DigiLocker();
+		};
+	}
+
+	@Bean
+	VoterIdVerifier voterIdVerifier(IntegrationProperties properties, Clock clock) {
+		return switch (properties.identityProvider()) {
+			case FAKE -> new FakeIdentityProviders.VoterId();
+			case EPS -> new EpsIdDocumentVerifiers.VoterId(EpsClient.create(properties.eps(), clock));
+			case NONE -> new UnconfiguredIdentityProviders.VoterId();
+		};
+	}
+
+	@Bean
+	DrivingLicenceVerifier drivingLicenceVerifier(IntegrationProperties properties, Clock clock) {
+		return switch (properties.identityProvider()) {
+			case FAKE -> new FakeIdentityProviders.DrivingLicence();
+			case EPS -> new EpsIdDocumentVerifiers.DrivingLicence(EpsClient.create(properties.eps(), clock));
+			case NONE -> new UnconfiguredIdentityProviders.DrivingLicence();
+		};
+	}
+
+	@Bean
+	NameMatcher nameMatcher(IntegrationProperties properties, Clock clock) {
+		return switch (properties.identityProvider()) {
+			case FAKE -> new FakeIdentityProviders.Names();
+			case EPS -> new EpsIdDocumentVerifiers.Names(EpsClient.create(properties.eps(), clock));
+			case NONE -> new UnconfiguredIdentityProviders.Names();
 		};
 	}
 

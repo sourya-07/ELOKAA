@@ -50,8 +50,9 @@ class ReviewService {
 	private static final Set<ApplicationStatus> QUEUE = EnumSet.of(ApplicationStatus.SUBMITTED,
 			ApplicationStatus.UNDER_REVIEW, ApplicationStatus.ON_HOLD);
 	/** Steps a reviewer may send back; the rest are system steps (the credit check is redone only through PAN). */
-	private static final Set<PartnerStep> CORRECTABLE = EnumSet.of(PartnerStep.AADHAAR, PartnerStep.PAN,
-			PartnerStep.HOME_ADDRESS, PartnerStep.PHOTOS, PartnerStep.EDUCATION, PartnerStep.ID_DOCUMENT);
+	private static final Set<PartnerStep> CORRECTABLE = EnumSet.of(PartnerStep.EMAIL_VERIFICATION, PartnerStep.AADHAAR,
+			PartnerStep.PAN, PartnerStep.HOME_ADDRESS, PartnerStep.ALTERNATE_ID, PartnerStep.PHOTOS, PartnerStep.EDUCATION,
+			PartnerStep.ID_DOCUMENT);
 	private static final Duration DEFAULT_CORRECTION_WINDOW = Duration.ofDays(14);
 
 	record QueueItem(@JsonProperty("application_id") String applicationId, String status, String method,
@@ -143,7 +144,11 @@ class ReviewService {
 					a.getStatus().name()))
 			.orElse(Map.of());
 		Map<String, String> numbers = new LinkedHashMap<>();
-		idNumbers.findByApplicationId(id).forEach(n -> numbers.put(n.getType().name(), n.getNumberMasked()));
+		idNumbers.findByApplicationId(id).forEach(n -> numbers.put(n.getType().name(), n.getNumberMasked())); // before journey v2
+		verification.evidence(id).stream()
+			.filter(e -> e.status() == EvidenceStatus.VERIFIED
+					&& (e.kind() == VerificationApi.Kind.VOTER_ID || e.kind() == VerificationApi.Kind.DRIVING_LICENCE))
+			.forEach(e -> numbers.put(e.kind().name(), e.valueMasked()));
 		List<ActionView> history = actions.findByApplicationIdOrderByOccurredAtAsc(id)
 			.stream()
 			.map(a -> new ActionView(a.getAction(), staffName(a.getStaffId()), a.getDecision(), a.getReasonCode(),
@@ -372,10 +377,16 @@ class ReviewService {
 		}
 		Map<VerificationApi.Kind, EvidenceStatus> checks = new java.util.EnumMap<>(VerificationApi.Kind.class);
 		verification.evidence(id).forEach(e -> checks.put(e.kind(), e.status()));
-		for (VerificationApi.Kind kind : VerificationApi.Kind.values()) {
+		for (VerificationApi.Kind kind : List.of(VerificationApi.Kind.PAN, VerificationApi.Kind.AADHAAR)) {
 			if (checks.get(kind) != EvidenceStatus.VERIFIED) {
 				blockers.add(kind.name() + "_NOT_VERIFIED");
 			}
+		}
+		// One verified voter ID or driving licence is enough (journey v2; older applications have no such step)
+		boolean hasAlternateStep = steps.findByApplicationId(id).stream()
+			.anyMatch(s -> s.getStepKey() == PartnerStep.ALTERNATE_ID && s.getStatus() != StepStatus.NOT_APPLICABLE);
+		if (hasAlternateStep && verification.verifiedAlternateIds(id).isEmpty()) {
+			blockers.add("ALTERNATE_ID_NOT_VERIFIED");
 		}
 		if (addresses.findByApplicationId(id).map(a -> a.getStatus() != EvidenceStatus.VERIFIED).orElse(true)) {
 			blockers.add("ADDRESS_NOT_VERIFIED");

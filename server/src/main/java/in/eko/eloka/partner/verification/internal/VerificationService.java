@@ -58,6 +58,8 @@ class VerificationService implements VerificationApi {
 	/** DigiLocker trips an application may start per hour (each one is a provider session). */
 	private static final int MAX_STARTS_PER_HOUR = 10;
 	private static final java.util.regex.Pattern PAN = java.util.regex.Pattern.compile("[A-Z]{5}\\d{4}[A-Z]");
+	private static final java.util.regex.Pattern EPIC = java.util.regex.Pattern.compile("[A-Z]{3}\\d{7}");
+	private static final java.util.regex.Pattern LICENCE = java.util.regex.Pattern.compile("[A-Z]{2}\\d{13}");
 	private static final char[] REF_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".toCharArray();
 	private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -65,12 +67,15 @@ class VerificationService implements VerificationApi {
 	private final DigiLockerSessionRepository sessions;
 	private final PanVerifier panVerifier;
 	private final DigiLockerProvider digiLocker;
+	private final AlternateIdChecks alternateIds;
 	private final FieldCipher cipher;
 	private final BlindIndex index;
 	private final Clock clock;
 
 	VerificationService(VerificationRepository verifications, DigiLockerSessionRepository sessions,
-			PanVerifier panVerifier, DigiLockerProvider digiLocker, FieldCipher cipher, BlindIndex index, Clock clock) {
+			PanVerifier panVerifier, DigiLockerProvider digiLocker, AlternateIdChecks alternateIds, FieldCipher cipher,
+			BlindIndex index, Clock clock) {
+		this.alternateIds = alternateIds;
 		this.verifications = verifications;
 		this.sessions = sessions;
 		this.panVerifier = panVerifier;
@@ -177,6 +182,63 @@ class VerificationService implements VerificationApi {
 				yield new DigiLockerOutcome.Verified(person.aadhaarLast4(), address, person.dob(), identity);
 			}
 		};
+	}
+
+	@Override
+	@Transactional
+	public AlternateIdOutcome verifyAlternateId(UUID applicationId, AlternateType type, String rawNumber) {
+		String number = rawNumber == null ? "" : rawNumber.trim().toUpperCase().replaceAll("[\\s-]", "");
+		java.util.regex.Pattern format = type == AlternateType.VOTER_ID ? EPIC : LICENCE;
+		if (!format.matcher(number).matches()) {
+			throw ValidationException.field("number", type == AlternateType.VOTER_ID
+					? "Enter the 10-character voter ID (EPIC) number, for example ABC1234567"
+					: "Enter the driving licence number, for example MH0120110012345");
+		}
+		Verification person = latestVerifiedDigiLocker(applicationId).orElseThrow(() -> new ApiProblem(HttpStatus.CONFLICT,
+				"AADHAAR_NOT_VERIFIED", "Verify your Aadhaar through DigiLocker first"));
+		String aadhaarName = cipher.decrypt(person.getNameEnc());
+		LocalDate aadhaarDob = LocalDate.parse(cipher.decrypt(person.getDobEnc()));
+		AlternateIdChecks.Result check = alternateIds.check(type, number, aadhaarName, aadhaarDob);
+		if (check.result() == AlternateResult.UNAVAILABLE) {
+			return new AlternateIdOutcome(AlternateResult.UNAVAILABLE, null, null);
+		}
+		String masked = "*".repeat(number.length() - 4) + number.substring(number.length() - 4);
+		byte[] hash = index.hash(type.name().toLowerCase(), number);
+		Verification attempt = new Verification(applicationId, type.kind(), Method.PROVIDER, EvidenceStatus.VERIFIED,
+				type.name().toLowerCase(), check.providerRef())
+			.value(cipher.encrypt(number), hash, masked);
+		if (check.holderName() != null) {
+			attempt.person(cipher.encrypt(check.holderName()), check.holderDob() == null ? null : cipher.encrypt(check.holderDob().toString()));
+		}
+		if (check.result() != AlternateResult.VERIFIED) {
+			attempt.failed(check.result().name());
+		}
+		verifications.save(attempt);
+		return new AlternateIdOutcome(check.result(), masked, check.result() == AlternateResult.VERIFIED ? hash : null);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<AlternateType, Long> alternateIdFailures(UUID applicationId) {
+		Map<AlternateType, Long> failures = new EnumMap<>(AlternateType.class);
+		for (Verification v : verifications.findByApplicationIdOrderByCreatedAtDesc(applicationId)) {
+			if (v.getStatus() == EvidenceStatus.VERIFICATION_FAILED
+					&& (v.getKind() == Kind.VOTER_ID || v.getKind() == Kind.DRIVING_LICENCE)) {
+				failures.merge(AlternateType.valueOf(v.getKind().name()), 1L, Long::sum);
+			}
+		}
+		return failures;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public java.util.Set<AlternateType> verifiedAlternateIds(UUID applicationId) {
+		java.util.Set<AlternateType> verified = java.util.EnumSet.noneOf(AlternateType.class);
+		for (AlternateType type : AlternateType.values()) {
+			latest(applicationId, type.kind()).filter(v -> v.getStatus() == EvidenceStatus.VERIFIED)
+				.ifPresent(v -> verified.add(type));
+		}
+		return verified;
 	}
 
 	@Override

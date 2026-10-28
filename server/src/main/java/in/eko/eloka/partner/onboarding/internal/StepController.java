@@ -80,8 +80,19 @@ class StepController {
 	record DigiLockerComplete(String state) {
 	}
 
-	record IdDocumentRequest(@JsonProperty("voter_id_number") String voterIdNumber,
-			@JsonProperty("driving_licence_number") String drivingLicenceNumber) {
+	record AlternateIdRequest(String type, String number) {
+	}
+
+	/** A billable record check: needs {@code If-Match} and {@code Idempotency-Key}. */
+	@PostMapping("/alternate-id-verifications")
+	ResponseEntity<?> alternateId(@PathVariable String id, @RequestBody AlternateIdRequest body,
+			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch,
+			@RequestHeader(value = Idempotency.HEADER, required = false) String key, HttpServletRequest request) {
+		long version = WebSupport.expectedVersion(ifMatch);
+		UUID applicantId = WebSupport.applicantId();
+		return idempotency.run(applicantId, key, WebSupport.fingerprint(request, version + " " + body),
+				() -> WebSupport.ok(identity.verifyAlternateId(applicantId, id, version, body == null ? null : body.type(),
+						body == null ? null : body.number())));
 	}
 
 	@PostMapping("/digilocker-sessions")
@@ -178,10 +189,9 @@ class StepController {
 	}
 
 	@PostMapping("/id-document/submit")
-	ResponseEntity<ApplicationSnapshot> submitIdDocument(@PathVariable String id, @RequestBody IdDocumentRequest body,
+	ResponseEntity<ApplicationSnapshot> submitIdDocument(@PathVariable String id,
 			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
-		return WebSupport.ok(documents.submitIdDocument(WebSupport.applicantId(), id, WebSupport.expectedVersion(ifMatch),
-				body == null ? null : body.voterIdNumber(), body == null ? null : body.drivingLicenceNumber()));
+		return WebSupport.ok(documents.submitIdDocument(WebSupport.applicantId(), id, WebSupport.expectedVersion(ifMatch)));
 	}
 
 	private static String name(MultipartFile file) {

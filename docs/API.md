@@ -68,7 +68,8 @@ its check; a failed check sets the step to `FAILED` with `last_error_code` and u
 | `DELETE …/{id}/documents/{documentId}` | — | `204` | `409` for Aadhaar images |
 | `POST …/{id}/photos/submit` | — | `200`, `PHOTOS` done | `409 DOCUMENTS_MISSING` (+`missing_documents`) |
 | `POST …/{id}/education/submit` | — | `200`, `EDUCATION` done | `409 DOCUMENTS_MISSING` |
-| `POST …/{id}/id-document/submit` | `{"voter_id_number","driving_licence_number"}` (at least one, with both sides uploaded) | `200`, `ID_DOCUMENT` done | `422`, `409 DOCUMENTS_MISSING` |
+| `POST …/{id}/alternate-id-verifications` | `{"type": VOTER_ID \| DRIVING_LICENCE, "number"}` (+ `Idempotency-Key`) | `200`, `ALTERNATE_ID` done (summary `type`, `number_masked`), or failed with `VOTER_ID_NOT_FOUND`, `*_NAME_MISMATCH`, `*_DOB_MISMATCH`, `DRIVING_LICENCE_NOT_ACTIVE`, `ID_ALREADY_USED` (an attempt each), `ALTERNATE_ID_UNAVAILABLE` (an outage, no attempt) | `422` wrong number format or type, `409 ID_TYPE_EXHAUSTED` (3 tries of this type used: try the other), `423 STEP_BLOCKED`, `409 AADHAAR_NOT_VERIFIED` |
+| `POST …/{id}/id-document/submit` | — | `200`, `ID_DOCUMENT` done | `409 DOCUMENTS_MISSING` (+`missing_documents`): both sides of a verified document are needed |
 
 Document kinds: `LIVE_PHOTO`, `PASSPORT_PHOTO` (JPG only, ≤ 5 MB, ≥ 300 px a side); `GRADUATION_CERTIFICATE`,
 `COMPUTER_CERTIFICATE`, `VOTER_ID_FRONT`, `VOTER_ID_BACK`, `DRIVING_LICENCE_FRONT`, `DRIVING_LICENCE_BACK`

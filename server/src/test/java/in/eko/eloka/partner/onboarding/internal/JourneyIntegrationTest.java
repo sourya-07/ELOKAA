@@ -89,9 +89,13 @@ class JourneyIntegrationTest {
 			.andExpect(stepSummary("PAN", "pan_masked").exists()));
 		creditCheck().andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("CONSENT_REQUIRED"));
 		consent("CREDIT_CHECK");
-		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS"))
+		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("ALTERNATE_ID"))
 			.andExpect(stepSummary("CREDIT_CHECK", "outcome").value("ELIGIBLE"))
 			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].summary.score").doesNotExist()));
+		track(alternateId("VOTER_ID", in.eko.eloka.partner.JourneyDriver.newEpic("4567"))
+			.andExpect(status().isOk())
+			.andExpect(stepSummary("ALTERNATE_ID", "type").value("VOTER_ID"))
+			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
 		finishDocumentsAndSubmit();
 		String details = jdbc.queryForObject("SELECT details FROM audit_event WHERE action = 'CREDIT_ASSESSED' "
 				+ "AND target_id = ?", String.class, id);
@@ -106,6 +110,7 @@ class JourneyIntegrationTest {
 		call(get(app(""))).andExpect(jsonPath("$.steps[?(@.step_key=='AADHAAR')].status").value("COMPLETED"));
 		track(complete(again).andExpect(status().isOk())
 			.andExpect(jsonPath("$.steps[?(@.step_key=='PAN')].status").value("COMPLETED"))
+			.andExpect(jsonPath("$.steps[?(@.step_key=='ALTERNATE_ID')].status").value("COMPLETED"))
 			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].status").value("COMPLETED"))
 			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
 	}
@@ -257,18 +262,19 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
-	void voterIdOrDrivingLicenceNeedsTheNumberAndBothSides() throws Exception {
-		reachPhotos();
+	void theIdImagesMustBeOfTheVerifiedDocument() throws Exception {
+		reachPhotos(); // the voter ID was verified on the way
 		uploadPhotosAndEducation();
-		submitId("{}").andExpect(status().isUnprocessableContent());
-		submitId("{\"voter_id_number\":\"ABC1234567\"}").andExpect(status().isConflict())
-			.andExpect(jsonPath("$.code").value("DOCUMENTS_MISSING"));
 		upload("DRIVING_LICENCE_FRONT", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		upload("DRIVING_LICENCE_BACK", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		refresh();
-		submitId("{\"driving_licence_number\":\"bad\"}").andExpect(status().isUnprocessableContent());
-		track(submitId("{\"driving_licence_number\":\"MH01 20110012345\"}").andExpect(status().isOk())
-			.andExpect(stepSummary("ID_DOCUMENT", "driving_licence").value("***********2345"))
+		// a driving licence nobody checked does not count
+		submitId().andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("DOCUMENTS_MISSING"))
+			.andExpect(jsonPath("$.missing_documents[0]").value("VOTER_ID_FRONT"));
+		upload("VOTER_ID_FRONT", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		upload("VOTER_ID_BACK", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		refresh();
+		track(submitId().andExpect(status().isOk()).andExpect(stepSummary("ID_DOCUMENT", "voter_id").value(true))
 			.andExpect(jsonPath("$.next_step").value("DECLARATION")));
 	}
 
@@ -302,7 +308,16 @@ class JourneyIntegrationTest {
 
 	private void reachPhotos() throws Exception {
 		reachCreditCheck(newPan("4321"));
-		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS")));
+		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("ALTERNATE_ID")));
+		track(alternateId("VOTER_ID", in.eko.eloka.partner.JourneyDriver.newEpic("4567")).andExpect(status().isOk())
+			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
+	}
+
+	private ResultActions alternateId(String type, String number) throws Exception {
+		return call(post(app("/alternate-id-verifications")).header("If-Match", etag())
+			.header("Idempotency-Key", UUID.randomUUID().toString())
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("{\"type\":\"" + type + "\",\"number\":\"" + number + "\"}"));
 	}
 
 	private void uploadPhotosAndEducation() throws Exception {
@@ -323,7 +338,7 @@ class JourneyIntegrationTest {
 		upload("VOTER_ID_FRONT", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		upload("VOTER_ID_BACK", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		refresh();
-		track(submitId("{\"voter_id_number\":\"ABC1234567\"}").andExpect(status().isOk()));
+		track(submitId().andExpect(status().isOk()));
 		track(call(post(app("/declaration")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"version\":\"" + VERSION + "\",\"accepted\":true}")).andExpect(status().isOk()));
 		refresh();
@@ -375,9 +390,8 @@ class JourneyIntegrationTest {
 		return call(multipart(app("/documents")).file(file("file", name, bytes)).param("kind", kind));
 	}
 
-	private ResultActions submitId(String body) throws Exception {
-		return call(post(app("/id-document/submit")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content(body));
+	private ResultActions submitId() throws Exception {
+		return call(post(app("/id-document/submit")).header("If-Match", etag()));
 	}
 
 	private void refresh() throws Exception {

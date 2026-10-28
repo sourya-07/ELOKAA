@@ -68,7 +68,7 @@ class PartnerApplicationIntegrationTest {
 			.andExpect(header().string("ETag", "\"v0\""))
 			.andExpect(jsonPath("$.status").value("IN_PROGRESS"))
 			.andExpect(jsonPath("$.next_step").value("EMAIL_VERIFICATION"))
-			.andExpect(jsonPath("$.steps.length()").value(11))
+			.andExpect(jsonPath("$.steps.length()").value(12))
 			.andExpect(jsonPath("$.steps[0].step_key").value("MOBILE_VERIFICATION"))
 			.andExpect(jsonPath("$.steps[0].status").value("COMPLETED")));
 		String id = created.get("application_id").asString();
