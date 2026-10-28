@@ -67,7 +67,9 @@ class EpsDigiLocker implements DigiLockerProvider {
 				return new Fetch.Done(identity(document));
 			}
 		}
-		throw new ProviderUnavailableException(NAME);
+		// A finished trip without an Aadhaar: the person's DigiLocker has none linked. A real answer,
+		// not an outage, so the applicant is told to link Aadhaar in DigiLocker
+		return new Fetch.Failed("NO_AADHAAR_DATA");
 	}
 
 	private static Identity identity(JsonNode document) {

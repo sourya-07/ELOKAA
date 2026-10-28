@@ -37,14 +37,22 @@ class StepRulesTest {
 	}
 
 	@Test
-	void anotherMethodResetsIdentityThroughToTheCreditCheck() {
+	void aNewDigiLockerIdentityResetsThePanThroughToTheDeclaration() {
 		StepContext context = contextWithEverythingCompleted();
-		context.complete(PartnerStep.VERIFICATION_METHOD, "{}");
-		for (PartnerStep reset : List.of(PartnerStep.AADHAAR, PartnerStep.HOME_ADDRESS, PartnerStep.PAN,
-				PartnerStep.CREDIT_CHECK, PartnerStep.DECLARATION)) {
+		context.complete(PartnerStep.AADHAAR, "{}", new byte[32]);
+		for (PartnerStep reset : List.of(PartnerStep.PAN, PartnerStep.CREDIT_CHECK, PartnerStep.DECLARATION)) {
 			assertThat(context.step(reset).getStatus()).as(reset.name()).isEqualTo(StepStatus.IN_PROGRESS);
 		}
+		assertThat(context.step(PartnerStep.HOME_ADDRESS).getStatus()).isEqualTo(StepStatus.COMPLETED);
 		assertThat(context.step(PartnerStep.EDUCATION).getStatus()).isEqualTo(StepStatus.COMPLETED);
+	}
+
+	@Test
+	void anUnderAgeResultBlocksAtOnce() {
+		ApplicationStep step = new ApplicationStep(UUID.randomUUID(), PartnerStep.AADHAAR, 3);
+		step.block("DIGILOCKER_UNDER_AGE");
+		assertThat(step.getStatus()).isEqualTo(StepStatus.BLOCKED);
+		assertThat(step.getLastErrorCode()).isEqualTo("DIGILOCKER_UNDER_AGE");
 	}
 
 	@Test

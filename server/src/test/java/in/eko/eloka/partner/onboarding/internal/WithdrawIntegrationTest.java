@@ -33,7 +33,7 @@ class WithdrawIntegrationTest {
 
 	@Test
 	void withdrawNeedsAFreshCodeAndARetryReplays() throws Exception {
-		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		long version = applicant.refresh().get("version").asLong();
 		String withdraw = "/v1/partner/applications/" + applicant.id() + "/withdraw";
 

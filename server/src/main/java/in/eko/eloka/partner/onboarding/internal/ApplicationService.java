@@ -20,7 +20,6 @@ import in.eko.eloka.partner.eligibility.EligibilityOutcome;
 import in.eko.eloka.partner.onboarding.ApplicationStatus;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.onboarding.StepStatus;
-import in.eko.eloka.partner.onboarding.VerificationMethod;
 import in.eko.eloka.partner.shared.error.ApiProblem;
 import in.eko.eloka.partner.shared.error.NotFoundException;
 import in.eko.eloka.partner.shared.error.ValidationException;
@@ -108,8 +107,9 @@ class ApplicationService {
 			return new Start(snapshot(existing), true);
 		}
 		Instant now = Instant.now(clock);
-		PartnerApplication application = applications
-			.saveAndFlush(new PartnerApplication(PublicIds.next("ptn", now), applicantId, now, properties.idleExpiry()));
+		PartnerApplication fresh = new PartnerApplication(PublicIds.next("ptn", now), applicantId, now, properties.idleExpiry());
+		fresh.useDigiLocker();
+		PartnerApplication application = applications.saveAndFlush(fresh);
 		for (PartnerStep key : PartnerStep.values()) {
 			ApplicationStep step = new ApplicationStep(application.getId(), key, properties.maxAttempts());
 			if (key == PartnerStep.MOBILE_VERIFICATION) {
@@ -195,23 +195,6 @@ class ApplicationService {
 			if (purpose == ConsentRecord.Purpose.DATA_PROCESSING) {
 				context.complete(PartnerStep.CONSENT, json.writeValueAsString(Map.of("version", version)));
 			}
-			return null;
-		});
-		return get(applicantId, publicId);
-	}
-
-	/** Page 2: DigiLocker or step by step. Choosing the other one again resets the identity steps. */
-	@Transactional
-	ApplicationSnapshot chooseMethod(UUID applicantId, String publicId, long expectedVersion, String methodName) {
-		VerificationMethod method = parse(VerificationMethod.class, methodName, "method");
-		write(applicantId, publicId, expectedVersion, context -> {
-			context.requirePrerequisites(PartnerStep.VERIFICATION_METHOD);
-			if (method == context.application().getMethod()
-					&& context.step(PartnerStep.VERIFICATION_METHOD).getStatus().isSatisfied()) {
-				return null; // same choice again: nothing changes
-			}
-			context.application().chooseMethod(method);
-			context.complete(PartnerStep.VERIFICATION_METHOD, json.writeValueAsString(Map.of("method", method.name())));
 			return null;
 		});
 		return get(applicantId, publicId);

@@ -14,7 +14,7 @@ export interface Milestone {
 
 export const MILESTONES: Milestone[] = [
 	{ key: "CONTACT", label: "Contact details", steps: ["MOBILE_VERIFICATION", "EMAIL_VERIFICATION", "CONSENT"] },
-	{ key: "IDENTITY", label: "Identity", steps: ["VERIFICATION_METHOD", "AADHAAR", "HOME_ADDRESS", "PAN", "ALTERNATE_ID"] },
+	{ key: "IDENTITY", label: "Identity", steps: ["AADHAAR", "HOME_ADDRESS", "PAN", "ALTERNATE_ID"] },
 	{ key: "ELIGIBILITY", label: "Eligibility", steps: ["CREDIT_CHECK"] },
 	{ key: "PHOTOS", label: "Photos", steps: ["PHOTOS"] },
 	{ key: "DOCUMENTS", label: "Documents", steps: ["KYC_DOCUMENTS", "EDUCATION", "ID_DOCUMENT"] },

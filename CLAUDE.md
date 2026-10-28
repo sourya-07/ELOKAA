@@ -4,7 +4,7 @@ Guidance for anyone (people and AI agents) changing this repository. Read this f
 
 ## What this project is
 
-ELOKA partner onboarding: an individual applies to become an ELOKA partner (mobile OTP, DigiLocker or step-by-step identity, CIBIL ≥ 700, photos, certificates, voter ID or driving licence) and Eko staff review the application. Journey and rules: [`docs/PARTNER_JOURNEY.md`](docs/PARTNER_JOURNEY.md). Decisions: [`docs/adr/`](docs/adr/). Unknowns: [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md).
+ELOKA partner onboarding: an individual applies to become an ELOKA partner (mobile and email OTP, identity through DigiLocker, CIBIL ≥ 700, photos, certificates, voter ID or driving licence; journey v2, ADR-0007) and Eko staff review the application. Journey and rules: [`docs/PARTNER_JOURNEY.md`](docs/PARTNER_JOURNEY.md). Decisions: [`docs/adr/`](docs/adr/). Unknowns: [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md).
 
 Proven parts are ported from the eloka repo (`sourya-07/eloka`, ADR-0001). Read the eloka original before porting a file, then trim it to this domain.
 

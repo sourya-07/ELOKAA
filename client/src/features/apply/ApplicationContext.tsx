@@ -99,7 +99,9 @@ export function ApplicationProvider({ children, optional = false }: { children: 
 						forget();
 					}
 					if (!optionalRef.current) {
-						routerRef.current.replace("/apply");
+						// Keep where they were going (e.g. back from DigiLocker in another browser): after
+						// signing in they continue there
+						routerRef.current.replace(`/apply?next=${encodeURIComponent(routerRef.current.asPath)}`);
 					}
 				} else if (error instanceof ApiError && error.code === "ALREADY_APPROVED") {
 					// Already a partner: show that application (the pages route to the status page)

@@ -67,22 +67,31 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
-	void stepByStepJourneyToSubmission() throws Exception {
-		toPan("MANUAL");
-		track(pan(newPan("4321"), "Ravi Kumar", "1990-01-15").andExpect(status().isOk())
-			.andExpect(jsonPath("$.next_step").value("CREDIT_CHECK"))
+	void digiLockerJourneyFetchesIdentityAndAddressThenSubmits() throws Exception {
+		verifyEmail();
+		consent("DATA_PROCESSING");
+		call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("CONSENT_REQUIRED"));
+		consent("DIGILOCKER");
+		String state = startDigiLocker();
+		assertThat(state).startsWith("dls_");
+
+		track(complete(state).andExpect(status().isOk())
+			.andExpect(stepSummary("AADHAAR", "aadhaar_masked").value("XXXX-XXXX-1234"))
+			.andExpect(stepSummary("AADHAAR", "address_from_digilocker").value(true))
+			.andExpect(stepSummary("HOME_ADDRESS", "source").value("DIGILOCKER"))
+			.andExpect(jsonPath("$.next_step").value("PAN")));
+		complete(state).andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("DIGILOCKER_ALREADY_USED"));
+		complete("dls_forged").andExpect(status().isUnprocessableContent());
+
+		// Name and date of birth come from DigiLocker: only the PAN is sent
+		track(pan(newPan("4321")).andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK"))
 			.andExpect(stepSummary("PAN", "pan_masked").exists()));
 		creditCheck().andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("CONSENT_REQUIRED"));
 		consent("CREDIT_CHECK");
-		track(creditCheck().andExpect(status().isOk())
-			.andExpect(jsonPath("$.next_step").value("HOME_ADDRESS"))
-			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].summary.outcome").value("ELIGIBLE"))
+		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS"))
 			.andExpect(stepSummary("CREDIT_CHECK", "outcome").value("ELIGIBLE"))
 			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].summary.score").doesNotExist()));
-		track(call(put(app("/home-address")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"line1\":\"Flat 12, Sample Lane\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400050\"}"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
 		finishDocumentsAndSubmit();
 		String details = jdbc.queryForObject("SELECT details FROM audit_event WHERE action = 'CREDIT_ASSESSED' "
 				+ "AND target_id = ?", String.class, id);
@@ -90,38 +99,32 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
-	void digiLockerJourneyFetchesIdentityAndAddress() throws Exception {
-		toMethod("DIGILOCKER");
-		call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isConflict())
-			.andExpect(jsonPath("$.code").value("CONSENT_REQUIRED"));
+	void theSameDigiLockerIdentityAgainKeepsThePanAndTheCreditCheck() throws Exception {
+		reachPhotos();
 		consent("DIGILOCKER");
-		String url = client.body(call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isOk()))
-			.get("url").asString();
-		String state = url.substring(url.indexOf("state=") + 6);
-		assertThat(state).startsWith("dls_");
+		String again = startDigiLocker();
+		call(get(app(""))).andExpect(jsonPath("$.steps[?(@.step_key=='AADHAAR')].status").value("COMPLETED"));
+		track(complete(again).andExpect(status().isOk())
+			.andExpect(jsonPath("$.steps[?(@.step_key=='PAN')].status").value("COMPLETED"))
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].status").value("COMPLETED"))
+			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
+	}
 
-		track(call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"state\":\"" + state + "\"}")).andExpect(status().isOk())
-			.andExpect(stepSummary("AADHAAR", "aadhaar_masked").value("XXXX-XXXX-1234"))
-			.andExpect(stepSummary("AADHAAR", "address_from_digilocker").value(true)));
-		call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"state\":\"" + state + "\"}")).andExpect(status().isConflict())
-			.andExpect(jsonPath("$.code").value("DIGILOCKER_ALREADY_USED"));
-		call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"state\":\"dls_forged\"}")).andExpect(status().isUnprocessableContent());
-
-		// A later failed DigiLocker attempt must not hide the identity already verified
-		jdbc.update("INSERT INTO verification (id, application_id, kind, method, status, provider, provider_ref, "
-				+ "failure_code, version, created_at, updated_at) SELECT UUID_TO_BIN(UUID()), id, 'AADHAAR', 'DIGILOCKER', "
-				+ "'VERIFICATION_FAILED', 'digilocker', ?, 'INVALID_REFERENCE', 0, NOW(6) + INTERVAL 1 SECOND, NOW(6) "
-				+ "FROM partner_application WHERE public_id = ?", "failed-redo-" + id, id);
-
-		// Name and date of birth come from DigiLocker, not from the request
-		track(pan(newPan("4321"), null, null).andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK")));
-		consent("CREDIT_CHECK");
-		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS"))
-			.andExpect(stepSummary("HOME_ADDRESS", "source").value("DIGILOCKER")));
-		finishDocumentsAndSubmit();
+	@Test
+	void startingAgainEndsTheEarlierTripAndADigiLockerAddressIsNotRetyped() throws Exception {
+		verifyEmail();
+		consent("DATA_PROCESSING");
+		consent("DIGILOCKER");
+		String first = startDigiLocker();
+		String second = startDigiLocker();
+		complete(first).andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("DIGILOCKER_ALREADY_USED"));
+		track(complete(second).andExpect(status().isOk()));
+		call(put(app("/home-address")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"line1\":\"Flat 12\",\"city\":\"Pune\",\"state\":\"Maharashtra\",\"pincode\":\"411001\"}"))
+			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("ADDRESS_FROM_DIGILOCKER"));
+		// The retired step-by-step routes are gone
+		call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"method\":\"MANUAL\"}")).andExpect(result -> assertThat(result.getResponse().getStatus()).isIn(404, 405));
 	}
 
 	@Test
@@ -135,8 +138,8 @@ class JourneyIntegrationTest {
 
 		// The same PAN cannot be tried again by someone else
 		start();
-		toPan("MANUAL");
-		pan(lowPan, "Ravi Kumar", "1990-01-15").andExpect(status().isOk())
+		toPan();
+		pan(lowPan).andExpect(status().isOk())
 			.andExpect(jsonPath("$.steps[?(@.step_key=='PAN')].last_error_code").value("PAN_ALREADY_USED"));
 	}
 
@@ -180,41 +183,25 @@ class JourneyIntegrationTest {
 
 	@Test
 	void aPanThatDoesNotMatchBlocksTheStepAfterThreeTries() throws Exception {
-		toPan("MANUAL");
+		toPan();
 		for (int attempt = 1; attempt <= 3; attempt++) {
-			track(pan(newPan("1111"), "Ravi Kumar", "1990-01-15").andExpect(status().isOk())
+			track(pan(newPan("1111")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.steps[?(@.step_key=='PAN')].last_error_code").value("PAN_NAME_MISMATCH")));
 		}
-		pan(newPan("4321"), "Ravi Kumar", "1990-01-15").andExpect(status().isLocked());
-		pan("ABCDE1234F", "Ravi Kumar", "1990-01-15").andExpect(status().isLocked());
+		pan(newPan("4321")).andExpect(status().isLocked());
+		pan("ABCDE1234F").andExpect(status().isLocked());
 	}
 
 	@Test
-	void panInputIsValidated() throws Exception {
-		toPan("MANUAL");
-		pan("ABCCE1234F", "Ravi Kumar", "1990-01-15").andExpect(status().isUnprocessableContent())
-			.andExpect(jsonPath("$.invalid_params.pan").exists()); // a company PAN
-		pan(newPan("4321"), "Ravi Kumar", "2015-01-01").andExpect(status().isUnprocessableContent())
-			.andExpect(jsonPath("$.invalid_params.dob").exists());
-		pan(newPan("4321"), null, "1990-01-15").andExpect(status().isUnprocessableContent());
-	}
-
-	@Test
-	void switchingToStepByStepDropsTheDigiLockerIdentity() throws Exception {
-		toMethod("DIGILOCKER");
+	void panInputIsValidatedAndNeedsDigiLockerFirst() throws Exception {
+		verifyEmail();
+		consent("DATA_PROCESSING");
+		pan(newPan("4321")).andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"));
 		consent("DIGILOCKER");
-		String url = client.body(call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isOk()))
-			.get("url").asString();
-		track(call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"state\":\"" + url.substring(url.indexOf("state=") + 6) + "\"}")).andExpect(status().isOk()));
-		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"method\":\"MANUAL\"}")).andExpect(status().isOk()));
-		track(call(multipart(app("/aadhaar")).file(file("front", "front.jpg", jpeg(800, 500, null)))
-			.file(file("back", "back.jpg", jpeg(800, 500, null)))
-			.param("aadhaar_last4", "4321")
-			.header("If-Match", etag())).andExpect(status().isOk()));
-		// Step by step now: the name and date of birth must be typed, the old DigiLocker ones no longer count
-		pan(newPan("4321"), null, null).andExpect(status().isUnprocessableContent());
+		track(complete(startDigiLocker()));
+		pan("ABCCE1234F").andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.invalid_params.pan").exists()); // a company PAN
+		pan("not-a-pan").andExpect(status().isUnprocessableContent());
 	}
 
 	@Test
@@ -287,37 +274,35 @@ class JourneyIntegrationTest {
 
 	// ---- journey helpers ------------------------------------------------------------------------
 
-	private void toMethod(String method) throws Exception {
+	/** Contact details, consents and DigiLocker done: the PAN is next. */
+	private void toPan() throws Exception {
 		verifyEmail();
 		consent("DATA_PROCESSING");
-		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"method\":\"" + method + "\"}")).andExpect(status().isOk()));
+		consent("DIGILOCKER");
+		track(complete(startDigiLocker()).andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PAN")));
 	}
 
-	private void toPan(String method) throws Exception {
-		toMethod(method);
-		if (method.equals("MANUAL")) {
-			track(call(multipart(app("/aadhaar")).file(file("front", "front.jpg", jpeg(800, 500, null)))
-				.file(file("back", "back.jpg", jpeg(800, 500, null)))
-				.param("aadhaar_last4", "4321")
-				.header("If-Match", etag())).andExpect(status().isOk())
-				.andExpect(jsonPath("$.next_step").value("PAN"))
-				.andExpect(stepSummary("AADHAAR", "review").value("MANUAL_REVIEW_REQUIRED")));
-		}
+	private String startDigiLocker() throws Exception {
+		String url = client.body(call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isOk()))
+			.get("url").asString();
+		refresh();
+		return url.substring(url.indexOf("state=") + 6);
+	}
+
+	private ResultActions complete(String state) throws Exception {
+		return call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"state\":\"" + state + "\"}"));
 	}
 
 	private void reachCreditCheck(String pan) throws Exception {
-		toPan("MANUAL");
-		track(pan(pan, "Ravi Kumar", "1990-01-15").andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK")));
+		toPan();
+		track(pan(pan).andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("CREDIT_CHECK")));
 		consent("CREDIT_CHECK");
 	}
 
 	private void reachPhotos() throws Exception {
 		reachCreditCheck(newPan("4321"));
-		track(creditCheck().andExpect(status().isOk()));
-		track(call(put(app("/home-address")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"line1\":\"Flat 12\",\"city\":\"Pune\",\"state\":\"Maharashtra\",\"pincode\":\"411001\"}"))
-			.andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS")));
+		track(creditCheck().andExpect(status().isOk()).andExpect(jsonPath("$.next_step").value("PHOTOS")));
 	}
 
 	private void uploadPhotosAndEducation() throws Exception {
@@ -354,13 +339,11 @@ class JourneyIntegrationTest {
 
 	// ---- request helpers ------------------------------------------------------------------------
 
-	private ResultActions pan(String pan, String name, String dob) throws Exception {
-		String body = json.writeValueAsString(java.util.Map.of("pan", pan, "name", name == null ? "" : name,
-				"dob", dob == null ? "" : dob));
+	private ResultActions pan(String pan) throws Exception {
 		return call(post(app("/pan-verifications")).header("If-Match", etag())
 			.header("Idempotency-Key", UUID.randomUUID().toString())
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(body));
+			.content(json.writeValueAsString(java.util.Map.of("pan", pan))));
 	}
 
 	private ResultActions creditCheck() throws Exception {

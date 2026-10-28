@@ -62,7 +62,7 @@ class StaffReviewIntegrationTest {
 
 	@Test
 	void reviewThenApproveByASecondPerson() throws Exception {
-		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String reviewer = staffToken(REVIEWER);
 		String id = applicant.id();
 		JsonNode queue = body(staff(reviewer, get("/v1/admin/applications")).andExpect(status().isOk()));
@@ -89,7 +89,7 @@ class StaffReviewIntegrationTest {
 
 	@Test
 	void whoRecommendsCannotApprove() throws Exception {
-		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String lead = staffToken(LEAD);
 		String id = applicant.id();
 		JsonNode view = body(staff(lead, post("/v1/admin/applications/" + id + "/claim")).andExpect(status().isOk()));
@@ -101,7 +101,7 @@ class StaffReviewIntegrationTest {
 
 	@Test
 	void correctionsSendStepsBackAndFreezeTheRest() throws Exception {
-		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String reviewer = staffToken(REVIEWER);
 		String id = applicant.id();
 		JsonNode view = body(staff(reviewer, post("/v1/admin/applications/" + id + "/claim")));
@@ -130,7 +130,7 @@ class StaffReviewIntegrationTest {
 
 	@Test
 	void onlyApproversSeeHiddenValuesAndEveryRevealIsAudited() throws Exception {
-		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String id = applicant.id();
 		String body = "{\"field\":\"PAN\",\"reason\":\"Name check with the bank\"}";
 		staff(staffToken(REVIEWER), post("/v1/admin/applications/" + id + "/pii-reveal").contentType(MediaType.APPLICATION_JSON)

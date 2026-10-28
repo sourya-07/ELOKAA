@@ -11,7 +11,7 @@ import { withOptionalApplication } from "@/features/apply/withApplication";
 import { ApiError, call } from "@/lib/api";
 import { normaliseMobile } from "@/lib/validation";
 import { clock } from "@/lib/format";
-import { routeFor } from "@/lib/steps";
+import { routeFor, safeNext } from "@/lib/steps";
 import { delayedAppear } from "@/styles/motion";
 
 interface Sent {
@@ -37,7 +37,7 @@ function ContactPage() {
 
 	useEffect(() => {
 		if (snapshot && !contactOpen) {
-			router.replace(routeFor(snapshot));
+			router.replace(safeNext(router.query.next) ?? routeFor(snapshot));
 		}
 	}, [contactOpen, router, snapshot]);
 

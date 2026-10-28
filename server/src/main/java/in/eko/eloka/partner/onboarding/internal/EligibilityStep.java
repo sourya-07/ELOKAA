@@ -27,7 +27,6 @@ import tools.jackson.databind.json.JsonMapper;
 class EligibilityStep {
 
 	private final ApplicationService applications;
-	private final IdentitySteps identity;
 	private final EligibilityApi eligibility;
 	private final VerificationApi verification;
 	private final ConsentRecordRepository consents;
@@ -36,11 +35,10 @@ class EligibilityStep {
 	private final AuditLog audit;
 	private final JsonMapper json;
 
-	EligibilityStep(ApplicationService applications, IdentitySteps identity, EligibilityApi eligibility,
+	EligibilityStep(ApplicationService applications, EligibilityApi eligibility,
 			VerificationApi verification, ConsentRecordRepository consents, ApplicationStateMachine stateMachine,
 			OnboardingProperties properties, AuditLog audit, JsonMapper json) {
 		this.applications = applications;
-		this.identity = identity;
 		this.eligibility = eligibility;
 		this.verification = verification;
 		this.consents = consents;
@@ -80,10 +78,7 @@ class EligibilityStep {
 			audit.record(new AuditEntry("CREDIT_ASSESSED", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
 					publicId, details)); // the outcome only, never the score
 			switch (assessment.outcome()) {
-				case ELIGIBLE -> {
-					context.complete(PartnerStep.CREDIT_CHECK, json.writeValueAsString(Map.of("outcome", "ELIGIBLE")));
-					identity.completeAddressFromDigiLocker(context);
-				}
+				case ELIGIBLE -> context.complete(PartnerStep.CREDIT_CHECK, json.writeValueAsString(Map.of("outcome", "ELIGIBLE")));
 				case INELIGIBLE -> {
 					context.failTechnically(PartnerStep.CREDIT_CHECK, "CREDIT_SCORE_BELOW_THRESHOLD");
 					stateMachine.apply(context.application(), LifecycleEvent.MARK_INELIGIBLE, "SYSTEM", null);

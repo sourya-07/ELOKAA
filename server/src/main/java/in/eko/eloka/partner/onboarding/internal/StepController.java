@@ -1,8 +1,6 @@
 package in.eko.eloka.partner.onboarding.internal;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,7 +46,8 @@ class StepController {
 		this.idempotency = idempotency;
 	}
 
-	record PanRequest(String pan, String name, String dob) {
+	/** Only the PAN: the name and date of birth checked against it come from DigiLocker. */
+	record PanRequest(String pan) {
 	}
 
 	record EmailRequest(String email) {
@@ -85,17 +84,6 @@ class StepController {
 			@JsonProperty("driving_licence_number") String drivingLicenceNumber) {
 	}
 
-	@PostMapping(path = "/aadhaar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	ResponseEntity<ApplicationSnapshot> aadhaar(@PathVariable String id,
-			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch,
-			@RequestParam(value = "aadhaar_last4", required = false) String last4,
-			@RequestParam(value = "front", required = false) MultipartFile front,
-			@RequestParam(value = "back", required = false) MultipartFile back) {
-		long version = WebSupport.expectedVersion(ifMatch);
-		return WebSupport.ok(identity.manualAadhaar(WebSupport.applicantId(), id, version, last4, name(front),
-				bytes(front), name(back), bytes(back)));
-	}
-
 	@PostMapping("/digilocker-sessions")
 	Map<String, String> startDigiLocker(@PathVariable String id,
 			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
@@ -120,9 +108,8 @@ class StepController {
 			@RequestHeader(value = Idempotency.HEADER, required = false) String key, HttpServletRequest request) {
 		long version = WebSupport.expectedVersion(ifMatch);
 		UUID applicantId = WebSupport.applicantId();
-		LocalDate dob = parseDob(body == null ? null : body.dob());
 		return idempotency.run(applicantId, key, WebSupport.fingerprint(request, version + " " + body),
-				() -> WebSupport.ok(identity.verifyPan(applicantId, id, version, body.pan(), body.name(), dob)));
+				() -> WebSupport.ok(identity.verifyPan(applicantId, id, version, body == null ? null : body.pan())));
 	}
 
 	/** A credit bureau enquiry: needs {@code If-Match} and {@code Idempotency-Key}. */
@@ -195,18 +182,6 @@ class StepController {
 			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 		return WebSupport.ok(documents.submitIdDocument(WebSupport.applicantId(), id, WebSupport.expectedVersion(ifMatch),
 				body == null ? null : body.voterIdNumber(), body == null ? null : body.drivingLicenceNumber()));
-	}
-
-	private static LocalDate parseDob(String dob) {
-		if (dob == null || dob.isBlank()) {
-			return null;
-		}
-		try {
-			return LocalDate.parse(dob.trim());
-		}
-		catch (DateTimeParseException ex) {
-			throw ValidationException.field("dob", "Use the format YYYY-MM-DD");
-		}
 	}
 
 	private static String name(MultipartFile file) {

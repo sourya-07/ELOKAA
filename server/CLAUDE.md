@@ -39,7 +39,8 @@ src/main/java/in/eko/eloka/partner/
 │             /v1/partner/applications
 ├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode turned upright first (ImageSanitizer, ExifOrientation), PDF
 │             malware scan, AES-GCM encrypted storage behind DocumentStorage (filesystem now)
-├── verification/ PAN checks, DigiLocker sessions (single-use state, 15 min), manual Aadhaar; EvidenceStatus;
+├── verification/ PAN checks (against the DigiLocker identity), DigiLocker sessions (single-use state, 15 min, a new
+│             start ends the open one, 10 per hour, outages are not results, under 18 refused); EvidenceStatus;
 │             encrypted values + masked copies + PAN blind index
 ├── eligibility/ EligibilityPolicy (MIN_SCORE = 700, a constant), credit assessments (score only, never the report)
    (onboarding/internal also has IdentitySteps, EligibilityStep, DocumentSteps, StepController, and staff review:

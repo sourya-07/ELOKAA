@@ -11,11 +11,10 @@ public enum PartnerStep {
 	MOBILE_VERIFICATION,
 	EMAIL_VERIFICATION,
 	CONSENT,
-	VERIFICATION_METHOD,
 	AADHAAR,
+	HOME_ADDRESS,
 	PAN,
 	CREDIT_CHECK,
-	HOME_ADDRESS,
 	PHOTOS,
 	EDUCATION,
 	ID_DOCUMENT,
@@ -27,29 +26,27 @@ public enum PartnerStep {
 			case MOBILE_VERIFICATION -> List.of();
 			case EMAIL_VERIFICATION -> List.of(MOBILE_VERIFICATION);
 			case CONSENT -> List.of(EMAIL_VERIFICATION);
-			case VERIFICATION_METHOD -> List.of(CONSENT);
-			case AADHAAR -> List.of(VERIFICATION_METHOD);
-			case PAN -> List.of(AADHAAR);
+			case AADHAAR -> List.of(CONSENT);
+			case HOME_ADDRESS, PAN -> List.of(AADHAAR);
 			case CREDIT_CHECK -> List.of(PAN);
-			case HOME_ADDRESS -> List.of(CREDIT_CHECK);
 			case PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(CREDIT_CHECK, HOME_ADDRESS);
-			case DECLARATION -> List.of(EMAIL_VERIFICATION, CONSENT, VERIFICATION_METHOD, AADHAAR, PAN, CREDIT_CHECK, HOME_ADDRESS, PHOTOS,
+			case DECLARATION -> List.of(EMAIL_VERIFICATION, CONSENT, AADHAAR, HOME_ADDRESS, PAN, CREDIT_CHECK, PHOTOS,
 					EDUCATION, ID_DOCUMENT);
 		};
 	}
 
 	/**
-	 * Steps whose result is no longer valid when this step is completed again with new data.
-	 * They go back to {@code IN_PROGRESS}, and so do the steps they in turn invalidate. A new
-	 * Aadhaar result invalidates the PAN step (its name match) and so the credit check; the
-	 * eligibility module may reuse a recent result for the same PAN instead of asking the bureau again.
+	 * Steps whose result is no longer valid when this step is completed again with different data
+	 * (the same data changes nothing, see the step fingerprint). They go back to {@code IN_PROGRESS},
+	 * and so do the steps they in turn invalidate. A new DigiLocker identity invalidates the PAN step
+	 * (its name and date-of-birth match) and so the credit check; the eligibility module may reuse a
+	 * recent result for the same PAN instead of asking the bureau again.
 	 */
 	public List<PartnerStep> invalidates() {
 		return switch (this) {
-			case VERIFICATION_METHOD -> List.of(AADHAAR, HOME_ADDRESS, DECLARATION);
 			case AADHAAR -> List.of(PAN, DECLARATION);
 			case PAN -> List.of(CREDIT_CHECK, DECLARATION);
-			case EMAIL_VERIFICATION, CONSENT, CREDIT_CHECK, HOME_ADDRESS, PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(DECLARATION);
+			case EMAIL_VERIFICATION, CONSENT, HOME_ADDRESS, CREDIT_CHECK, PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(DECLARATION);
 			case MOBILE_VERIFICATION, DECLARATION -> List.of();
 		};
 	}

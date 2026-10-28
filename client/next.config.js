@@ -3,6 +3,15 @@ module.exports = {
 	reactStrictMode: true,
 	poweredByHeader: false,
 	output: "standalone",
+	// Journey v2 (ADR-0007): the identity steps share one page. Old links and in-flight DigiLocker
+	// returns (?state=…, passed through by Next) land there.
+	async redirects() {
+		return ["method", "aadhaar", "pan", "address", "digilocker", "credit-check"].map((page) => ({
+			source: `/apply/${page}`,
+			destination: "/apply/identity",
+			permanent: true,
+		}));
+	},
 	async headers() {
 		return [
 			{

@@ -4,42 +4,48 @@ The source of truth for what the applicant sees and what the server allows. The 
 
 ## Pages
 
-| Page | Path (client) | Step key | Both paths? |
-|---|---|---|---|
-| 1 Contact details: mobile number + OTP, then email + code and the data-use consent (one card) | `/apply` | `MOBILE_VERIFICATION`, `EMAIL_VERIFICATION`, `CONSENT` | yes |
-| 2 Choose how to apply | `/apply/method` | `VERIFICATION_METHOD` | yes |
-| 3D Connect DigiLocker, check details, enter PAN | `/apply/digilocker` | `AADHAAR`, `HOME_ADDRESS`, `PAN` | DigiLocker |
-| 3 Aadhaar (masked image + last 4 digits) | `/apply/aadhaar` | `AADHAAR` | step by step |
-| 4 PAN + date of birth | `/apply/pan` | `PAN` | step by step |
-| 4b Credit check (consent, result) | `/apply/credit-check` | `CREDIT_CHECK` | yes |
-| 5 Home address | `/apply/address` | `HOME_ADDRESS` | step by step |
-| 6 Live photo + passport-size photo | `/apply/photos` | `PHOTOS` | yes |
-| 7 Graduation certificate (+ optional computer certificates) | `/apply/education` | `EDUCATION` | yes |
-| 8 Voter ID or driving licence | `/apply/id-document` | `ID_DOCUMENT` | yes |
-| 9 Review + declaration | `/apply/review` | `DECLARATION` | yes |
-| 10 Status | `/apply/status` | — | yes |
+One page can hold several steps (ADR-0007). Identity is DigiLocker only; the step-by-step path is retired.
+
+| Page | Path (client) | Step keys |
+|---|---|---|
+| Contact details: mobile number + OTP, then email + code and the data-use consent (one card) | `/apply` | `MOBILE_VERIFICATION`, `EMAIL_VERIFICATION`, `CONSENT` |
+| Identity and eligibility, as tasks: Aadhaar through DigiLocker, home address (typed only if DigiLocker's is incomplete), PAN, credit check | `/apply/identity` (`#aadhaar`, `#address`, `#pan`, `#eligibility`) | `AADHAAR`, `HOME_ADDRESS`, `PAN`, `CREDIT_CHECK` |
+| Live photo + passport-size photo | `/apply/photos` | `PHOTOS` |
+| Graduation certificate (+ optional computer certificates) | `/apply/education` | `EDUCATION` |
+| Voter ID or driving licence | `/apply/id-document` | `ID_DOCUMENT` |
+| Review + declaration | `/apply/review` | `DECLARATION` |
+| Status | `/apply/status` | — |
+
+Old addresses (`/apply/method`, `/aadhaar`, `/pan`, `/address`, `/digilocker`, `/credit-check`) redirect to
+`/apply/identity`, keeping `?state=` for a DigiLocker return. Progress shows six parts (contact, identity,
+eligibility, photos, documents, review) from the server's step statuses, not a count of screens.
 
 ```mermaid
 flowchart TD
-  A[1 Mobile + OTP, email + code, consent] --> B[2 Choose method]
-  B -->|DigiLocker| D1[Connect DigiLocker] --> D2[Check details + enter PAN]
-  B -->|Step by step| M1[3 Aadhaar] --> M2[4 PAN]
-  D2 --> PV{PAN verified?}
-  M2 --> PV
-  PV -->|no, attempts left| M2
-  PV -->|no, 3 failures| BL[Step blocked]
-  PV -->|yes| CC[Credit-check consent → check]
+  A[Mobile + OTP, email + code, consent] --> D1[Connect DigiLocker]
+  D1 -->|Aadhaar verified, 18+| AD{Whole address from DigiLocker?}
+  D1 -->|no Aadhaar in DigiLocker / failed| D1
+  D1 -->|DigiLocker down| D1
+  D1 -->|under 18| UA[Step blocked]
+  AD -->|yes| PAN[PAN, checked against the DigiLocker name and date of birth]
+  AD -->|no| HA[Type the home address] --> PAN
+  PAN -->|no, 3 failures| BL[Step blocked]
+  PAN -->|yes| CC[Credit-check consent → check]
   CC -->|score < 700| IN[INELIGIBLE]
   CC -->|unable to assess| RT[Retry later, never passes]
-  CC -->|score ≥ 700| H{Path}
-  H -->|step by step| M3[5 Home address] --> P6
-  H -->|DigiLocker| P6[6 Photos]
-  P6 --> P7[7 Education] --> P8[8 Voter ID or DL] --> RV[9 Review] --> SUB[Submit]
+  CC -->|score ≥ 700| P6[Photos]
+  P6 --> P7[Education] --> P8[Voter ID or DL] --> RV[Review] --> SUB[Submit]
   SUB --> Q[Staff review]
   Q -->|correction| CORR[Correction required] --> SUB
   Q --> AP[APPROVED]
   Q --> RJ[REJECTED]
 ```
+
+**DigiLocker trips.** "Continue to DigiLocker" (or "Start again") ends any earlier unfinished trip; at most
+10 trips per hour. Back with `?state=`, the page finishes the trip once and, while DigiLocker is still working,
+checks again by itself for about a minute and a half. A trip finished in another browser (or the DigiLocker
+app opening a different one) asks for the mobile code there and then finishes. Redoing DigiLocker on a done
+step keeps it done until DigiLocker answers; the same identity again changes nothing after it.
 
 ## Application status
 
@@ -84,17 +90,16 @@ Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAI
 | `MOBILE_VERIFICATION` | — | OTP verified |
 | `EMAIL_VERIFICATION` | mobile | a code sent to the address was entered (one open, approved or ineligible application per address) |
 | `CONSENT` | email | current data-use consent recorded |
-| `VERIFICATION_METHOD` | consent | `DIGILOCKER` or `MANUAL` chosen |
-| `AADHAAR` | method | DigiLocker result verified, or masked images + last 4 digits submitted |
-| `PAN` | Aadhaar | provider says the PAN is valid and the name matches the Aadhaar name |
+| `AADHAAR` | consent | DigiLocker result verified and the person is 18 or older |
+| `HOME_ADDRESS` | Aadhaar | the DigiLocker address, or (only when DigiLocker's is incomplete, or a reviewer reopened it) one typed by the applicant |
+| `PAN` | Aadhaar | provider says the PAN is valid and matches the DigiLocker name and date of birth |
 | `CREDIT_CHECK` | PAN | outcome `ELIGIBLE` |
-| `HOME_ADDRESS` | credit check | address saved (self-declared) or DigiLocker address confirmed |
 | `PHOTOS` | credit check, home address | live photo and passport-size photo submitted |
 | `EDUCATION` | credit check, home address | graduation certificate submitted |
 | `ID_DOCUMENT` | credit check, home address | voter ID or driving licence (or both) submitted |
 | `DECLARATION` | all of the above | current declaration accepted |
 
-Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new PAN resets `CREDIT_CHECK` and `DECLARATION`; a new method resets `AADHAAR` and `HOME_ADDRESS`; any document change resets `DECLARATION`.
+Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new PAN resets `CREDIT_CHECK` and `DECLARATION`; any document change resets `DECLARATION`.
 
 ## Evidence status (per document or check)
 

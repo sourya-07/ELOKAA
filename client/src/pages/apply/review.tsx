@@ -9,10 +9,11 @@ import { useApplication, useStepGuard } from "@/features/apply/ApplicationContex
 import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
 import { DECLARATION_VERSION } from "@/lib/consent";
-import { pagesFor} from "@/lib/steps";
+import { PAGES } from "@/lib/steps";
 import { isDone } from "@/lib/types";
 
 const SUMMARY: Record<string, (s: Record<string, unknown>) => string> = {
+	EMAIL_VERIFICATION: (s) => `Mobile verified, email ${s.email_masked ?? ""}`,
 	AADHAAR: (s) => `Aadhaar ${s.aadhaar_masked ?? ""}`,
 	PAN: (s) => `PAN ${s.pan_masked ?? ""}`,
 	CREDIT_CHECK: () => "Eligible",
@@ -44,7 +45,7 @@ function ReviewPage() {
 		});
 	};
 
-	const pages = pagesFor(snapshot.method).filter((p) => p.step !== "MOBILE_VERIFICATION" && p.step !== "DECLARATION" && p.step !== "VERIFICATION_METHOD");
+	const pages = PAGES.filter((p) => p.step !== "DECLARATION");
 	return (
 		<ApplyShell title="Review your application" subtitle="Check your details before you submit." progress={snapshot}>
 			<Section>

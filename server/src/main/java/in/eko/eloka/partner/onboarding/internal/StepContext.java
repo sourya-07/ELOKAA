@@ -109,6 +109,11 @@ final class StepContext {
 		record("STEP_FAILED", key);
 	}
 
+	void block(PartnerStep key, String errorCode) {
+		steps.get(key).block(errorCode);
+		record("STEP_FAILED", key);
+	}
+
 	void awaitExternal(PartnerStep key) {
 		steps.get(key).awaitExternal();
 		record("STEP_PENDING_EXTERNAL", key);

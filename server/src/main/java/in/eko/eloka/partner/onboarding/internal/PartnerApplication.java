@@ -99,8 +99,9 @@ class PartnerApplication extends BaseEntity {
 		}
 	}
 
-	void chooseMethod(VerificationMethod chosen) {
-		this.method = chosen;
+	/** Journey v2: identity always comes from DigiLocker (ADR-0007); MANUAL remains only on older applications. */
+	void useDigiLocker() {
+		this.method = VerificationMethod.DIGILOCKER;
 	}
 
 	void bindPan(byte[] hash) {

@@ -1,6 +1,5 @@
 package in.eko.eloka.partner.onboarding.internal;
 
-import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -9,7 +8,6 @@ import in.eko.eloka.partner.audit.AuditLog;
 import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.onboarding.StepStatus;
-import in.eko.eloka.partner.onboarding.VerificationMethod;
 import in.eko.eloka.partner.shared.crypto.BlindIndex;
 import in.eko.eloka.partner.shared.crypto.FieldCipher;
 import in.eko.eloka.partner.shared.error.ApiProblem;
@@ -66,31 +64,10 @@ class IdentitySteps {
 		this.json = json;
 	}
 
-	/** Step by step: masked Aadhaar front and back plus the last 4 digits. Staff check them later. */
-	@Transactional
-	ApplicationSnapshot manualAadhaar(UUID applicantId, String publicId, long version, String last4, String frontName,
-			byte[] front, String backName, byte[] back) {
-		applications.write(applicantId, publicId, version, context -> {
-			requireMethod(context, VerificationMethod.MANUAL);
-			context.requirePrerequisites(PartnerStep.AADHAAR);
-			if (front == null || back == null) {
-				throw ValidationException.field("front", "Upload both sides of your Aadhaar card");
-			}
-			verification.recordManualAadhaar(context.applicationId(), last4);
-			documents.attach(context, applicantId, DocumentKind.AADHAAR_MASKED_FRONT, frontName, front);
-			documents.attach(context, applicantId, DocumentKind.AADHAAR_MASKED_BACK, backName, back);
-			context.complete(PartnerStep.AADHAAR, json.writeValueAsString(Map.of("method", "MANUAL", "aadhaar_masked",
-					"XXXX-XXXX-" + last4.trim(), "review", "MANUAL_REVIEW_REQUIRED")));
-			return null;
-		});
-		return applications.get(applicantId, publicId);
-	}
-
 	/** Sends the applicant to DigiLocker. Needs the DigiLocker consent first. */
 	@Transactional
 	String startDigiLocker(UUID applicantId, String publicId, long version) {
 		return applications.write(applicantId, publicId, version, context -> {
-			requireMethod(context, VerificationMethod.DIGILOCKER);
 			context.requirePrerequisites(PartnerStep.AADHAAR);
 			boolean consented = consents
 				.findFirstByApplicationIdAndPurposeOrderByAcceptedAtDesc(context.applicationId(), ConsentRecord.Purpose.DIGILOCKER)
@@ -100,8 +77,19 @@ class IdentitySteps {
 				throw new ApiProblem(HttpStatus.CONFLICT, "CONSENT_REQUIRED", "Allow ELOKA to fetch your details from DigiLocker first",
 						Map.of("purpose", "DIGILOCKER"));
 			}
+			StepStatus status = context.step(PartnerStep.AADHAAR).getStatus();
+			if (status == StepStatus.LOCKED) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "STEP_NOT_EDITABLE", "Your Aadhaar cannot be changed now");
+			}
+			if (status == StepStatus.BLOCKED) { // before the provider call: no DigiLocker session for a blocked step
+				throw new ApiProblem(HttpStatus.LOCKED, "STEP_BLOCKED", "Too many failed attempts on this step. Please contact support.");
+			}
 			String url = verification.startDigiLocker(context.applicationId(), properties.digilockerReturnUrl()).url();
-			context.awaitExternal(PartnerStep.AADHAAR);
+			// A redo of a done (or reopened) step keeps that status until DigiLocker answers: leaving
+			// half-way changes nothing, and the steps after it stay valid
+			if (status != StepStatus.COMPLETED && status != StepStatus.REOPENED) {
+				context.awaitExternal(PartnerStep.AADHAAR);
+			}
 			return url;
 		});
 	}
@@ -113,17 +101,33 @@ class IdentitySteps {
 	@Transactional
 	DigiLockerResult completeDigiLocker(UUID applicantId, String publicId, String state) {
 		boolean pending = applications.write(applicantId, publicId, null, context -> {
-			requireMethod(context, VerificationMethod.DIGILOCKER);
 			VerificationApi.DigiLockerOutcome outcome = verification.completeDigiLocker(context.applicationId(), state);
-			if (!(outcome instanceof VerificationApi.DigiLockerOutcome.Pending)) {
+			String result = switch (outcome) {
+				case VerificationApi.DigiLockerOutcome.Pending p -> null;
+				case VerificationApi.DigiLockerOutcome.Unavailable u -> "UNAVAILABLE";
+				case VerificationApi.DigiLockerOutcome.Failed failed -> failed.code();
+				case VerificationApi.DigiLockerOutcome.Verified verified -> "VERIFIED";
+			};
+			if (result != null) {
 				audit.record(new AuditEntry("DIGILOCKER_RESULT", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
-						publicId, Map.of("result", outcome instanceof VerificationApi.DigiLockerOutcome.Verified ? "VERIFIED"
-								: ((VerificationApi.DigiLockerOutcome.Failed) outcome).code())));
+						publicId, Map.of("result", result)));
 			}
 			switch (outcome) {
 				case VerificationApi.DigiLockerOutcome.Pending p -> {
 					return true;
 				}
+				// DigiLocker or EPS could not answer: not a result. Nothing is used up, the trip stays open and
+				// the answer is "still waiting" (202); a done or reopened step keeps its status
+				case VerificationApi.DigiLockerOutcome.Unavailable u -> {
+					StepStatus current = context.step(PartnerStep.AADHAAR).getStatus();
+					if (current != StepStatus.COMPLETED && current != StepStatus.REOPENED) {
+						context.failTechnically(PartnerStep.AADHAAR, "DIGILOCKER_UNAVAILABLE");
+					}
+					return true;
+				}
+				// Under 18: no retry can change it (docs/OPEN_QUESTIONS.md Q-29)
+				case VerificationApi.DigiLockerOutcome.Failed failed when failed.code().equals("UNDER_AGE") ->
+					context.block(PartnerStep.AADHAAR, "DIGILOCKER_UNDER_AGE");
 				case VerificationApi.DigiLockerOutcome.Failed failed -> context.fail(PartnerStep.AADHAAR, "DIGILOCKER_" + failed.code());
 				case VerificationApi.DigiLockerOutcome.Verified verified -> {
 					boolean addressComplete = saveDigiLockerAddress(context, verified.address());
@@ -132,6 +136,9 @@ class IdentitySteps {
 					summary.put("aadhaar_masked", "XXXX-XXXX-" + verified.aadhaarLast4());
 					summary.put("address_from_digilocker", addressComplete);
 					context.complete(PartnerStep.AADHAAR, json.writeValueAsString(summary), verified.identityHash());
+					if (addressComplete) {
+						completeAddressFromDigiLocker(context);
+					}
 				}
 			}
 			return false;
@@ -140,17 +147,17 @@ class IdentitySteps {
 	}
 
 	/**
-	 * Checks the PAN. On the DigiLocker path the name and date of birth come from DigiLocker, not
-	 * from what was typed. A PAN held by another open, approved or ineligible application is refused.
+	 * Checks the PAN against the name and date of birth from DigiLocker (never what was typed). A PAN
+	 * held by another open, approved or ineligible application is refused.
 	 */
 	@Transactional
-	ApplicationSnapshot verifyPan(UUID applicantId, String publicId, long version, String pan, String name, LocalDate dob) {
+	ApplicationSnapshot verifyPan(UUID applicantId, String publicId, long version, String pan) {
 		applications.write(applicantId, publicId, version, context -> {
 			context.requirePrerequisites(PartnerStep.PAN);
 			if (context.step(PartnerStep.PAN).getStatus() == StepStatus.BLOCKED) {
 				throw new ApiProblem(HttpStatus.LOCKED, "STEP_BLOCKED", "Too many failed attempts on this step. Please contact support.");
 			}
-			VerificationApi.PanOutcome outcome = verification.verifyPan(context.applicationId(), pan, name, dob);
+			VerificationApi.PanOutcome outcome = verification.verifyPan(context.applicationId(), pan);
 			String result = outcome.result() != VerificationApi.PanOutcome.Result.MATCH ? "PAN_" + outcome.result().name()
 					: applicationRows.existsBlockingPan(outcome.panHash(), context.applicationId(), applications.blockingStatuses())
 							? "PAN_ALREADY_USED" : "PAN_VERIFIED";
@@ -168,11 +175,21 @@ class IdentitySteps {
 		return applications.get(applicantId, publicId);
 	}
 
-	/** Home address typed by the applicant (or a correction of the DigiLocker one). */
+	/**
+	 * Home address typed by the applicant: only when DigiLocker did not give a whole one, or a
+	 * reviewer asked for it to be corrected. A DigiLocker address is not replaced by a typed one.
+	 */
 	@Transactional
 	ApplicationSnapshot saveHomeAddress(UUID applicantId, String publicId, long version, AddressInput input) {
 		applications.write(applicantId, publicId, version, context -> {
 			context.requirePrerequisites(PartnerStep.HOME_ADDRESS);
+			boolean fromDigiLocker = addresses.findByApplicationId(context.applicationId())
+				.map(existing -> existing.getSource() == PartnerAddress.Source.DIGILOCKER)
+				.orElse(false);
+			if (fromDigiLocker && context.step(PartnerStep.HOME_ADDRESS).getStatus() != StepStatus.REOPENED) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "ADDRESS_FROM_DIGILOCKER",
+						"Your home address comes from DigiLocker. To change it, update it in Aadhaar and connect DigiLocker again.");
+			}
 			AddressInput clean = validate(input);
 			PartnerAddress address = addresses.findByApplicationId(context.applicationId())
 				.orElseGet(() -> new PartnerAddress(context.applicationId()));
@@ -187,15 +204,12 @@ class IdentitySteps {
 	}
 
 	/**
-	 * Completes the home address step from DigiLocker once the credit check has passed, when
-	 * DigiLocker gave a whole address. Called by the eligibility step under the same lock.
+	 * Completes the home address step from the DigiLocker address just saved. Again with the same
+	 * address changes nothing; a frozen step (during a correction) is left alone.
 	 */
-	void completeAddressFromDigiLocker(StepContext context) {
-		if (context.application().getMethod() != VerificationMethod.DIGILOCKER) {
+	private void completeAddressFromDigiLocker(StepContext context) {
+		if (context.step(PartnerStep.HOME_ADDRESS).getStatus() == StepStatus.LOCKED) {
 			return;
-		}
-		if (context.step(PartnerStep.HOME_ADDRESS).getStatus().isSatisfied()) {
-			return; // already done, or frozen during a correction
 		}
 		addresses.findByApplicationId(context.applicationId())
 			.filter(address -> address.getSource() == PartnerAddress.Source.DIGILOCKER)
@@ -233,14 +247,6 @@ class IdentitySteps {
 	private String addressSummary(PartnerAddress address) {
 		return json.writeValueAsString(Map.of("state", address.getState(), "pincode", address.getPincode(), "source",
 				address.getSource().name()));
-	}
-
-	private static void requireMethod(StepContext context, VerificationMethod method) {
-		if (context.application().getMethod() != method) {
-			throw new ApiProblem(HttpStatus.CONFLICT, "WRONG_METHOD",
-					"This application uses " + (method == VerificationMethod.MANUAL ? "DigiLocker" : "the step-by-step path"),
-					Map.of("method", String.valueOf(context.application().getMethod())));
-		}
 	}
 
 	private static AddressInput validate(AddressInput input) {

@@ -6,7 +6,7 @@ import { staggerChildren } from "@/styles/motion";
 /** One part of the application, as the progress line names it. */
 const PARTS = [
 	{ title: "Contact details", body: "Verify your mobile number and your email address with one-time codes." },
-	{ title: "Identity", body: "Aadhaar through DigiLocker (or by uploading it), your PAN, and your home address." },
+	{ title: "Identity", body: "Your Aadhaar through DigiLocker (it gives your home address too), then your PAN." },
 	{
 		title: "Eligibility",
 		body: "With your consent we check your CIBIL credit score. We tell you only whether it is 700 or more, and we never keep your credit report.",
@@ -49,7 +49,7 @@ export default function Home() {
 								</Text>{" "}
 								With a score below 700 you are not eligible under our current rules, and the application ends at that check.
 							</ListItem>
-							<ListItem>You have your own Aadhaar, PAN and mobile number.</ListItem>
+							<ListItem>You have your own Aadhaar, PAN and mobile number, and a DigiLocker account with your Aadhaar in it (you can create one while applying).</ListItem>
 						</List>
 					</Box>
 
@@ -77,7 +77,7 @@ export default function Home() {
 						</Heading>
 						<List spacing={2} styleType="disc" pl={5}>
 							<ListItem>Your phone, with the mobile number you will use, and your email</ListItem>
-							<ListItem>Your PAN card</ListItem>
+							<ListItem>The mobile number linked to your Aadhaar (for DigiLocker), and your PAN</ListItem>
 							<ListItem>Your graduation certificate</ListItem>
 							<ListItem>Your voter ID or driving licence</ListItem>
 							<ListItem>A camera on your phone or computer, in good light</ListItem>

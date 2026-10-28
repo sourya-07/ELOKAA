@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,9 +63,6 @@ class ApplicationController {
 	record ConsentRequest(String purpose, String version) {
 	}
 
-	record MethodRequest(String method) {
-	}
-
 	record DeclarationRequest(String version, boolean accepted) {
 	}
 
@@ -114,13 +110,6 @@ class ApplicationController {
 		long version = WebSupport.expectedVersion(ifMatch);
 		return WebSupport.ok(applications.consent(WebSupport.applicantId(), id, version, body.purpose(), body.version(),
 				index.hash("ip", request.getRemoteAddr())));
-	}
-
-	@PutMapping("/{id}/method")
-	ResponseEntity<ApplicationSnapshot> method(@PathVariable String id, @RequestBody MethodRequest body,
-			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
-		long version = WebSupport.expectedVersion(ifMatch);
-		return WebSupport.ok(applications.chooseMethod(WebSupport.applicantId(), id, version, body.method()));
 	}
 
 	@PostMapping("/{id}/declaration")

@@ -43,8 +43,8 @@ public interface VerificationApi {
 		record Pending() implements DigiLockerOutcome {
 		}
 
-		/** @param address may have missing parts; the applicant then completes it by hand */
 		/**
+		 * @param address may have missing parts; the applicant then completes it by hand
 		 * @param dob date of birth from DigiLocker (age rules)
 		 * @param identityHash blind index of name, date of birth and Aadhaar last 4: a redo with the
 		 *        same identity does not make the later steps stale
@@ -53,7 +53,15 @@ public interface VerificationApi {
 				implements DigiLockerOutcome {
 		}
 
+		/**
+		 * A real answer that is not a pass: {@code NO_AADHAAR_DATA} (DigiLocker has no Aadhaar for this
+		 * person), {@code INVALID_REFERENCE}, {@code UNDER_AGE}.
+		 */
 		record Failed(String code) implements DigiLockerOutcome {
+		}
+
+		/** DigiLocker or EPS could not answer now: not a result. The session stays open to be checked again. */
+		record Unavailable() implements DigiLockerOutcome {
 		}
 	}
 
@@ -71,16 +79,18 @@ public interface VerificationApi {
 	 * @param name for the step-by-step path the name typed by the applicant; for DigiLocker the
 	 *        name DigiLocker gave is used instead and this is ignored
 	 */
-	PanOutcome verifyPan(UUID applicationId, String pan, String name, LocalDate dob);
+	/**
+	 * Checks the PAN against the name and date of birth DigiLocker gave.
+	 *
+	 * @throws in.eko.eloka.partner.shared.error.ApiProblem {@code AADHAAR_NOT_VERIFIED} without a verified DigiLocker identity
+	 */
+	PanOutcome verifyPan(UUID applicationId, String pan);
 
 	/** @param returnUrlPattern client URL with {@code {state}} where the single-use state goes */
 	DigiLockerStart startDigiLocker(UUID applicationId, String returnUrlPattern);
 
 	/** Reads the session the state belongs to. A state works once, for its own application, for 15 minutes. */
 	DigiLockerOutcome completeDigiLocker(UUID applicationId, String state);
-
-	/** Records a manual Aadhaar (masked images checked by staff later). */
-	void recordManualAadhaar(UUID applicationId, String aadhaarLast4);
 
 	/** Name and DOB from DigiLocker if used, else from the PAN step; and the verified PAN. */
 	Optional<Identity> verifiedIdentity(UUID applicationId);

@@ -7,7 +7,7 @@ import { render } from "../render";
 const replace = jest.fn();
 jest.mock("next/router", () => ({
 	// a new object on every call, like the Pages Router
-	useRouter: () => ({ push: jest.fn(), replace, query: {}, pathname: "/apply/pan" }),
+	useRouter: () => ({ push: jest.fn(), replace, query: {}, asPath: "/apply/identity", pathname: "/apply/pan" }),
 }));
 
 function reply(status: number, body: unknown) {

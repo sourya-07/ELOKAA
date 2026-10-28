@@ -1,39 +1,27 @@
 import type { Snapshot, StepKey } from "@/lib/types";
 
-/** Pages of the journey (docs/PARTNER_JOURNEY.md) and the step each one completes. */
+/** Where each step is done (docs/PARTNER_JOURNEY.md). One page can hold several steps, each with its own anchor. */
 export interface Page {
 	path: string;
 	title: string;
 	step: StepKey;
-	paths: ("DIGILOCKER" | "MANUAL")[];
 }
 
 export const PAGES: Page[] = [
-	{ path: "/apply", title: "Mobile number", step: "MOBILE_VERIFICATION", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/method", title: "How to apply", step: "VERIFICATION_METHOD", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/digilocker", title: "DigiLocker", step: "AADHAAR", paths: ["DIGILOCKER"] },
-	{ path: "/apply/aadhaar", title: "Aadhaar", step: "AADHAAR", paths: ["MANUAL"] },
-	{ path: "/apply/pan", title: "PAN", step: "PAN", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/credit-check", title: "Credit check", step: "CREDIT_CHECK", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/address", title: "Home address", step: "HOME_ADDRESS", paths: ["MANUAL"] },
-	{ path: "/apply/photos", title: "Photos", step: "PHOTOS", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/education", title: "Education", step: "EDUCATION", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/id-document", title: "Voter ID or driving licence", step: "ID_DOCUMENT", paths: ["DIGILOCKER", "MANUAL"] },
-	{ path: "/apply/review", title: "Review", step: "DECLARATION", paths: ["DIGILOCKER", "MANUAL"] },
+	{ path: "/apply", title: "Contact details", step: "EMAIL_VERIFICATION" },
+	{ path: "/apply/identity#aadhaar", title: "Aadhaar (DigiLocker)", step: "AADHAAR" },
+	{ path: "/apply/identity#address", title: "Home address", step: "HOME_ADDRESS" },
+	{ path: "/apply/identity#pan", title: "PAN", step: "PAN" },
+	{ path: "/apply/identity#eligibility", title: "Eligibility", step: "CREDIT_CHECK" },
+	{ path: "/apply/photos", title: "Photos", step: "PHOTOS" },
+	{ path: "/apply/education", title: "Education", step: "EDUCATION" },
+	{ path: "/apply/id-document", title: "Voter ID or driving licence", step: "ID_DOCUMENT" },
+	{ path: "/apply/review", title: "Review", step: "DECLARATION" },
 ];
 
-/**
- * The pages of the applicant's path, in order. On the DigiLocker path the PAN is entered on the
- * DigiLocker page and the home address comes from DigiLocker, so those pages are not separate steps.
- */
-export function pagesFor(method: Snapshot["method"]): Page[] {
-	const path = method ?? "MANUAL";
-	return PAGES.filter((page) => page.paths.includes(path)).filter(
-		(page) => !(path === "DIGILOCKER" && page.path === "/apply/pan"),
-	);
-}
+const IDENTITY: StepKey[] = ["AADHAAR", "HOME_ADDRESS", "PAN", "CREDIT_CHECK"];
 
-/** Where the applicant continues: the server's next step, shown on its page. */
+/** Where the applicant continues: the page of the server's next step. */
 export function routeFor(snapshot: Snapshot): string {
 	if (!["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status)) {
 		return "/apply/status";
@@ -45,19 +33,15 @@ export function routeFor(snapshot: Snapshot): string {
 	if (next === "EMAIL_VERIFICATION" || next === "CONSENT") {
 		return "/apply"; // contact details: the sign-in page continues with the email
 	}
-	if (next === "VERIFICATION_METHOD") {
-		return "/apply/method";
+	if (IDENTITY.includes(next)) {
+		return "/apply/identity";
 	}
-	if (next === "AADHAAR") {
-		return snapshot.method === "DIGILOCKER" ? "/apply/digilocker" : "/apply/aadhaar";
-	}
-	if (next === "PAN" && snapshot.method === "DIGILOCKER") {
-		return "/apply/digilocker";
-	}
-	if (next === "HOME_ADDRESS") {
-		return "/apply/address"; // on the DigiLocker path only when DigiLocker gave no full address
-	}
-	return PAGES.find((page) => page.step === next && page.paths.includes(snapshot.method ?? "MANUAL"))?.path ?? "/apply/review";
+	return PAGES.find((page) => page.step === next)?.path ?? "/apply/review";
+}
+
+/** A return address inside the journey only (never another site). */
+export function safeNext(value: unknown): string | null {
+	return typeof value === "string" && value.startsWith("/apply/") && !value.startsWith("//") ? value : null;
 }
 
 /** What a step error code means for the applicant. */
@@ -71,4 +55,8 @@ export const ERROR_TEXT: Record<string, string> = {
 	INVALID_SCORE: "We could not complete the credit check. Our team will contact you.",
 	CREDIT_SCORE_BELOW_THRESHOLD: "Your credit check did not meet our requirement.",
 	DIGILOCKER_INVALID_REFERENCE: "DigiLocker did not finish. Please try again.",
+	DIGILOCKER_NO_AADHAAR_DATA: "Your DigiLocker has no Aadhaar linked. Link your Aadhaar in DigiLocker, then try again.",
+	DIGILOCKER_UNAVAILABLE: "DigiLocker is not answering right now. Nothing was used up; check again in a few minutes.",
+	DIGILOCKER_UNDER_AGE: "You must be 18 or older to become an ELOKA partner.",
+	AADHAAR_NOT_VERIFIED: "Verify your Aadhaar through DigiLocker first.",
 };

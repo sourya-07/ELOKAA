@@ -30,7 +30,7 @@ class LogLeakIntegrationTest {
 
 	@Test
 	void noPersonalDataOrTokensInTheLogs(CapturedOutput output) throws Exception {
-		JourneyDriver applicant = new JourneyDriver(mvc, json).submitStepByStep();
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String logs = output.getAll();
 		assertThat(logs).isNotEmpty();
 		assertThat(logs).doesNotContain(applicant.pan());

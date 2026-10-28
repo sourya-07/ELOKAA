@@ -87,4 +87,4 @@ eloka:
     consent-version: "2026-10-27"
     declaration-version: "2026-10-27"
     # The client page DigiLocker sends the applicant back to
-    digilocker-return-url: ${ELOKA_PUBLIC_URL:http://localhost:3003}/apply/digilocker?state={state}
+    digilocker-return-url: ${ELOKA_PUBLIC_URL:http://localhost:3003}/apply/identity?state={state}

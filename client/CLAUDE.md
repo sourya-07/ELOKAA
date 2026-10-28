@@ -15,16 +15,21 @@ npm run build
 ## Layout
 
 ```
-src/pages/            routes only: index, apply/* (journey), staff/* (review console), api/health, api/v1/[...path] (BFF)
+src/pages/            routes only: index, apply/* (journey: index = contact details, identity = Aadhaar via DigiLocker,
+                      address, PAN and credit check as tasks, photos, education, id-document, review, status;
+                      old identity pages redirect in next.config.js), staff/*, api/health, api/v1/[...path] (BFF)
 src/middleware.ts     per-request CSP nonce (pages render per request so the nonce is real)
 src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
-                      (pages per path, routeFor), milestones.ts (progress = finished parts, from server step
+                      (PAGES: step → page#anchor, routeFor, safeNext for ?next= after sign-in), tasks.ts (step status →
+                      task state), milestones.ts (progress = finished parts, from server step
                       statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest; loads once per
                       session, never goes back to an older snapshot), guards, PanForm, SubmitStep, useDocuments,
                       useAction, withApplication / withOptionalApplication (marks a journey page; _app wraps marked
                       pages in ONE shared provider; "optional" pages such as /apply also render signed out),
-                      EmailStage (email code + data-use consent on the /apply card), WithdrawPanel (step-up code,
+                      EmailStage (email code + data-use consent on the /apply card), DigiLockerTask (explainer, consent,
+                      official help links, return with ?state=, automatic re-checks, start again), AddressForm,
+                      PanForm (PAN only), EligibilityTask, WithdrawPanel (step-up code,
                       then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after

@@ -1,5 +1,7 @@
 package in.eko.eloka.partner.verification.internal;
 
+import in.eko.eloka.partner.shared.error.RateLimitedException;
+import in.eko.eloka.partner.integration.ProviderUnavailableException;
 import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Duration;
@@ -43,12 +45,18 @@ interface DigiLockerSessionRepository extends JpaRepository<DigiLockerSession, U
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("select s from DigiLockerSession s where s.stateHash = :stateHash")
 	Optional<DigiLockerSession> lockByStateHash(@Param("stateHash") byte[] stateHash);
+
+	List<DigiLockerSession> findByApplicationIdAndConsumedAtIsNull(UUID applicationId);
+
+	long countByApplicationIdAndCreatedAtAfter(UUID applicationId, Instant since);
 }
 
 @Service
 class VerificationService implements VerificationApi {
 
 	private static final Duration DIGILOCKER_WINDOW = Duration.ofMinutes(15);
+	/** DigiLocker trips an application may start per hour (each one is a provider session). */
+	private static final int MAX_STARTS_PER_HOUR = 10;
 	private static final java.util.regex.Pattern PAN = java.util.regex.Pattern.compile("[A-Z]{5}\\d{4}[A-Z]");
 	private static final char[] REF_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".toCharArray();
 	private static final SecureRandom RANDOM = new SecureRandom();
@@ -74,7 +82,7 @@ class VerificationService implements VerificationApi {
 
 	@Override
 	@Transactional
-	public PanOutcome verifyPan(UUID applicationId, String rawPan, String typedName, LocalDate typedDob) {
+	public PanOutcome verifyPan(UUID applicationId, String rawPan) {
 		String pan = rawPan == null ? "" : rawPan.trim().toUpperCase();
 		if (!PAN.matcher(pan).matches()) {
 			throw ValidationException.field("pan", "Enter a valid 10-character PAN, for example ABCDE1234F");
@@ -82,17 +90,10 @@ class VerificationService implements VerificationApi {
 		if (pan.charAt(3) != 'P') {
 			throw ValidationException.field("pan", "This is not a personal PAN. Use the PAN issued to you as a person.");
 		}
-		Optional<Verification> digiLockerIdentity = latestVerifiedDigiLocker(applicationId);
-		String name;
-		LocalDate dob;
-		if (digiLockerIdentity.isPresent()) {
-			name = cipher.decrypt(digiLockerIdentity.get().getNameEnc());
-			dob = requireDob(LocalDate.parse(cipher.decrypt(digiLockerIdentity.get().getDobEnc())));
-		}
-		else {
-			name = requireName(typedName);
-			dob = requireDob(typedDob);
-		}
+		Verification person = latestVerifiedDigiLocker(applicationId).orElseThrow(() -> new ApiProblem(HttpStatus.CONFLICT,
+				"AADHAAR_NOT_VERIFIED", "Verify your Aadhaar through DigiLocker first"));
+		String name = cipher.decrypt(person.getNameEnc());
+		LocalDate dob = LocalDate.parse(cipher.decrypt(person.getDobEnc()));
 		PanVerifier.PanCheck check = panVerifier.verify(pan, name, dob);
 		PanOutcome.Result result = PanOutcome.Result.valueOf(check.result().name());
 		byte[] hash = index.hash("pan", pan);
@@ -110,6 +111,13 @@ class VerificationService implements VerificationApi {
 	@Override
 	@Transactional
 	public DigiLockerStart startDigiLocker(UUID applicationId, String returnUrlPattern) {
+		Instant now = Instant.now(clock);
+		if (sessions.countByApplicationIdAndCreatedAtAfter(applicationId, now.minus(Duration.ofHours(1))) >= MAX_STARTS_PER_HOUR) {
+			throw new RateLimitedException("DIGILOCKER_LIMIT_REACHED",
+					"Too many DigiLocker attempts. Please try again in an hour.", Duration.ofHours(1));
+		}
+		// "Start again": an earlier, unfinished trip can no longer be completed
+		sessions.findByApplicationIdAndConsumedAtIsNull(applicationId).forEach(open -> open.consume(now));
 		String state = Tokens.random("dls_");
 		String verificationRef = verificationRef();
 		DigiLockerProvider.Session session = digiLocker.start(verificationRef, returnUrlPattern.replace("{state}", state));
@@ -134,7 +142,13 @@ class VerificationService implements VerificationApi {
 		if (session.isExpired(now)) {
 			throw new ApiProblem(HttpStatus.GONE, "DIGILOCKER_EXPIRED", "This DigiLocker link has expired. Please start again.");
 		}
-		DigiLockerProvider.Fetch fetch = digiLocker.fetch(session.getVerificationRef(), session.getProviderRef());
+		DigiLockerProvider.Fetch fetch;
+		try {
+			fetch = digiLocker.fetch(session.getVerificationRef(), session.getProviderRef());
+		}
+		catch (ProviderUnavailableException ex) {
+			return new DigiLockerOutcome.Unavailable(); // the session stays open: "Check again" can finish it
+		}
 		return switch (fetch) {
 			case DigiLockerProvider.Fetch.Pending pending -> new DigiLockerOutcome.Pending();
 			case DigiLockerProvider.Fetch.Failed failed -> {
@@ -146,6 +160,11 @@ class VerificationService implements VerificationApi {
 			case DigiLockerProvider.Fetch.Done done -> {
 				session.consume(now);
 				DigiLockerProvider.Identity person = done.identity();
+				if (age(person.dob(), LocalDate.ofInstant(now, java.time.ZoneId.of("Asia/Kolkata"))) < 18) {
+					verifications.save(new Verification(applicationId, Kind.AADHAAR, Method.DIGILOCKER,
+							EvidenceStatus.VERIFICATION_FAILED, "digilocker", session.getProviderRef()).failed("UNDER_AGE"));
+					yield new DigiLockerOutcome.Failed("UNDER_AGE");
+				}
 				verifications.save(new Verification(applicationId, Kind.AADHAAR, Method.DIGILOCKER, EvidenceStatus.VERIFIED,
 						"digilocker", session.getProviderRef())
 					.value(null, null, "XXXX-XXXX-" + person.aadhaarLast4())
@@ -158,17 +177,6 @@ class VerificationService implements VerificationApi {
 				yield new DigiLockerOutcome.Verified(person.aadhaarLast4(), address, person.dob(), identity);
 			}
 		};
-	}
-
-	@Override
-	@Transactional
-	public void recordManualAadhaar(UUID applicationId, String aadhaarLast4) {
-		if (aadhaarLast4 == null || !aadhaarLast4.trim().matches("\\d{4}")) {
-			throw ValidationException.field("aadhaar_last4", "Enter the last 4 digits of your Aadhaar number");
-		}
-		verifications.save(new Verification(applicationId, Kind.AADHAAR, Method.MANUAL,
-				EvidenceStatus.MANUAL_REVIEW_REQUIRED, null, null)
-			.value(null, null, "XXXX-XXXX-" + aadhaarLast4.trim()));
 	}
 
 	@Override
@@ -231,20 +239,9 @@ class VerificationService implements VerificationApi {
 			.findFirst();
 	}
 
-	private static String requireName(String name) {
-		String value = name == null ? "" : name.trim().replaceAll("\\s+", " ");
-		if (value.length() < 2 || value.length() > 100 || !value.matches("[A-Za-z .'-]+")) {
-			throw ValidationException.field("name", "Enter your name exactly as it is on your PAN card");
-		}
-		return value.toUpperCase();
-	}
-
-	private LocalDate requireDob(LocalDate dob) {
-		LocalDate today = LocalDate.now(clock);
-		if (dob == null || dob.isAfter(today.minusYears(18)) || dob.isBefore(today.minusYears(100))) {
-			throw ValidationException.field("dob", "Enter your date of birth. You must be at least 18.");
-		}
-		return dob;
+	/** Age on {@code today} in whole years. */
+	private static int age(LocalDate dob, LocalDate today) {
+		return java.time.Period.between(dob, today).getYears();
 	}
 
 	/** Our id for a DigiLocker attempt: "DL" + 18 characters, within EPS's 20-character limit. */

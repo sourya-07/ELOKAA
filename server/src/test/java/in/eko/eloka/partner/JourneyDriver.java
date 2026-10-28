@@ -3,7 +3,6 @@ package in.eko.eloka.partner;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.awt.Color;
@@ -56,26 +55,23 @@ public final class JourneyDriver {
 		return token;
 	}
 
-	/** Step by step, all the way to SUBMITTED. */
-	public JourneyDriver submitStepByStep() throws Exception {
+	/** Through DigiLocker, all the way to SUBMITTED (the address comes from DigiLocker). */
+	public JourneyDriver submit() throws Exception {
 		verifyEmail();
 		consent("DATA_PROCESSING");
-		track(call(put(app("/method")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"method\":\"MANUAL\"}")).andExpect(status().isOk()));
-		track(call(multipart(app("/aadhaar")).file(file("front", jpeg(800, 500))).file(file("back", jpeg(800, 500)))
-			.param("aadhaar_last4", "4321")
-			.header("If-Match", etag())).andExpect(status().isOk()));
+		consent("DIGILOCKER");
+		String url = client.body(call(post(app("/digilocker-sessions")).header("If-Match", etag())).andExpect(status().isOk()))
+			.get("url").asString();
+		track(call(post(app("/digilocker-sessions/complete")).contentType(MediaType.APPLICATION_JSON)
+			.content("{\"state\":\"" + url.substring(url.indexOf("state=") + 6) + "\"}")).andExpect(status().isOk()));
 		pan = newPan("4321");
 		track(call(post(app("/pan-verifications")).header("If-Match", etag())
 			.header("Idempotency-Key", UUID.randomUUID().toString())
 			.contentType(MediaType.APPLICATION_JSON)
-			.content("{\"pan\":\"" + pan + "\",\"name\":\"Ravi Kumar\",\"dob\":\"1990-01-15\"}")).andExpect(status().isOk()));
+			.content("{\"pan\":\"" + pan + "\"}")).andExpect(status().isOk()));
 		consent("CREDIT_CHECK");
 		track(call(post(app("/credit-assessments")).header("If-Match", etag())
 			.header("Idempotency-Key", UUID.randomUUID().toString())).andExpect(status().isOk()));
-		track(call(put(app("/home-address")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
-			.content("{\"line1\":\"Flat 12\",\"city\":\"Pune\",\"state\":\"Maharashtra\",\"pincode\":\"411001\"}"))
-			.andExpect(status().isOk()));
 		upload("LIVE_PHOTO", jpeg(600, 600));
 		upload("PASSPORT_PHOTO", jpeg(350, 450));
 		submitStep("/photos/submit", null);

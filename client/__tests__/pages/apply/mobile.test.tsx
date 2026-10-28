@@ -6,7 +6,7 @@ import { render } from "../../render";
 
 const push = jest.fn();
 const replace = jest.fn();
-jest.mock("next/router", () => ({ useRouter: () => ({ push, replace, query: {}, pathname: "/apply" }) }));
+jest.mock("next/router", () => ({ useRouter: () => ({ push, replace, query: {}, asPath: "/apply/identity", pathname: "/apply" }) }));
 
 function respond(...replies: { status: number; body: unknown }[]) {
 	const fetchMock = jest.fn();
@@ -81,7 +81,7 @@ describe("contact details page", () => {
 			{ status: 200, body: snapshotAt("EMAIL_VERIFICATION") },
 			{ status: 202, body: { challenge_ref: "c1", expires_in: 600, resend_after: 30, otp_length: 6, email_masked: "r***@example.com" } },
 			{ status: 200, body: verified },
-			{ status: 200, body: snapshotAt("VERIFICATION_METHOD", { version: 5 }) },
+			{ status: 200, body: snapshotAt("AADHAAR", { version: 5 }) },
 		);
 		renderPage();
 		fireEvent.change(await screen.findByLabelText("Email address"), { target: { value: "not-an-email" } });
@@ -104,6 +104,6 @@ describe("contact details page", () => {
 		expect(await screen.findByText("Agree to how we use your data to continue")).toBeInTheDocument();
 		fireEvent.click(screen.getByRole("checkbox"));
 		fireEvent.click(screen.getByRole("button", { name: "Continue" }));
-		await waitFor(() => expect(push).toHaveBeenCalledWith("/apply/method"));
+		await waitFor(() => expect(push).toHaveBeenCalledWith("/apply/identity"));
 	});
 });

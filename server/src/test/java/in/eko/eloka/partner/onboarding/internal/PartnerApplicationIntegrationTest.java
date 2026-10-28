@@ -68,7 +68,7 @@ class PartnerApplicationIntegrationTest {
 			.andExpect(header().string("ETag", "\"v0\""))
 			.andExpect(jsonPath("$.status").value("IN_PROGRESS"))
 			.andExpect(jsonPath("$.next_step").value("EMAIL_VERIFICATION"))
-			.andExpect(jsonPath("$.steps.length()").value(12))
+			.andExpect(jsonPath("$.steps.length()").value(11))
 			.andExpect(jsonPath("$.steps[0].step_key").value("MOBILE_VERIFICATION"))
 			.andExpect(jsonPath("$.steps[0].status").value("COMPLETED")));
 		String id = created.get("application_id").asString();
@@ -83,19 +83,13 @@ class PartnerApplicationIntegrationTest {
 	@Test
 	void stepsMoveInOrderAndTheServerSaysWhatIsNext() throws Exception {
 		String id = startWithEmail();
-		call(put("/v1/partner/applications/" + id + "/method").header("If-Match", "\"v1\"")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content("{\"method\":\"MANUAL\"}")).andExpect(status().isConflict())
+		call(post("/v1/partner/applications/" + id + "/digilocker-sessions").header("If-Match", "\"v1\""))
+			.andExpect(status().isConflict())
 			.andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"))
 			.andExpect(jsonPath("$.missing_steps[0]").value("CONSENT"));
 
-		JsonNode afterConsent = client.body(consent(id, "\"v1\"", CONSENT).andExpect(status().isOk())
-			.andExpect(jsonPath("$.next_step").value("VERIFICATION_METHOD")));
-		call(put("/v1/partner/applications/" + id + "/method")
-			.header("If-Match", "\"v" + afterConsent.get("version").asLong() + "\"")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content("{\"method\":\"manual\"}")).andExpect(status().isOk())
-			.andExpect(jsonPath("$.method").value("MANUAL"))
+		consent(id, "\"v1\"", CONSENT).andExpect(status().isOk())
+			.andExpect(jsonPath("$.method").value("DIGILOCKER"))
 			.andExpect(jsonPath("$.next_step").value("AADHAAR"));
 	}
 

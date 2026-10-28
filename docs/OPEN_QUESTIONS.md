@@ -24,7 +24,6 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 |---|---|---|---|
 | Q-7 | OTP delivery | default | EPS Mobile/OTP API through `OtpSender` (no DLT setup on our side) |
 | Q-8 | PAN, DigiLocker, voter ID, driving licence checks | default | EPS PAN Lite/Advanced, EPS DigiLocker, EPS voter ID and DL APIs; staff review on top |
-| Q-9 | Manual (step-by-step) Aadhaar | default | masked Aadhaar image (first 8 digits covered) + last 4 digits, checked by staff. The full number is never stored. Aadhaar OTP eKYC needs a licensed KUA/AUA and is not planned |
 | Q-10 | Who is the partner after approval? Provisioning? | default | an individual partner; approval ends this project and publishes `PartnerApproved`; no account is created |
 | Q-11 | Staff console in scope? | default | yes, a minimal one ported from eloka (queue, case, decisions) |
 | Q-12 | File formats | default | photos JPEG (.jpg/.jpeg) only, 5 MB; certificates and ID images JPEG or PDF, 10 MB. The whiteboard may also say PNG |
@@ -38,9 +37,8 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-24 | Live-photo location: accuracy limits, applicants outside India | default | refused above 1000 m; flagged for staff above 100 m and outside India |
 | Q-25 | One email per live application? (refusing reveals that an address is registered) | default | yes, with a neutral message |
 | Q-26 | Must the uploaded voter ID / driving licence images be of the document that was verified? | default | yes |
-| Q-27 | Exact official DigiLocker app-store links | default | checked when the help text is built |
 | Q-28 | Adopt the `DESIGN.taste.md` proposal (Geist, Ledger Blue)? | default | no; `DESIGN.md` (Inter, Connect Blue) stays |
-| Q-29 | An applicant under 18 at DigiLocker: block the step, or close the application? May they apply after turning 18? | default | the step blocks and the application expires; no permanent bar |
+| Q-29 | An applicant under 18 at DigiLocker: block the step, or close the application? May they apply after turning 18? | default | built: the Aadhaar step blocks at once (`DIGILOCKER_UNDER_AGE`) and the application expires; no permanent bar |
 | Q-17 | EPS Mobile OTP needs a `csp_id` ("the agent the OTP is sent on behalf of"). What do we send for a partner applicant? | default | `ELOKA_EPS_CSP_ID`, else our `initiator_id`. The EPS adapter is tested against a mock server only, not yet against EPS UAT |
 
 ## Closed
@@ -51,3 +49,5 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | C-2 | CIBIL check right after PAN is verified (ADR-0005) | 2026-10-27 |
 | C-3 | New `PTN-` Stitch screens in the ELOKA Platform project; Local Admin `APP-` screens unchanged | 2026-10-27 |
 | C-4 | LEAD process out of scope | 2026-10-27 |
+| C-5 | Identity through DigiLocker only; the step-by-step (masked Aadhaar) path is retired (was Q-9) (ADR-0007) | 2026-10-28 |
+| C-6 | Official DigiLocker links in the help: `digilocker.gov.in/web/signup`, Play Store `com.digilocker.android`, App Store `id1320618078` (checked on digilocker.gov.in; was Q-27) | 2026-10-28 |

@@ -95,6 +95,13 @@ class ApplicationStep extends BaseEntity {
 		this.reviewerMessage = null;
 	}
 
+	/** A result no retry can change (e.g. under 18): blocked at once, whatever attempts are left. */
+	void block(String errorCode) {
+		requireAttemptAllowed();
+		this.status = StepStatus.BLOCKED;
+		this.lastErrorCode = errorCode;
+	}
+
 	/** Waiting for a provider (redirect, async check). */
 	void awaitExternal() {
 		requireAttemptAllowed();

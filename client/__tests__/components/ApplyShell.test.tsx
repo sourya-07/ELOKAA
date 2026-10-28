@@ -4,7 +4,7 @@ import { SuccessMark } from "@/components/SuccessMark";
 import { snapshotAt } from "../fixtures";
 import { render } from "../render";
 
-jest.mock("next/router", () => ({ useRouter: () => ({ push: jest.fn(), replace: jest.fn(), query: {}, pathname: "/apply/pan" }) }));
+jest.mock("next/router", () => ({ useRouter: () => ({ push: jest.fn(), replace: jest.fn(), query: {}, asPath: "/apply/identity", pathname: "/apply/pan" }) }));
 
 describe("apply shell", () => {
 	it("shows progress as finished parts of the application, not as screens", () => {
