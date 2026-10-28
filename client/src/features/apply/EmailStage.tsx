@@ -135,7 +135,7 @@ export function EmailStage() {
 						<Stack spacing={4}>
 							<FormControl isInvalid={!!emailError} isDisabled={!!sent}>
 								<FormLabel htmlFor="email">Email address</FormLabel>
-								<Input id="email" type="email" inputMode="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+								<Input id="email" type="email" inputMode="email" autoComplete="email" spellCheck={false} value={email} onChange={(event) => setEmail(event.target.value)} />
 								<FormHelperText>We email you about your application. We never use it for marketing.</FormHelperText>
 								<FormErrorMessage>{emailError}</FormErrorMessage>
 							</FormControl>

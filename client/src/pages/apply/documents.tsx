@@ -47,6 +47,7 @@ function DocumentsPage() {
 			onUpload={(file, onProgress) => upload(kind, file, {}, onProgress)}
 			onRemove={remove}
 			contentUrl={contentUrl}
+			showRule={false}
 		/>
 	);
 

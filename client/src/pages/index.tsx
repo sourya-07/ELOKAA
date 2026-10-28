@@ -56,6 +56,10 @@ export default function Home() {
 						</List>
 					</Box>
 
+					<Button as={NextLink} href="/apply" alignSelf="flex-start">
+						Start your application
+					</Button>
+
 					<Stack as="section" aria-labelledby="how" spacing={3}>
 						<Heading as="h2" size="sm" id="how">
 							How it works

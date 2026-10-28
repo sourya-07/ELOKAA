@@ -48,6 +48,8 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 	const [problem, setProblem] = useState<Problem | null>(null);
 	const [preview, setPreview] = useState<{ url: string; file: File } | null>(null);
 	const [busy, setBusy] = useState(false);
+	// The live picture has started (the first frames arrived): only then can a photo be taken
+	const [streaming, setStreaming] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const send = async (file: File) => {
@@ -71,6 +73,26 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 	}, []);
 
 	useEffect(() => stop, [stop]);
+
+	// Attach the stream once React has put the <video> on the page (an animation frame could come
+	// before that, and the camera would never start); ready once frames actually play. If the
+	// picture never plays, stop and offer the retry and the phone-camera fallback
+	useEffect(() => {
+		const element = video.current;
+		if (state === "live" && element && stream.current && element.srcObject !== stream.current) {
+			element.srcObject = stream.current;
+			element.play().then(
+				() => setStreaming(true),
+				() => {
+					if (element.paused) {
+						stop();
+						setProblem("other");
+						setState("unavailable");
+					}
+				},
+			);
+		}
+	}, [state, stop]);
 	useEffect(() => () => {
 		if (preview) {
 			URL.revokeObjectURL(preview.url);
@@ -92,14 +114,9 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 		}
 		try {
 			stream.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+			setStreaming(false);
 			setProblem(null);
 			setState("live");
-			requestAnimationFrame(() => {
-				if (video.current && stream.current) {
-					video.current.srcObject = stream.current;
-					void video.current.play();
-				}
-			});
 		} catch (e) {
 			setProblem(problemOf(e));
 			setState("unavailable");
@@ -142,13 +159,13 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 			{state === "live" && (
 				<AspectRatio ratio={4 / 5} maxW="360px" w="100%" bg="ink.900" borderRadius="card" overflow="hidden">
 					<Box position="relative">
-						<video ref={video} muted playsInline aria-label="Camera preview" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }} />
+						<video ref={video} muted playsInline aria-label="Camera preview" onLoadedData={() => setStreaming(true)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }} />
 						<FaceGuide />
 					</Box>
 				</AspectRatio>
 			)}
 			{state === "preview" && preview && (
-				<AspectRatio ratio={4 / 5} maxW="360px" w="100%" borderRadius="card" overflow="hidden">
+				<AspectRatio className="camera-preview" ratio={4 / 5} maxW="360px" w="100%" borderRadius="card" overflow="hidden">
 					{/* eslint-disable-next-line @next/next/no-img-element -- a local blob preview */}
 					<img src={preview.url} alt="Your photo" style={{ objectFit: "cover" }} />
 				</AspectRatio>
@@ -163,7 +180,7 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 					</Button>
 				)}
 				{state === "live" && (
-					<Button size="md" onClick={snap}>
+					<Button size="md" onClick={snap} isDisabled={!streaming} isLoading={!streaming} loadingText="Starting camera">
 						Take photo
 					</Button>
 				)}

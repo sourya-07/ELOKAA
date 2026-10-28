@@ -32,11 +32,12 @@ export function PanForm() {
 	return (
 		<Stack spacing={4}>
 			<FormControl isInvalid={!!panError} isDisabled={blocked}>
-				<FormLabel htmlFor="pan">PAN</FormLabel>
+				<FormLabel htmlFor="pan-number">PAN</FormLabel>
 				<Input
-					id="pan"
+					id="pan-number" // not "pan": that is the task section's anchor on the identity page
 					autoCapitalize="characters"
 					autoComplete="off"
+					spellCheck={false}
 					fontFamily="mono"
 					maxLength={10}
 					value={pan}

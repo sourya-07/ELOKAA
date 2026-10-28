@@ -63,7 +63,7 @@ export function AlternateIdTask() {
 			</RadioGroup>
 			<FormControl isInvalid={!!numberError}>
 				<FormLabel htmlFor="alternate-number">{FORMAT[type].label}</FormLabel>
-				<Input id="alternate-number" autoCapitalize="characters" autoComplete="off" fontFamily="mono" maxLength={FORMAT[type].max} value={number} onChange={(event) => setNumber(event.target.value.toUpperCase())} />
+				<Input id="alternate-number" autoCapitalize="characters" autoComplete="off" spellCheck={false} fontFamily="mono" maxLength={FORMAT[type].max} value={number} onChange={(event) => setNumber(event.target.value.toUpperCase())} />
 				<FormHelperText>{FORMAT[type].help}</FormHelperText>
 				<FormErrorMessage>{numberError}</FormErrorMessage>
 			</FormControl>

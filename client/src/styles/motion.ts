@@ -61,6 +61,10 @@ const PRESSED = "& .chakra-button:not(:disabled):active";
  */
 export const journeyFeedback: SystemStyleObject = {
 	"& [role=alert]": enter(0, 200),
+	// A status that changes (waiting → verified) fades in where it is: opacity only, 150 ms
+	"& .status-pill": { animation: `${fade} 150ms ${EASE_OUT} both` },
+	// A photo just taken or a preview appears softly instead of popping in
+	"& .camera-preview": { animation: `${fade} 200ms ${EASE_OUT} both` },
 	"& .chakra-button": {
 		transitionProperty: "background-color, border-color, color, transform",
 		transitionDuration: "160ms",
@@ -68,7 +72,7 @@ export const journeyFeedback: SystemStyleObject = {
 	},
 	[PRESSED]: { transform: "scale(0.97)" },
 	// Same selector, so it wins by coming later
-	[REDUCED_MOTION]: { [PRESSED]: { transform: "none" } },
+	[REDUCED_MOTION]: { [PRESSED]: { transform: "none" }, "& .status-pill, & .camera-preview": { animation: "none" } },
 };
 
 /** Reads the reduced-motion setting for animations started from script. */

@@ -94,7 +94,7 @@ function PhotosPage() {
 						<Text>
 							Photo taken{file.location ? ` · location within about ${file.location.accuracy_m} m` : ""}
 						</Text>
-						<StatusPill status={file.status} />
+						<StatusPill status={file.status} forApplicant />
 					</Flex>
 				))}
 				<CameraCapture

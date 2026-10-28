@@ -19,6 +19,8 @@ interface Props {
 	contentUrl: (documentId: string) => string;
 	allowMany?: boolean;
 	isDisabled?: boolean;
+	/** False when the page already says the formats and sizes once */
+	showRule?: boolean;
 }
 
 /**
@@ -26,7 +28,7 @@ interface Props {
  * and a button to add or replace it. Uploads show real progress, then "Checking file…" while the
  * server checks it; removing asks once before it happens.
  */
-export function FileSlot({ label, hint, rule, required, files, onUpload, onRemove, contentUrl, allowMany, isDisabled }: Props) {
+export function FileSlot({ label, hint, rule, required, files, onUpload, onRemove, contentUrl, allowMany, isDisabled, showRule = true }: Props) {
 	const input = useRef<HTMLInputElement>(null);
 	const [progress, setProgress] = useState<number | null>(null);
 	const [busy, setBusy] = useState(false);
@@ -111,7 +113,7 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 							</Stack>
 						</HStack>
 						<HStack>
-							<StatusPill status={file.status} />
+							<StatusPill status={file.status} forApplicant />
 							{onRemove && (allowMany || !required) && confirming !== file.document_id && (
 								<Button size="sm" variant="link" onClick={() => setConfirming(file.document_id)} isDisabled={isDisabled || busy}>
 									Remove
@@ -138,9 +140,11 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 						</Text>
 					</Stack>
 				)}
-				<Text fontSize="sm" color="text.muted">
-					{rule.label}
-				</Text>
+				{showRule && (
+					<Text fontSize="sm" color="text.muted">
+						{rule.label}
+					</Text>
+				)}
 				<input ref={input} type="file" hidden accept={rule.types.join(",")} onChange={(event) => choose(event.target.files?.[0])} disabled={isDisabled || busy} />
 				<Button variant="outline" size="md" onClick={() => input.current?.click()} isDisabled={isDisabled || busy} alignSelf="flex-start">
 					{files.length && !allowMany ? "Replace file" : allowMany && files.length ? "Add another" : "Choose file"}

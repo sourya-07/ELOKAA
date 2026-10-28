@@ -10,6 +10,7 @@ npm run lint       # ESLint (next/core-web-vitals + next/typescript), no warning
 npm run typecheck
 npm run test:ci    # Jest, 2 workers
 npm run build
+npm run e2e        # Playwright end to end (server and dev server running; docs/TESTING.md)
 ```
 
 ## Layout
@@ -42,6 +43,7 @@ src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no 
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
 src/styles/motion.ts  the only motion: easing curves, enter/stagger, delayed loading, reduced-motion helpers
 __tests__/            Jest tests, mirroring src/ (render.tsx wraps the theme, fixtures.ts builds snapshots)
+e2e/                  Playwright: journey (phone width) and layout (3 widths) with axe; helpers make test data and JPEGs
 ```
 
 ## Settings
@@ -65,6 +67,7 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
 - No analytics or third-party scripts on onboarding pages.
 - Motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
   (the success tick is the one exception), and a fade-only version under `prefers-reduced-motion`. What
-  moves: journey pages enter in order, the step line moves on from the last step, journey buttons give 0.97 on
-  press, errors and uploaded files fade in, loading spinners appear only after 400 ms, and a tick draws
+  moves: journey pages enter in order, a finished part of the progress line fills in, task panels open and fold
+  (Chakra Collapse; instant under reduced motion), journey buttons give 0.97 on press, errors, uploaded files,
+  a changed status pill and a camera preview fade in, loading spinners appear only after 400 ms, and a tick draws
   on "submitted"/"approved". The staff console does not animate (used all day). No looping motion on forms.

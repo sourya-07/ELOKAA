@@ -16,11 +16,18 @@ const TONES: Record<string, { bg: string; color: string; label: string }> = {
 	VERIFICATION_FAILED: { bg: "status.error.bg", color: "status.error.fg", label: "Failed" },
 };
 
-/** A status as a pill: words, not only colour. */
-export function StatusPill({ status }: { status: string }) {
-	const tone = TONES[status] ?? { bg: "bg.subtle", color: "text.muted", label: status.toLowerCase().replace(/_/g, " ") };
+/** What an applicant reads for a file they just added: it is theirs, not yet anyone's to review. */
+const APPLICANT: Record<string, { bg: string; color: string; label: string }> = {
+	MANUAL_REVIEW_REQUIRED: { bg: "status.ok.bg", color: "status.ok.fg", label: "Uploaded" },
+	SUBMITTED: { bg: "status.ok.bg", color: "status.ok.fg", label: "Uploaded" },
+};
+
+/** A status as a pill: words, not only colour. Staff see review states; applicants see their own words. */
+export function StatusPill({ status, forApplicant }: { status: string; forApplicant?: boolean }) {
+	const tone = (forApplicant ? APPLICANT[status] : undefined) ?? TONES[status] ?? { bg: "bg.subtle", color: "text.muted", label: status.toLowerCase().replace(/_/g, " ") };
 	return (
-		<Badge bg={tone.bg} color={tone.color} borderRadius="full" px={2.5} py={0.5} textTransform="none" fontWeight={500}>
+		// keyed by status: in the journey a change (waiting → verified) fades in (journeyFeedback); staff see no motion
+		<Badge key={status} className="status-pill" bg={tone.bg} color={tone.color} borderRadius="full" px={2.5} py={0.5} textTransform="none" fontWeight={500}>
 			{tone.label}
 		</Badge>
 	);

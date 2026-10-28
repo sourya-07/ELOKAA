@@ -13,7 +13,8 @@
 		"lint": "eslint . --max-warnings=0",
 		"typecheck": "tsc --noEmit",
 		"test": "jest",
-		"test:ci": "jest --ci --maxWorkers=2"
+		"test:ci": "jest --ci --maxWorkers=2",
+		"e2e": "playwright test"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^2.8.2",
@@ -25,7 +26,9 @@
 		"react-dom": "^18.3.1"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "4.13.0",
 		"@eslint/eslintrc": "^3.1.0",
+		"@playwright/test": "1.63.0",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/react": "^15.0.7",
 		"@testing-library/user-event": "^14.5.2",

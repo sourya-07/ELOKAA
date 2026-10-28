@@ -39,10 +39,26 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 			<Head>
 				<title>{`${title} · ELOKA partner`}</title>
 			</Head>
+			<Box
+				as="a"
+				href="#main"
+				position="absolute"
+				left={2}
+				top={2}
+				zIndex="skipLink"
+				bg="bg.surface"
+				px={3}
+				py={2}
+				borderRadius="control"
+				transform="translateY(-200%)"
+				_focusVisible={{ transform: "none" }}
+			>
+				Skip to the form
+			</Box>
 			<Box as="header" borderBottom="1px solid" borderColor="border.hairline" bg="bg.surface">
 				<Container maxW="720px" py={4}>
 					<Flex justify="space-between" align="center">
-						<Text as={NextLink} href="/apply" fontWeight={700} fontSize="lg" letterSpacing="-0.01em">
+						<Text as={NextLink} href="/apply" fontWeight={700} fontSize="lg" letterSpacing="-0.01em" translate="no">
 							ELOKA
 						</Text>
 						<HStack spacing={4}>
@@ -57,7 +73,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 					</Flex>
 				</Container>
 			</Box>
-			<Container as="main" maxW="720px" py={{ base: 6, md: 10 }} sx={journeyFeedback}>
+			<Container as="main" id="main" maxW="720px" py={{ base: 6, md: 10 }} sx={journeyFeedback}>
 				{/* A new page (or a new part of one) enters in order instead of appearing all at once */}
 				<Stack spacing={6} sx={staggerChildren()}>
 					{progress && <Milestones states={milestonesOf(progress)} />}
@@ -69,7 +85,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 					{/* Its own box: the page's entrance moves the box, the mark animates inside it */}
 					{mark && <Box>{mark}</Box>}
 					<Stack spacing={2}>
-						<Heading as="h1" size="lg" letterSpacing="-0.01em" ref={heading} tabIndex={-1} _focus={{ outline: "none" }}>
+						<Heading as="h1" size="lg" letterSpacing="-0.01em" ref={heading} tabIndex={-1} _focus={{ outline: "none" }} _focusVisible={{ outline: "2px solid", outlineColor: "connect.500", outlineOffset: "4px" }}>
 							{title}
 						</Heading>
 						{subtitle && <Text color="text.muted">{subtitle}</Text>}

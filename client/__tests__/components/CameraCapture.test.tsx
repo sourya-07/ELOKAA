@@ -24,6 +24,19 @@ describe("CameraCapture", () => {
 		expect(screen.getByRole("button", { name: "Try the camera again" })).toBeInTheDocument();
 	});
 
+	it("stops and offers the phone camera when the picture never plays", async () => {
+		const track = { stop: jest.fn() };
+		const stream = { getTracks: () => [track] };
+		Object.defineProperty(navigator, "mediaDevices", { value: { getUserMedia: jest.fn().mockResolvedValue(stream) }, configurable: true });
+		const play = jest.spyOn(HTMLMediaElement.prototype, "play").mockRejectedValue(new Error("no frames"));
+		render(<CameraCapture onCapture={jest.fn()} />);
+		fireEvent.click(screen.getByRole("button", { name: "Open camera" }));
+		expect(await screen.findByRole("button", { name: "Try the camera again" })).toBeInTheDocument();
+		expect(screen.getByText("Take a photo with the phone camera")).toBeInTheDocument();
+		expect(track.stop).toHaveBeenCalled();
+		play.mockRestore();
+	});
+
 	it("checks a phone-camera file before sending it", async () => {
 		Object.defineProperty(navigator, "mediaDevices", { value: undefined, configurable: true });
 		const onCapture = jest.fn();

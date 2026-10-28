@@ -66,21 +66,9 @@ export function TaskSection({ id, title, state, summary, lockedReason, canChange
 			p={{ base: 4, md: 6 }}
 		>
 			<Flex justify="space-between" align="flex-start" gap={3}>
-				<Stack spacing={1} minW={0}>
-					<Heading as="h2" size="sm" id={`${bodyId}-title`} ref={heading} tabIndex={-1} _focus={{ outline: "none" }}>
-						{title}
-					</Heading>
-					{!open && state === "done" && summary && (
-						<Text fontSize="sm" color="text.muted" fontFamily="mono">
-							{summary}
-						</Text>
-					)}
-					{!open && state === "locked" && lockedReason && (
-						<Text fontSize="sm" color="text.muted">
-							{lockedReason}
-						</Text>
-					)}
-				</Stack>
+				<Heading as="h2" size="sm" id={`${bodyId}-title`} ref={heading} tabIndex={-1} minW={0} _focus={{ outline: "none" }} _focusVisible={{ outline: "2px solid", outlineColor: "connect.500", outlineOffset: "4px" }}>
+					{title}
+				</Heading>
 				<Flex align="center" gap={3} flexShrink={0}>
 					<Text as="span" role="status" fontSize="xs" fontWeight={600} px={2} py={0.5} borderRadius="full" color={mark.color} bg={mark.bg}>
 						{mark.label}
@@ -92,6 +80,17 @@ export function TaskSection({ id, title, state, summary, lockedReason, canChange
 					)}
 				</Flex>
 			</Flex>
+			{/* Its own line under the title, full width: a masked number is not squeezed beside the status */}
+			{!open && state === "done" && summary && (
+				<Text fontSize="sm" color="text.muted" mt={1} sx={{ fontVariantNumeric: "tabular-nums" }}>
+					{summary}
+				</Text>
+			)}
+			{!open && state === "locked" && lockedReason && (
+				<Text fontSize="sm" color="text.muted" mt={1}>
+					{lockedReason}
+				</Text>
+			)}
 			{reduced ? open && body : <Collapse in={open} animateOpacity unmountOnExit>{body}</Collapse>}
 		</Box>
 	);

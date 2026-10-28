@@ -28,7 +28,9 @@ export function AddressForm() {
 		if (!values.state) found.state = "Choose your state";
 		if (!isPincode(values.pincode)) found.pincode = "Enter a valid 6-digit pincode";
 		setErrors(found);
-		if (Object.keys(found).length) {
+		const first = (["line1", "city", "state", "pincode"] as Field[]).find((name) => found[name]);
+		if (first) {
+			document.getElementById(first)?.focus(); // start where the first problem is
 			return;
 		}
 		await run(async () => {

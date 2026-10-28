@@ -16,7 +16,10 @@ export default class AppDocument extends Document<Props> {
 		const { nonce } = this.props;
 		return (
 			<Html lang="en-IN">
-				<Head nonce={nonce} />
+				<Head nonce={nonce}>
+					<meta name="color-scheme" content="light" />
+					<meta name="theme-color" content="#FAFAF7" />
+				</Head>
 				<body>
 					<Main />
 					<NextScript nonce={nonce} />

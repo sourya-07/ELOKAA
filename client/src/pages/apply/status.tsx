@@ -1,4 +1,4 @@
-import { Button, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ApplyShell, Section } from "@/components/ApplyShell";
@@ -41,10 +41,18 @@ function StatusPage() {
 			mark={snapshot.status === "SUBMITTED" || snapshot.status === "APPROVED" ? <SuccessMark /> : undefined}
 		>
 			<Section>
-				<Stack direction="row" justify="space-between">
-					<Text color="text.muted">Application {snapshot.application_id}</Text>
+				<Flex justify="space-between" align="flex-start" gap={3} wrap="wrap">
+					<Stack spacing={0} minW={0}>
+						<Text color="text.muted" fontSize="sm">
+							Application number
+						</Text>
+						{/* A long id must wrap on a phone, not widen the page */}
+						<Text fontFamily="mono" fontSize="sm" overflowWrap="anywhere" translate="no">
+							{snapshot.application_id}
+						</Text>
+					</Stack>
 					<StatusPill status={snapshot.status === "CORRECTION_REQUIRED" ? "REOPENED" : snapshot.status} />
-				</Stack>
+				</Flex>
 				{submitted && <Text color="text.muted">Submitted on {submitted}</Text>}
 				{correctionDue && <Text>Please make the changes by {correctionDue}, or the application will expire.</Text>}
 				{reopened.map((step) => (

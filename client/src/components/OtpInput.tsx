@@ -31,6 +31,7 @@ export function OtpInput({ length = 6, value, onChange, isInvalid, isDisabled }:
 					value={digit}
 					aria-label={`Digit ${index + 1} of ${length}`}
 					inputMode="numeric"
+					spellCheck={false}
 					autoComplete={index === 0 ? "one-time-code" : "off"}
 					textAlign="center"
 					w="48px"

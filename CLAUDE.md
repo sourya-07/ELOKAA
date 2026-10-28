@@ -33,6 +33,7 @@ ELOKAA/
 | Client dev server | `make client-dev` → <http://localhost:3003> |
 | Server tests | `make server-test` |
 | Server locally | `make server-run` → <http://localhost:8091/actuator/health> |
+| Browser end to end (stack running) | `cd client && npm run e2e` (Playwright, Chromium, one worker) |
 | Both images | `make images` |
 | Load test (server running) | `make load-test` |
 | Staging / production / test stack | `docker compose -f deploy/docker-compose.yml --env-file deploy/.env.<staging\|production\|test> up -d --wait` ([`docs/deploy/RUNBOOK.md`](docs/deploy/RUNBOOK.md)) |

@@ -6,7 +6,9 @@ describe("Home", () => {
 	it("shows the heading and the way in", () => {
 		render(<Home />);
 		expect(screen.getByRole("heading", { name: "Become an ELOKA partner" })).toBeInTheDocument();
-		expect(screen.getByRole("link", { name: "Start your application" })).toHaveAttribute("href", "/apply");
+		for (const link of screen.getAllByRole("link", { name: "Start your application" })) {
+			expect(link).toHaveAttribute("href", "/apply");
+		}
 	});
 
 	it("states the credit rule before anyone starts", () => {

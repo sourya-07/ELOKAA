@@ -7,3 +7,8 @@
 next-env.d.ts
 npm-debug.log*
 .env*.local
+
+# Playwright output (screenshots, traces)
+/e2e/.results/
+/test-results/
+/playwright-report/
