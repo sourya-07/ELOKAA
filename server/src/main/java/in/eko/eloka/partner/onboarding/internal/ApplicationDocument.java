@@ -59,6 +59,13 @@ class ApplicationDocument extends BaseEntity {
 		this.removedAt = now;
 	}
 
+	/** What it shows may no longer fit (a new PAN, another ID document): a reviewer looks again. */
+	void resetDecision() {
+		this.status = EvidenceStatus.MANUAL_REVIEW_REQUIRED;
+		this.rejectReason = null;
+		this.decidedAt = null;
+	}
+
 	void decide(boolean verified, String reasonCode, Instant now) {
 		this.status = verified ? EvidenceStatus.VERIFIED : EvidenceStatus.REJECTED;
 		this.rejectReason = verified ? null : reasonCode;

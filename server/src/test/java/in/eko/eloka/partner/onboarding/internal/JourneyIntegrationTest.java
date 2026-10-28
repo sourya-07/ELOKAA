@@ -260,9 +260,6 @@ class JourneyIntegrationTest {
 		upload("LIVE_PHOTO", "me.jpg", jpeg(120, 120, null)).andExpect(status().isUnprocessableContent());
 		upload("LIVE_PHOTO", "me.jpg", "MZ not really a picture".getBytes()).andExpect(status().isUnprocessableContent());
 		upload("LIVE_PHOTO", "me.pdf", pdf("")).andExpect(status().isUnprocessableContent());
-		upload("GRADUATION_CERTIFICATE", "degree.pdf",
-				pdf("X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"))
-			.andExpect(status().isUnprocessableContent());
 
 		// Anything appended after the picture is gone once stored
 		byte[] polyglot = jpeg(600, 600, "<script>alert(1)</script>");
@@ -285,25 +282,38 @@ class JourneyIntegrationTest {
 		// A replaced photo is no longer the applicant's to fetch
 		upload("LIVE_PHOTO", "again.jpg", jpeg(600, 600, null)).andExpect(status().isCreated());
 		call(get(app("/documents/" + documentId + "/content"))).andExpect(status().isNotFound());
+
+		// PDFs are scanned for malware (documents come after the photos)
+		upload("PASSPORT_PHOTO", "passport.jpg", jpeg(350, 450, null)).andExpect(status().isCreated());
+		refresh();
+		track(call(post(app("/photos/submit")).header("If-Match", etag())).andExpect(status().isOk()));
+		upload("CLASS_10_MARKSHEET", "class10.pdf",
+				pdf("X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"))
+			.andExpect(status().isUnprocessableContent());
 	}
 
 	@Test
-	void theIdImagesMustBeOfTheVerifiedDocument() throws Exception {
+	void theIdentityImagesNeedTheVerifiedDocumentAndNoFileTwice() throws Exception {
 		reachPhotos(); // the voter ID was verified on the way
 		uploadPhotosAndEducation();
+		byte[] front = jpeg(800, 500, null);
+		upload("AADHAAR_FRONT", "front.jpg", front).andExpect(status().isCreated());
+		upload("AADHAAR_BACK", "back.jpg", front).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.code").value("DUPLICATE_FILE"));
+		upload("AADHAAR_BACK", "back.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		upload("PAN_CARD", "pan.pdf", pdf("pan")).andExpect(status().isCreated());
 		upload("DRIVING_LICENCE_FRONT", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		upload("DRIVING_LICENCE_BACK", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		refresh();
 		// a driving licence nobody checked does not count
-		submitId().andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("DOCUMENTS_MISSING"))
+		submitKyc().andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("DOCUMENTS_MISSING"))
 			.andExpect(jsonPath("$.missing_documents[0]").value("VOTER_ID_FRONT"));
 		upload("VOTER_ID_FRONT", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		upload("VOTER_ID_BACK", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		refresh();
-		track(submitId().andExpect(status().isOk()).andExpect(stepSummary("ID_DOCUMENT", "voter_id").value(true))
+		track(submitKyc().andExpect(status().isOk()).andExpect(stepSummary("KYC_DOCUMENTS", "id_document").value("VOTER_ID"))
 			.andExpect(jsonPath("$.next_step").value("DECLARATION")));
 	}
-
 	// ---- journey helpers ------------------------------------------------------------------------
 
 	/** Contact details, consents and DigiLocker done: the PAN is next. */
@@ -351,20 +361,34 @@ class JourneyIntegrationTest {
 		upload("PASSPORT_PHOTO", "passport.jpg", jpeg(350, 450, null)).andExpect(status().isCreated());
 		refresh();
 		track(call(post(app("/photos/submit")).header("If-Match", etag())).andExpect(status().isOk())
-			.andExpect(jsonPath("$.next_step").value("EDUCATION")));
-		upload("GRADUATION_CERTIFICATE", "degree.pdf", pdf("")).andExpect(status().isCreated());
+			.andExpect(jsonPath("$.next_step").value("KYC_DOCUMENTS")));
+		upload("CLASS_10_MARKSHEET", "class10.pdf", pdf("10")).andExpect(status().isCreated());
+		upload("CLASS_12_MARKSHEET", "class12.jpg", jpeg(800, 600, null)).andExpect(status().isCreated());
+		refresh();
+		// graduation or diploma: one of them is needed
+		call(post(app("/education/submit")).header("If-Match", etag())).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.missing_documents[0]").value("GRADUATION_CERTIFICATE"));
+		upload("DIPLOMA_CERTIFICATE", "diploma.pdf", pdf("diploma")).andExpect(status().isCreated());
 		upload("COMPUTER_CERTIFICATE", "ccc.jpg", jpeg(800, 600, null)).andExpect(status().isCreated());
 		refresh();
 		track(call(post(app("/education/submit")).header("If-Match", etag())).andExpect(status().isOk())
+			.andExpect(stepSummary("EDUCATION", "degree").value("DIPLOMA"))
 			.andExpect(stepSummary("EDUCATION", "computer_certificates").value(1)));
+	}
+
+	private void uploadIdentityImages() throws Exception {
+		upload("AADHAAR_FRONT", "aadhaar-front.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		upload("AADHAAR_BACK", "aadhaar-back.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
+		upload("PAN_CARD", "pan.pdf", pdf("pan")).andExpect(status().isCreated());
 	}
 
 	private void finishDocumentsAndSubmit() throws Exception {
 		uploadPhotosAndEducation();
+		uploadIdentityImages();
 		upload("VOTER_ID_FRONT", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		upload("VOTER_ID_BACK", "voter.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		refresh();
-		track(submitId().andExpect(status().isOk()));
+		track(submitKyc().andExpect(status().isOk()));
 		track(call(post(app("/declaration")).header("If-Match", etag()).contentType(MediaType.APPLICATION_JSON)
 			.content("{\"version\":\"" + VERSION + "\",\"accepted\":true}")).andExpect(status().isOk()));
 		refresh();
@@ -421,8 +445,8 @@ class JourneyIntegrationTest {
 		return call(request);
 	}
 
-	private ResultActions submitId() throws Exception {
-		return call(post(app("/id-document/submit")).header("If-Match", etag()));
+	private ResultActions submitKyc() throws Exception {
+		return call(post(app("/kyc-documents/submit")).header("If-Match", etag()));
 	}
 
 	private void refresh() throws Exception {
@@ -476,6 +500,9 @@ class JourneyIntegrationTest {
 		var graphics = image.createGraphics();
 		graphics.setColor(Color.ORANGE);
 		graphics.fillRect(0, 0, width, height);
+		// A different mark each time, so two uploads are never the same file (DUPLICATE_FILE)
+		graphics.setColor(new Color(ThreadLocalRandom.current().nextInt(0xFFFFFF)));
+		graphics.fillRect(0, 0, Math.min(64, width), Math.min(64, height));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpeg", out);
 		if (trailer != null) {
@@ -491,6 +518,6 @@ class JourneyIntegrationTest {
 	}
 
 	private static byte[] pdf(String body) {
-		return ("%PDF-1.4\n1 0 obj << >> endobj\n" + body + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
+		return ("%PDF-1.4\n1 0 obj << >> endobj\n" + body + "\n%" + UUID.randomUUID() + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
 	}
 }

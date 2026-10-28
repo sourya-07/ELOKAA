@@ -139,7 +139,8 @@ class PartnerApplicationIntegrationTest {
 				    version, created_at, updated_at)
 				SELECT UUID_TO_BIN(UUID()), a.id, UNHEX(REPEAT('AB', 32)), 'test', 'ELIGIBLE', 742, NOW(6), 0, NOW(6), NOW(6)
 				FROM partner_application a WHERE a.public_id = ?""", id);
-		for (String kind : List.of("LIVE_PHOTO", "PASSPORT_PHOTO", "GRADUATION_CERTIFICATE", "VOTER_ID_FRONT", "VOTER_ID_BACK")) {
+		for (String kind : List.of("LIVE_PHOTO", "PASSPORT_PHOTO", "AADHAAR_FRONT", "AADHAAR_BACK", "PAN_CARD", "VOTER_ID_FRONT",
+				"VOTER_ID_BACK", "CLASS_10_MARKSHEET", "CLASS_12_MARKSHEET", "GRADUATION_CERTIFICATE")) {
 			attachFile(id, kind); // submit checks the file rules too
 		}
 		String key = UUID.randomUUID().toString();

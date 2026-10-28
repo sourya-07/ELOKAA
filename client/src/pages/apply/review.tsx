@@ -19,8 +19,10 @@ const SUMMARY: Record<string, (s: Record<string, unknown>) => string> = {
 	CREDIT_CHECK: () => "Eligible",
 	HOME_ADDRESS: (s) => `${s.state ?? ""} ${s.pincode ?? ""}`,
 	PHOTOS: () => "Live photo and passport-size photo",
-	EDUCATION: (s) => `Graduation certificate${Number(s.computer_certificates) ? ` and ${s.computer_certificates} computer certificate(s)` : ""}`,
-	ID_DOCUMENT: (s) => [s.voter_id && `Voter ID ${s.voter_id}`, s.driving_licence && `Driving licence ${s.driving_licence}`].filter(Boolean).join(", "),
+	ALTERNATE_ID: (s) => `${s.type === "DRIVING_LICENCE" ? "Driving licence" : "Voter ID"} ${s.number_masked ?? ""}`,
+	KYC_DOCUMENTS: (s) => `Aadhaar front and back, PAN card, ${s.id_document === "DRIVING_LICENCE" ? "driving licence" : "voter ID"}`,
+	EDUCATION: (s) =>
+		`Class 10 and 12 marksheets, ${s.degree === "DIPLOMA" ? "diploma" : "graduation"} certificate${Number(s.computer_certificates) ? `, ${s.computer_certificates} computer certificate(s)` : ""}`,
 };
 
 /** Review everything, accept the declaration and submit (once, even on a double click). */

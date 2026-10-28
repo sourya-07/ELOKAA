@@ -10,7 +10,6 @@ export type StepKey =
 	| "HOME_ADDRESS"
 	| "PHOTOS"
 	| "EDUCATION"
-	| "ID_DOCUMENT"
 	| "ALTERNATE_ID"
 	| "KYC_DOCUMENTS"
 	| "DECLARATION";

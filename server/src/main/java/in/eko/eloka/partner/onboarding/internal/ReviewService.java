@@ -51,8 +51,8 @@ class ReviewService {
 			ApplicationStatus.UNDER_REVIEW, ApplicationStatus.ON_HOLD);
 	/** Steps a reviewer may send back; the rest are system steps (the credit check is redone only through PAN). */
 	private static final Set<PartnerStep> CORRECTABLE = EnumSet.of(PartnerStep.EMAIL_VERIFICATION, PartnerStep.AADHAAR,
-			PartnerStep.PAN, PartnerStep.HOME_ADDRESS, PartnerStep.ALTERNATE_ID, PartnerStep.PHOTOS, PartnerStep.EDUCATION,
-			PartnerStep.ID_DOCUMENT);
+			PartnerStep.PAN, PartnerStep.HOME_ADDRESS, PartnerStep.ALTERNATE_ID, PartnerStep.PHOTOS, PartnerStep.KYC_DOCUMENTS,
+			PartnerStep.EDUCATION);
 	private static final Duration DEFAULT_CORRECTION_WINDOW = Duration.ofDays(14);
 
 	record QueueItem(@JsonProperty("application_id") String applicationId, String status, String method,
@@ -73,7 +73,8 @@ class ReviewService {
 			String eligibility, List<EvidenceItem> evidence, Map<String, String> address,
 			@JsonProperty("id_numbers") Map<String, String> idNumbers, List<ActionView> actions,
 			@JsonProperty("approval_blockers") List<String> approvalBlockers,
-			@JsonProperty("photo_location") PhotoLocationView photoLocation) {
+			@JsonProperty("photo_location") PhotoLocationView photoLocation,
+			@JsonProperty("correctable_steps") List<String> correctableSteps) {
 	}
 
 	/** Where the live photo was taken, for the reviewer; the browser's word, not proof (Q-3). */
@@ -166,7 +167,7 @@ class ReviewService {
 		return new CaseView(applicationService.snapshot(application), staffName(assigned),
 				assigned == null ? null : assigned.toString(),
 				eligibility.latestOutcome(id).name(), evidence, address, numbers, history, blockers(application),
-				photoLocation(id));
+				photoLocation(id), CORRECTABLE.stream().sorted().map(Enum::name).toList());
 	}
 
 	private PhotoLocationView photoLocation(UUID applicationId) {
@@ -375,8 +376,13 @@ class ReviewService {
 	DocumentContent documentContent(Caller caller, String publicId, UUID documentId) {
 		requireAnyRole(caller);
 		PartnerApplication application = find(publicId);
-		documents.findByDocumentIdAndApplicationId(documentId, application.getId())
+		ApplicationDocument link = documents.findByDocumentIdAndApplicationId(documentId, application.getId())
 			.orElseThrow(() -> new NotFoundException("DOCUMENT_NOT_FOUND", "Document not found"));
+		// Full Aadhaar images: the reviewer on the case or an approver only (ADR-0008)
+		if (link.getKind().isFullAadhaar() && !caller.hasRole(Role.APPROVER)
+				&& !caller.subjectId().equals(application.getAssignedStaffId())) {
+			throw new ForbiddenException("NOT_ASSIGNED", "Claim the case to see the Aadhaar images");
+		}
 		audit.record(new AuditEntry("DOCUMENT_VIEWED", "STAFF", caller.subjectId().toString(), "PARTNER_APPLICATION",
 				publicId, Map.of("document", documentId.toString())));
 		return documentApi.loadForReview(documentId);
@@ -403,9 +409,11 @@ class ReviewService {
 				blockers.add(kind.name() + "_NOT_VERIFIED");
 			}
 		}
-		// One verified voter ID or driving licence is enough (journey v2; older applications have no such step)
+		// One verified voter ID or driving licence is enough. Applications submitted before journey v2 got the
+		// step frozen without a result (V14: LOCKED, no summary): their numbers were typed and checked by staff
 		boolean hasAlternateStep = steps.findByApplicationId(id).stream()
-			.anyMatch(s -> s.getStepKey() == PartnerStep.ALTERNATE_ID && s.getStatus() != StepStatus.NOT_APPLICABLE);
+			.anyMatch(s -> s.getStepKey() == PartnerStep.ALTERNATE_ID && s.getStatus() != StepStatus.NOT_APPLICABLE
+					&& !(s.getStatus() == StepStatus.LOCKED && s.getSummary() == null));
 		if (hasAlternateStep && verification.verifiedAlternateIds(id).isEmpty()) {
 			blockers.add("ALTERNATE_ID_NOT_VERIFIED");
 		}

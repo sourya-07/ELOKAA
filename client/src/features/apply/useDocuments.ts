@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { call } from "@/lib/api";
+import { call, uploadWithProgress } from "@/lib/api";
 import type { DocumentView } from "@/lib/types";
 import { useApplication } from "./ApplicationContext";
 
@@ -19,12 +19,12 @@ export function useDocuments() {
 	}, [reload]);
 
 	const upload = useCallback(
-		async (kind: string, file: File, fields: Record<string, string> = {}) => {
+		async (kind: string, file: File, fields: Record<string, string> = {}, onProgress?: (share: number) => void) => {
 			const form = new FormData();
 			form.append("kind", kind);
 			form.append("file", file, file.name);
 			Object.entries(fields).forEach(([name, value]) => form.append(name, value));
-			await call<DocumentView>(base, { form });
+			await uploadWithProgress<DocumentView>(base, form, onProgress);
 			await Promise.all([reload(), refresh()]);
 		},
 		[base, refresh, reload],

@@ -11,8 +11,7 @@ One page can hold several steps (ADR-0007). Identity is DigiLocker only; the ste
 | Contact details: mobile number + OTP, then email + code and the data-use consent (one card) | `/apply` | `MOBILE_VERIFICATION`, `EMAIL_VERIFICATION`, `CONSENT` |
 | Identity and eligibility, as tasks: Aadhaar through DigiLocker, home address (typed only if DigiLocker's is incomplete), PAN, credit check, then a voter ID or driving licence checked with its government record | `/apply/identity` (`#aadhaar`, `#address`, `#pan`, `#eligibility`, `#alternate-id`) | `AADHAAR`, `HOME_ADDRESS`, `PAN`, `CREDIT_CHECK`, `ALTERNATE_ID` |
 | Live photo + passport-size photo | `/apply/photos` | `PHOTOS` |
-| Graduation certificate (+ optional computer certificates) | `/apply/education` | `EDUCATION` |
-| Both sides of the verified voter ID or driving licence | `/apply/id-document` | `ID_DOCUMENT` |
+| Documents, in two groups: identity (Aadhaar front and back as full images, PAN card, both sides of the verified voter ID or driving licence) and education (class 10 and 12 marksheets, graduation or diploma certificate, up to 5 optional computer certificates) | `/apply/documents` (`#identity-documents`, `#education`) | `KYC_DOCUMENTS`, `EDUCATION` |
 | Review + declaration | `/apply/review` | `DECLARATION` |
 | Status | `/apply/status` | — |
 
@@ -96,11 +95,11 @@ Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAI
 | `CREDIT_CHECK` | PAN | outcome `ELIGIBLE` |
 | `ALTERNATE_ID` | credit check | a voter ID or driving licence found in its government record (EPS), a licence active, the date of birth (where the record has one) the DigiLocker one, and the holder's name a match for the DigiLocker name (EPS Name Match ≥ `eloka.verification.name-match-min-score`, 0.85); one document per open application. 3 tries per document type; the step blocks when both are used up, and staff follow up (nothing is verified from an image). An outage uses nothing |
 | `PHOTOS` | credit check, home address, alternate ID | live photo (taken with the camera, with the browser's location: required, never invented, at most 1000 m rough, taken within 5 min; rougher than 100 m or outside India is flagged for staff) and passport-size photo submitted |
-| `EDUCATION` | credit check, home address, alternate ID | graduation certificate submitted |
-| `ID_DOCUMENT` | credit check, home address, alternate ID | both sides of a verified document submitted (the number was checked in `ALTERNATE_ID`) |
+| `KYC_DOCUMENTS` | photos | Aadhaar front and back (full images, ADR-0008), PAN card, and both sides of a voter ID or driving licence verified in `ALTERNATE_ID` submitted |
+| `EDUCATION` | photos | class 10 and class 12 marksheets and a graduation or diploma certificate submitted (computer certificates optional, up to 5) |
 | `DECLARATION` | all of the above | current declaration accepted |
 
-Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new DigiLocker identity resets `PAN`, `ALTERNATE_ID` and what follows them; a new PAN resets `CREDIT_CHECK` and `DECLARATION`; another verified ID document resets `ID_DOCUMENT` (its images must match) and `DECLARATION`; any document change resets `DECLARATION`.
+Re-doing a step **with different data** resets later steps that depend on it (each step keeps a blind-index fingerprint of the data it was completed with, so redoing it with the same PAN, DigiLocker identity or address changes nothing after it): a new DigiLocker identity resets `PAN`, `ALTERNATE_ID`, `KYC_DOCUMENTS` and what follows them; a new PAN resets `CREDIT_CHECK`, `KYC_DOCUMENTS` and `DECLARATION`; another verified ID document resets `KYC_DOCUMENTS` (its images must match) and `DECLARATION`; any document change resets `DECLARATION`. Whenever `KYC_DOCUMENTS` is reset or reopened, its images go back to "review needed" for staff. The same file in two places is refused (`DUPLICATE_FILE`).
 
 ## Evidence status (per document or check)
 

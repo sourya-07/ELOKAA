@@ -195,7 +195,10 @@ class IdentitySteps {
 			}
 			VerificationApi.AlternateIdOutcome outcome = verification.verifyAlternateId(context.applicationId(), type, number);
 			if (outcome.result() == VerificationApi.AlternateResult.UNAVAILABLE) {
-				context.failTechnically(PartnerStep.ALTERNATE_ID, "ALTERNATE_ID_UNAVAILABLE");
+				// An outage is not a result: a done or reopened step keeps its status
+				if (step.getStatus() != StepStatus.COMPLETED && step.getStatus() != StepStatus.REOPENED) {
+					context.failTechnically(PartnerStep.ALTERNATE_ID, "ALTERNATE_ID_UNAVAILABLE");
+				}
 				return null;
 			}
 			String result = outcome.result() != VerificationApi.AlternateResult.VERIFIED ? type.name() + "_" + outcome.result().name()

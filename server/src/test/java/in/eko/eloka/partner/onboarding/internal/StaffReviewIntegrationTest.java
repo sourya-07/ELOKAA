@@ -100,6 +100,35 @@ class StaffReviewIntegrationTest {
 	}
 
 	@Test
+	void fullAadhaarImagesOpenOnlyForTheReviewerOnTheCaseOrAnApprover() throws Exception {
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
+		String id = applicant.id();
+		String reviewer = staffToken(REVIEWER);
+		JsonNode view = body(staff(reviewer, get("/v1/admin/applications/" + id)));
+		String front = evidenceId(view, "AADHAAR_FRONT");
+		String passport = evidenceId(view, "PASSPORT_PHOTO");
+		staff(reviewer, get("/v1/admin/applications/" + id + "/documents/" + front + "/content")).andExpect(status().isForbidden());
+		staff(reviewer, get("/v1/admin/applications/" + id + "/documents/" + passport + "/content")).andExpect(status().isOk());
+		staff(staffToken(APPROVER), get("/v1/admin/applications/" + id + "/documents/" + front + "/content"))
+			.andExpect(status().isOk());
+		staff(reviewer, post("/v1/admin/applications/" + id + "/claim")).andExpect(status().isOk());
+		staff(reviewer, get("/v1/admin/applications/" + id + "/documents/" + front + "/content")).andExpect(status().isOk());
+	}
+
+	@Test
+	void anApplicationSubmittedBeforeJourneyV2CanStillBeApproved() throws Exception {
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
+		String id = applicant.id();
+		// as V14 left it: the step frozen without a result, no voter ID / licence check on record
+		jdbc.update("UPDATE application_step s JOIN partner_application a ON a.id = s.application_id "
+				+ "SET s.summary = NULL WHERE a.public_id = ? AND s.step_key = 'ALTERNATE_ID'", id);
+		jdbc.update("DELETE v FROM verification v JOIN partner_application a ON a.id = v.application_id "
+				+ "WHERE a.public_id = ? AND v.kind IN ('VOTER_ID', 'DRIVING_LICENCE')", id);
+		JsonNode view = body(staff(staffToken(REVIEWER), get("/v1/admin/applications/" + id)));
+		assertThat(view.get("approval_blockers").toString()).doesNotContain("ALTERNATE_ID_NOT_VERIFIED");
+	}
+
+	@Test
 	void correctionsSendStepsBackAndFreezeTheRest() throws Exception {
 		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
 		String reviewer = staffToken(REVIEWER);

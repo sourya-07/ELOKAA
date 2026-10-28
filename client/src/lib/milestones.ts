@@ -17,7 +17,7 @@ export const MILESTONES: Milestone[] = [
 	{ key: "IDENTITY", label: "Identity", steps: ["AADHAAR", "HOME_ADDRESS", "PAN", "ALTERNATE_ID"] },
 	{ key: "ELIGIBILITY", label: "Eligibility", steps: ["CREDIT_CHECK"] },
 	{ key: "PHOTOS", label: "Photos", steps: ["PHOTOS"] },
-	{ key: "DOCUMENTS", label: "Documents", steps: ["KYC_DOCUMENTS", "EDUCATION", "ID_DOCUMENT"] },
+	{ key: "DOCUMENTS", label: "Documents", steps: ["KYC_DOCUMENTS", "EDUCATION"] },
 	{ key: "REVIEW", label: "Review and submit", steps: ["DECLARATION"] },
 ];
 

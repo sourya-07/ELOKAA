@@ -83,6 +83,44 @@ export async function call<T>(path: string, options: CallOptions = {}): Promise<
 	return { data: data as T, status: response.status, etag: response.headers.get("etag") };
 }
 
+/**
+ * A file upload that reports how much has been sent (fetch cannot). Same rules as {@link call}:
+ * through the proxy, `X-Requested-With`, and an {@link ApiError} with the server's problem.
+ * Progress covers the browser-to-proxy leg; checking the file on the server comes after 100%.
+ */
+export function uploadWithProgress<T>(path: string, form: FormData, onProgress?: (share: number) => void): Promise<Reply<T>> {
+	return new Promise((resolve, reject) => {
+		const request = new XMLHttpRequest();
+		request.open("POST", `/api${path}`);
+		request.setRequestHeader("x-requested-with", "eloka");
+		request.setRequestHeader("accept", "application/json");
+		request.upload.onprogress = (event) => {
+			if (event.lengthComputable) {
+				onProgress?.(event.loaded / event.total);
+			}
+		};
+		request.onerror = () =>
+			reject(new ApiError({ status: 0, code: "NETWORK", detail: "No connection. Check your internet and try again." }));
+		request.onload = () => {
+			const data = request.responseText ? safeJson(request.responseText) : undefined;
+			if (request.status < 200 || request.status >= 300) {
+				const problem = (data && typeof data === "object" ? data : {}) as Partial<Problem>;
+				reject(
+					new ApiError({
+						...problem,
+						status: request.status,
+						code: problem.code ?? `HTTP_${request.status}`,
+						detail: problem.detail ?? "Something went wrong. Please try again.",
+					}),
+				);
+				return;
+			}
+			resolve({ data: data as T, status: request.status, etag: request.getResponseHeader("etag") });
+		};
+		request.send(form);
+	});
+}
+
 function safeJson(text: string): unknown {
 	try {
 		return JSON.parse(text);

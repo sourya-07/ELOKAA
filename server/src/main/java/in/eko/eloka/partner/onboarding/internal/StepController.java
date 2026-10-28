@@ -193,10 +193,10 @@ class StepController {
 		return WebSupport.ok(documents.submitEducation(WebSupport.applicantId(), id, WebSupport.expectedVersion(ifMatch)));
 	}
 
-	@PostMapping("/id-document/submit")
-	ResponseEntity<ApplicationSnapshot> submitIdDocument(@PathVariable String id,
+	@PostMapping("/kyc-documents/submit")
+	ResponseEntity<ApplicationSnapshot> submitKycDocuments(@PathVariable String id,
 			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
-		return WebSupport.ok(documents.submitIdDocument(WebSupport.applicantId(), id, WebSupport.expectedVersion(ifMatch)));
+		return WebSupport.ok(documents.submitKycDocuments(WebSupport.applicantId(), id, WebSupport.expectedVersion(ifMatch)));
 	}
 
 	private static String name(MultipartFile file) {

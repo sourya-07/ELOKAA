@@ -66,7 +66,8 @@ function PhotosPage() {
 	const { documents, upload, contentUrl } = useDocuments();
 	const location = useGeolocation();
 	const live = documents.filter((d) => d.kind === "LIVE_PHOTO");
-	const fix = location.state.kind === "ready" && location.state.fix.accuracy <= MAX_ACCURACY_M ? location.state.fix : null;
+	const fresh = location.current();
+	const fix = location.state.kind === "ready" && fresh && fresh.accuracy <= MAX_ACCURACY_M ? fresh : null;
 
 	const sendLive = async (file: File) => {
 		const now = location.current();
@@ -98,7 +99,12 @@ function PhotosPage() {
 				))}
 				<CameraCapture
 					onCapture={sendLive}
-					onStart={() => location.state.kind !== "ready" && location.start()}
+					// No fresh fix (none yet, too old, or the watch stopped after an upload): look again
+					onStart={() => {
+						if (!location.current()) {
+							location.start();
+						}
+					}}
 					canUse={!!fix}
 					waitingFor={<LocationLine state={location.state} onRetry={location.start} />}
 				/>
@@ -113,7 +119,7 @@ function PhotosPage() {
 					rule={PHOTO}
 					required
 					files={documents.filter((d) => d.kind === "PASSPORT_PHOTO")}
-					onUpload={(file) => upload("PASSPORT_PHOTO", file)}
+					onUpload={(file, onProgress) => upload("PASSPORT_PHOTO", file, {}, onProgress)}
 					contentUrl={contentUrl}
 				/>
 			</Section>

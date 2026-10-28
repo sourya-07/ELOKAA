@@ -76,9 +76,11 @@ class DocumentSteps {
 	static PartnerStep stepOf(DocumentKind kind) {
 		return switch (kind) {
 			case LIVE_PHOTO, PASSPORT_PHOTO -> PartnerStep.PHOTOS;
-			case GRADUATION_CERTIFICATE, COMPUTER_CERTIFICATE -> PartnerStep.EDUCATION;
-			case VOTER_ID_FRONT, VOTER_ID_BACK, DRIVING_LICENCE_FRONT, DRIVING_LICENCE_BACK -> PartnerStep.ID_DOCUMENT;
-			case AADHAAR_MASKED_FRONT, AADHAAR_MASKED_BACK -> PartnerStep.AADHAAR;
+			case CLASS_10_MARKSHEET, CLASS_12_MARKSHEET, GRADUATION_CERTIFICATE, DIPLOMA_CERTIFICATE, COMPUTER_CERTIFICATE ->
+				PartnerStep.EDUCATION;
+			case AADHAAR_FRONT, AADHAAR_BACK, PAN_CARD, VOTER_ID_FRONT, VOTER_ID_BACK, DRIVING_LICENCE_FRONT,
+					DRIVING_LICENCE_BACK -> PartnerStep.KYC_DOCUMENTS;
+			case AADHAAR_MASKED_FRONT, AADHAAR_MASKED_BACK -> PartnerStep.AADHAAR; // before journey v2 only
 		};
 	}
 
@@ -119,8 +121,8 @@ class DocumentSteps {
 	/** Stores a file and links it to the application under the caller's lock. */
 	DocumentView attach(StepContext context, UUID applicantId, DocumentKind kind, String fileName, byte[] bytes) {
 		PartnerStep step = stepOf(kind);
+		requireEditable(context, step); // frozen during a correction: the real reason, before "earlier steps first"
 		context.requirePrerequisites(step);
-		requireEditable(context, step);
 		List<ApplicationDocument> active = links.findByApplicationIdAndRemovedAtIsNullOrderByCreatedAtAsc(context.applicationId());
 		if (kind == DocumentKind.COMPUTER_CERTIFICATE
 				&& active.stream().filter(d -> d.getKind() == kind).count() >= MAX_COMPUTER_CERTIFICATES) {
@@ -128,6 +130,14 @@ class DocumentSteps {
 					"You can add up to " + MAX_COMPUTER_CERTIFICATES + " computer certificates");
 		}
 		DocumentRef stored = documents.store(new NewDocument(applicantId, kind, fileName, bytes));
+		// The same picture in two places (Aadhaar front as the back, one scan for two marksheets) is a mistake
+		boolean duplicate = active.stream()
+			.filter(d -> d.getKind() != kind || !SINGLE.contains(kind))
+			.anyMatch(d -> java.security.MessageDigest.isEqual(documents.describe(d.getDocumentId()).sha256(), stored.sha256()));
+		if (duplicate) {
+			throw new ApiProblem(HttpStatus.UNPROCESSABLE_CONTENT, "DUPLICATE_FILE",
+					"You already uploaded this same file for another document. Choose the right file.");
+		}
 		if (SINGLE.contains(kind)) {
 			active.stream().filter(d -> d.getKind() == kind).forEach(d -> d.remove(context.now()));
 		}
@@ -192,7 +202,8 @@ class DocumentSteps {
 			context.requirePrerequisites(PartnerStep.EDUCATION);
 			Map<DocumentKind, Long> have = counts(context);
 			DocumentRequirements.requireMet(PartnerStep.EDUCATION, have);
-			context.complete(PartnerStep.EDUCATION, json.writeValueAsString(Map.of("graduation_certificate", true,
+			context.complete(PartnerStep.EDUCATION, json.writeValueAsString(Map.of(
+					"degree", have.containsKey(DocumentKind.GRADUATION_CERTIFICATE) ? "GRADUATION" : "DIPLOMA",
 					"computer_certificates", have.getOrDefault(DocumentKind.COMPUTER_CERTIFICATE, 0L))));
 			return null;
 		});
@@ -200,35 +211,44 @@ class DocumentSteps {
 	}
 
 	/**
-	 * Both sides of the voter ID or driving licence that was verified in the identity step (or of
-	 * either, when both were). The number itself was checked there; it is not asked again.
+	 * The identity documents: Aadhaar front and back (full images, ADR-0008), the PAN card, and both
+	 * sides of the voter ID or driving licence that was verified (of either, when both were). The
+	 * numbers were checked in the identity steps; they are not asked again.
 	 */
 	@Transactional
-	ApplicationSnapshot submitIdDocument(UUID applicantId, String publicId, long version) {
+	ApplicationSnapshot submitKycDocuments(UUID applicantId, String publicId, long version) {
 		applications.write(applicantId, publicId, version, context -> {
-			context.requirePrerequisites(PartnerStep.ID_DOCUMENT);
+			context.requirePrerequisites(PartnerStep.KYC_DOCUMENTS);
 			Map<DocumentKind, Long> have = counts(context);
-			java.util.Set<VerificationApi.AlternateType> verified = verification.verifiedAlternateIds(context.applicationId());
-			List<DocumentKind> missing = new java.util.ArrayList<>();
-			Map<String, Object> summary = new LinkedHashMap<>();
-			for (VerificationApi.AlternateType type : verified) {
+			List<String> missing = new java.util.ArrayList<>();
+			for (DocumentKind kind : List.of(DocumentKind.AADHAAR_FRONT, DocumentKind.AADHAAR_BACK, DocumentKind.PAN_CARD)) {
+				if (!have.containsKey(kind)) {
+					missing.add(kind.name());
+				}
+			}
+			String idDocument = null;
+			List<DocumentKind> idGap = null;
+			for (VerificationApi.AlternateType type : verification.verifiedAlternateIds(context.applicationId())) {
 				List<DocumentKind> sides = type == VerificationApi.AlternateType.VOTER_ID
 						? List.of(DocumentKind.VOTER_ID_FRONT, DocumentKind.VOTER_ID_BACK)
 						: List.of(DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK);
 				List<DocumentKind> gap = sides.stream().filter(kind -> !have.containsKey(kind)).toList();
 				if (gap.isEmpty()) {
-					summary.put(type == VerificationApi.AlternateType.VOTER_ID ? "voter_id" : "driving_licence", true);
+					idDocument = type.name();
 				}
-				else if (missing.isEmpty() || gap.size() < missing.size()) {
-					missing = new java.util.ArrayList<>(gap);
+				else if (idGap == null || gap.size() < idGap.size()) {
+					idGap = gap;
 				}
 			}
-			if (summary.isEmpty()) {
-				throw new ApiProblem(HttpStatus.CONFLICT, "DOCUMENTS_MISSING",
-						"Add both sides of the document you verified", Map.of("missing_documents",
-								missing.stream().map(Enum::name).toList()));
+			if (idDocument == null && idGap != null) {
+				idGap.forEach(kind -> missing.add(kind.name()));
 			}
-			context.complete(PartnerStep.ID_DOCUMENT, json.writeValueAsString(summary));
+			if (!missing.isEmpty() || idDocument == null) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "DOCUMENTS_MISSING", "Some required files are missing",
+						Map.of("missing_documents", missing));
+			}
+			context.complete(PartnerStep.KYC_DOCUMENTS,
+					json.writeValueAsString(Map.of("aadhaar", true, "pan_card", true, "id_document", idDocument)));
 			return null;
 		});
 		return applications.get(applicantId, publicId);

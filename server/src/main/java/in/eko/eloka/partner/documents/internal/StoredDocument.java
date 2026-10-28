@@ -65,6 +65,6 @@ class StoredDocument extends BaseEntity {
 	}
 
 	DocumentRef toRef() {
-		return new DocumentRef(getId(), ownerId, kind, fileName, contentType, sizeBytes, width, height, getCreatedAt());
+		return new DocumentRef(getId(), ownerId, kind, fileName, contentType, sizeBytes, width, height, getCreatedAt(), sha256);
 	}
 }

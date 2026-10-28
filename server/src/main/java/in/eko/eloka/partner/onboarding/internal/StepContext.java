@@ -26,6 +26,8 @@ final class StepContext {
 	private final Map<PartnerStep, ApplicationStep> steps = new EnumMap<>(PartnerStep.class);
 	private final TimelineEntryRepository timeline;
 	private final Instant now;
+	/** Steps made stale (or reopened) by this write, so the caller can redo what depends on them */
+	private final Set<PartnerStep> invalidated = EnumSet.noneOf(PartnerStep.class);
 
 	StepContext(PartnerApplication application, List<ApplicationStep> stepRows, TimelineEntryRepository timeline,
 			Instant now) {
@@ -119,6 +121,10 @@ final class StepContext {
 		record("STEP_PENDING_EXTERNAL", key);
 	}
 
+	boolean wasInvalidated(PartnerStep key) {
+		return invalidated.contains(key);
+	}
+
 	void record(String eventType, PartnerStep key) {
 		timeline.save(new TimelineEntry(application.getId(), eventType, key, null, null, "APPLICANT", now));
 	}
@@ -131,6 +137,7 @@ final class StepContext {
 			ApplicationStep downstream = steps.get(dependent);
 			if (downstream.getStatus() == StepStatus.COMPLETED || downstream.getStatus() == StepStatus.PENDING_EXTERNAL) {
 				downstream.invalidate();
+				invalidated.add(dependent);
 				record("STEP_INVALIDATED", dependent);
 				invalidateDependents(dependent, visited);
 			}
@@ -138,6 +145,7 @@ final class StepContext {
 					&& application.getStatus() == ApplicationStatus.CORRECTION_REQUIRED) {
 				// A corrected step changes what was checked and declared, so those are redone too
 				downstream.reopen(DEPENDENCY_CHANGED, null);
+				invalidated.add(dependent);
 				record("STEP_REOPENED", dependent);
 				invalidateDependents(dependent, visited);
 			}

@@ -28,7 +28,6 @@ import type { CaseView, StaffView } from "@/features/staff/types";
 import { call } from "@/lib/api";
 
 const REASONS = ["BLURRY", "WRONG_DOCUMENT", "NAME_MISMATCH", "EXPIRED_DOCUMENT", "FULL_AADHAAR_VISIBLE", "TAMPERED", "OTHER"];
-const CORRECTABLE = ["AADHAAR", "PAN", "HOME_ADDRESS", "PHOTOS", "EDUCATION", "ID_DOCUMENT"];
 
 function Panel({ title, children }: { title: string; children: ReactNode }) {
 	return (
@@ -218,7 +217,7 @@ export default function CasePage() {
 									<Panel title="Ask for corrections">
 										<CheckboxGroup value={correction.steps} onChange={(steps) => setCorrection({ ...correction, steps: steps as string[] })}>
 											<Stack>
-												{CORRECTABLE.map((step) => (
+												{view.correctable_steps.map((step) => (
 													<Checkbox key={step} value={step}>
 														{step.toLowerCase().replace(/_/g, " ")}
 													</Checkbox>

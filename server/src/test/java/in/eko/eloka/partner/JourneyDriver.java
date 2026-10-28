@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.imageio.ImageIO;
@@ -79,11 +80,14 @@ public final class JourneyDriver {
 		upload("LIVE_PHOTO", jpeg(600, 600));
 		upload("PASSPORT_PHOTO", jpeg(350, 450));
 		submitStep("/photos/submit", null);
-		upload("GRADUATION_CERTIFICATE", jpeg(800, 600));
+		for (String kind : List.of("AADHAAR_FRONT", "AADHAAR_BACK", "PAN_CARD", "VOTER_ID_FRONT", "VOTER_ID_BACK")) {
+			upload(kind, jpeg(800, 500));
+		}
+		submitStep("/kyc-documents/submit", null);
+		for (String kind : List.of("CLASS_10_MARKSHEET", "CLASS_12_MARKSHEET", "GRADUATION_CERTIFICATE")) {
+			upload(kind, jpeg(800, 600));
+		}
 		submitStep("/education/submit", null);
-		upload("VOTER_ID_FRONT", jpeg(800, 500));
-		upload("VOTER_ID_BACK", jpeg(800, 500));
-		submitStep("/id-document/submit", null);
 		return declareAndSubmit();
 	}
 
@@ -192,13 +196,16 @@ public final class JourneyDriver {
 		var graphics = image.createGraphics();
 		graphics.setColor(Color.ORANGE);
 		graphics.fillRect(0, 0, width, height);
+		// A different mark each time, so two uploads are never the same file (DUPLICATE_FILE)
+		graphics.setColor(new Color(ThreadLocalRandom.current().nextInt(0xFFFFFF)));
+		graphics.fillRect(0, 0, Math.min(64, width), Math.min(64, height));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpeg", out);
 		return out.toByteArray();
 	}
 
 	static byte[] pdf() {
-		return "%PDF-1.4\n%%EOF".getBytes(StandardCharsets.ISO_8859_1);
+		return ("%PDF-1.4\n%" + UUID.randomUUID() + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
 	}
 
 	private static MockMultipartFile file(String part, byte[] bytes) {

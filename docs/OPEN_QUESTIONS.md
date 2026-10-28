@@ -36,7 +36,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-23 | Name-match threshold between the voter ID / driving licence name and the DigiLocker (Aadhaar) name | default | `eloka.verification.name-match-min-score: 0.85` (EPS calls 0.85–0.99 a good partial match); to tune with EPS UAT samples |
 | Q-24 | Live-photo location: accuracy limits, applicants outside India | default | built: refused above 1000 m (`eloka.onboarding.location.max-accuracy-m`); flagged for staff above 100 m (`flag-accuracy-m`) and outside India; location asked just before the photo, not at the start |
 | Q-25 | One email per live application? (refusing reveals that an address is registered) | default | yes, with a neutral message |
-| Q-26 | Must the uploaded voter ID / driving licence images be of the document that was verified? | default | yes |
+| Q-26 | Must the uploaded voter ID / driving licence images be of the document that was verified? | default | built: yes (`KYC_DOCUMENTS` submit) |
 | Q-28 | Adopt the `DESIGN.taste.md` proposal (Geist, Ledger Blue)? | default | no; `DESIGN.md` (Inter, Connect Blue) stays |
 | Q-29 | An applicant under 18 at DigiLocker: block the step, or close the application? May they apply after turning 18? | default | built: the Aadhaar step blocks at once (`DIGILOCKER_UNDER_AGE`) and the application expires; no permanent bar |
 | Q-17 | EPS Mobile OTP needs a `csp_id` ("the agent the OTP is sent on behalf of"). What do we send for a partner applicant? | default | `ELOKA_EPS_CSP_ID`, else our `initiator_id`. The EPS adapter is tested against a mock server only, not yet against EPS UAT |

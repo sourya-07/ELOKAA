@@ -164,6 +164,13 @@ class ApplicationService {
 		Instant now = Instant.now(clock);
 		StepContext context = new StepContext(application, steps.findByApplicationId(application.getId()), timeline, now);
 		T result = action.apply(context);
+		if (context.wasInvalidated(PartnerStep.KYC_DOCUMENTS)) {
+			// A new identity, PAN or ID document: the identity images are reviewed again
+			documents.findByApplicationIdAndRemovedAtIsNullOrderByCreatedAtAsc(application.getId())
+				.stream()
+				.filter(d -> DocumentSteps.stepOf(d.getKind()) == PartnerStep.KYC_DOCUMENTS)
+				.forEach(ApplicationDocument::resetDecision);
+		}
 		application.recordActivity(now, properties.idleExpiry());
 		applications.saveAndFlush(application);
 		return result;

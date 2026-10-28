@@ -97,6 +97,13 @@ class AlternateIdIntegrationTest {
 	}
 
 	@Test
+	void anOutageDoesNotUndoAVerifiedDocument() throws Exception {
+		track(check("VOTER_ID", JourneyDriver.newEpic("4567")).andExpect(step("status").value("COMPLETED")));
+		track(check("DRIVING_LICENCE", JourneyDriver.newLicence("9999")).andExpect(status().isOk())
+			.andExpect(step("status").value("COMPLETED")));
+	}
+
+	@Test
 	void oneDocumentBelongsToOneLiveApplication() throws Exception {
 		String epic = JourneyDriver.newEpic("4567");
 		track(check("VOTER_ID", epic).andExpect(step("status").value("COMPLETED")));

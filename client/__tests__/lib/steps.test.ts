@@ -9,7 +9,8 @@ describe("routeFor", () => {
 			expect(routeFor(snapshotAt(step))).toBe("/apply/identity");
 		}
 		expect(routeFor(snapshotAt("PHOTOS"))).toBe("/apply/photos");
-		expect(routeFor(snapshotAt("ID_DOCUMENT"))).toBe("/apply/id-document");
+		expect(routeFor(snapshotAt("KYC_DOCUMENTS"))).toBe("/apply/documents");
+		expect(routeFor(snapshotAt("EDUCATION"))).toBe("/apply/documents");
 		expect(routeFor(snapshotAt("DECLARATION"))).toBe("/apply/review");
 	});
 	it("shows the status page once nothing can be changed", () => {

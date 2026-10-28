@@ -36,4 +36,8 @@ export interface CaseView {
 	id_numbers: Record<string, string>;
 	actions: { action: string; staff: string; decision: string | null; reason_code: string | null; note: string | null; occurred_at: string }[];
 	approval_blockers: string[];
+	/** Steps a reviewer may send back (the server's list) */
+	correctable_steps: string[];
+	/** Where the live photo was taken: the browser's word, not proof */
+	photo_location: { latitude: number; longitude: number; accuracy_m: number; captured_at: string; flags: string } | null;
 }

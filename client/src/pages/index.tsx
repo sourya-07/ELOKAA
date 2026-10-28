@@ -12,7 +12,10 @@ const PARTS = [
 		body: "With your consent we check your CIBIL credit score. We tell you only whether it is 700 or more, and we never keep your credit report.",
 	},
 	{ title: "Photos", body: "A live photo taken with your camera (we record where it is taken, so you will be asked to share your location), and a passport-size photo." },
-	{ title: "Documents", body: "Your graduation certificate, and your voter ID or driving licence." },
+	{
+		title: "Documents",
+		body: "Your Aadhaar (front and back), PAN card, voter ID or driving licence, class 10 and 12 marksheets, and your graduation or diploma certificate.",
+	},
 	{ title: "Review and submit", body: "Check everything, then submit. Two people in our team review it." },
 ];
 
@@ -78,8 +81,8 @@ export default function Home() {
 						<List spacing={2} styleType="disc" pl={5}>
 							<ListItem>Your phone, with the mobile number you will use, and your email</ListItem>
 							<ListItem>The mobile number linked to your Aadhaar (for DigiLocker), and your PAN</ListItem>
-							<ListItem>Your graduation certificate</ListItem>
-							<ListItem>Your voter ID or driving licence</ListItem>
+							<ListItem>Your Aadhaar card, voter ID or driving licence, to photograph or scan both sides</ListItem>
+							<ListItem>Your class 10 and class 12 marksheets, and your graduation or diploma certificate</ListItem>
 							<ListItem>A camera on your phone or computer, in good light</ListItem>
 						</List>
 						<Text fontSize="sm" color="text.muted">

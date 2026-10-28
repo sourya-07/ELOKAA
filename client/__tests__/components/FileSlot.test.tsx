@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import { FileSlot } from "@/components/FileSlot";
 import { ApiError } from "@/lib/api";
 import { PHOTO } from "@/lib/validation";
@@ -52,7 +52,28 @@ describe("FileSlot", () => {
 			/>,
 		);
 		fireEvent.click(screen.getByRole("button", { name: "Remove" }));
+		expect(onRemove).not.toHaveBeenCalled(); // asks first
+		fireEvent.click(screen.getByRole("button", { name: "Yes, remove" }));
 		expect(await screen.findByRole("alert")).toHaveTextContent("No connection");
 		expect(onRemove).toHaveBeenCalledWith("d1");
+	});
+
+	it("shows real upload progress, then that the file is being checked", async () => {
+		let report: (share: number) => void = () => undefined;
+		let finish: () => void = () => undefined;
+		const onUpload = jest.fn((_file: File, onProgress: (share: number) => void) => {
+			report = onProgress;
+			return new Promise<void>((resolve) => (finish = resolve));
+		});
+		const { container } = render(<FileSlot label="PAN card" rule={PHOTO} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
+		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, {
+			target: { files: [new File(["x"], "pan.jpg", { type: "image/jpeg" })] },
+		});
+		act(() => report(0.4));
+		expect(screen.getByText("Uploading… 40%")).toBeInTheDocument();
+		act(() => report(1));
+		expect(screen.getByText("Checking file…")).toBeInTheDocument();
+		await act(async () => finish());
+		expect(screen.queryByText("Checking file…")).not.toBeInTheDocument();
 	});
 });

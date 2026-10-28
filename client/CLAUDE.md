@@ -16,10 +16,10 @@ npm run build
 
 ```
 src/pages/            routes only: index, apply/* (journey: index = contact details, identity = Aadhaar via DigiLocker,
-                      address, PAN and credit check as tasks, photos, education, id-document, review, status;
-                      old identity pages redirect in next.config.js), staff/*, api/health, api/v1/[...path] (BFF)
+                      address, PAN, credit check and voter ID / licence as tasks, photos, documents = identity
+                      documents and education, review, status; old pages redirect in next.config.js), staff/*, api/health, api/v1/[...path] (BFF)
 src/middleware.ts     per-request CSP nonce (pages render per request so the nonce is real)
-src/lib/              api.ts (fetch through the proxy, ApiError), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
+src/lib/              api.ts (fetch through the proxy, ApiError, uploadWithProgress (XHR, for upload progress)), documents.ts (kind labels), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
                       (PAGES: step → page#anchor, routeFor, safeNext for ?next= after sign-in), tasks.ts (step status →
                       task state), milestones.ts (progress = finished parts, from server step
                       statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts
@@ -36,7 +36,7 @@ src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 sh
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after
                       navigation), TaskSection (one task of a multi-task page: open when current, folded when done),
-                      OtpInput, FileSlot, CameraCapture (named camera errors, mirrored 4:5 view with a face
+                      OtpInput, FileSlot (progress, "Checking file…", preview, remove asks first), CameraCapture (named camera errors, mirrored 4:5 view with a face
                       guide, ≤1600 px, checked phone-camera fallback), StatusPill, ErrorBanner
 src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no font requests to third parties
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md

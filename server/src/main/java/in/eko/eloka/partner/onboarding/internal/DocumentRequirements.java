@@ -45,10 +45,17 @@ final class DocumentRequirements {
 	static final List<Requirement> ALL = List.of(
 			new Requirement("LIVE_PHOTO", PartnerStep.PHOTOS, options(List.of(DocumentKind.LIVE_PHOTO))),
 			new Requirement("PASSPORT_PHOTO", PartnerStep.PHOTOS, options(List.of(DocumentKind.PASSPORT_PHOTO))),
-			new Requirement("GRADUATION", PartnerStep.EDUCATION, options(List.of(DocumentKind.GRADUATION_CERTIFICATE))),
-			new Requirement("VOTER_ID_OR_DRIVING_LICENCE", PartnerStep.ID_DOCUMENT,
+			new Requirement("AADHAAR_FRONT", PartnerStep.KYC_DOCUMENTS, options(List.of(DocumentKind.AADHAAR_FRONT))),
+			new Requirement("AADHAAR_BACK", PartnerStep.KYC_DOCUMENTS, options(List.of(DocumentKind.AADHAAR_BACK))),
+			new Requirement("PAN_CARD", PartnerStep.KYC_DOCUMENTS, options(List.of(DocumentKind.PAN_CARD))),
+			// Which pair counts is narrowed to the verified document at submit (DocumentSteps)
+			new Requirement("VOTER_ID_OR_DRIVING_LICENCE", PartnerStep.KYC_DOCUMENTS,
 					options(List.of(DocumentKind.VOTER_ID_FRONT, DocumentKind.VOTER_ID_BACK),
-							List.of(DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK))));
+							List.of(DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK))),
+			new Requirement("CLASS_10_MARKSHEET", PartnerStep.EDUCATION, options(List.of(DocumentKind.CLASS_10_MARKSHEET))),
+			new Requirement("CLASS_12_MARKSHEET", PartnerStep.EDUCATION, options(List.of(DocumentKind.CLASS_12_MARKSHEET))),
+			new Requirement("GRADUATION_OR_DIPLOMA", PartnerStep.EDUCATION,
+					options(List.of(DocumentKind.GRADUATION_CERTIFICATE), List.of(DocumentKind.DIPLOMA_CERTIFICATE))));
 
 	private DocumentRequirements() {
 	}

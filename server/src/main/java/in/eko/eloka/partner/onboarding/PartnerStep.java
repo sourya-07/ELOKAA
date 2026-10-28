@@ -17,8 +17,8 @@ public enum PartnerStep {
 	CREDIT_CHECK,
 	ALTERNATE_ID,
 	PHOTOS,
+	KYC_DOCUMENTS,
 	EDUCATION,
-	ID_DOCUMENT,
 	DECLARATION;
 
 	/** Steps that must be satisfied before this one can be started. */
@@ -31,9 +31,11 @@ public enum PartnerStep {
 			case HOME_ADDRESS, PAN -> List.of(AADHAAR);
 			case CREDIT_CHECK -> List.of(PAN);
 			case ALTERNATE_ID -> List.of(CREDIT_CHECK);
-			case PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(CREDIT_CHECK, HOME_ADDRESS, ALTERNATE_ID);
+			case PHOTOS -> List.of(CREDIT_CHECK, HOME_ADDRESS, ALTERNATE_ID);
+			// Documents come after identity, eligibility and the photos (ADR-0007)
+			case KYC_DOCUMENTS, EDUCATION -> List.of(PHOTOS);
 			case DECLARATION -> List.of(EMAIL_VERIFICATION, CONSENT, AADHAAR, HOME_ADDRESS, PAN, CREDIT_CHECK, ALTERNATE_ID,
-					PHOTOS, EDUCATION, ID_DOCUMENT);
+					PHOTOS, KYC_DOCUMENTS, EDUCATION);
 		};
 	}
 
@@ -46,12 +48,14 @@ public enum PartnerStep {
 	 */
 	public List<PartnerStep> invalidates() {
 		return switch (this) {
-			// The PAN and the second ID were matched against the DigiLocker name and date of birth
-			case AADHAAR -> List.of(PAN, ALTERNATE_ID, DECLARATION);
+			// The PAN and the second ID were matched against the DigiLocker name and date of birth, and the
+			// identity images show that person
+			case AADHAAR -> List.of(PAN, ALTERNATE_ID, KYC_DOCUMENTS, DECLARATION);
 			// The ID images must be of the verified document
-			case ALTERNATE_ID -> List.of(ID_DOCUMENT, DECLARATION);
-			case PAN -> List.of(CREDIT_CHECK, DECLARATION);
-			case EMAIL_VERIFICATION, CONSENT, HOME_ADDRESS, CREDIT_CHECK, PHOTOS, EDUCATION, ID_DOCUMENT -> List.of(DECLARATION);
+			case ALTERNATE_ID -> List.of(KYC_DOCUMENTS, DECLARATION);
+			// The PAN card image must be of this PAN
+			case PAN -> List.of(CREDIT_CHECK, KYC_DOCUMENTS, DECLARATION);
+			case EMAIL_VERIFICATION, CONSENT, HOME_ADDRESS, CREDIT_CHECK, PHOTOS, KYC_DOCUMENTS, EDUCATION -> List.of(DECLARATION);
 			case MOBILE_VERIFICATION, DECLARATION -> List.of();
 		};
 	}

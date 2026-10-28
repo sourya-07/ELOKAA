@@ -15,8 +15,8 @@ export const PAGES: Page[] = [
 	{ path: "/apply/identity#eligibility", title: "Eligibility", step: "CREDIT_CHECK" },
 	{ path: "/apply/identity#alternate-id", title: "Voter ID or driving licence", step: "ALTERNATE_ID" },
 	{ path: "/apply/photos", title: "Photos", step: "PHOTOS" },
-	{ path: "/apply/education", title: "Education", step: "EDUCATION" },
-	{ path: "/apply/id-document", title: "Voter ID or driving licence images", step: "ID_DOCUMENT" },
+	{ path: "/apply/documents#identity-documents", title: "Identity documents", step: "KYC_DOCUMENTS" },
+	{ path: "/apply/documents#education", title: "Education", step: "EDUCATION" },
 	{ path: "/apply/review", title: "Review", step: "DECLARATION" },
 ];
 
@@ -36,6 +36,9 @@ export function routeFor(snapshot: Snapshot): string {
 	}
 	if (IDENTITY.includes(next)) {
 		return "/apply/identity";
+	}
+	if (next === "KYC_DOCUMENTS" || next === "EDUCATION") {
+		return "/apply/documents";
 	}
 	return PAGES.find((page) => page.step === next)?.path ?? "/apply/review";
 }

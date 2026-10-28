@@ -41,7 +41,7 @@ class StepRulesTest {
 		StepContext context = contextWithEverythingCompleted();
 		context.complete(PartnerStep.AADHAAR, "{}", new byte[32]);
 		for (PartnerStep reset : List.of(PartnerStep.PAN, PartnerStep.CREDIT_CHECK, PartnerStep.ALTERNATE_ID,
-				PartnerStep.ID_DOCUMENT, PartnerStep.DECLARATION)) {
+				PartnerStep.KYC_DOCUMENTS, PartnerStep.DECLARATION)) {
 			assertThat(context.step(reset).getStatus()).as(reset.name()).isEqualTo(StepStatus.IN_PROGRESS);
 		}
 		assertThat(context.step(PartnerStep.HOME_ADDRESS).getStatus()).isEqualTo(StepStatus.COMPLETED);
