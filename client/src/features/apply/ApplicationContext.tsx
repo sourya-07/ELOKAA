@@ -5,6 +5,7 @@ import { Button, Stack, Text } from "@chakra-ui/react";
 import { ApiError, call, type CallOptions, newKey } from "@/lib/api";
 import { routeFor } from "@/lib/steps";
 import type { Snapshot } from "@/lib/types";
+import { delayedAppear } from "@/styles/motion";
 
 interface ApplicationState {
 	snapshot: Snapshot;
@@ -126,7 +127,7 @@ export function ApplicationProvider({ children }: { children: ReactNode }) {
 	}
 	if (!value) {
 		return (
-			<Center minH="60vh">
+			<Center minH="60vh" sx={delayedAppear}>
 				<Spinner label="Loading your application" />
 			</Center>
 		);

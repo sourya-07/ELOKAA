@@ -3,6 +3,7 @@ import { useId, useRef, useState } from "react";
 import { messageOf } from "@/lib/api";
 import type { DocumentView } from "@/lib/types";
 import { checkFile, type FileRule } from "@/lib/validation";
+import { enter } from "@/styles/motion";
 import { ErrorBanner } from "./ErrorBanner";
 import { StatusPill } from "./StatusPill";
 
@@ -58,7 +59,7 @@ export function FileSlot({ label, rule, required, files, onUpload, onRemove, con
 					</Tag>
 				</Flex>
 				{files.map((file) => (
-					<Flex key={file.document_id} justify="space-between" align="center" gap={2} wrap="wrap">
+					<Flex key={file.document_id} justify="space-between" align="center" gap={2} wrap="wrap" sx={enter(0, 200)}>
 						<Stack spacing={0} minW={0}>
 							<Link href={contentUrl(file.document_id)} isExternal color="text.link" noOfLines={1}>
 								{file.file_name}

@@ -3,6 +3,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ApplyShell, Section } from "@/components/ApplyShell";
 import { StatusPill } from "@/components/StatusPill";
+import { SuccessMark } from "@/components/SuccessMark";
 import { useApplication } from "@/features/apply/ApplicationContext";
 import { WithdrawPanel } from "@/features/apply/WithdrawPanel";
 import { withApplication } from "@/features/apply/withApplication";
@@ -28,7 +29,11 @@ function StatusPage() {
 	const text = TEXT[snapshot.status];
 	const reopened = snapshot.steps.filter((s) => s.status === "REOPENED" && s.reviewer_message);
 	return (
-		<ApplyShell title={text.title} subtitle={text.body}>
+		<ApplyShell
+			title={text.title}
+			subtitle={text.body}
+			mark={snapshot.status === "SUBMITTED" || snapshot.status === "APPROVED" ? <SuccessMark /> : undefined}
+		>
 			<Section>
 				<Stack direction="row" justify="space-between">
 					<Text color="text.muted">Application {snapshot.application_id}</Text>

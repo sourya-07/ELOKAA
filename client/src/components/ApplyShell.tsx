@@ -1,17 +1,20 @@
-import { Box, Container, Flex, Heading, Progress, Stack, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
+import { EASE_IN_OUT, prefersReducedMotion, journeyFeedback, staggerChildren } from "@/styles/motion";
 
 interface Props {
 	title: string;
 	subtitle?: ReactNode;
 	step?: { index: number; total: number };
+	/** Shown above the title, e.g. the tick on a good outcome */
+	mark?: ReactNode;
 	children: ReactNode;
 }
 
 /** Page frame of the applicant journey: brand bar, step counter and one focused column. */
-export function ApplyShell({ title, subtitle, step, children }: Props) {
+export function ApplyShell({ title, subtitle, step, mark, children }: Props) {
 	const percent = step && step.total ? Math.round((step.index / step.total) * 100) : undefined;
 	return (
 		<>
@@ -33,8 +36,9 @@ export function ApplyShell({ title, subtitle, step, children }: Props) {
 					</Flex>
 				</Container>
 			</Box>
-			<Container as="main" maxW="720px" py={{ base: 6, md: 10 }}>
-				<Stack spacing={6}>
+			<Container as="main" maxW="720px" py={{ base: 6, md: 10 }} sx={journeyFeedback}>
+				{/* A new page (or a new part of one) enters in order instead of appearing all at once */}
+				<Stack spacing={6} sx={staggerChildren()}>
 					{step && step.index > 0 && (
 						<Box>
 							<Flex justify="space-between" fontSize="sm" color="text.muted" mb={2}>
@@ -43,9 +47,11 @@ export function ApplyShell({ title, subtitle, step, children }: Props) {
 								</Text>
 								<Text>{percent}%</Text>
 							</Flex>
-							<Progress value={percent} size="xs" borderRadius="full" colorScheme="blackAlpha" aria-label="Progress" />
+							<StepLine percent={percent ?? 0} />
 						</Box>
 					)}
+					{/* Its own box: the page's entrance moves the box, the mark animates inside it */}
+					{mark && <Box>{mark}</Box>}
 					<Stack spacing={2}>
 						<Heading as="h1" size="lg" letterSpacing="-0.01em">
 							{title}
@@ -56,6 +62,31 @@ export function ApplyShell({ title, subtitle, step, children }: Props) {
 				</Stack>
 			</Container>
 		</>
+	);
+}
+
+// The share drawn on the previous page, so the line moves on from there instead of jumping
+let drawn: number | null = null;
+
+/** The journey's progress line. Arriving on a step moves it from where the last page left it. */
+function StepLine({ percent }: { percent: number }) {
+	const bar = useRef<HTMLDivElement>(null);
+	const share = percent / 100;
+	useEffect(() => {
+		const from = drawn;
+		drawn = share;
+		if (from === null || from === share || !bar.current?.animate || prefersReducedMotion()) {
+			return;
+		}
+		bar.current.animate([{ transform: `scaleX(${from})` }, { transform: `scaleX(${share})` }], {
+			duration: 250,
+			easing: EASE_IN_OUT,
+		});
+	}, [share]);
+	return (
+		<Box role="progressbar" aria-label="Progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} h="4px" bg="paper.300" borderRadius="full" overflow="hidden">
+			<Box ref={bar} h="100%" bg="connect.500" transformOrigin="left" style={{ transform: `scaleX(${share})` }} />
+		</Box>
 	);
 }
 

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useApplication } from "@/features/apply/ApplicationContext";
 import { withApplication } from "@/features/apply/withApplication";
 import { routeFor } from "@/lib/steps";
+import { delayedAppear } from "@/styles/motion";
 
 /** After sign-in: open (or start) the application and go to where it continues. */
 function Continue() {
@@ -13,7 +14,7 @@ function Continue() {
 		router.replace(routeFor(snapshot));
 	}, [router, snapshot]);
 	return (
-		<Center minH="60vh">
+		<Center minH="60vh" sx={delayedAppear}>
 			<Spinner label="Opening your application" />
 		</Center>
 	);

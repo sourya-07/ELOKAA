@@ -9,6 +9,7 @@ import { useAction } from "@/features/apply/useAction";
 import { withApplication } from "@/features/apply/withApplication";
 import { CONSENT_VERSION } from "@/lib/consent";
 import { ERROR_TEXT, position, routeFor } from "@/lib/steps";
+import { enter } from "@/styles/motion";
 
 /** The CIBIL check right after the PAN. Only the outcome is shown, never the score. */
 function CreditCheckPage() {
@@ -39,7 +40,7 @@ function CreditCheckPage() {
 		<ApplyShell title="Credit check" subtitle="We check your CIBIL credit report to confirm you are eligible." step={position(snapshot.method, "/apply/credit-check")}>
 			<Section>
 				{busy ? (
-					<Stack direction="row" align="center" spacing={3}>
+					<Stack direction="row" align="center" spacing={3} sx={enter(0, 200)}>
 						<Spinner size="sm" />
 						<Text>Checking your eligibility…</Text>
 					</Stack>

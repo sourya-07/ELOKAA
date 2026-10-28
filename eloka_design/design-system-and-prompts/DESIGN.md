@@ -116,7 +116,7 @@ ELOKA is Eko's white-label fintech platform for India. Businesses apply to run t
 
 **Quiet authority.** The interface should feel like a well-run bank branch: calm, orderly and certain. Surfaces are a warm paper white rather than clinical grey, ink is near-black, and there is exactly one decisive action on each view. Nothing decorates for its own sake. Trust comes from precision: aligned edges, consistent spacing, plain words, and status that is always visible.
 
-Density is balanced, like a daily-use tool (5 of 10). Layouts are symmetric and predictable (variance 3 of 10), because applicants are filling in serious financial paperwork and staff are making compliance decisions. Motion is restrained (3 of 10): short 150–200 ms fades and slides for dialogs and state changes, with no looping animation. Applicant screens are mobile-first, because most applicants finish onboarding on a phone. Staff screens are desktop-first and information-dense.
+Density is balanced, like a daily-use tool (5 of 10). Layouts are symmetric and predictable (variance 3 of 10), because applicants are filling in serious financial paperwork and staff are making compliance decisions. Motion is restrained (3 of 10): short fades and slides (200–300 ms, strong ease-out) for state changes, with no looping animation and a fade-only version for reduced motion. The applicant pages enter section by section, the step line moves on from the previous step, and a tick draws once on a good outcome; staff screens stay still. The client's `src/styles/motion.ts` holds the exact values. Applicant screens are mobile-first, because most applicants finish onboarding on a phone. Staff screens are desktop-first and information-dense.
 
 ## 2. Color Palette & Roles
 

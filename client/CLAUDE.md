@@ -24,6 +24,7 @@ src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 sh
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (journey steps link to /apply/status), OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
+src/styles/motion.ts  the only motion: easing curves, enter/stagger, delayed loading, reduced-motion helpers
 __tests__/            Jest tests, mirroring src/ (render.tsx wraps the theme, fixtures.ts builds snapshots)
 ```
 
@@ -46,3 +47,8 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
 - No `console.log` (lint error): personal data must never reach the browser console.
 - No tokens or personal data in `localStorage`/`sessionStorage`; the session lives in an HttpOnly cookie (ADR-0003).
 - No analytics or third-party scripts on onboarding pages.
+- Motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
+  (the success tick is the one exception), and a fade-only version under `prefers-reduced-motion`. What
+  moves: journey pages enter in order, the step line moves on from the last step, journey buttons give 0.97 on
+  press, errors and uploaded files fade in, loading spinners appear only after 400 ms, and a tick draws
+  on "submitted"/"approved". The staff console does not animate (used all day). No looping motion on forms.
