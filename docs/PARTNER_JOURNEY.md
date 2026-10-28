@@ -95,7 +95,7 @@ Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAI
 | `PAN` | Aadhaar | provider says the PAN is valid and matches the DigiLocker name and date of birth |
 | `CREDIT_CHECK` | PAN | outcome `ELIGIBLE` |
 | `ALTERNATE_ID` | credit check | a voter ID or driving licence found in its government record (EPS), a licence active, the date of birth (where the record has one) the DigiLocker one, and the holder's name a match for the DigiLocker name (EPS Name Match ≥ `eloka.verification.name-match-min-score`, 0.85); one document per open application. 3 tries per document type; the step blocks when both are used up, and staff follow up (nothing is verified from an image). An outage uses nothing |
-| `PHOTOS` | credit check, home address, alternate ID | live photo and passport-size photo submitted |
+| `PHOTOS` | credit check, home address, alternate ID | live photo (taken with the camera, with the browser's location: required, never invented, at most 1000 m rough, taken within 5 min; rougher than 100 m or outside India is flagged for staff) and passport-size photo submitted |
 | `EDUCATION` | credit check, home address, alternate ID | graduation certificate submitted |
 | `ID_DOCUMENT` | credit check, home address, alternate ID | both sides of a verified document submitted (the number was checked in `ALTERNATE_ID`) |
 | `DECLARATION` | all of the above | current declaration accepted |

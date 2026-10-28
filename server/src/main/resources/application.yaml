@@ -89,5 +89,9 @@ eloka:
     max-attempts: 3
     consent-version: "2026-10-27"
     declaration-version: "2026-10-27"
+    # The live photo's location (docs/OPEN_QUESTIONS.md Q-24): refused when rougher than max, flagged above flag
+    location:
+      max-accuracy-m: 1000
+      flag-accuracy-m: 100
     # The client page DigiLocker sends the applicant back to
     digilocker-return-url: ${ELOKA_PUBLIC_URL:http://localhost:3003}/apply/identity?state={state}

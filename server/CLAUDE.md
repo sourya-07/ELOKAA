@@ -35,7 +35,7 @@ src/main/java/in/eko/eloka/partner/
 ├── onboarding/ partner applications: PartnerStep (prerequisites, invalidation), StepStatus, ApplicationStatus;
 │             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
 │             If-Match + editable check), StepContext (complete with a fingerprint: same data = no reset of
-│             later steps), DocumentRequirements (the one file checklist), consent records (versions per
+│             later steps), DocumentRequirements (the one file checklist), LocationRules + PhotoLocation (live-photo location, encrypted), consent records (versions per
 │             purpose), Idempotency, ExpiryJob,
 │             /v1/partner/applications
 ├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode turned upright first (ImageSanitizer, ExifOrientation), PDF

@@ -11,7 +11,7 @@ const PARTS = [
 		title: "Eligibility",
 		body: "With your consent we check your CIBIL credit score. We tell you only whether it is 700 or more, and we never keep your credit report.",
 	},
-	{ title: "Photos", body: "A live photo taken with your camera, and a passport-size photo." },
+	{ title: "Photos", body: "A live photo taken with your camera (we record where it is taken, so you will be asked to share your location), and a passport-size photo." },
 	{ title: "Documents", body: "Your graduation certificate, and your voter ID or driving licence." },
 	{ title: "Review and submit", body: "Check everything, then submit. Two people in our team review it." },
 ];

@@ -34,7 +34,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-18 | EPS DigiLocker: the document call needs a `verification_id` the create call does not return | default | we send our own id as `client_ref_id` on create and `verification_id` on fetch; untested against EPS UAT |
 | Q-19 | A person with no credit history (no CIBIL score) | default | `UNABLE_TO_ASSESS` (`NO_CREDIT_HISTORY`): never eligible, the step blocks after 3 tries for staff follow-up |
 | Q-23 | Name-match threshold between the voter ID / driving licence name and the DigiLocker (Aadhaar) name | default | `eloka.verification.name-match-min-score: 0.85` (EPS calls 0.85–0.99 a good partial match); to tune with EPS UAT samples |
-| Q-24 | Live-photo location: accuracy limits, applicants outside India | default | refused above 1000 m; flagged for staff above 100 m and outside India |
+| Q-24 | Live-photo location: accuracy limits, applicants outside India | default | built: refused above 1000 m (`eloka.onboarding.location.max-accuracy-m`); flagged for staff above 100 m (`flag-accuracy-m`) and outside India; location asked just before the photo, not at the start |
 | Q-25 | One email per live application? (refusing reveals that an address is registered) | default | yes, with a neutral message |
 | Q-26 | Must the uploaded voter ID / driving licence images be of the document that was verified? | default | yes |
 | Q-28 | Adopt the `DESIGN.taste.md` proposal (Geist, Ledger Blue)? | default | no; `DESIGN.md` (Inter, Connect Blue) stays |

@@ -95,7 +95,18 @@ public final class JourneyDriver {
 	}
 
 	public ResultActions upload(String kind, byte[] bytes) throws Exception {
-		return call(multipart(app("/documents")).file(file("file", bytes)).param("kind", kind));
+		MockMultipartHttpServletRequestBuilder request = multipart(app("/documents")).file(file("file", bytes));
+		request.param("kind", kind);
+		if (kind.equals("LIVE_PHOTO")) {
+			withLocation(request);
+		}
+		return call(request);
+	}
+
+	/** A location in Mumbai, taken now, as a browser would send it with the live photo. */
+	public static void withLocation(MockMultipartHttpServletRequestBuilder request) {
+		request.param("latitude", "19.0596").param("longitude", "72.8295").param("accuracy_m", "18")
+			.param("captured_at", java.time.Instant.now().toString());
 	}
 
 	public void submitStep(String path, String body) throws Exception {

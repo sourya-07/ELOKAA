@@ -72,7 +72,13 @@ class ReviewService {
 			@JsonProperty("assigned_to_id") String assignedToId,
 			String eligibility, List<EvidenceItem> evidence, Map<String, String> address,
 			@JsonProperty("id_numbers") Map<String, String> idNumbers, List<ActionView> actions,
-			@JsonProperty("approval_blockers") List<String> approvalBlockers) {
+			@JsonProperty("approval_blockers") List<String> approvalBlockers,
+			@JsonProperty("photo_location") PhotoLocationView photoLocation) {
+	}
+
+	/** Where the live photo was taken, for the reviewer; the browser's word, not proof (Q-3). */
+	record PhotoLocationView(double latitude, double longitude, @JsonProperty("accuracy_m") long accuracyM,
+			@JsonProperty("captured_at") Instant capturedAt, String flags) {
 	}
 
 	private final PartnerApplicationRepository applications;
@@ -81,6 +87,7 @@ class ReviewService {
 	private final ApplicationDocumentRepository documents;
 	private final PartnerAddressRepository addresses;
 	private final IdNumberRepository idNumbers;
+	private final PhotoLocationRepository locations;
 	private final ReviewActionRepository actions;
 	private final ApplicationStateMachine stateMachine;
 	private final VerificationApi verification;
@@ -94,7 +101,7 @@ class ReviewService {
 
 	ReviewService(PartnerApplicationRepository applications, ApplicationService applicationService,
 			ApplicationStepRepository steps, ApplicationDocumentRepository documents, PartnerAddressRepository addresses,
-			IdNumberRepository idNumbers, ReviewActionRepository actions,
+			IdNumberRepository idNumbers, PhotoLocationRepository locations, ReviewActionRepository actions,
 			ApplicationStateMachine stateMachine, VerificationApi verification, EligibilityApi eligibility,
 			DocumentApi documentApi, StaffDirectory staff, AuditLog audit, AuditTrail auditTrail, FieldCipher cipher,
 			Clock clock) {
@@ -104,6 +111,7 @@ class ReviewService {
 		this.documents = documents;
 		this.addresses = addresses;
 		this.idNumbers = idNumbers;
+		this.locations = locations;
 		this.actions = actions;
 		this.stateMachine = stateMachine;
 		this.verification = verification;
@@ -157,7 +165,20 @@ class ReviewService {
 		UUID assigned = application.getAssignedStaffId();
 		return new CaseView(applicationService.snapshot(application), staffName(assigned),
 				assigned == null ? null : assigned.toString(),
-				eligibility.latestOutcome(id).name(), evidence, address, numbers, history, blockers(application));
+				eligibility.latestOutcome(id).name(), evidence, address, numbers, history, blockers(application),
+				photoLocation(id));
+	}
+
+	private PhotoLocationView photoLocation(UUID applicationId) {
+		return documents.findByApplicationIdAndRemovedAtIsNullOrderByCreatedAtAsc(applicationId)
+			.stream()
+			.filter(d -> d.getKind() == in.eko.eloka.partner.documents.DocumentKind.LIVE_PHOTO)
+			.findFirst()
+			.flatMap(d -> locations.findByDocumentId(d.getDocumentId()))
+			.map(l -> new PhotoLocationView(Double.parseDouble(cipher.decrypt(l.getLatitudeEnc())),
+					Double.parseDouble(cipher.decrypt(l.getLongitudeEnc())), Math.round(l.getAccuracyM()), l.getCapturedAt(),
+					l.getFlags()))
+			.orElse(null);
 	}
 
 	@Transactional

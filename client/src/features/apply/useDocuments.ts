@@ -19,10 +19,11 @@ export function useDocuments() {
 	}, [reload]);
 
 	const upload = useCallback(
-		async (kind: string, file: File) => {
+		async (kind: string, file: File, fields: Record<string, string> = {}) => {
 			const form = new FormData();
 			form.append("kind", kind);
 			form.append("file", file, file.name);
+			Object.entries(fields).forEach(([name, value]) => form.append(name, value));
 			await call<DocumentView>(base, { form });
 			await Promise.all([reload(), refresh()]);
 		},

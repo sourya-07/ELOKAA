@@ -29,12 +29,15 @@ src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 sh
                       pages in ONE shared provider; "optional" pages such as /apply also render signed out),
                       EmailStage (email code + data-use consent on the /apply card), DigiLockerTask (explainer, consent,
                       official help links, return with ?state=, automatic re-checks, start again), AddressForm,
-                      PanForm (PAN only), EligibilityTask, AlternateIdTask (voter ID or driving licence number), WithdrawPanel (step-up code,
+                      PanForm (PAN only), EligibilityTask, AlternateIdTask (voter ID or driving licence number),
+                      useGeolocation (live-photo location: starts on a button press, best recent fix, never
+                      invented), WithdrawPanel (step-up code,
                       then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after
                       navigation), TaskSection (one task of a multi-task page: open when current, folded when done),
-                      OtpInput, FileSlot, CameraCapture, StatusPill, ErrorBanner
+                      OtpInput, FileSlot, CameraCapture (named camera errors, mirrored 4:5 view with a face
+                      guide, ≤1600 px, checked phone-camera fallback), StatusPill, ErrorBanner
 src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no font requests to third parties
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
 src/styles/motion.ts  the only motion: easing curves, enter/stagger, delayed loading, reduced-motion helpers

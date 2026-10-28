@@ -144,12 +144,17 @@ class StepController {
 	@PostMapping(path = "/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseEntity<DocumentSteps.DocumentView> upload(@PathVariable String id,
 			@RequestParam(value = "kind", required = false) String kind,
-			@RequestParam(value = "file", required = false) MultipartFile file) {
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam(value = "latitude", required = false) String latitude,
+			@RequestParam(value = "longitude", required = false) String longitude,
+			@RequestParam(value = "accuracy_m", required = false) String accuracyM,
+			@RequestParam(value = "captured_at", required = false) String capturedAt) {
 		if (file == null || file.isEmpty()) {
 			throw ValidationException.field("file", "Choose a file to upload");
 		}
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(documents.upload(WebSupport.applicantId(), id, kind, file.getOriginalFilename(), bytes(file)));
+			.body(documents.upload(WebSupport.applicantId(), id, kind, file.getOriginalFilename(), bytes(file),
+					new LocationRules.Input(latitude, longitude, accuracyM, capturedAt)));
 	}
 
 	@GetMapping("/documents")

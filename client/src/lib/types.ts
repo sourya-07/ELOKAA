@@ -88,6 +88,8 @@ export interface DocumentView {
 	size: number;
 	reject_reason?: string;
 	uploaded_at: string;
+	/** Live photo only: how precise the recorded location was (never the coordinates) */
+	location?: { accuracy_m: number; flags: string };
 }
 
 export const SATISFIED: StepStatus[] = ["COMPLETED", "LOCKED", "NOT_APPLICABLE"];

@@ -226,6 +226,32 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
+	void theLivePhotoNeedsARealLocation() throws Exception {
+		reachPhotos();
+		byte[] photo = jpeg(600, 600, null);
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO"))
+			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_REQUIRED"));
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.param("latitude", "0").param("longitude", "0").param("accuracy_m", "10"))
+			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_INVALID"));
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "5000"))
+			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_TOO_INACCURATE"));
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.param("latitude", "51.5").param("longitude", "-0.12").param("accuracy_m", "250")
+			.param("captured_at", java.time.Instant.now().toString()))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.location.accuracy_m").value(250))
+			.andExpect(jsonPath("$.location.flags").value("LOW_ACCURACY,OUTSIDE_INDIA"))
+			.andExpect(jsonPath("$.location.latitude").doesNotExist());
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM photo_location l JOIN partner_application a "
+				+ "ON a.id = l.application_id WHERE a.public_id = ?", Integer.class, id)).isEqualTo(1);
+		// the rejected tries stored nothing
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM application_document d JOIN partner_application a "
+				+ "ON a.id = d.application_id WHERE a.public_id = ? AND d.kind = 'LIVE_PHOTO'", Integer.class, id)).isEqualTo(1);
+	}
+
+	@Test
 	void uploadsAreCheckedByTheirContent() throws Exception {
 		call(multipart(app("/documents")).file(file("file", "me.jpg", jpeg(600, 600, null))).param("kind", "LIVE_PHOTO"))
 			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"));
@@ -387,7 +413,12 @@ class JourneyIntegrationTest {
 	}
 
 	private ResultActions upload(String kind, String name, byte[] bytes) throws Exception {
-		return call(multipart(app("/documents")).file(file("file", name, bytes)).param("kind", kind));
+		MockMultipartHttpServletRequestBuilder request = multipart(app("/documents")).file(file("file", name, bytes));
+		request.param("kind", kind);
+		if (kind.equals("LIVE_PHOTO")) {
+			in.eko.eloka.partner.JourneyDriver.withLocation(request);
+		}
+		return call(request);
 	}
 
 	private ResultActions submitId() throws Exception {

@@ -8,12 +8,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import in.eko.eloka.partner.audit.AuditEntry;
+import in.eko.eloka.partner.audit.AuditLog;
 import in.eko.eloka.partner.documents.DocumentApi;
 import in.eko.eloka.partner.documents.DocumentContent;
 import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.documents.DocumentRef;
 import in.eko.eloka.partner.documents.NewDocument;
 import in.eko.eloka.partner.onboarding.PartnerStep;
+import in.eko.eloka.partner.shared.crypto.FieldCipher;
 import in.eko.eloka.partner.shared.error.ApiProblem;
 import in.eko.eloka.partner.shared.error.NotFoundException;
 import in.eko.eloka.partner.shared.error.ValidationException;
@@ -35,23 +38,38 @@ class DocumentSteps {
 	private static final Set<DocumentKind> SINGLE = EnumSet.complementOf(EnumSet.of(DocumentKind.COMPUTER_CERTIFICATE));
 	private static final int MAX_COMPUTER_CERTIFICATES = 5;
 
+	@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
 	record DocumentView(@JsonProperty("document_id") String documentId, String kind, String status,
 			@JsonProperty("file_name") String fileName, @JsonProperty("content_type") String contentType, long size,
-			@JsonProperty("reject_reason") String rejectReason, @JsonProperty("uploaded_at") Instant uploadedAt) {
+			@JsonProperty("reject_reason") String rejectReason, @JsonProperty("uploaded_at") Instant uploadedAt,
+			Location location) {
+	}
+
+	/** Shown to the applicant for the live photo: how precise the recorded location was (never the coordinates). */
+	record Location(@JsonProperty("accuracy_m") long accuracyM, String flags) {
 	}
 
 	private final ApplicationService applications;
 	private final ApplicationDocumentRepository links;
 	private final DocumentApi documents;
 	private final VerificationApi verification;
+	private final LocationRules locationRules;
+	private final PhotoLocationRepository locations;
+	private final FieldCipher cipher;
+	private final AuditLog audit;
 	private final JsonMapper json;
 
 	DocumentSteps(ApplicationService applications, ApplicationDocumentRepository links, DocumentApi documents,
-			VerificationApi verification, JsonMapper json) {
+			VerificationApi verification, LocationRules locationRules, PhotoLocationRepository locations, FieldCipher cipher,
+			AuditLog audit, JsonMapper json) {
 		this.applications = applications;
 		this.links = links;
 		this.documents = documents;
 		this.verification = verification;
+		this.locationRules = locationRules;
+		this.locations = locations;
+		this.cipher = cipher;
+		this.audit = audit;
 		this.json = json;
 	}
 
@@ -69,12 +87,33 @@ class DocumentSteps {
 	 * {@code If-Match}; each changes the version, which the client then reads.
 	 */
 	@Transactional
-	DocumentView upload(UUID applicantId, String publicId, String kindName, String fileName, byte[] bytes) {
+	DocumentView upload(UUID applicantId, String publicId, String kindName, String fileName, byte[] bytes,
+			LocationRules.Input location) {
 		DocumentKind kind = parseKind(kindName);
 		if (stepOf(kind) == PartnerStep.AADHAAR) {
 			throw ValidationException.field("kind", "Aadhaar images are sent with the Aadhaar step");
 		}
-		return applications.write(applicantId, publicId, null, context -> attach(context, applicantId, kind, fileName, bytes));
+		return applications.write(applicantId, publicId, null, context -> {
+			// The live photo is refused without a real location, before anything is stored (never invented);
+			// the earlier steps are checked first, so the answer says what to do first
+			LocationRules.Checked where = null;
+			if (kind == DocumentKind.LIVE_PHOTO) {
+				context.requirePrerequisites(PartnerStep.PHOTOS);
+				where = locationRules.check(location, context.now());
+			}
+			DocumentView view = attach(context, applicantId, kind, fileName, bytes);
+			LocationRules.Checked found = where;
+			if (found == null) {
+				return view;
+			}
+			locations.save(new PhotoLocation(context.applicationId(), UUID.fromString(view.documentId()),
+					cipher.encrypt(Double.toString(found.latitude())), cipher.encrypt(Double.toString(found.longitude())),
+					found.accuracyM(), found.capturedAt(), context.now(), found.flags()));
+			audit.record(new AuditEntry("LOCATION_RECORDED", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
+					publicId, Map.of("flags", found.flags().isEmpty() ? "NONE" : found.flags())));
+			return new DocumentView(view.documentId(), view.kind(), view.status(), view.fileName(), view.contentType(),
+					view.size(), view.rejectReason(), view.uploadedAt(), new Location(Math.round(found.accuracyM()), found.flags()));
+		});
 	}
 
 	/** Stores a file and links it to the application under the caller's lock. */
@@ -226,9 +265,13 @@ class DocumentSteps {
 		}
 	}
 
-	private static DocumentView view(ApplicationDocument link, DocumentRef ref) {
+	private DocumentView view(ApplicationDocument link, DocumentRef ref) {
+		Location location = link.getKind() != DocumentKind.LIVE_PHOTO ? null
+				: locations.findByDocumentId(link.getDocumentId())
+					.map(l -> new Location(Math.round(l.getAccuracyM()), l.getFlags()))
+					.orElse(null);
 		return new DocumentView(link.getDocumentId().toString(), link.getKind().name(), link.getStatus().name(),
-				ref.fileName(), ref.contentType(), ref.size(), link.getRejectReason(), ref.uploadedAt());
+				ref.fileName(), ref.contentType(), ref.size(), link.getRejectReason(), ref.uploadedAt(), location);
 	}
 
 	private static NotFoundException notFound() {

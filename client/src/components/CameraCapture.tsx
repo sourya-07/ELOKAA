@@ -1,22 +1,51 @@
 import { AspectRatio, Box, Button, HStack, Stack, Text } from "@chakra-ui/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { messageOf } from "@/lib/api";
+import { checkFile, PHOTO } from "@/lib/validation";
 import { ErrorBanner } from "./ErrorBanner";
 
 interface Props {
 	onCapture: (file: File) => Promise<void>;
+	/** Called when the applicant opens the camera (a button press), e.g. to start the location */
+	onStart?: () => void;
+	/** False while the photo may not be sent yet (no location); "Use photo" waits */
+	canUse?: boolean;
+	/** Shown under the picture while it cannot be sent */
+	waitingFor?: ReactNode;
 	isDisabled?: boolean;
 }
 
+/** The longest side of the saved photo: plenty for a face, and well under the 5 MB limit. */
+const MAX_SIDE = 1600;
+
+type Problem = "denied" | "missing" | "busy" | "insecure" | "other";
+
+const PROBLEM_TEXT: Record<Problem, string> = {
+	denied: "Camera access is blocked for this site. Allow the camera in your browser's site settings (the icon next to the address), then try again.",
+	missing: "We could not find a camera on this device. Use a phone or a computer with a camera.",
+	busy: "Another app is using the camera. Close it, then try again.",
+	insecure: "The camera works only on the secure (https) address of this site.",
+	other: "We could not open the camera here.",
+};
+
+function problemOf(error: unknown): Problem {
+	const name = error instanceof DOMException || error instanceof Error ? error.name : "";
+	if (name === "NotAllowedError" || name === "SecurityError") return "denied";
+	if (name === "NotFoundError" || name === "OverconstrainedError") return "missing";
+	if (name === "NotReadableError" || name === "AbortError") return "busy";
+	return "other";
+}
+
 /**
- * Takes a live photo with the device camera (never from the gallery when a camera exists).
- * Without camera access it falls back to the phone's camera picker. The picture leaves the
- * browser only when the person presses "Use photo".
+ * Takes the live photo with the device camera: a mirrored live view in a 4:5 frame with a face
+ * guide, a preview to retake or use, and a phone-camera fallback when the browser cannot open the
+ * camera. The picture leaves the browser only when the person presses "Use photo".
  */
-export function CameraCapture({ onCapture, isDisabled }: Props) {
+export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, isDisabled }: Props) {
 	const video = useRef<HTMLVideoElement>(null);
 	const stream = useRef<MediaStream | null>(null);
 	const [state, setState] = useState<"idle" | "live" | "preview" | "unavailable">("idle");
+	const [problem, setProblem] = useState<Problem | null>(null);
 	const [preview, setPreview] = useState<{ url: string; file: File } | null>(null);
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -49,12 +78,21 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 	}, [preview]);
 
 	const start = async () => {
+		onStart?.();
+		setError(null);
+		if (typeof window !== "undefined" && window.isSecureContext === false) {
+			setProblem("insecure");
+			setState("unavailable");
+			return;
+		}
 		if (!navigator.mediaDevices?.getUserMedia) {
+			setProblem("other");
 			setState("unavailable");
 			return;
 		}
 		try {
 			stream.current = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+			setProblem(null);
 			setState("live");
 			requestAnimationFrame(() => {
 				if (video.current && stream.current) {
@@ -62,7 +100,8 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 					void video.current.play();
 				}
 			});
-		} catch {
+		} catch (e) {
+			setProblem(problemOf(e));
 			setState("unavailable");
 		}
 	};
@@ -72,10 +111,12 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 		if (!element || !element.videoWidth) {
 			return;
 		}
+		const scale = Math.min(1, MAX_SIDE / Math.max(element.videoWidth, element.videoHeight));
 		const canvas = document.createElement("canvas");
-		canvas.width = element.videoWidth;
-		canvas.height = element.videoHeight;
-		canvas.getContext("2d")?.drawImage(element, 0, 0);
+		canvas.width = Math.round(element.videoWidth * scale);
+		canvas.height = Math.round(element.videoHeight * scale);
+		// The saved photo is the true image (not mirrored); only the live view is a mirror
+		canvas.getContext("2d")?.drawImage(element, 0, 0, canvas.width, canvas.height);
 		canvas.toBlob(
 			(blob) => {
 				if (blob) {
@@ -86,7 +127,7 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 				}
 			},
 			"image/jpeg",
-			0.92,
+			0.9,
 		);
 	};
 
@@ -99,20 +140,23 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 	return (
 		<Stack spacing={3}>
 			{state === "live" && (
-				<AspectRatio ratio={4 / 3} maxW="100%" bg="ink.900" borderRadius="control" overflow="hidden">
-					<video ref={video} muted playsInline aria-label="Camera preview" />
+				<AspectRatio ratio={4 / 5} maxW="360px" w="100%" bg="ink.900" borderRadius="card" overflow="hidden">
+					<Box position="relative">
+						<video ref={video} muted playsInline aria-label="Camera preview" style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }} />
+						<FaceGuide />
+					</Box>
 				</AspectRatio>
 			)}
 			{state === "preview" && preview && (
-				<Box borderRadius="control" overflow="hidden" maxW="100%">
+				<AspectRatio ratio={4 / 5} maxW="360px" w="100%" borderRadius="card" overflow="hidden">
 					{/* eslint-disable-next-line @next/next/no-img-element -- a local blob preview */}
-					<img src={preview.url} alt="Your photo" style={{ width: "100%" }} />
-				</Box>
+					<img src={preview.url} alt="Your photo" style={{ objectFit: "cover" }} />
+				</AspectRatio>
 			)}
 			<Text fontSize="sm" color="text.muted">
-				Face the camera in good light. Remove glasses and caps.
+				Face the camera in good light, with your whole face inside the oval. Remove glasses and caps.
 			</Text>
-			<HStack wrap="wrap">
+			<HStack wrap="wrap" spacing={3}>
 				{state === "idle" && (
 					<Button variant="outline" size="md" onClick={start} isDisabled={isDisabled}>
 						Open camera
@@ -125,7 +169,7 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 				)}
 				{state === "preview" && (
 					<>
-						<Button size="md" onClick={use} isLoading={busy} loadingText="Uploading">
+						<Button size="md" onClick={use} isLoading={busy} loadingText="Uploading" isDisabled={!canUse}>
 							Use photo
 						</Button>
 						<Button size="md" variant="outline" onClick={start} isDisabled={busy}>
@@ -134,29 +178,48 @@ export function CameraCapture({ onCapture, isDisabled }: Props) {
 					</>
 				)}
 				{state === "unavailable" && (
-					<Button as="label" variant="outline" size="md" cursor="pointer">
-						Take a photo
-						<input
-							type="file"
-							accept="image/jpeg"
-							capture="user"
-							hidden
-							onChange={async (event) => {
-								const file = event.target.files?.[0];
-								if (file) {
+					<>
+						<Button variant="outline" size="md" onClick={start}>
+							Try the camera again
+						</Button>
+						<Button as="label" variant="outline" size="md" cursor="pointer" aria-disabled={!canUse}>
+							Take a photo with the phone camera
+							<input
+								type="file"
+								accept="image/jpeg"
+								capture="user"
+								hidden
+								disabled={!canUse}
+								onChange={async (event) => {
+									const file = event.target.files?.[0];
+									event.target.value = "";
+									if (!file) {
+										return;
+									}
+									const bad = checkFile(file, PHOTO);
+									if (bad) {
+										setError(bad);
+										return;
+									}
 									await send(file);
-								}
-							}}
-						/>
-					</Button>
+								}}
+							/>
+						</Button>
+					</>
 				)}
 			</HStack>
+			{state !== "idle" && !canUse && waitingFor}
+			{state === "unavailable" && problem && <ErrorBanner tone="warning" message={PROBLEM_TEXT[problem]} />}
 			<ErrorBanner message={error} />
-			{state === "unavailable" && (
-				<Text fontSize="sm" color="text.muted">
-					We could not open the camera here. Allow camera access, or take the photo with your phone camera.
-				</Text>
-			)}
 		</Stack>
+	);
+}
+
+/** An oval to place the face in; decoration only. */
+function FaceGuide() {
+	return (
+		<Box as="svg" viewBox="0 0 100 125" position="absolute" inset={0} w="100%" h="100%" aria-hidden pointerEvents="none">
+			<ellipse cx="50" cy="56" rx="30" ry="38" fill="none" stroke="white" strokeOpacity="0.85" strokeWidth="0.8" strokeDasharray="3 2" />
+		</Box>
 	);
 }

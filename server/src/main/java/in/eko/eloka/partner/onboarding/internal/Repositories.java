@@ -111,3 +111,8 @@ interface ReviewActionRepository extends JpaRepository<ReviewAction, UUID> {
 
 	List<ReviewAction> findByApplicationIdOrderByOccurredAtAsc(UUID applicationId);
 }
+
+interface PhotoLocationRepository extends JpaRepository<PhotoLocation, UUID> {
+
+	Optional<PhotoLocation> findByDocumentId(UUID documentId);
+}
