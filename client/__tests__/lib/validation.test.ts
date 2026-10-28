@@ -1,4 +1,4 @@
-import { checkFile, isPersonalPan, isPincode, normaliseMobile, PAPER, PHOTO } from "@/lib/validation";
+import { checkFile, isPersonalPan, isPincode, mobileDigits, normaliseMobile, PAPER, PHOTO } from "@/lib/validation";
 
 describe("normaliseMobile", () => {
 	it.each([
@@ -7,8 +7,21 @@ describe("normaliseMobile", () => {
 		["098765-43210", "9876543210"],
 		["5876543210", null],
 		["12345", null],
+		["98765432101", null],
 	])("%s -> %s", (raw, expected) => {
 		expect(normaliseMobile(raw)).toBe(expected);
+	});
+});
+
+describe("mobileDigits", () => {
+	it.each([
+		["98765abc", "98765"],
+		["11111111111111111111", "1111111111"],
+		["+91 98765 43210", "9876543210"],
+		["098765-43210", "9876543210"],
+		["98765432101", "9876543210"],
+	])("%s -> %s", (raw, expected) => {
+		expect(mobileDigits(raw)).toBe(expected);
 	});
 });
 

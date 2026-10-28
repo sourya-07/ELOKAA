@@ -1,12 +1,24 @@
 /** Checks done in the browser for quick feedback. The server checks everything again. */
 
-export function normaliseMobile(raw: string): string | null {
-	let digits = raw.replace(/\D/g, "");
+/** The digits of a number, without a leading +91 or 0 on a full-length number. */
+function localDigits(raw: string): string {
+	const digits = raw.replace(/\D/g, "");
 	if (digits.length === 12 && digits.startsWith("91")) {
-		digits = digits.slice(2);
-	} else if (digits.length === 11 && digits.startsWith("0")) {
-		digits = digits.slice(1);
+		return digits.slice(2);
 	}
+	if (digits.length === 11 && digits.startsWith("0")) {
+		return digits.slice(1);
+	}
+	return digits;
+}
+
+/** What the mobile field keeps as the person types or pastes: digits only, never more than 10. */
+export function mobileDigits(raw: string): string {
+	return localDigits(raw).slice(0, 10);
+}
+
+export function normaliseMobile(raw: string): string | null {
+	const digits = localDigits(raw);
 	return /^[6-9]\d{9}$/.test(digits) ? digits : null;
 }
 

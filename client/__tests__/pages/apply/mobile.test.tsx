@@ -48,6 +48,16 @@ describe("contact details page", () => {
 		expect(replace).not.toHaveBeenCalled();
 	});
 
+	it("keeps only digits in the mobile field, never more than 10", async () => {
+		respond(SIGNED_OUT);
+		renderPage();
+		const field = await screen.findByLabelText("Mobile number");
+		fireEvent.change(field, { target: { value: "11111111111111111111" } });
+		expect(field).toHaveValue("1111111111");
+		fireEvent.change(field, { target: { value: "98a76" } });
+		expect(field).toHaveValue("9876");
+	});
+
 	it("signs in with the mobile code and continues on the same card with the email", async () => {
 		const fetchMock = respond(
 			SIGNED_OUT,

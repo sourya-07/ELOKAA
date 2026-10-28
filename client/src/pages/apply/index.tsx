@@ -9,7 +9,7 @@ import { EmailStage } from "@/features/apply/EmailStage";
 import { useAction } from "@/features/apply/useAction";
 import { withOptionalApplication } from "@/features/apply/withApplication";
 import { ApiError, call } from "@/lib/api";
-import { normaliseMobile } from "@/lib/validation";
+import { mobileDigits, normaliseMobile } from "@/lib/validation";
 import { clock } from "@/lib/format";
 import { routeFor, safeNext } from "@/lib/steps";
 import { delayedAppear } from "@/styles/motion";
@@ -135,10 +135,11 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 								<InputLeftAddon>+91</InputLeftAddon>
 								<Input
 									id="mobile"
+									type="tel"
 									inputMode="numeric"
 									autoComplete="tel-national"
 									value={mobile}
-									onChange={(event) => setMobile(event.target.value)}
+									onChange={(event) => setMobile(mobileDigits(event.target.value))}
 								/>
 							</InputGroup>
 							<FormErrorMessage>{mobileError}</FormErrorMessage>

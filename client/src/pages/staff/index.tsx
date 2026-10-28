@@ -8,7 +8,7 @@ import { ErrorBanner } from "@/components/ErrorBanner";
 import { OtpInput } from "@/components/OtpInput";
 import { useAction } from "@/features/apply/useAction";
 import { call } from "@/lib/api";
-import { normaliseMobile } from "@/lib/validation";
+import { mobileDigits, normaliseMobile } from "@/lib/validation";
 
 interface Props {
 	googleClientId: string | null;
@@ -92,7 +92,7 @@ export default function StaffSignIn({ googleClientId: GOOGLE_CLIENT_ID, otpSignI
 							{GOOGLE_CLIENT_ID && <Divider />}
 							<FormControl isDisabled={sent}>
 								<FormLabel htmlFor="staff-mobile">Mobile number (local sign-in)</FormLabel>
-								<Input id="staff-mobile" inputMode="numeric" value={mobile} onChange={(event) => setMobile(event.target.value)} />
+								<Input id="staff-mobile" type="tel" inputMode="numeric" value={mobile} onChange={(event) => setMobile(mobileDigits(event.target.value))} />
 							</FormControl>
 							{!sent ? (
 								<Button onClick={sendCode} isLoading={busy}>
