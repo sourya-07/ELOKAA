@@ -22,7 +22,13 @@
   appended to a JPEG, path names in file names; replayed DigiLocker returns; uploads to steps
   frozen during a correction; reviewer approving their own recommendation; reviewers revealing values.
 - **Infrastructure:** Flyway from empty with `ddl-auto=validate`; module boundaries; the audit
-  chain re-verified from stored rows; no personal data or tokens in the logs.
+  chain re-verified from stored rows; no personal data or tokens in the logs (coordinates, email and voter ID
+  numbers included); V18 back-fills application numbers on existing rows, and parallel starts get distinct ones.
+- **Contracts:** `ErrorCatalogTest` (every error code the source can send is in docs/ERROR_CATALOG.md and the
+  other way round; step results built from the verification enums) and, on the client, `errors.test.ts` (a
+  message for every catalogued code) and `validation.test.ts` (the fallback file rules equal the server's; the
+  same email cases as the server's `EmailRuleTest`).
+- **Closing:** withdrawing deletes nothing (row counts before and after), leaves the queue, cannot be claimed.
 
 ## What the browser tests prove
 
@@ -33,6 +39,9 @@ the UI in a real browser, never a real provider.
   credit check → voter ID → live photo with a fake camera and a granted location → passport photo → every
   document → review → confirm → submitted, with an axe check (no serious or critical WCAG 2 A/AA problems)
   on each main page and no sideways scrolling on the status page.
+  On the way it checks the seven-language list (only English (UK) selectable), no "Change" on verified identity
+  results, the live photo's browser-reported coordinates, the masked mobile on review and status, and the
+  10-digit application number.
 - A score of 699: the respectful "not eligible" page, the score never shown.
 - Location not allowed: the live photo cannot be sent and the page says how to allow it.
 - The start and sign-in pages at 360, 768 and 1280 px: nothing wider than the screen, axe clean; and with

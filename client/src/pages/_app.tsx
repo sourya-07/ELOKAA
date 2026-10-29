@@ -1,4 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import { MotionConfig } from "framer-motion";
 import NextApp, { type AppContext, type AppInitialProps, type AppProps } from "next/app";
 import { ApplicationProvider } from "@/features/apply/ApplicationContext";
 import type { ApplicationPage } from "@/features/apply/withApplication";
@@ -11,10 +12,13 @@ export default function App({ Component, pageProps, locale }: AppProps & { local
 	const needs = (Component as ApplicationPage<object>).needsApplication;
 	return (
 		<ChakraProvider theme={theme}>
-			<I18nProvider initial={locale}>
-				{/* One provider across journey pages: it stays mounted while only the page inside changes */}
-				{needs ? <ApplicationProvider optional={needs === "optional"}>{page}</ApplicationProvider> : page}
-			</I18nProvider>
+			{/* Chakra's own animations (Collapse, modals, menus) follow the person's reduced-motion setting too */}
+			<MotionConfig reducedMotion="user">
+				<I18nProvider initial={locale}>
+					{/* One provider across journey pages: it stays mounted while only the page inside changes */}
+					{needs ? <ApplicationProvider optional={needs === "optional"}>{page}</ApplicationProvider> : page}
+				</I18nProvider>
+			</MotionConfig>
 		</ChakraProvider>
 	);
 }

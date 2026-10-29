@@ -5,6 +5,11 @@ test("an eligible applicant goes from the start page to a submitted application"
 	const applicant = newApplicant("4321");
 	await page.goto("/");
 	await expect(page.getByText("Your CIBIL credit score is 700 or more.")).toBeVisible();
+	await expect(page.getByText("Keep your documents ready in digital format (soft copies).")).toBeVisible();
+	// seven languages; only English (UK) can be chosen until a reviewed translation exists
+	const languages = page.getByLabel("Language").locator("option");
+	await expect(languages).toHaveCount(7);
+	await expect(page.getByLabel("Language").locator("option:not([disabled])")).toHaveText(["English (UK)"]);
 	await expectAccessible(page);
 	await screenshotWholePage(page, "e2e/.results/screens/01-start.png");
 
@@ -15,6 +20,9 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await tick(page.getByRole("radio", { name: "Voter ID" }));
 	await page.getByLabel("Voter ID (EPIC) number").fill(applicant.epic);
 	await page.getByRole("button", { name: "Verify", exact: true }).click();
+	// verified results are read-only: no "Change" on Aadhaar, PAN or the voter ID
+	await expect(page.getByRole("button", { name: "Change" })).toHaveCount(0);
+	await expectAccessible(page);
 	await screenshotWholePage(page, "e2e/.results/screens/02-identity.png");
 	await page.getByRole("button", { name: "Continue" }).click();
 
@@ -25,6 +33,7 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await expect(page.getByText(/Location found/)).toBeVisible();
 	await page.getByRole("button", { name: "Use photo" }).click();
 	await expect(page.getByText(/Photo taken · location within about/)).toBeVisible();
+	await expect(page.getByText(/^Latitude -?\d+\.\d{5}, longitude -?\d+\.\d{5}$/)).toBeVisible();
 	await page.locator("input[type=file]:not([capture])").setInputFiles(await jpeg(page, 600, 750));
 	await expect(page.getByText("Uploaded")).toBeVisible();
 	await expectAccessible(page);
@@ -46,6 +55,8 @@ test("an eligible applicant goes from the start page to a submitted application"
 	// Review and submit
 	await expect(page).toHaveURL(/\/apply\/review/);
 	await expect(page.getByText("Still to do before you can submit")).toBeHidden();
+	await expect(page.getByText(/Mobile \+91 \*{6}\d{4}/)).toBeVisible();
+	await expectAccessible(page);
 	await tick(page.getByRole("checkbox", { name: /information I have given is true/ }));
 	await page.getByRole("button", { name: "Submit application" }).click();
 	await expect(page.getByText("Submit your application?")).toBeVisible();
@@ -53,6 +64,8 @@ test("an eligible applicant goes from the start page to a submitted application"
 	await page.getByRole("button", { name: "Submit", exact: true }).click();
 	await expect(page.getByRole("heading", { name: "Application submitted" })).toBeVisible();
 	await expect(page.getByText("What happens next")).toBeVisible();
+	await expect(page.getByText(/^[1-5]\d{9}$/)).toBeVisible(); // the 10-digit application number
+	await expect(page.getByText(/^\+91 \*{6}\d{4}$/)).toBeVisible();
 	expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 	await expectAccessible(page);
 	await screenshotWholePage(page, "e2e/.results/screens/06-submitted.png");

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Collapse, Link, ListItem, OrderedList, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Collapse, Link, ListItem, OrderedList, Stack, Text, useDisclosure, usePrefersReducedMotion } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ErrorBanner } from "@/components/ErrorBanner";
@@ -35,6 +35,7 @@ export function DigiLockerTask() {
 	const [tries, setTries] = useState(0);
 	const [linkProblem, setLinkProblem] = useState<string | null>(null);
 	const help = useDisclosure();
+	const reduced = usePrefersReducedMotion();
 	const { busy, error, setError, run } = useAction();
 	const started = useRef(false);
 
@@ -131,6 +132,31 @@ export function DigiLockerTask() {
 		);
 	}
 
+	const helpBox = (
+		<Box id="digilocker-help" bg="bg.subtle" borderRadius="control" p={4}>
+			<OrderedList spacing={2}>
+				<ListItem>
+					Open DigiLocker on the{" "}
+					<Link href={DIGILOCKER.signup} isExternal color="text.link">
+						website
+					</Link>{" "}
+					or in the app (
+					<Link href={DIGILOCKER.android} isExternal color="text.link">
+						Android
+					</Link>
+					,{" "}
+					<Link href={DIGILOCKER.ios} isExternal color="text.link">
+						iPhone
+					</Link>
+					).
+				</ListItem>
+				<ListItem>Sign up with the mobile number linked to your Aadhaar, and enter the code it sends.</ListItem>
+				<ListItem>Check that your Aadhaar shows under &quot;Issued documents&quot;. If it does not, add it there with your Aadhaar number.</ListItem>
+				<ListItem>Come back here and press &quot;Continue to DigiLocker&quot;. Your progress is saved.</ListItem>
+			</OrderedList>
+		</Box>
+	);
+
 	return (
 		<Stack spacing={4}>
 			<Text>You will go to DigiLocker, the government&apos;s document wallet, and sign in with the mobile number linked to your Aadhaar. There you allow ELOKA to read your Aadhaar. Then you come back here.</Text>
@@ -155,30 +181,8 @@ export function DigiLockerTask() {
 					Don&apos;t have DigiLocker yet?
 				</Button>
 			</Stack>
-			<Collapse in={help.isOpen} animateOpacity>
-				<Box id="digilocker-help" bg="bg.subtle" borderRadius="control" p={4}>
-					<OrderedList spacing={2}>
-						<ListItem>
-							Open DigiLocker on the{" "}
-							<Link href={DIGILOCKER.signup} isExternal color="text.link">
-								website
-							</Link>{" "}
-							or in the app (
-							<Link href={DIGILOCKER.android} isExternal color="text.link">
-								Android
-							</Link>
-							,{" "}
-							<Link href={DIGILOCKER.ios} isExternal color="text.link">
-								iPhone
-							</Link>
-							).
-						</ListItem>
-						<ListItem>Sign up with the mobile number linked to your Aadhaar, and enter the code it sends.</ListItem>
-						<ListItem>Check that your Aadhaar shows under &quot;Issued documents&quot;. If it does not, add it there with your Aadhaar number.</ListItem>
-						<ListItem>Come back here and press &quot;Continue to DigiLocker&quot;. Your progress is saved.</ListItem>
-					</OrderedList>
-				</Box>
-			</Collapse>
+			{/* Opens without moving under reduced motion */}
+			{reduced ? help.isOpen && helpBox : <Collapse in={help.isOpen} animateOpacity>{helpBox}</Collapse>}
 		</Stack>
 	);
 }
