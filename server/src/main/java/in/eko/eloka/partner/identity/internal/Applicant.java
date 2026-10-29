@@ -22,6 +22,10 @@ class Applicant extends BaseEntity {
 	protected Applicant() {
 	}
 
+	String getMobileMasked() {
+		return mobileMasked;
+	}
+
 	byte[] getMobileEnc() {
 		return mobileEnc;
 	}

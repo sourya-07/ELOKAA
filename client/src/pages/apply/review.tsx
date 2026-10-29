@@ -31,10 +31,13 @@ import { DECLARATION_VERSION } from "@/lib/consent";
 import { MILESTONES } from "@/lib/milestones";
 import { PAGES } from "@/lib/steps";
 import { canChange } from "@/lib/tasks";
-import { isDone } from "@/lib/types";
+import { isDone, type Snapshot } from "@/lib/types";
 
-const SUMMARY: Record<string, (s: Record<string, unknown>) => string> = {
-	EMAIL_VERIFICATION: (s) => `Mobile verified, email ${s.email_masked ?? ""}`,
+const SUMMARY: Record<string, (s: Record<string, unknown>, snapshot: Snapshot) => string> = {
+	EMAIL_VERIFICATION: (s, snapshot) =>
+		[snapshot.contact?.mobile_masked && `Mobile +91 ${snapshot.contact.mobile_masked}`, `Email ${s.email_masked ?? snapshot.contact?.email_masked ?? ""}`]
+			.filter(Boolean)
+			.join(" · "),
 	AADHAAR: (s) => `Aadhaar ${s.aadhaar_masked ?? ""} from DigiLocker`,
 	HOME_ADDRESS: (s) => `${s.state ?? ""} ${s.pincode ?? ""}${s.source === "DIGILOCKER" ? " (from DigiLocker)" : ""}`,
 	PAN: (s) => `PAN ${s.pan_masked ?? ""}`,
@@ -113,7 +116,7 @@ function ReviewPage() {
 							if (!step) {
 								return null;
 							}
-							const text = step.summary ? SUMMARY[page.step]?.(step.summary) : undefined;
+							const text = step.summary ? SUMMARY[page.step]?.(step.summary, snapshot) : undefined;
 							const editable = page.step !== "CREDIT_CHECK" && canChange(snapshot, page.step);
 							return (
 								<Flex key={page.path} justify="space-between" align="center" gap={3} wrap="wrap">
@@ -171,7 +174,7 @@ function ReviewPage() {
 						<AlertDialogBody>
 							<Stack spacing={2}>
 								<Text>After you submit, you cannot change your details unless our team asks you to.</Text>
-								<Text color="text.muted">Two people in our team review every application. We will contact you on your mobile and email.</Text>
+								<Text color="text.muted">Two people in our team review every application. You can follow it on your status page.</Text>
 								<ErrorBanner message={error} />
 							</Stack>
 						</AlertDialogBody>

@@ -8,6 +8,7 @@ export function snapshotAt(next: StepKey | null, overrides: Partial<Snapshot> = 
 	return {
 		application_id: "ptn_TEST",
 		application_number: "1000000042",
+		contact: { mobile_masked: "******3210", email_masked: "r***@example.com" },
 		status: "IN_PROGRESS",
 		version: 3,
 		method: "DIGILOCKER",

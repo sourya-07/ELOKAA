@@ -123,4 +123,6 @@ enquiry, so only an approver can. An under-18 block should not be unblocked unti
 
 Before submitting, the applicant sees what still stops submission (the snapshot's `submit_blockers`), each with
 a link to the part to fix; links and "Change" carry `?return=review`, and those pages offer "Back to review".
-Submitting asks for confirmation once, then sends one request.
+Submitting asks for confirmation once, then sends one request. The review and status pages show the
+verified mobile and email masked (`snapshot.contact`). No email or SMS is sent when the status changes (no
+notification service exists yet), so the pages say "check this page for updates" and never promise a message.

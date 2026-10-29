@@ -17,6 +17,7 @@ import in.eko.eloka.partner.audit.AuditLog;
 import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.eligibility.EligibilityApi;
 import in.eko.eloka.partner.eligibility.EligibilityOutcome;
+import in.eko.eloka.partner.identity.ApplicantDirectory;
 import in.eko.eloka.partner.onboarding.ApplicationStatus;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.onboarding.StepStatus;
@@ -60,12 +61,15 @@ class ApplicationService {
 	private final TransactionTemplate transactions;
 	private final Clock clock;
 	private final ApplicationDocumentRepository documents;
+	private final ApplicantDirectory applicants;
 
 	ApplicationService(PartnerApplicationRepository applications, ApplicationStepRepository steps,
 			ConsentRecordRepository consents, TimelineEntryRepository timeline, ApplicationStateMachine stateMachine,
 			OnboardingProperties properties, AuditLog audit, EligibilityApi eligibility, JsonMapper json,
-			TransactionTemplate transactions, Clock clock, ApplicationDocumentRepository documents) {
+			TransactionTemplate transactions, Clock clock, ApplicationDocumentRepository documents,
+			ApplicantDirectory applicants) {
 		this.applications = applications;
+		this.applicants = applicants;
 		this.documents = documents;
 		this.steps = steps;
 		this.consents = consents;
@@ -381,7 +385,9 @@ class ApplicationService {
 		if (stateMachine.allows(application, LifecycleEvent.WITHDRAW)) {
 			actions.add("WITHDRAW");
 		}
-		return new ApplicationSnapshot(application.getPublicId(), number(application), application.getStatus().name(),
+		ApplicationSnapshot.Contact contact = new ApplicationSnapshot.Contact(
+				applicants.maskedMobile(application.getApplicantId()).orElse(null), application.getEmailMasked());
+		return new ApplicationSnapshot(application.getPublicId(), number(application), contact, application.getStatus().name(),
 				application.getVersion(), application.getMethod() == null ? null : application.getMethod().name(), next,
 				application.getExpiresAt(), application.getSubmittedAt(), rows.stream().map(this::stepView).toList(),
 				actions, DocumentRequirements.status(have), blockers);

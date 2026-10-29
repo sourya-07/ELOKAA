@@ -19,4 +19,13 @@ describe("status page", () => {
 		expect(screen.getByText("1000000042")).toBeInTheDocument();
 		expect(screen.queryByText("ptn_TEST")).not.toBeInTheDocument();
 	});
+
+	it("shows the masked mobile and email and promises no message the system does not send", () => {
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt(null, { status: "SUBMITTED" }), write: jest.fn() });
+		render(<StatusPage />);
+		expect(screen.getByText("+91 ******3210")).toBeInTheDocument();
+		expect(screen.getByText("r***@example.com")).toBeInTheDocument();
+		expect(screen.queryByText(/on your mobile/)).not.toBeInTheDocument();
+		expect(screen.queryByText(/We tell you/)).not.toBeInTheDocument();
+	});
 });

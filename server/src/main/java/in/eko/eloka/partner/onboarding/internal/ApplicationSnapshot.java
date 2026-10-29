@@ -13,12 +13,16 @@ import tools.jackson.databind.JsonNode;
  * 10-digit number people read and quote (display only, never accepted as a lookup).
  */
 record ApplicationSnapshot(@JsonProperty("application_id") String applicationId,
-		@JsonProperty("application_number") String applicationNumber, String status, long version,
+		@JsonProperty("application_number") String applicationNumber, Contact contact, String status, long version,
 		String method, @JsonProperty("next_step") String nextStep, @JsonProperty("expires_at") Instant expiresAt,
 		@JsonProperty("submitted_at") Instant submittedAt, List<Step> steps,
 		@JsonProperty("available_actions") List<String> availableActions,
 		List<DocumentRequirements.Status> requirements,
 		@JsonProperty("submit_blockers") List<Blocker> submitBlockers) {
+
+	/** The verified mobile and email, masked by the server; the full values never leave it. */
+	record Contact(@JsonProperty("mobile_masked") String mobileMasked, @JsonProperty("email_masked") String emailMasked) {
+	}
 
 	/**
 	 * Why the applicant cannot submit yet: a step that is not done ({@code code} says why), or a

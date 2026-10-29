@@ -52,6 +52,8 @@ export interface Snapshot {
 	application_id: string;
 	/** The 10-digit number people read and quote; the API and URLs use application_id. */
 	application_number: string | null;
+	/** The verified mobile and email, masked by the server (never the full values). */
+	contact?: { mobile_masked: string | null; email_masked: string | null };
 	status: ApplicationStatus;
 	version: number;
 	method: "DIGILOCKER" | "MANUAL" | null;

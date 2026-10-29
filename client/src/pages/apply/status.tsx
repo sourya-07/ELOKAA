@@ -1,4 +1,4 @@
-import { Button, Flex, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ApplyShell, Section } from "@/components/ApplyShell";
@@ -12,9 +12,9 @@ import type { ApplicationStatus } from "@/lib/types";
 
 const TEXT: Record<ApplicationStatus, { title: string; body: string }> = {
 	IN_PROGRESS: { title: "Your application is in progress", body: "Continue where you left off." },
-	SUBMITTED: { title: "Application submitted", body: "Our team will check your details and documents. We will contact you on your mobile." },
+	SUBMITTED: { title: "Application submitted", body: "Our team will check your details and documents. Check this page for updates." },
 	UNDER_REVIEW: { title: "We are checking your application", body: "Our team is looking at your details and documents." },
-	ON_HOLD: { title: "We are checking your application", body: "Our team needs a little more time. We will contact you." },
+	ON_HOLD: { title: "We are checking your application", body: "Our team needs a little more time. Check this page for updates." },
 	CORRECTION_REQUIRED: { title: "Some changes are needed", body: "Our team has asked you to change the steps below." },
 	APPROVED: { title: "You are an ELOKA partner", body: "Your application is approved. Our team will contact you about the next steps." },
 	REJECTED: { title: "Your application was not approved", body: "Our team could not approve your application. You can contact support for details." },
@@ -53,6 +53,30 @@ function StatusPage() {
 					</Stack>
 					<StatusPill status={snapshot.status === "CORRECTION_REQUIRED" ? "REOPENED" : snapshot.status} />
 				</Flex>
+				{(snapshot.contact?.mobile_masked || snapshot.contact?.email_masked) && (
+					<Stack as="dl" spacing={0} fontSize="sm">
+						{snapshot.contact?.mobile_masked && (
+							<Box>
+								<Text as="dt" display="inline" color="text.muted">
+									Mobile:{" "}
+								</Text>
+								<Text as="dd" display="inline" fontFamily="mono" translate="no">
+									+91 {snapshot.contact.mobile_masked}
+								</Text>
+							</Box>
+						)}
+						{snapshot.contact?.email_masked && (
+							<Box>
+								<Text as="dt" display="inline" color="text.muted">
+									Email:{" "}
+								</Text>
+								<Text as="dd" display="inline" fontFamily="mono" translate="no">
+									{snapshot.contact.email_masked}
+								</Text>
+							</Box>
+						)}
+					</Stack>
+				)}
 				{submitted && <Text color="text.muted">Submitted on {submitted}</Text>}
 				{correctionDue && <Text>Please make the changes by {correctionDue}, or the application will expire.</Text>}
 				{reopened.map((step) => (
@@ -67,7 +91,7 @@ function StatusPage() {
 					<Stack as="ol" spacing={2} pl={5} sx={{ listStyleType: "decimal" }}>
 						<Text as="li">A reviewer checks your details and documents.</Text>
 						<Text as="li">A second person in our team approves it (two people always look at an application).</Text>
-						<Text as="li">We tell you the outcome on your mobile and email. If something needs a change, you will see it here.</Text>
+						<Text as="li">The outcome shows on this page. If something needs a change, you will see it here too.</Text>
 					</Stack>
 				</Section>
 			)}

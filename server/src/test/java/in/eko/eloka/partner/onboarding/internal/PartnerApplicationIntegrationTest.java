@@ -70,7 +70,11 @@ class PartnerApplicationIntegrationTest {
 			.andExpect(jsonPath("$.next_step").value("EMAIL_VERIFICATION"))
 			.andExpect(jsonPath("$.steps.length()").value(12))
 			.andExpect(jsonPath("$.steps[0].step_key").value("MOBILE_VERIFICATION"))
-			.andExpect(jsonPath("$.steps[0].status").value("COMPLETED")));
+			.andExpect(jsonPath("$.steps[0].status").value("COMPLETED"))
+			// the contact block is masked by the server; the full number never leaves it
+			.andExpect(jsonPath("$.contact.mobile_masked").value(org.hamcrest.Matchers.matchesPattern("\\*{6}\\d{4}")))
+			.andExpect(jsonPath("$.contact.email_masked").value(org.hamcrest.Matchers.nullValue())));
+		assertThat(created.toString()).doesNotContainPattern("[6-9]\\d{9}");
 		String id = created.get("application_id").asString();
 		assertThat(id).startsWith("ptn_");
 
