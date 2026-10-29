@@ -209,7 +209,7 @@ class DocumentSteps {
 			Map<DocumentKind, Long> have = counts(context);
 			DocumentRequirements.requireMet(PartnerStep.EDUCATION, have);
 			context.complete(PartnerStep.EDUCATION, json.writeValueAsString(Map.of(
-					"degree", have.containsKey(DocumentKind.GRADUATION_CERTIFICATE) ? "GRADUATION" : "DIPLOMA",
+					"diploma", have.containsKey(DocumentKind.DIPLOMA_CERTIFICATE),
 					"computer_certificates", have.getOrDefault(DocumentKind.COMPUTER_CERTIFICATE, 0L))));
 			return null;
 		});

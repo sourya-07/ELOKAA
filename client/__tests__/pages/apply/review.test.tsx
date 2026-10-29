@@ -19,13 +19,13 @@ describe("review page", () => {
 		const snapshot = snapshotAt("KYC_DOCUMENTS", {
 			submit_blockers: [
 				{ step_key: "KYC_DOCUMENTS", code: "DOCUMENTS_MISSING", group: "PAN_CARD" },
-				{ step_key: "EDUCATION", code: "DOCUMENTS_MISSING", group: "GRADUATION_OR_DIPLOMA" },
+				{ step_key: "EDUCATION", code: "DOCUMENTS_MISSING", group: "GRADUATION_CERTIFICATE" },
 			],
 		});
 		(useApplication as jest.Mock).mockReturnValue({ snapshot, write: jest.fn() });
 		render(<ReviewPage />);
 		expect(screen.getByText(/Add your PAN card\./)).toBeInTheDocument();
-		expect(screen.getByText(/Add your graduation or diploma certificate\./)).toBeInTheDocument();
+		expect(screen.getByText(/Add your graduation certificate\./)).toBeInTheDocument();
 		const fixes = screen.getAllByRole("link", { name: "Fix" });
 		expect(fixes[0]).toHaveAttribute("href", "/apply/documents?return=review#identity-documents");
 		expect(screen.getByRole("button", { name: "Submit application" })).toBeDisabled();

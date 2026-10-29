@@ -1,6 +1,5 @@
-import { Button, Radio, RadioGroup, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import { Button, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { ApplyShell } from "@/components/ApplyShell";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { FileSlot } from "@/components/FileSlot";
@@ -20,7 +19,7 @@ import { PAPER } from "@/lib/validation";
 /**
  * Every document on one page, in two groups: identity documents (Aadhaar front and back as full
  * images, PAN card, both sides of the verified voter ID or driving licence) and education (class
- * 10 and 12 marksheets, a graduation or diploma certificate, optional computer certificates).
+ * 10 and 12 marksheets, the graduation certificate, an optional diploma and optional computer certificates).
  * The server's file rules decide what is missing; one "Continue" sends both groups.
  */
 function DocumentsPage() {
@@ -32,9 +31,6 @@ function DocumentsPage() {
 	const filesOf = (kind: string) => documents.filter((d) => d.kind === kind);
 	const verifiedId = (snapshot.steps.find((s) => s.step_key === "ALTERNATE_ID")?.summary?.type as string | undefined) ?? "VOTER_ID";
 	const idName = verifiedId === "DRIVING_LICENCE" ? "Driving licence" : "Voter ID";
-	// The applicant's own choice; until they choose, what they already uploaded (the list loads after the first render)
-	const [chosen, setChosen] = useState<"GRADUATION_CERTIFICATE" | "DIPLOMA_CERTIFICATE" | null>(null);
-	const degree = chosen ?? (documents.some((d) => d.kind === "DIPLOMA_CERTIFICATE") ? "DIPLOMA_CERTIFICATE" : "GRADUATION_CERTIFICATE");
 
 	const slot = (kind: string, label: string, hint?: string, extra: { required?: boolean; allowMany?: boolean } = { required: true }) => (
 		<FileSlot
@@ -96,18 +92,10 @@ function DocumentsPage() {
 					{slot("CLASS_10_MARKSHEET", "Class 10 marksheet")}
 					{slot("CLASS_12_MARKSHEET", "Class 12 marksheet")}
 				</SimpleGrid>
-				<Stack spacing={2}>
-					<Text fontWeight={600} id="degree-label">
-						Your highest qualification after class 12
-					</Text>
-					<RadioGroup value={degree} onChange={(value) => setChosen(value as typeof degree)} aria-labelledby="degree-label">
-						<Stack direction={{ base: "column", sm: "row" }} spacing={5}>
-							<Radio value="GRADUATION_CERTIFICATE">Graduation</Radio>
-							<Radio value="DIPLOMA_CERTIFICATE">Diploma</Radio>
-						</Stack>
-					</RadioGroup>
-				</Stack>
-				{degree === "GRADUATION_CERTIFICATE" ? slot("GRADUATION_CERTIFICATE", "Graduation certificate") : slot("DIPLOMA_CERTIFICATE", "Diploma certificate")}
+				<SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+					{slot("GRADUATION_CERTIFICATE", "Graduation certificate")}
+					{slot("DIPLOMA_CERTIFICATE", "Diploma certificate", "If you have one.", { required: false })}
+				</SimpleGrid>
 				{slot("COMPUTER_CERTIFICATE", "Computer certificates", "Up to 5, if you have any.", { required: false, allowMany: true })}
 			</TaskSection>
 

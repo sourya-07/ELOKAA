@@ -418,14 +418,16 @@ class JourneyIntegrationTest {
 		upload("CLASS_10_MARKSHEET", "class10.pdf", pdf("10")).andExpect(status().isCreated());
 		upload("CLASS_12_MARKSHEET", "class12.jpg", jpeg(800, 600, null)).andExpect(status().isCreated());
 		refresh();
-		// graduation or diploma: one of them is needed
+		// a diploma does not stand in for the graduation certificate: graduation is required, a diploma optional
+		upload("DIPLOMA_CERTIFICATE", "diploma.pdf", pdf("diploma")).andExpect(status().isCreated());
+		refresh();
 		call(post(app("/education/submit")).header("If-Match", etag())).andExpect(status().isConflict())
 			.andExpect(jsonPath("$.missing_documents[0]").value("GRADUATION_CERTIFICATE"));
-		upload("DIPLOMA_CERTIFICATE", "diploma.pdf", pdf("diploma")).andExpect(status().isCreated());
+		upload("GRADUATION_CERTIFICATE", "degree.pdf", pdf("degree")).andExpect(status().isCreated());
 		upload("COMPUTER_CERTIFICATE", "ccc.jpg", jpeg(800, 600, null)).andExpect(status().isCreated());
 		refresh();
 		track(call(post(app("/education/submit")).header("If-Match", etag())).andExpect(status().isOk())
-			.andExpect(stepSummary("EDUCATION", "degree").value("DIPLOMA"))
+			.andExpect(stepSummary("EDUCATION", "diploma").value(true))
 			.andExpect(stepSummary("EDUCATION", "computer_certificates").value(1)));
 	}
 

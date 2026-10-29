@@ -44,12 +44,17 @@ class DocumentRequirementsTest {
 	}
 
 	@Test
-	void graduationOrDiplomaIsEnough() {
+	void graduationIsRequiredAndADiplomaOptional() {
 		Map<DocumentKind, Long> have = new EnumMap<>(DocumentKind.class);
 		have.put(DocumentKind.CLASS_10_MARKSHEET, 1L);
 		have.put(DocumentKind.CLASS_12_MARKSHEET, 1L);
-		assertThatThrownBy(() -> DocumentRequirements.requireMet(PartnerStep.EDUCATION, have)).isInstanceOf(ApiProblem.class);
 		have.put(DocumentKind.DIPLOMA_CERTIFICATE, 1L);
+		// a diploma alone is not enough
+		assertThatThrownBy(() -> DocumentRequirements.requireMet(PartnerStep.EDUCATION, have)).isInstanceOf(ApiProblem.class);
+		have.put(DocumentKind.GRADUATION_CERTIFICATE, 1L);
+		DocumentRequirements.requireMet(PartnerStep.EDUCATION, have);
+		// and none is needed
+		have.remove(DocumentKind.DIPLOMA_CERTIFICATE);
 		DocumentRequirements.requireMet(PartnerStep.EDUCATION, have);
 	}
 }

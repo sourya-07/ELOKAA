@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { useApplication } from "@/features/apply/ApplicationContext";
 import { ApiError } from "@/lib/api";
 import DocumentsPage from "@/pages/apply/documents";
@@ -29,22 +29,15 @@ describe("documents page", () => {
 		documents = [];
 	});
 
-	it("shows a diploma already uploaded, not an empty graduation slot", () => {
-		documents = [{ document_id: "d1", kind: "DIPLOMA_CERTIFICATE", status: "MANUAL_REVIEW_REQUIRED", file_name: "diploma.pdf", content_type: "application/pdf", size: 10, uploaded_at: "" }];
-		(useApplication as jest.Mock).mockReturnValue({ snapshot: withVerified("VOTER_ID"), write: jest.fn() });
-		render(<DocumentsPage />);
-		expect(screen.getByText("Diploma certificate")).toBeInTheDocument();
-		expect(screen.getByRole("radio", { name: "Diploma" })).toBeChecked();
-	});
-
-	it("asks for the verified ID document and either graduation or diploma", () => {
+	it("asks for the verified ID document, the graduation certificate, and a diploma only if there is one", () => {
 		(useApplication as jest.Mock).mockReturnValue({ snapshot: withVerified("DRIVING_LICENCE"), write: jest.fn() });
 		render(<DocumentsPage />);
 		expect(screen.getByText("Driving licence: front")).toBeInTheDocument();
 		expect(screen.queryByText("Voter ID: front")).not.toBeInTheDocument();
-		expect(screen.getByText("Graduation certificate")).toBeInTheDocument();
-		fireEvent.click(screen.getByRole("radio", { name: "Diploma" }));
-		expect(screen.getByText("Diploma certificate")).toBeInTheDocument();
+		const slotOf = (label: string) => screen.getByText(label).closest("div[class]")?.parentElement?.parentElement as HTMLElement;
+		expect(within(slotOf("Graduation certificate")).getByText("Required")).toBeInTheDocument();
+		expect(within(slotOf("Diploma certificate")).getByText("Optional")).toBeInTheDocument();
+		expect(screen.queryByRole("radio")).not.toBeInTheDocument();
 	});
 
 	it("sends both groups in order, then moves on", async () => {

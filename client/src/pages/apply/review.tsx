@@ -46,7 +46,7 @@ const SUMMARY: Record<string, (s: Record<string, unknown>, snapshot: Snapshot) =
 	PHOTOS: () => "Live photo (with location) and passport-size photo",
 	KYC_DOCUMENTS: (s) => `Aadhaar front and back, PAN card, ${s.id_document === "DRIVING_LICENCE" ? "driving licence" : "voter ID"}`,
 	EDUCATION: (s) =>
-		`Class 10 and 12 marksheets, ${s.degree === "DIPLOMA" ? "diploma" : "graduation"} certificate${Number(s.computer_certificates) ? `, ${s.computer_certificates} computer certificate(s)` : ""}`,
+		`Class 10 and 12 marksheets, graduation certificate${s.diploma ? ", diploma" : ""}${Number(s.computer_certificates) ? `, ${s.computer_certificates} computer certificate(s)` : ""}`,
 };
 
 /** Where a done part's data came from: checked with a record, supplied by the applicant, or waiting for our team. */

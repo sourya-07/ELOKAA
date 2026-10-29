@@ -56,5 +56,6 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | C-3 | New `PTN-` Stitch screens in the ELOKA Platform project; Local Admin `APP-` screens unchanged | 2026-10-27 |
 | C-4 | LEAD process out of scope | 2026-10-27 |
 | C-5 | Identity through DigiLocker only; the step-by-step (masked Aadhaar) path is retired (was Q-9) (ADR-0007) | 2026-10-28 |
+| C-8 | Graduation certificate required; diploma certificate optional (was: either one) | 2026-10-29 |
 | C-7 | Start page time estimate: "about 3–5 minutes" (owner's decision; the whole journey with DigiLocker, the credit check and the uploads may take longer, so measure it on EPS UAT) | 2026-10-29 |
 | C-6 | Official DigiLocker links in the help: `digilocker.gov.in/web/signup`, Play Store `com.digilocker.android`, App Store `id1320618078` (checked on digilocker.gov.in; was Q-27) | 2026-10-28 |

@@ -54,8 +54,9 @@ final class DocumentRequirements {
 							List.of(DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK))),
 			new Requirement("CLASS_10_MARKSHEET", PartnerStep.EDUCATION, options(List.of(DocumentKind.CLASS_10_MARKSHEET))),
 			new Requirement("CLASS_12_MARKSHEET", PartnerStep.EDUCATION, options(List.of(DocumentKind.CLASS_12_MARKSHEET))),
-			new Requirement("GRADUATION_OR_DIPLOMA", PartnerStep.EDUCATION,
-					options(List.of(DocumentKind.GRADUATION_CERTIFICATE), List.of(DocumentKind.DIPLOMA_CERTIFICATE))));
+			// Graduation is required; a diploma is optional, like the computer certificates (owner, 2026-10-29)
+			new Requirement("GRADUATION_CERTIFICATE", PartnerStep.EDUCATION,
+					options(List.of(DocumentKind.GRADUATION_CERTIFICATE))));
 
 	private DocumentRequirements() {
 	}

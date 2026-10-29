@@ -4,7 +4,7 @@ import type { SubmitBlocker } from "@/lib/types";
 
 const GROUP_FILES: Record<string, string> = {
 	VOTER_ID_OR_DRIVING_LICENCE: "both sides of your voter ID or driving licence",
-	GRADUATION_OR_DIPLOMA: "your graduation or diploma certificate",
+	GRADUATION_CERTIFICATE: "your graduation certificate",
 };
 
 /** One sentence per thing still stopping submission, with where to fix it. */
