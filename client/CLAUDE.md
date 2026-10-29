@@ -31,7 +31,7 @@ src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 sh
                       withApplication / withOptionalApplication (marks a journey page; _app wraps marked
                       pages in ONE shared provider; "optional" pages such as /apply also render signed out),
                       EmailStage (email code + data-use consent on the /apply card), DigiLockerTask (explainer, consent,
-                      official help links, return with ?state=, automatic re-checks, start again), AddressForm,
+                      a direct link to DigiLocker's sign-up page in a new tab, return with ?state=, automatic re-checks, start again), AddressForm,
                       PanForm (PAN only), EligibilityTask, AlternateIdTask (voter ID or driving licence number),
                       useGeolocation (live-photo location: starts on a button press, best recent fix, never
                       invented), WithdrawPanel (step-up code,

@@ -39,15 +39,13 @@ describe("identity page", () => {
 		expect(screen.queryByRole("textbox", { name: "PAN" })).not.toBeInTheDocument();
 	});
 
-	it("explains how to get DigiLocker, with official links only", () => {
+	it("sends someone without DigiLocker straight to its official sign-up page, in a new tab", () => {
 		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt("AADHAAR"), write: jest.fn(), setSnapshot: jest.fn() });
 		render(<IdentityPage />);
-		fireEvent.click(screen.getByRole("button", { name: "Don't have DigiLocker yet?" }));
-		// the panel animates open; jsdom does not run the animation, so read the links as they are in the page
-		for (const link of screen.getAllByRole("link", { hidden: true }).filter((a) => a.getAttribute("target") === "_blank")) {
-			expect(link.getAttribute("href")).toMatch(/^https:\/\/(www\.digilocker\.gov\.in|play\.google\.com|apps\.apple\.com)\//);
-		}
-		expect(screen.getByRole("link", { name: "Android", hidden: true })).toHaveAttribute("href", "https://play.google.com/store/apps/details?id=com.digilocker.android");
+		const signUp = screen.getByRole("link", { name: /Don't have a DigiLocker account\? Sign up on DigiLocker/ });
+		expect(signUp).toHaveAttribute("href", "https://www.digilocker.gov.in/web/signup");
+		expect(signUp).toHaveAttribute("target", "_blank");
+		expect(signUp.getAttribute("rel")).toContain("noopener");
 	});
 
 	it("finishes the trip once when coming back from DigiLocker", async () => {

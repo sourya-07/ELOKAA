@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Collapse, Link, ListItem, OrderedList, Stack, Text, useDisclosure, usePrefersReducedMotion } from "@chakra-ui/react";
+import { Button, Checkbox, Link, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ErrorBanner } from "@/components/ErrorBanner";
@@ -13,11 +13,9 @@ import { useAction } from "./useAction";
 /** Seconds between automatic checks after coming back from DigiLocker (about a minute and a half in all). */
 const BACKOFF = [2, 3, 5, 8, 13, 21, 34];
 
-/** Official DigiLocker places only (checked on digilocker.gov.in, docs/OPEN_QUESTIONS.md Q-27). */
+/** DigiLocker's official sign-up page (checked on digilocker.gov.in, docs/OPEN_QUESTIONS.md C-6). */
 const DIGILOCKER = {
 	signup: "https://www.digilocker.gov.in/web/signup",
-	android: "https://play.google.com/store/apps/details?id=com.digilocker.android",
-	ios: "https://apps.apple.com/in/app/digilocker/id1320618078",
 };
 
 /**
@@ -34,8 +32,6 @@ export function DigiLockerTask() {
 	const [waiting, setWaiting] = useState(false);
 	const [tries, setTries] = useState(0);
 	const [linkProblem, setLinkProblem] = useState<string | null>(null);
-	const help = useDisclosure();
-	const reduced = usePrefersReducedMotion();
 	const { busy, error, setError, run } = useAction();
 	const started = useRef(false);
 
@@ -132,30 +128,6 @@ export function DigiLockerTask() {
 		);
 	}
 
-	const helpBox = (
-		<Box id="digilocker-help" bg="bg.subtle" borderRadius="control" p={4}>
-			<OrderedList spacing={2}>
-				<ListItem>
-					Open DigiLocker on the{" "}
-					<Link href={DIGILOCKER.signup} isExternal color="text.link">
-						website
-					</Link>{" "}
-					or in the app (
-					<Link href={DIGILOCKER.android} isExternal color="text.link">
-						Android
-					</Link>
-					,{" "}
-					<Link href={DIGILOCKER.ios} isExternal color="text.link">
-						iPhone
-					</Link>
-					).
-				</ListItem>
-				<ListItem>Sign up with the mobile number linked to your Aadhaar, and enter the code it sends.</ListItem>
-				<ListItem>Check that your Aadhaar shows under &quot;Issued documents&quot;. If it does not, add it there with your Aadhaar number.</ListItem>
-				<ListItem>Come back here and press &quot;Continue to DigiLocker&quot;. Your progress is saved.</ListItem>
-			</OrderedList>
-		</Box>
-	);
 
 	return (
 		<Stack spacing={4}>
@@ -177,12 +149,11 @@ export function DigiLockerTask() {
 				<Button onClick={start} isLoading={busy}>
 					{awayElsewhere || stepError || linkProblem ? "Start again" : "Continue to DigiLocker"}
 				</Button>
-				<Button variant="link" onClick={help.onToggle} aria-expanded={help.isOpen} aria-controls="digilocker-help">
-					Don&apos;t have DigiLocker yet?
-				</Button>
+				{/* Straight to DigiLocker's own sign-up, in a new tab so this application stays open */}
+				<Link href={DIGILOCKER.signup} isExternal color="text.link" fontWeight={500}>
+					Don&apos;t have a DigiLocker account? Sign up on DigiLocker
+				</Link>
 			</Stack>
-			{/* Opens without moving under reduced motion */}
-			{reduced ? help.isOpen && helpBox : <Collapse in={help.isOpen} animateOpacity>{helpBox}</Collapse>}
 		</Stack>
 	);
 }

@@ -58,4 +58,4 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | C-9 | File rules (owner, 2026-10-29, was Q-12): documents (Aadhaar, PAN, voter ID, driving licence, marksheets, graduation, diploma, computer certificates) JPG/JPEG, PNG or PDF, 10 KB to 5 MB; photos JPG/JPEG or PNG, 20 KB to 2 MB (and at least 300 px a side); at most 5 computer certificates. PNG is stored re-encoded as JPEG | 2026-10-29 |
 | C-8 | Graduation certificate required; diploma certificate optional (was: either one) | 2026-10-29 |
 | C-7 | Start page time estimate: "about 3–5 minutes" (owner's decision; the whole journey with DigiLocker, the credit check and the uploads may take longer, so measure it on EPS UAT) | 2026-10-29 |
-| C-6 | Official DigiLocker links in the help: `digilocker.gov.in/web/signup`, Play Store `com.digilocker.android`, App Store `id1320618078` (checked on digilocker.gov.in; was Q-27) | 2026-10-28 |
+| C-6 | Official DigiLocker sign-up link: `digilocker.gov.in/web/signup` (checked on digilocker.gov.in; was Q-27). Since 2026-10-29 "Don't have a DigiLocker account?" opens it directly in a new tab (no help panel, no app-store links) | 2026-10-28 |
