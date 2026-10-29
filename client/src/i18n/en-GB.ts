@@ -27,7 +27,7 @@ export const enGB = {
 	"home.part.photos.title": "Photos",
 	"home.part.photos.body": "A live photo with your location, and a passport-size photo.",
 	"home.part.documents.title": "Documents",
-	"home.part.documents.body": "Aadhaar, PAN card, voter ID or driving licence, class 10 and 12 marksheets, and a graduation certificate (a diploma is optional).",
+	"home.part.documents.body": "Aadhaar, PAN, voter ID or driving licence, marksheets, and graduation certificate.",
 	"home.part.review.title": "Review and submit",
 	"home.part.review.body": "Check your details and submit. Two people in our team review it.",
 	"home.ready": "Keep these ready",

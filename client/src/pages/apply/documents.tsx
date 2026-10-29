@@ -77,7 +77,7 @@ function DocumentsPage() {
 		<ApplyShell title="Your documents" subtitle="Photos or scans. Every detail must be readable." progress={snapshot}>
 			<TaskSection id="identity-documents" title="Identity documents" state={open(kycState, educationState)} summary="Aadhaar, PAN card and your ID uploaded" canChange={canChange(snapshot, "KYC_DOCUMENTS")}>
 				<SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-					{slot("AADHAAR_FRONT", "Aadhaar: front", "The whole card, unmasked. Stored encrypted; only our review team can open it.")}
+					{slot("AADHAAR_FRONT", "Aadhaar: front")}
 					{slot("AADHAAR_BACK", "Aadhaar: back")}
 				</SimpleGrid>
 				{slot("PAN_CARD", "PAN card")}
@@ -94,9 +94,9 @@ function DocumentsPage() {
 				</SimpleGrid>
 				<SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
 					{slot("GRADUATION_CERTIFICATE", "Graduation certificate")}
-					{slot("DIPLOMA_CERTIFICATE", "Diploma certificate", "If you have one.", { required: false })}
+					{slot("DIPLOMA_CERTIFICATE", "Diploma certificate", undefined, { required: false })}
 				</SimpleGrid>
-				{slot("COMPUTER_CERTIFICATE", "Computer certificates", "Up to 5, if you have any.", { required: false, allowMany: true })}
+				{slot("COMPUTER_CERTIFICATE", "Computer certificates", "Up to 5", { required: false, allowMany: true })}
 			</TaskSection>
 
 			<ErrorBanner message={error} />
