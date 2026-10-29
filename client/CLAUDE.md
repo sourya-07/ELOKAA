@@ -45,6 +45,11 @@ src/components/       ApplyShell/Section (milestone progress, "My application", 
                       from GET /v1/partner/document-rules via useDocuments().ruleFor, PHOTO/PAPER are the fallback copy), CameraCapture (named camera errors, mirrored 4:5 view with a face
                       guide, ≤1600 px, checked phone-camera fallback), StatusPill and StatusIcon (every status is a mark and words,
                       never colour alone), ErrorBanner
+src/i18n/             locales.ts (the seven languages in the owner's order, named in their own script), en-GB.ts (the source
+                      catalog), catalogs.ts (a language is usable only when 100 % of keys are there and a person reviewed it;
+                      today only English (UK)), I18nProvider (useI18n().t, cookie eloka_lang, <html lang/dir>); moved so far:
+                      ApplyShell, the start page, the status page (the other pages, form messages and lib/errors.ts are next)
+src/components/LanguageSelector.tsx  always the seven; ones without a reviewed translation are listed as "not available yet"
 src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no font requests to third parties
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
 src/styles/motion.ts  the only motion: easing curves, enter/stagger, delayed loading, reduced-motion helpers
@@ -71,6 +76,9 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
 - No `console.log` (lint error): personal data must never reach the browser console.
 - No tokens or personal data in `localStorage`/`sessionStorage`; the session lives in an HttpOnly cookie (ADR-0003).
 - No analytics or third-party scripts on onboarding pages.
+- Applicant-facing text goes through `useI18n().t` with a key in `src/i18n/en-GB.ts` on pages already moved (a test
+  fails on hard-coded text there). Never add a language without a person's reviewed translation of every key; Urdu
+  also needs a right-to-left layout check, and each script its own self-hosted font (the CSP allows only 'self').
 - Motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
   (the success tick is the one exception), and a fade-only version under `prefers-reduced-motion`. What
   moves: journey pages enter in order, a finished part of the progress line fills in, task panels open and fold

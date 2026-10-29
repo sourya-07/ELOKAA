@@ -7,26 +7,14 @@ import { SuccessMark } from "@/components/SuccessMark";
 import { useApplication } from "@/features/apply/ApplicationContext";
 import { WithdrawPanel } from "@/features/apply/WithdrawPanel";
 import { withApplication } from "@/features/apply/withApplication";
+import { useI18n } from "@/i18n/I18nProvider";
 import { PAGES, routeFor } from "@/lib/steps";
-import type { ApplicationStatus } from "@/lib/types";
-
-const TEXT: Record<ApplicationStatus, { title: string; body: string }> = {
-	IN_PROGRESS: { title: "Your application is in progress", body: "Continue where you left off." },
-	SUBMITTED: { title: "Application submitted", body: "Our team will check your details and documents. Check this page for updates." },
-	UNDER_REVIEW: { title: "We are checking your application", body: "Our team is looking at your details and documents." },
-	ON_HOLD: { title: "We are checking your application", body: "Our team needs a little more time. Check this page for updates." },
-	CORRECTION_REQUIRED: { title: "Some changes are needed", body: "Our team has asked you to change the steps below." },
-	APPROVED: { title: "You are an ELOKA partner", body: "Your application is approved. Our team will contact you about the next steps." },
-	REJECTED: { title: "Your application was not approved", body: "Our team could not approve your application. You can contact support for details." },
-	INELIGIBLE: { title: "You are not eligible right now", body: "Your credit check did not meet our requirement, so we cannot go on with this application." },
-	WITHDRAWN: { title: "Application withdrawn", body: "You withdrew this application." },
-	EXPIRED: { title: "Application expired", body: "This application expired because it was not finished in time. You can start a new one." },
-};
 
 function StatusPage() {
 	const { snapshot } = useApplication();
 	const router = useRouter();
-	const text = TEXT[snapshot.status];
+	const { t } = useI18n();
+	const text = { title: t(`status.${snapshot.status}.title`), body: t(`status.${snapshot.status}.body`) };
 	const reopened = snapshot.steps.filter((s) => s.status === "REOPENED" && s.reviewer_message);
 	const stepTitle = (key: string) => PAGES.find((p) => p.step === key)?.title ?? key.toLowerCase().replace(/_/g, " ");
 	const date = (value: string | null) =>
@@ -44,7 +32,7 @@ function StatusPage() {
 				<Flex justify="space-between" align="flex-start" gap={3} wrap="wrap">
 					<Stack spacing={0} minW={0}>
 						<Text color="text.muted" fontSize="sm">
-							Application number
+							{t("status.number")}
 						</Text>
 						{/* A long id must wrap on a phone, not widen the page */}
 						<Text fontFamily="mono" fontSize="sm" overflowWrap="anywhere" translate="no">
@@ -58,7 +46,7 @@ function StatusPage() {
 						{snapshot.contact?.mobile_masked && (
 							<Box>
 								<Text as="dt" display="inline" color="text.muted">
-									Mobile:{" "}
+									{t("status.mobile")}{" "}
 								</Text>
 								<Text as="dd" display="inline" fontFamily="mono" translate="no">
 									+91 {snapshot.contact.mobile_masked}
@@ -68,7 +56,7 @@ function StatusPage() {
 						{snapshot.contact?.email_masked && (
 							<Box>
 								<Text as="dt" display="inline" color="text.muted">
-									Email:{" "}
+									{t("status.email")}{" "}
 								</Text>
 								<Text as="dd" display="inline" fontFamily="mono" translate="no">
 									{snapshot.contact.email_masked}
@@ -77,8 +65,8 @@ function StatusPage() {
 						)}
 					</Stack>
 				)}
-				{submitted && <Text color="text.muted">Submitted on {submitted}</Text>}
-				{correctionDue && <Text>Please make the changes by {correctionDue}, or the application will expire.</Text>}
+				{submitted && <Text color="text.muted">{t("status.submittedOn", { date: submitted })}</Text>}
+				{correctionDue && <Text>{t("status.correctionDue", { date: correctionDue })}</Text>}
 				{reopened.map((step) => (
 					<Stack key={step.step_key} spacing={1}>
 						<Text fontWeight={600}>{stepTitle(step.step_key)}</Text>
@@ -87,21 +75,21 @@ function StatusPage() {
 				))}
 			</Section>
 			{["SUBMITTED", "UNDER_REVIEW", "ON_HOLD"].includes(snapshot.status) && (
-				<Section label="What happens next">
+				<Section label={t("status.next")}>
 					<Stack as="ol" spacing={2} pl={5} sx={{ listStyleType: "decimal" }}>
-						<Text as="li">A reviewer checks your details and documents.</Text>
-						<Text as="li">A second person in our team approves it (two people always look at an application).</Text>
-						<Text as="li">The outcome shows on this page. If something needs a change, you will see it here too.</Text>
+						<Text as="li">{t("status.next.reviewer")}</Text>
+						<Text as="li">{t("status.next.approver")}</Text>
+						<Text as="li">{t("status.next.outcome")}</Text>
 					</Stack>
 				</Section>
 			)}
 			{["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status) && (
-				<Button onClick={() => router.push(routeFor(snapshot))}>Continue</Button>
+				<Button onClick={() => router.push(routeFor(snapshot))}>{t("status.continue")}</Button>
 			)}
 			{snapshot.available_actions.includes("WITHDRAW") && <WithdrawPanel />}
 			{snapshot.status === "EXPIRED" && (
 				<Button as={NextLink} href="/apply/continue">
-					Start a new application
+					{t("status.startNew")}
 				</Button>
 			)}
 		</ApplyShell>

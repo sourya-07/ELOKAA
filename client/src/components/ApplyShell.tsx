@@ -3,7 +3,9 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { type ReactNode, useEffect, useRef } from "react";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { useApplicationSession } from "@/features/apply/ApplicationContext";
+import { useI18n } from "@/i18n/I18nProvider";
 import { call } from "@/lib/api";
 import { milestonesOf, type MilestoneState } from "@/lib/milestones";
 import type { Snapshot } from "@/lib/types";
@@ -26,6 +28,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 	const heading = useRef<HTMLHeadingElement>(null);
 	const reveal = useRevealOnScroll<HTMLDivElement>();
 	const router = useRouter();
+	const { t } = useI18n();
 	// Came here from "Fix" or "Change" on the review page: one click back
 	const backToReview = router?.query?.return === "review" && router.pathname !== "/apply/review";
 	useEffect(() => {
@@ -38,7 +41,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 	return (
 		<>
 			<Head>
-				<title>{`${title} · ELOKA partner`}</title>
+				<title>{`${title} · ${t("shell.titleSuffix")}`}</title>
 			</Head>
 			<Box
 				as="a"
@@ -54,7 +57,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 				transform="translateY(-200%)"
 				_focusVisible={{ transform: "none" }}
 			>
-				Skip to the form
+				{t("shell.skip")}
 			</Box>
 			<Box as="header" borderBottom="1px solid" borderColor="border.hairline" bg="bg.surface">
 				<Container maxW="720px" py={4}>
@@ -63,10 +66,11 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 							ELOKA
 						</Text>
 						<HStack spacing={4}>
+							<LanguageSelector />
 							{/* Journey steps only: the status page shows the application and lets the applicant withdraw */}
 							{progress && (
 								<Text as={NextLink} href="/apply/status" fontSize="sm" color="text.link">
-									My application
+									{t("shell.myApplication")}
 								</Text>
 							)}
 							{signedIn && <SignOut />}
@@ -81,7 +85,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 					{progress && <Milestones states={milestonesOf(progress)} />}
 					{backToReview && (
 						<Text as={NextLink} href="/apply/review" fontSize="sm" color="text.link" alignSelf="flex-start">
-							← Back to review
+							{t("shell.backToReview")}
 						</Text>
 					)}
 					{/* Its own box: the page's entrance moves the box, the mark animates inside it */}
@@ -103,6 +107,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 function SignOut() {
 	const router = useRouter();
 	const { signOut } = useApplicationSession();
+	const { t } = useI18n();
 	return (
 		<Button
 			variant="link"
@@ -115,7 +120,7 @@ function SignOut() {
 				await router.replace("/apply");
 			}}
 		>
-			Sign out
+			{t("shell.signOut")}
 		</Button>
 	);
 }
