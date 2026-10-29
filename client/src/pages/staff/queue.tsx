@@ -50,7 +50,7 @@ export default function QueuePage() {
 										<Tr key={item.application_id}>
 											<Td>
 												<Link as={NextLink} href={`/staff/cases/${item.application_id}`} color="text.link" fontFamily="mono">
-													{item.application_id}
+													{item.application_number ?? item.application_id}
 												</Link>
 											</Td>
 											<Td>

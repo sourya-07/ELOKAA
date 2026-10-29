@@ -50,6 +50,8 @@ export interface Step {
 
 export interface Snapshot {
 	application_id: string;
+	/** The 10-digit number people read and quote; the API and URLs use application_id. */
+	application_number: string | null;
 	status: ApplicationStatus;
 	version: number;
 	method: "DIGILOCKER" | "MANUAL" | null;

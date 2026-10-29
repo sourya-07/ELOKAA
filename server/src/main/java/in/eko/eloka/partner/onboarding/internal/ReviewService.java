@@ -55,7 +55,8 @@ class ReviewService {
 			PartnerStep.EDUCATION);
 	private static final Duration DEFAULT_CORRECTION_WINDOW = Duration.ofDays(14);
 
-	record QueueItem(@JsonProperty("application_id") String applicationId, String status, String method,
+	record QueueItem(@JsonProperty("application_id") String applicationId,
+			@JsonProperty("application_number") String applicationNumber, String status, String method,
 			@JsonProperty("submitted_at") Instant submittedAt, @JsonProperty("assigned_to") String assignedTo,
 			@JsonProperty("waiting_items") int waitingItems) {
 	}
@@ -139,7 +140,7 @@ class ReviewService {
 						: EnumSet.of(parse(ApplicationStatus.class, status, "status")), paging);
 		return found
 			.stream()
-			.map(a -> new QueueItem(a.getPublicId(), a.getStatus().name(), a.getMethod() == null ? null : a.getMethod().name(),
+			.map(a -> new QueueItem(a.getPublicId(), ApplicationService.number(a), a.getStatus().name(), a.getMethod() == null ? null : a.getMethod().name(),
 					a.getSubmittedAt(), staffName(a.getAssignedStaffId()), blockers(a).size()))
 			.toList();
 	}

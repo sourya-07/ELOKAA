@@ -381,10 +381,15 @@ class ApplicationService {
 		if (stateMachine.allows(application, LifecycleEvent.WITHDRAW)) {
 			actions.add("WITHDRAW");
 		}
-		return new ApplicationSnapshot(application.getPublicId(), application.getStatus().name(),
+		return new ApplicationSnapshot(application.getPublicId(), number(application), application.getStatus().name(),
 				application.getVersion(), application.getMethod() == null ? null : application.getMethod().name(), next,
 				application.getExpiresAt(), application.getSubmittedAt(), rows.stream().map(this::stepView).toList(),
 				actions, DocumentRequirements.status(have), blockers);
+	}
+
+	/** As text: the client shows it and never does arithmetic on it. */
+	static String number(PartnerApplication application) {
+		return application.getApplicationNumber() == null ? null : application.getApplicationNumber().toString();
 	}
 
 	private static String blockerCode(ApplicationStep step) {

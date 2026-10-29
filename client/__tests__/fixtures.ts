@@ -7,6 +7,7 @@ export function snapshotAt(next: StepKey | null, overrides: Partial<Snapshot> = 
 	const nextIndex = next ? KEYS.indexOf(next) : KEYS.length;
 	return {
 		application_id: "ptn_TEST",
+		application_number: "1000000042",
 		status: "IN_PROGRESS",
 		version: 3,
 		method: "DIGILOCKER",

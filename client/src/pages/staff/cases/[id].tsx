@@ -83,6 +83,11 @@ export default function CasePage() {
 					<Stack spacing={6}>
 						<Flex gap={3} align="center" wrap="wrap">
 							<StatusPill status={status} />
+							{view.application.application_number && (
+								<Text fontFamily="mono" translate="no">
+									No. {view.application.application_number}
+								</Text>
+							)}
 							<Text color="text.muted">{view.application.method === "DIGILOCKER" ? "DigiLocker" : "Step by step"}</Text>
 							<Text color="text.muted">Credit check: {view.eligibility.toLowerCase().replace(/_/g, " ")}</Text>
 							<Text color="text.muted">Reviewer: {view.assigned_to ?? "nobody"}</Text>

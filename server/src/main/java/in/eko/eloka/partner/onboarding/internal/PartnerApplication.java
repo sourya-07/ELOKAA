@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Generated;
 
 /**
  * One partner application. Status changes only through {@link ApplicationStateMachine}; this
@@ -23,6 +24,11 @@ class PartnerApplication extends BaseEntity {
 
 	@Column(name = "public_id", nullable = false, unique = true, length = 32)
 	private String publicId;
+
+	/** The 10-digit number people read and quote; given by the database on insert (V18), never changed. */
+	@Generated
+	@Column(name = "application_number", insertable = false, updatable = false)
+	private Long applicationNumber;
 
 	@Column(name = "applicant_id", nullable = false, columnDefinition = "BINARY(16)")
 	private UUID applicantId;
@@ -159,6 +165,10 @@ class PartnerApplication extends BaseEntity {
 
 	boolean isCorrectionOverdue(Instant now) {
 		return status == ApplicationStatus.CORRECTION_REQUIRED && correctionDueAt != null && correctionDueAt.isBefore(now);
+	}
+
+	Long getApplicationNumber() {
+		return applicationNumber;
 	}
 
 	String getPublicId() {

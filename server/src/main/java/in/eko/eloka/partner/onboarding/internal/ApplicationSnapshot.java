@@ -9,8 +9,11 @@ import tools.jackson.databind.JsonNode;
 /**
  * What the applicant sees after every call. The client renders from this and never infers
  * progress on its own; {@code next_step} is the server's answer to "where do I continue?".
+ * {@code application_id} identifies the application in the API; {@code application_number} is the
+ * 10-digit number people read and quote (display only, never accepted as a lookup).
  */
-record ApplicationSnapshot(@JsonProperty("application_id") String applicationId, String status, long version,
+record ApplicationSnapshot(@JsonProperty("application_id") String applicationId,
+		@JsonProperty("application_number") String applicationNumber, String status, long version,
 		String method, @JsonProperty("next_step") String nextStep, @JsonProperty("expires_at") Instant expiresAt,
 		@JsonProperty("submitted_at") Instant submittedAt, List<Step> steps,
 		@JsonProperty("available_actions") List<String> availableActions,

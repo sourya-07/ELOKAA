@@ -40,7 +40,7 @@ current snapshot when stale). Another applicant's id answers `404 APPLICATION_NO
 | `POST /v1/partner/applications/{id}/withdraw` | `{"otp","reason_code"?}` (+ `Idempotency-Key`; code from `POST /v1/partner/reauth`; `reason_code` one of `CHANGED_MIND`, `TAKES_TOO_LONG`, `WILL_APPLY_LATER`, `OTHER`, anything else is stored as `NONE`) | `200` status `WITHDRAWN` (from `IN_PROGRESS`, `SUBMITTED`, `CORRECTION_REQUIRED`); a repeat with the same key replays it without checking the used code again | `412`, `404` and `409 INVALID_STATE_TRANSITION` are checked first, so they do not use up the code; then `410 OTP_EXPIRED` (no live code), `422 OTP_INVALID` (+`attempts_left`), `429 OTP_LOCKED`; `400 IDEMPOTENCY_KEY_REQUIRED` |
 
 Any write on a submitted or closed application: `409 APPLICATION_NOT_EDITABLE`. Snapshot fields:
-`application_id`, `status`, `version`, `method`, `next_step` (server's answer to "where do I continue",
+`application_id` (the id in the API and URLs), `application_number` (10 digits, from 1000000001, unique, given by the database at start; for people to read and quote, never accepted as a lookup), `status`, `version`, `method`, `next_step` (server's answer to "where do I continue",
 null when nothing is editable), `expires_at`, `submitted_at`, `steps[]` (`step_key`, `status`,
 `attempt_count`, `max_attempts`, `last_error_code`, `summary` with masked values, `reopen_reason_code`,
 `reviewer_message`), `available_actions`, `requirements[]` (the file checklist: `group`, `step_key`, `rule`
@@ -87,7 +87,7 @@ reveal hidden values). Roles are read from the account on every request. Applica
 | `POST /v1/admin/auth/google` | `{"id_token"}` | only verified accounts of `eloka.staff.google-domain` with a staff account; others `403 NOT_STAFF` |
 | `POST /v1/admin/auth/otp`, `/auth/otp/verify` | `{"mobile"}`, `{"mobile","otp"}` | local/test only (`404` elsewhere); unknown mobiles get no SMS and can never pass |
 | `POST /v1/admin/auth/refresh`, `DELETE /v1/admin/auth/session`, `GET /v1/admin/me` | | `me` returns roles and masked email |
-| `GET /v1/admin/applications?status=&page=&size=` | | queue (submitted, under review, on hold), oldest first; `status=BLOCKED`: applications still with the applicant that have a blocked step |
+| `GET /v1/admin/applications?status=&page=&size=` | | queue (submitted, under review, on hold), oldest first, each with `application_id` and `application_number`; `status=BLOCKED`: applications still with the applicant that have a blocked step |
 | `POST /v1/admin/applications/{id}/steps/{step}/unblock` | `{"reason_code","note"?}` | gives a blocked step its tries back (failures before it stop counting); only while the application is with the applicant; `CREDIT_CHECK` needs an approver (a new bureau enquiry); the applicant's version changes; audited `REVIEW_UNBLOCK`. Errors: `409 STEP_NOT_BLOCKED`, `409 INVALID_STATE_TRANSITION`, `403`, `422` without a reason |
 | `GET /v1/admin/applications/{id}` | | case view: snapshot, evidence (masked), address (state, pincode, source, status), ID numbers (masked), eligibility outcome, review history, `approval_blockers`, `photo_location` (latitude, longitude, `accuracy_m`, `captured_at`, `flags` of the live photo), `correctable_steps` |
 | `POST …/{id}/claim`, `…/release` | | reviewer; release by the claimer only |

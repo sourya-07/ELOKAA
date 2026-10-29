@@ -10,6 +10,7 @@ export interface StaffView {
 
 export interface QueueItem {
 	application_id: string;
+	application_number: string | null;
 	status: string;
 	method: string | null;
 	submitted_at: string | null;

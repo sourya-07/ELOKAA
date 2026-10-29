@@ -48,7 +48,7 @@ function StatusPage() {
 						</Text>
 						{/* A long id must wrap on a phone, not widen the page */}
 						<Text fontFamily="mono" fontSize="sm" overflowWrap="anywhere" translate="no">
-							{snapshot.application_id}
+							{snapshot.application_number ?? snapshot.application_id}
 						</Text>
 					</Stack>
 					<StatusPill status={snapshot.status === "CORRECTION_REQUIRED" ? "REOPENED" : snapshot.status} />

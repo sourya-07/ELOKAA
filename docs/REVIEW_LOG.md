@@ -84,3 +84,4 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-28 | Journey motion (`--uncommitted --dir client`) | major | `client/src/styles/motion.ts` | the reveal line was 8% of the window above the bottom, so on a tall screen the last button of a page could never reach it and stayed hidden | fixed: a fixed 40 px line (every page ends with more bottom padding than that) |
 | 2026-10-29 | Scroll reveal replays on every scroll down (`--uncommitted --dir client`) | — | `client/src/styles/motion.ts` | no findings | — |
 | 2026-10-29 | P1 server safety fixes (capture time required, no orphan files, log masking) | minor | `shared/logging/PiiMasker.java` | a lowercase voter ID number was not masked | fixed: the EPIC rule ignores case; test for both cases |
+| 2026-10-29 | P2 application number (V18) | — | — | no findings | — |
