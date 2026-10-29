@@ -29,14 +29,15 @@ src/main/java/in/eko/eloka/partner/
 │             (EPS adapters in EpsIdDocumentVerifiers)
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
               (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session,
-              /reauth (step-up code before withdrawing, `ApplicantReauth`), email codes (`EmailVerification`: our own
+              /reauth (step-up code before withdrawing, `ApplicantReauth`), `ApplicantDirectory` (masked mobile only), email codes (`EmailVerification`: our own
               code, keyed hash only, mobile-OTP limits per address/application/IP; fixed code via
               `eloka.identity.email-fixed-code` in local/test only)
 ├── onboarding/ partner applications: PartnerStep (prerequisites, invalidation), StepStatus, ApplicationStatus;
 │             internal: ApplicationStateMachine (the only status changer), ApplicationService.write (row lock +
 │             If-Match + editable check), StepContext (complete with a fingerprint: same data = no reset of
 │             later steps), DocumentRequirements (the one file checklist: photos, KYC documents, education), LocationRules + PhotoLocation (live-photo location, encrypted), consent records (versions per
-│             purpose), Idempotency, ExpiryJob,
+│             purpose), Idempotency, ExpiryJob, ClosedApplications (a closed application ends its DigiLocker
+│             trips; nothing is deleted), DocumentRulesController (GET /v1/partner/document-rules),
 │             /v1/partner/applications
 ├── documents/  DocumentApi: per-kind rules (DocumentKind), type by bytes, JPEG re-encode turned upright first (ImageSanitizer, ExifOrientation), PDF
 │             malware scan, AES-GCM encrypted storage behind DocumentStorage (filesystem now)
@@ -68,4 +69,6 @@ src/test/resources/application-test.yaml
 - **Environments:** `ELOKA_ENVIRONMENT` is `local`, `test`, `staging` or `production`. `ProductionSafetyGuard` refuses to start staging or production while any `UnsafeInProduction` bean (fake provider, fixed OTP) or failed `SafetyCheck` (published development key) is present.
 - **Audit:** every business decision calls `AuditLog.record` inside the same transaction. `details` holds ids and codes only.
 - **Logs:** never log request bodies; `PiiMasker` is the last line of defence, not the first.
+- **Error codes:** a new `code` goes into docs/ERROR_CATALOG.md and `client/src/lib/errors.ts` in the same commit
+  (`ErrorCatalogTest` and the client's `errors.test.ts` fail otherwise).
 - **Providers:** add a port in `integration/`, an adapter + fake + stub in `integration/internal/`, and one `switch` arm in `ProviderConfig`. A provider failure is `ProviderUnavailableException` (503), a missing provider `ProviderNotConfiguredException` (409); neither may ever count as a pass.
