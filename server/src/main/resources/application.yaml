@@ -78,6 +78,8 @@ eloka:
     credit-bureau: none     # no bureau contracted yet (docs/OPEN_QUESTIONS.md Q-1)
     malware-scanner: none   # PDFs are refused until a scanner is configured
     email-provider: none    # email codes; smtp uses spring.mail.* (EPS has no email OTP)
+    geocoder:               # live photo's approximate address (docs/OPEN_QUESTIONS.md C-11); never blocks an upload
+      provider: none        # none | fake | nominatim (OpenStreetMap's free public service, 1 lookup per second)
   # Voter ID / driving licence holder vs the DigiLocker name (EPS Name Match, 0..1; 0.85+ is a good match, Q-23)
   verification:
     name-match-min-score: 0.85

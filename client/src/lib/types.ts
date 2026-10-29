@@ -92,7 +92,7 @@ export interface DocumentView {
 	reject_reason?: string;
 	uploaded_at: string;
 	/** Live photo only: the location the applicant's browser reported with it (their own file only) */
-	location?: { latitude: number; longitude: number; accuracy_m: number; captured_at: string; flags: string };
+	location?: { latitude: number; longitude: number; accuracy_m: number; captured_at: string; flags: string; approximate_address?: string | null };
 }
 
 export const SATISFIED: StepStatus[] = ["COMPLETED", "LOCKED", "NOT_APPLICABLE"];

@@ -255,7 +255,9 @@ class JourneyIntegrationTest {
 			// the applicant sees the coordinates their browser reported, back from the encrypted row
 			.andExpect(jsonPath("$.location.latitude").value(51.5))
 			.andExpect(jsonPath("$.location.longitude").value(-0.12))
-			.andExpect(jsonPath("$.location.captured_at").exists());
+			.andExpect(jsonPath("$.location.captured_at").exists())
+			// the approximate address from the coordinates (the test lookup says it is made up)
+			.andExpect(jsonPath("$.location.approximate_address").value("Test address near 51.5000, -0.1200 (no real lookup)"));
 		call(get(app("/documents"))).andExpect(status().isOk())
 			.andExpect(jsonPath("$[?(@.kind=='LIVE_PHOTO')].location.latitude").value(51.5));
 		// never in the snapshot (step summaries are stored as plain JSON)

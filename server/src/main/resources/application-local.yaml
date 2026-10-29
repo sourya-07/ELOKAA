@@ -33,3 +33,5 @@ eloka:
     credit-bureau: fake
     malware-scanner: fake
     email-provider: fake # no email is sent; the email code is the fixed one below
+    geocoder:
+      provider: nominatim # the free OpenStreetMap lookup, so the address shows locally too

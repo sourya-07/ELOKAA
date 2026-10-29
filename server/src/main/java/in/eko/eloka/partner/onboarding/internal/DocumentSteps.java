@@ -15,6 +15,7 @@ import in.eko.eloka.partner.documents.DocumentContent;
 import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.documents.DocumentRef;
 import in.eko.eloka.partner.documents.NewDocument;
+import in.eko.eloka.partner.integration.ReverseGeocoder;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.shared.crypto.FieldCipher;
 import in.eko.eloka.partner.shared.error.ApiProblem;
@@ -51,7 +52,8 @@ class DocumentSteps {
 	 * where the device said it was, not a checked address.
 	 */
 	record Location(double latitude, double longitude, @JsonProperty("accuracy_m") long accuracyM,
-			@JsonProperty("captured_at") Instant capturedAt, String flags) {
+			@JsonProperty("captured_at") Instant capturedAt, String flags,
+			@JsonProperty("approximate_address") String approximateAddress) {
 	}
 
 	private final ApplicationService applications;
@@ -63,10 +65,12 @@ class DocumentSteps {
 	private final FieldCipher cipher;
 	private final AuditLog audit;
 	private final JsonMapper json;
+	private final ReverseGeocoder geocoder;
 
 	DocumentSteps(ApplicationService applications, ApplicationDocumentRepository links, DocumentApi documents,
 			VerificationApi verification, LocationRules locationRules, PhotoLocationRepository locations, FieldCipher cipher,
-			AuditLog audit, JsonMapper json) {
+			AuditLog audit, JsonMapper json, ReverseGeocoder geocoder) {
+		this.geocoder = geocoder;
 		this.applications = applications;
 		this.links = links;
 		this.documents = documents;
@@ -113,14 +117,18 @@ class DocumentSteps {
 			if (found == null) {
 				return view;
 			}
+			// After the photo is accepted: an approximate address from the coordinates (never required; a slow
+			// or failed lookup leaves it empty)
+			String address = geocoder.addressOf(found.latitude(), found.longitude()).orElse(null);
 			locations.save(new PhotoLocation(context.applicationId(), UUID.fromString(view.documentId()),
 					cipher.encrypt(Double.toString(found.latitude())), cipher.encrypt(Double.toString(found.longitude())),
-					found.accuracyM(), found.capturedAt(), context.now(), found.flags()));
+					found.accuracyM(), found.capturedAt(), context.now(), found.flags())
+				.address(address == null ? null : cipher.encrypt(address)));
 			audit.record(new AuditEntry("LOCATION_RECORDED", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
 					publicId, Map.of("flags", found.flags().isEmpty() ? "NONE" : found.flags())));
 			return new DocumentView(view.documentId(), view.kind(), view.status(), view.fileName(), view.contentType(),
 					view.size(), view.rejectReason(), view.uploadedAt(), new Location(found.latitude(), found.longitude(),
-							Math.round(found.accuracyM()), found.capturedAt(), found.flags()));
+							Math.round(found.accuracyM()), found.capturedAt(), found.flags(), address));
 		});
 	}
 
@@ -297,7 +305,7 @@ class DocumentSteps {
 				: locations.findByDocumentId(link.getDocumentId())
 					.map(l -> new Location(Double.parseDouble(cipher.decrypt(l.getLatitudeEnc())),
 							Double.parseDouble(cipher.decrypt(l.getLongitudeEnc())), Math.round(l.getAccuracyM()), l.getCapturedAt(),
-							l.getFlags()))
+							l.getFlags(), l.getAddressEnc() == null ? null : cipher.decrypt(l.getAddressEnc())))
 					.orElse(null);
 		return new DocumentView(link.getDocumentId().toString(), link.getKind().name(), link.getStatus().name(),
 				ref.fileName(), ref.contentType(), ref.size(), link.getRejectReason(), ref.uploadedAt(), location);

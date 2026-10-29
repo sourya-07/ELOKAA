@@ -23,6 +23,8 @@ eloka:
     credit-bureau: fake
     malware-scanner: fake
     email-provider: fake # no email is sent; the email code is the fixed one below
+    geocoder:
+      provider: fake # an address that says it is made up; no network in tests
   documents:
     storage-path: build/test-files
   identity:

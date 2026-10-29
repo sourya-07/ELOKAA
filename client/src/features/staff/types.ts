@@ -43,5 +43,5 @@ export interface CaseView {
 	/** Steps a reviewer may send back (the server's list) */
 	correctable_steps: string[];
 	/** Where the live photo was taken: the browser's word, not proof */
-	photo_location: { latitude: number; longitude: number; accuracy_m: number; captured_at: string; flags: string } | null;
+	photo_location: { latitude: number; longitude: number; accuracy_m: number; captured_at: string; flags: string; approximate_address?: string | null } | null;
 }

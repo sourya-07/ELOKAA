@@ -54,6 +54,9 @@ eloka:
     malware-scanner: ${ELOKA_MALWARE_SCANNER:none}
     email-provider: ${ELOKA_EMAIL_PROVIDER:none} # smtp needs spring.mail.* (docs/OPEN_QUESTIONS.md Q-21)
     email-from: ${ELOKA_EMAIL_FROM:}
+    geocoder:
+      provider: ${ELOKA_GEOCODER:nominatim} # the free OpenStreetMap lookup (owner's choice, C-11); none turns it off
+      email: ${ELOKA_GEOCODER_EMAIL:} # a contact address OpenStreetMap asks for
     clamav:
       host: ${ELOKA_CLAMAV_HOST:}
       port: ${ELOKA_CLAMAV_PORT:3310}

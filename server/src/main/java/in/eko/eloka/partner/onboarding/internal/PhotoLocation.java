@@ -29,6 +29,10 @@ class PhotoLocation extends BaseEntity {
 	@Column(name = "longitude_enc", nullable = false, columnDefinition = "VARBINARY(64)")
 	private byte[] longitudeEnc;
 
+	/** The approximate address looked up from the coordinates (encrypted); null without a lookup. Not a checked address. */
+	@Column(name = "address_enc", columnDefinition = "VARBINARY(1024)")
+	private byte[] addressEnc;
+
 	@Column(name = "accuracy_m", nullable = false)
 	private double accuracyM;
 
@@ -75,6 +79,15 @@ class PhotoLocation extends BaseEntity {
 
 	Instant getCapturedAt() {
 		return capturedAt;
+	}
+
+	PhotoLocation address(byte[] encrypted) {
+		this.addressEnc = encrypted;
+		return this;
+	}
+
+	byte[] getAddressEnc() {
+		return addressEnc;
 	}
 
 	String getFlags() {

@@ -15,6 +15,7 @@ import in.eko.eloka.partner.integration.GoogleIdentityVerifier;
 import in.eko.eloka.partner.integration.MalwareScanner;
 import in.eko.eloka.partner.integration.MobileOtpGateway;
 import in.eko.eloka.partner.integration.PanVerifier;
+import in.eko.eloka.partner.integration.ReverseGeocoder;
 import org.springframework.mail.javamail.JavaMailSender;
 
 /**
@@ -110,6 +111,16 @@ class ProviderConfig {
 				yield new SmtpEmailSender(mail.getObject(), properties.emailFrom());
 			}
 			case NONE -> new UnconfiguredEmailSender();
+		};
+	}
+
+	/** The live photo's approximate address; optional, never blocks an upload (docs/OPEN_QUESTIONS.md C-11). */
+	@Bean
+	ReverseGeocoder reverseGeocoder(GeocoderProperties properties) {
+		return switch (properties.provider()) {
+			case FAKE -> new FakeReverseGeocoder();
+			case NOMINATIM -> new NominatimGeocoder(properties);
+			case NONE -> new UnconfiguredReverseGeocoder();
 		};
 	}
 

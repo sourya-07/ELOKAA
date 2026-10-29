@@ -101,9 +101,10 @@ function PhotosPage() {
 									<Text fontFamily="mono" fontSize="sm" translate="no">
 										Latitude {file.location.latitude.toFixed(5)}, longitude {file.location.longitude.toFixed(5)}
 									</Text>
+									{file.location.approximate_address && <Text fontSize="sm">Approximate address: {file.location.approximate_address}</Text>}
 									<Text fontSize="sm" color="text.muted">
 										Reported by your browser at {new Date(file.location.captured_at).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}. It is where
-										your device said it was, not a checked address.
+										your device said it was, not a checked address{file.location.approximate_address ? " (the address is looked up from it on OpenStreetMap)" : ""}.
 									</Text>
 								</>
 							)}

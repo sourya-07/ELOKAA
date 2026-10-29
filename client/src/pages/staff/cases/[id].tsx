@@ -162,6 +162,9 @@ export default function CasePage() {
 												{view.photo_location.latitude.toFixed(5)}, {view.photo_location.longitude.toFixed(5)} · within about {view.photo_location.accuracy_m} m ·{" "}
 												{new Date(view.photo_location.captured_at).toLocaleString("en-IN")}
 											</Text>
+											{view.photo_location.approximate_address && (
+												<Text fontSize="sm">Approximate address (OpenStreetMap, not checked): {view.photo_location.approximate_address}</Text>
+											)}
 											{view.photo_location.flags && (
 												<Text fontSize="sm" color="status.warn.fg">
 													{view.photo_location.flags.split(",").map((f) => f.toLowerCase().replace(/_/g, " ")).join(", ")} (the browser&apos;s location: a sign, not proof)

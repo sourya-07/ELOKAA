@@ -46,12 +46,20 @@ describe("photos page", () => {
 				content_type: "image/jpeg",
 				size: 10,
 				uploaded_at: "",
-				location: { latitude: 19.0596, longitude: 72.8295, accuracy_m: 18, captured_at: "2026-10-29T05:12:00Z", flags: "" },
+				location: {
+					latitude: 19.0596,
+					longitude: 72.8295,
+					accuracy_m: 18,
+					captured_at: "2026-10-29T05:12:00Z",
+					flags: "",
+					approximate_address: "Bandra West, Mumbai, Maharashtra, 400050, India",
+				},
 			},
 		];
 		render(<PhotosPage />);
 		expect(screen.getByText("Latitude 19.05960, longitude 72.82950")).toBeInTheDocument();
 		expect(screen.getByText(/not a checked address/)).toBeInTheDocument();
+		expect(screen.getByText("Approximate address: Bandra West, Mumbai, Maharashtra, 400050, India")).toBeInTheDocument();
 		expect(screen.queryByDisplayValue(/19\.05/)).not.toBeInTheDocument();
 		documents = [];
 	});
