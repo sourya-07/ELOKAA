@@ -54,6 +54,9 @@ class JourneyIntegrationTest {
 	@Autowired
 	org.springframework.jdbc.core.JdbcTemplate jdbc;
 
+	@Autowired
+	in.eko.eloka.partner.documents.DocumentProperties storage;
+
 	private ApplicantClient client;
 	private String token;
 	private String id;
@@ -232,10 +235,15 @@ class JourneyIntegrationTest {
 		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO"))
 			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_REQUIRED"));
 		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
-			.param("latitude", "0").param("longitude", "0").param("accuracy_m", "10"))
+			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "10"))
+			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_REQUIRED"));
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.param("latitude", "0").param("longitude", "0").param("accuracy_m", "10")
+			.param("captured_at", java.time.Instant.now().toString()))
 			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_INVALID"));
 		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
-			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "5000"))
+			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "5000")
+			.param("captured_at", java.time.Instant.now().toString()))
 			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_TOO_INACCURATE"));
 		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
 			.param("latitude", "51.5").param("longitude", "-0.12").param("accuracy_m", "250")
@@ -298,8 +306,11 @@ class JourneyIntegrationTest {
 		uploadPhotosAndEducation();
 		byte[] front = jpeg(800, 500, null);
 		upload("AADHAAR_FRONT", "front.jpg", front).andExpect(status().isCreated());
+		long files = storedFiles();
 		upload("AADHAAR_BACK", "back.jpg", front).andExpect(status().isUnprocessableContent())
 			.andExpect(jsonPath("$.code").value("DUPLICATE_FILE"));
+		// the refused upload left no file behind (it was written before the duplicate check)
+		assertThat(storedFiles()).isEqualTo(files);
 		upload("AADHAAR_BACK", "back.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
 		upload("PAN_CARD", "pan.pdf", pdf("pan")).andExpect(status().isCreated());
 		upload("DRIVING_LICENCE_FRONT", "dl.jpg", jpeg(800, 500, null)).andExpect(status().isCreated());
@@ -519,5 +530,15 @@ class JourneyIntegrationTest {
 
 	private static byte[] pdf(String body) {
 		return ("%PDF-1.4\n1 0 obj << >> endobj\n" + body + "\n%" + UUID.randomUUID() + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
+	}
+
+	private long storedFiles() throws java.io.IOException {
+		java.nio.file.Path root = java.nio.file.Path.of(storage.storagePath());
+		if (!java.nio.file.Files.exists(root)) {
+			return 0;
+		}
+		try (var paths = java.nio.file.Files.walk(root)) {
+			return paths.filter(java.nio.file.Files::isRegularFile).count();
+		}
 	}
 }

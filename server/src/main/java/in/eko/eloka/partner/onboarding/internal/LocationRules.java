@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * The live photo's location: required, real numbers in range (never 0,0), an accuracy within
- * {@code max-accuracy-m}, and taken within a few minutes of the upload. A location less precise than
+ * {@code max-accuracy-m}, and a capture time within a few minutes of the upload. A location less precise than
  * {@code flag-accuracy-m}, or outside India, is kept but flagged for staff (docs/OPEN_QUESTIONS.md Q-24).
  */
 @Component
@@ -38,7 +38,9 @@ class LocationRules {
 	}
 
 	Checked check(Input input, Instant now) {
-		if (input == null || input.latitude() == null || input.longitude() == null || input.accuracyM() == null) {
+		// The capture time is required too: without it the "taken just now" check could not run
+		if (input == null || input.latitude() == null || input.longitude() == null || input.accuracyM() == null
+				|| input.capturedAt() == null) {
 			throw problem("LOCATION_REQUIRED", "The live photo needs your location. Allow location for this site and take the photo again.");
 		}
 		double lat = number(input.latitude());
@@ -53,7 +55,7 @@ class LocationRules {
 		}
 		Instant captured;
 		try {
-			captured = input.capturedAt() == null ? now : Instant.parse(input.capturedAt());
+			captured = Instant.parse(input.capturedAt());
 		}
 		catch (DateTimeParseException ex) {
 			throw problem("LOCATION_INVALID", "We could not read your location. Take the photo again.");

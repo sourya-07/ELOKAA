@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 interface StoredDocumentRepository extends JpaRepository<StoredDocument, UUID> {
 
@@ -89,6 +91,7 @@ class DocumentService implements DocumentApi {
 		}
 		String key = UUID.randomUUID().toString();
 		storage.put(key, cipher.encryptBytes(cleaned));
+		deleteIfRolledBack(key);
 		return documents.save(new StoredDocument(document.ownerId(), document.kind(), cleanName(document.fileName(), type),
 				type.contentType(), cleaned.length, width, height, sha256(cleaned), key)).toRef();
 	}
@@ -108,6 +111,27 @@ class DocumentService implements DocumentApi {
 	public DocumentContent loadForReview(UUID documentId) {
 		StoredDocument doc = documents.findById(documentId).orElseThrow(DocumentService::notFound);
 		return new DocumentContent(doc.toRef(), cipher.decryptBytes(storage.get(doc.getStorageKey())));
+	}
+
+	/**
+	 * The file is written before its row, so a later refusal in the same transaction (a duplicate file, a
+	 * failed location check, a failed commit) would leave it on disk with nothing pointing to it. The key is
+	 * new for every upload, so no committed row can point to a file deleted here.
+	 */
+	private void deleteIfRolledBack(String key) {
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+			@Override
+			public void afterCompletion(int status) {
+				if (status != STATUS_COMMITTED) {
+					try {
+						storage.delete(key);
+					}
+					catch (RuntimeException ex) {
+						log.warn("Could not remove the file of a rolled-back upload", ex);
+					}
+				}
+			}
+		});
 	}
 
 	/** Keeps a readable base name; the extension always matches the real type. */

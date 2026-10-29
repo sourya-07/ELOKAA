@@ -20,7 +20,11 @@ class PiiMaskerTest {
 			"{\"credit_score\":742} | {\"credit_score\":[REDACTED]}",
 			"{\"otp\":\"123456\"} | {\"otp\":\"[REDACTED]\"}",
 			"user_9876543210 | user_******3210",
-			"code 123456 stays | code 123456 stays" })
+			"code 123456 stays | code 123456 stays",
+			"epic ABC1234567 here | epic [EPIC] here",
+			"epic abc1234567 here | epic [EPIC] here",
+			"mail rahul.k+x@example.co.in sent | mail r***@example.co.in sent",
+			"to=a@b.com | to=a***@b.com" })
 	void masksPersonalData(String input, String expected) {
 		assertThat(PiiMasker.mask(input)).isEqualTo(expected);
 	}

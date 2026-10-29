@@ -22,20 +22,22 @@ class LocationRulesTest {
 
 	@Test
 	void doubtfulLocationsAreKeptButFlagged() {
-		assertThat(rules.check(new LocationRules.Input("28.61", "77.21", "100.5", null), NOW).flags()).isEqualTo("LOW_ACCURACY");
-		assertThat(rules.check(new LocationRules.Input("1.35", "103.82", "20", null), NOW).flags()).isEqualTo("OUTSIDE_INDIA");
+		assertThat(rules.check(new LocationRules.Input("28.61", "77.21", "100.5", NOW.toString()), NOW).flags()).isEqualTo("LOW_ACCURACY");
+		assertThat(rules.check(new LocationRules.Input("1.35", "103.82", "20", NOW.toString()), NOW).flags()).isEqualTo("OUTSIDE_INDIA");
 	}
 
 	@Test
 	void missingInventedRoughOrOldLocationsAreRefused() {
 		assertCode(null, "LOCATION_REQUIRED");
 		assertCode(new LocationRules.Input(null, "72.8", "10", null), "LOCATION_REQUIRED");
-		assertCode(new LocationRules.Input("0", "0", "10", null), "LOCATION_INVALID");
-		assertCode(new LocationRules.Input("91", "72.8", "10", null), "LOCATION_INVALID");
-		assertCode(new LocationRules.Input("NaN", "72.8", "10", null), "LOCATION_INVALID");
-		assertCode(new LocationRules.Input("19.0", "abc", "10", null), "LOCATION_INVALID");
-		assertCode(new LocationRules.Input("19.0", "72.8", "0", null), "LOCATION_INVALID");
-		assertCode(new LocationRules.Input("19.0", "72.8", "1500", null), "LOCATION_TOO_INACCURATE");
+		// without a capture time the "taken just now" check could not run
+		assertCode(new LocationRules.Input("19.0", "72.8", "10", null), "LOCATION_REQUIRED");
+		assertCode(new LocationRules.Input("0", "0", "10", NOW.toString()), "LOCATION_INVALID");
+		assertCode(new LocationRules.Input("91", "72.8", "10", NOW.toString()), "LOCATION_INVALID");
+		assertCode(new LocationRules.Input("NaN", "72.8", "10", NOW.toString()), "LOCATION_INVALID");
+		assertCode(new LocationRules.Input("19.0", "abc", "10", NOW.toString()), "LOCATION_INVALID");
+		assertCode(new LocationRules.Input("19.0", "72.8", "0", NOW.toString()), "LOCATION_INVALID");
+		assertCode(new LocationRules.Input("19.0", "72.8", "1500", NOW.toString()), "LOCATION_TOO_INACCURATE");
 		assertCode(new LocationRules.Input("19.0", "72.8", "10", NOW.minusSeconds(600).toString()), "LOCATION_STALE");
 		assertCode(new LocationRules.Input("19.0", "72.8", "10", "yesterday"), "LOCATION_INVALID");
 	}
