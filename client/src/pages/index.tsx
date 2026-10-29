@@ -5,18 +5,12 @@ import { revealChildren, staggerChildren, useRevealOnScroll } from "@/styles/mot
 
 /** One part of the application, as the progress line names it. */
 const PARTS = [
-	{ title: "Contact details", body: "Verify your mobile number and your email address with one-time codes." },
-	{ title: "Identity", body: "Your Aadhaar through DigiLocker (it gives your home address too), your PAN, and your voter ID or driving licence number." },
-	{
-		title: "Eligibility",
-		body: "With your consent we check your CIBIL credit score. We tell you only whether it is 700 or more, and we never keep your credit report.",
-	},
-	{ title: "Photos", body: "A live photo taken with your camera (we record where it is taken, so you will be asked to share your location), and a passport-size photo." },
-	{
-		title: "Documents",
-		body: "Your Aadhaar (front and back), PAN card, voter ID or driving licence, class 10 and 12 marksheets, and your graduation or diploma certificate.",
-	},
-	{ title: "Review and submit", body: "Check everything, then submit. Two people in our team review it." },
+	{ title: "Contact details", body: "Verify your mobile number and email with one-time codes." },
+	{ title: "Identity", body: "Aadhaar through DigiLocker, your PAN, and a voter ID or driving licence." },
+	{ title: "Eligibility", body: "A CIBIL check, with your consent. You see only whether your score is 700 or more." },
+	{ title: "Photos", body: "A live photo with your location, and a passport-size photo." },
+	{ title: "Documents", body: "Aadhaar, PAN card, voter ID or driving licence, class 10 and 12 marksheets, and a graduation or diploma certificate." },
+	{ title: "Review and submit", body: "Check your details and submit. Two people in our team review it." },
 ];
 
 /**
@@ -53,10 +47,9 @@ export default function Home() {
 							<ListItem>
 								<Text as="span" fontWeight={600}>
 									Your CIBIL credit score is 700 or more.
-								</Text>{" "}
-								With a score below 700 you are not eligible under our current rules, and the application ends at that check.
+								</Text>
 							</ListItem>
-							<ListItem>You have your own Aadhaar, PAN and mobile number, and a DigiLocker account with your Aadhaar in it (you can create one while applying).</ListItem>
+							<ListItem>You have your own Aadhaar, PAN and mobile number, and a DigiLocker account with your Aadhaar in it.</ListItem>
 						</List>
 					</Box>
 
@@ -82,12 +75,12 @@ export default function Home() {
 						<Heading as="h2" size="sm" id="ready">
 							Keep these ready
 						</Heading>
+						<Text fontWeight={600}>Keep your documents ready in digital format (soft copies).</Text>
 						<List ref={ready} spacing={2} styleType="disc" pl={5} sx={revealChildren}>
-							<ListItem>Your phone, with the mobile number you will use, and your email</ListItem>
-							<ListItem>The mobile number linked to your Aadhaar (for DigiLocker), and your PAN</ListItem>
-							<ListItem>Your Aadhaar card, voter ID or driving licence, to photograph or scan both sides</ListItem>
-							<ListItem>Your class 10 and class 12 marksheets, and your graduation or diploma certificate</ListItem>
-							<ListItem>A camera on your phone or computer, in good light</ListItem>
+							<ListItem>Your phone, and the mobile number linked to your Aadhaar (for DigiLocker)</ListItem>
+							<ListItem>Aadhaar, PAN card, and voter ID or driving licence (both sides)</ListItem>
+							<ListItem>Class 10 and 12 marksheets, and a graduation or diploma certificate</ListItem>
+							<ListItem>A camera, in good light</ListItem>
 						</List>
 						<Text fontSize="sm" color="text.muted">
 							Photos and documents: JPG photos up to 5 MB; certificates and cards as JPG or PDF up to 10 MB.

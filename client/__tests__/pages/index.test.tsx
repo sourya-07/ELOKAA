@@ -12,7 +12,14 @@ describe("Home", () => {
 	it("states the credit rule before anyone starts", () => {
 		render(<Home />);
 		expect(screen.getByText("Your CIBIL credit score is 700 or more.")).toBeInTheDocument();
-		expect(screen.getByText(/below 700 you are not eligible/)).toBeInTheDocument();
+		// the rule, and nothing more about what happens below it
+		expect(screen.queryByText(/below 700/)).not.toBeInTheDocument();
 		expect(screen.getByRole("heading", { name: "How it works" })).toBeInTheDocument();
+	});
+
+	it("asks for soft copies and states the real file limits", () => {
+		render(<Home />);
+		expect(screen.getByText("Keep your documents ready in digital format (soft copies).")).toBeInTheDocument();
+		expect(screen.getByText(/JPG photos up to 5 MB; certificates and cards as JPG or PDF up to 10 MB/)).toBeInTheDocument();
 	});
 });

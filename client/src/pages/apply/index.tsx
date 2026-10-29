@@ -53,7 +53,7 @@ function ContactPage() {
 		);
 	}
 	return (
-		<ApplyShell title="Your contact details" subtitle="Your email lets us reach you about your application." progress={snapshot}>
+		<ApplyShell title="Contact details" progress={snapshot}>
 			<Section>
 				<EmailStage />
 			</Section>
@@ -116,7 +116,7 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 	};
 
 	return (
-		<ApplyShell title="Your mobile number" subtitle="We use it to sign you in and to contact you about your application.">
+		<ApplyShell title="Contact details">
 			<Section>
 				<form onSubmit={send} noValidate>
 					<Stack spacing={4}>

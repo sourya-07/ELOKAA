@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Stack, Text } from "@chakra-ui/react";
+import { Button, Checkbox, Flex, FormControl, FormErrorMessage, FormLabel, Input, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
 import { ErrorBanner } from "@/components/ErrorBanner";
@@ -126,7 +126,6 @@ export function EmailStage() {
 							<FormControl isInvalid={!!emailError} isDisabled={!!sent}>
 								<FormLabel htmlFor="email">Email address</FormLabel>
 								<Input id="email" type="email" inputMode="email" autoComplete="email" spellCheck={false} value={email} onChange={(event) => setEmail(event.target.value)} />
-								<FormHelperText>We email you about your application. We never use it for marketing.</FormHelperText>
 								<FormErrorMessage>{emailError}</FormErrorMessage>
 							</FormControl>
 							{!sent && (

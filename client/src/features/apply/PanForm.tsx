@@ -43,7 +43,7 @@ export function PanForm() {
 					value={pan}
 					onChange={(event) => setPan(event.target.value.toUpperCase())}
 				/>
-				<FormHelperText>Your personal PAN (10 characters). We check it against the name and date of birth from DigiLocker.</FormHelperText>
+				<FormHelperText>10 characters, for example ABCPK1234L</FormHelperText>
 				<FormErrorMessage>{panError}</FormErrorMessage>
 			</FormControl>
 			<ErrorBanner

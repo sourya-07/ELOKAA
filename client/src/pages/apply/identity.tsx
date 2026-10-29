@@ -34,7 +34,7 @@ function IdentityPage() {
 	const nextElsewhere = snapshot.next_step && !STEPS.includes(snapshot.next_step);
 
 	return (
-		<ApplyShell title="Your identity and eligibility" subtitle="Aadhaar through DigiLocker, your PAN, the credit check, then a voter ID or driving licence." progress={snapshot}>
+		<ApplyShell title="Identity and eligibility" progress={snapshot}>
 			<TaskSection
 				id="aadhaar"
 				title="Aadhaar, through DigiLocker"
