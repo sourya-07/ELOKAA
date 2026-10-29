@@ -3,15 +3,18 @@ import { NextResponse, type NextRequest } from "next/server";
 /**
  * Content Security Policy with a fresh nonce per page: only scripts carrying the nonce run, so an
  * injected script does not. Chakra writes inline styles, so styles allow 'unsafe-inline'. Google's
- * sign-in script is allowed on the staff pages only; applicant pages load nothing from elsewhere.
+ * sign-in script is allowed on the staff pages only; applicant pages load nothing from elsewhere. The
+ * application pages may compile WebAssembly ('wasm-unsafe-eval': the self-hosted blink check), nothing else.
  */
 export function middleware(request: NextRequest) {
 	const nonce = btoa(crypto.randomUUID());
 	const staff = request.nextUrl.pathname.startsWith("/staff");
+	// The live photo's blink check runs MediaPipe as WebAssembly (self-hosted, docs/OPEN_QUESTIONS.md C-12)
+	const wasm = request.nextUrl.pathname.startsWith("/apply") ? " 'wasm-unsafe-eval'" : "";
 	const dev = process.env.NODE_ENV !== "production";
 	const csp = [
 		"default-src 'self'",
-		`script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${staff ? " https://accounts.google.com" : ""}${dev ? " 'unsafe-eval'" : ""}`,
+		`script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${wasm}${staff ? " https://accounts.google.com" : ""}${dev ? " 'unsafe-eval'" : ""}`,
 		"style-src 'self' 'unsafe-inline'" + (staff ? " https://accounts.google.com" : ""),
 		"img-src 'self' blob: data:",
 		"media-src 'self' blob:",

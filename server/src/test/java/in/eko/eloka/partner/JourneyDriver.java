@@ -108,7 +108,9 @@ public final class JourneyDriver {
 	}
 
 	/** A location in Mumbai, taken now, as a browser would send it with the live photo. */
-	public static void withLocation(MockMultipartHttpServletRequestBuilder request) {
+	public static void withLocation(MockMultipartHttpServletRequestBuilder request) throws Exception {
+		// the eyes-closed frame the browser keeps from the blink (FakeFaceCheck: a red corner = eyes closed)
+		request.file(new MockMultipartFile("blink_frame", "blink.jpg", "image/jpeg", blinkFrame()));
 		request.param("latitude", "19.0596").param("longitude", "72.8295").param("accuracy_m", "18")
 			.param("captured_at", java.time.Instant.now().toString());
 	}
@@ -205,6 +207,17 @@ public final class JourneyDriver {
 				image.setRGB(x, y, ThreadLocalRandom.current().nextInt(0xFFFFFF));
 			}
 		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ImageIO.write(image, "jpeg", out);
+		return out.toByteArray();
+	}
+
+	/** A picture the fake face check reads as one face with the eyes closed (its top-left corner is red). */
+	public static byte[] blinkFrame() throws Exception {
+		BufferedImage image = new BufferedImage(320, 240, BufferedImage.TYPE_INT_RGB);
+		var graphics = image.createGraphics();
+		graphics.setColor(new Color(220, 20, 20));
+		graphics.fillRect(0, 0, 320, 240);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpeg", out);
 		return out.toByteArray();

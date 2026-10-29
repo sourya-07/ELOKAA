@@ -46,6 +46,10 @@ class PhotoLocation extends BaseEntity {
 	@Column(nullable = false, length = 60)
 	private String flags;
 
+	/** The blink as the server saw it: CONFIRMED, UNCONFIRMED (staff look) or NOT_CHECKED (V20). */
+	@Column(length = 20)
+	private String blink;
+
 	protected PhotoLocation() {
 	}
 
@@ -79,6 +83,15 @@ class PhotoLocation extends BaseEntity {
 
 	Instant getCapturedAt() {
 		return capturedAt;
+	}
+
+	PhotoLocation blink(String blink) {
+		this.blink = blink;
+		return this;
+	}
+
+	String getBlink() {
+		return blink;
 	}
 
 	PhotoLocation address(byte[] encrypted) {

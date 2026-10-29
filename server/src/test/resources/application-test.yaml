@@ -23,6 +23,8 @@ eloka:
     credit-bureau: fake
     malware-scanner: fake
     email-provider: fake # no email is sent; the email code is the fixed one below
+    face-check:
+      provider: fake # answers by the picture's corner colour (FakeFaceCheck)
     geocoder:
       provider: fake # an address that says it is made up; no network in tests
   documents:

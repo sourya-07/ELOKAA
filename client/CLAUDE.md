@@ -11,6 +11,7 @@ npm run typecheck
 npm run test:ci    # Jest, 2 workers
 npm run build
 npm run e2e        # Playwright end to end (server and dev server running; docs/TESTING.md)
+# predev/prebuild copy MediaPipe's WebAssembly into public/mediapipe/wasm (scripts/copy-mediapipe.mjs, not committed)
 ```
 
 ## Layout
@@ -44,7 +45,9 @@ src/components/       ApplyShell/Section (milestone progress, "My application", 
                       preview, remove asks first, no more files past the server's max_count; the rule shown is the server's
                       from GET /v1/partner/document-rules via useDocuments().ruleFor, PHOTO/PAPER are the fallback copy; lib/validation.ts
                       checkFile reads the bytes like the server: real type, min/max size, complete file), CameraCapture (named camera errors, mirrored 4:5 view with a face
-                      guide, ≤1600 px, checked phone-camera fallback), StatusPill and StatusIcon (every status is a mark and words,
+                      guide, ≤1600 px, a blink first (components/useBlink.ts: MediaPipe face landmarks, self-hosted in
+                      public/mediapipe; a timed eyes-closed picture where it cannot run), checked phone-camera fallback with an
+                      eyes-closed and an eyes-open picture), StatusPill and StatusIcon (every status is a mark and words,
                       never colour alone), ErrorBanner
 src/i18n/             locales.ts (the seven languages in the owner's order, named in their own script), en-GB.ts (the source
                       catalog), catalogs.ts (a language is usable only when 100 % of keys are there and a person reviewed it;

@@ -157,13 +157,14 @@ class StepController {
 			@RequestParam(value = "latitude", required = false) String latitude,
 			@RequestParam(value = "longitude", required = false) String longitude,
 			@RequestParam(value = "accuracy_m", required = false) String accuracyM,
-			@RequestParam(value = "captured_at", required = false) String capturedAt) {
+			@RequestParam(value = "captured_at", required = false) String capturedAt,
+			@RequestParam(value = "blink_frame", required = false) MultipartFile blinkFrame) {
 		if (file == null || file.isEmpty()) {
 			throw ValidationException.field("file", "Choose a file to upload");
 		}
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(documents.upload(WebSupport.applicantId(), id, kind, file.getOriginalFilename(), bytes(file),
-					new LocationRules.Input(latitude, longitude, accuracyM, capturedAt)));
+					new LocationRules.Input(latitude, longitude, accuracyM, capturedAt), bytes(blinkFrame)));
 	}
 
 	@GetMapping("/documents")

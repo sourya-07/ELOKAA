@@ -69,17 +69,24 @@ function PhotosPage() {
 	const fresh = location.current();
 	const fix = location.state.kind === "ready" && fresh && fresh.accuracy <= MAX_ACCURACY_M ? fresh : null;
 
-	const sendLive = async (file: File) => {
+	const sendLive = async (file: File, blinkFrame: Blob) => {
 		const now = location.current();
 		if (!now || now.accuracy > MAX_ACCURACY_M) {
 			throw new Error("Your location is needed with the live photo. Allow location, then take the photo again.");
 		}
-		await upload("LIVE_PHOTO", file, {
-			latitude: String(now.latitude),
-			longitude: String(now.longitude),
-			accuracy_m: String(now.accuracy),
-			captured_at: new Date(now.at).toISOString(),
-		});
+		await upload(
+			"LIVE_PHOTO",
+			file,
+			{
+				latitude: String(now.latitude),
+				longitude: String(now.longitude),
+				accuracy_m: String(now.accuracy),
+				captured_at: new Date(now.at).toISOString(),
+			},
+			undefined,
+			undefined,
+			{ blink_frame: blinkFrame }, // the eyes-closed moment, checked by the server and never stored
+		);
 		location.stop();
 	};
 

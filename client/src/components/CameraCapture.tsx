@@ -3,9 +3,11 @@ import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { messageOf } from "@/lib/api";
 import { acceptOf, checkFile, PHOTO } from "@/lib/validation";
 import { ErrorBanner } from "./ErrorBanner";
+import { frameOf, useBlink } from "./useBlink";
 
 interface Props {
-	onCapture: (file: File) => Promise<void>;
+	/** The photo, and the eyes-closed frame of the blink the server checks against it */
+	onCapture: (file: File, blinkFrame: Blob) => Promise<void>;
 	/** Called when the applicant opens the camera (a button press), e.g. to start the location */
 	onStart?: () => void;
 	/** False while the photo may not be sent yet (no location); "Use photo" waits */
@@ -38,8 +40,9 @@ function problemOf(error: unknown): Problem {
 
 /**
  * Takes the live photo with the device camera: a mirrored live view in a 4:5 frame with a face
- * guide, a preview to retake or use, and a phone-camera fallback when the browser cannot open the
- * camera. The picture leaves the browser only when the person presses "Use photo".
+ * guide, a blink first (seen by useBlink in the browser; its eyes-closed frame goes with the photo for the
+ * server to check), a preview to retake or use, and a phone-camera fallback (two pictures: eyes closed,
+ * then open) when the browser cannot open the camera. Nothing leaves the browser before "Use photo".
  */
 export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, isDisabled }: Props) {
 	const video = useRef<HTMLVideoElement>(null);
@@ -51,15 +54,22 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 	// The live picture has started (the first frames arrived): only then can a photo be taken
 	const [streaming, setStreaming] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const blink = useBlink(video, state === "live" && streaming);
+	// No blink detector in this browser: a timed picture with the eyes closed instead
+	const [countdown, setCountdown] = useState<number | null>(null);
+	// Phone-camera fallback: the eyes-closed picture, kept until the eyes-open one is chosen
+	const [fallbackClosed, setFallbackClosed] = useState<File | null>(null);
 
-	const send = async (file: File) => {
+	const send = async (file: File, blinkFrame: Blob) => {
 		setBusy(true);
 		setError(null);
 		try {
-			await onCapture(file);
+			await onCapture(file, blinkFrame);
 			// Uploaded: back to the start, so "Use photo" cannot send the same picture twice
 			setPreview(null);
 			setState("idle");
+			blink.reset();
+			setFallbackClosed(null);
 		} catch (e) {
 			setError(messageOf(e));
 		} finally {
@@ -156,10 +166,58 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 	};
 
 	const use = async () => {
-		if (preview) {
-			await send(preview.file);
+		if (preview && blink.closedFrame) {
+			await send(preview.file, blink.closedFrame);
 		}
 	};
+
+	const retake = () => {
+		blink.reset();
+		start();
+	};
+
+	// Manual blink: press, close the eyes, the frame is taken after 3 seconds
+	const closedByTimer = () => {
+		setCountdown(3);
+		const step = (left: number) => {
+			if (left === 0) {
+				const element = video.current;
+				setCountdown(null);
+				if (element && element.videoWidth) {
+					frameOf(element).then((frame) => frame && blink.setClosedFrame(frame));
+				}
+				return;
+			}
+			setCountdown(left);
+			window.setTimeout(() => step(left - 1), 1000);
+		};
+		step(3);
+	};
+
+	const blinkText = (() => {
+		if (state !== "live" || !streaming) {
+			return null;
+		}
+		if (blink.closedFrame) {
+			return "Blink seen. Keep looking at the camera and take the photo.";
+		}
+		switch (blink.state.kind) {
+			case "loading":
+				return "Getting the blink check ready…";
+			case "watching":
+				return blink.state.faces === 0
+					? "Put your face inside the oval."
+					: blink.state.faces > 1
+						? "Only your face should be in the picture."
+						: "Now blink once, slowly.";
+			case "unavailable":
+				return countdown !== null
+					? `Close your eyes now… ${countdown}`
+					: "Press the button below, close your eyes for 3 seconds, then open them.";
+			default:
+				return null;
+		}
+	})();
 
 	return (
 		<Stack spacing={3}>
@@ -178,16 +236,27 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 				</AspectRatio>
 			)}
 			<Text fontSize="sm" color="text.muted">
-				Face the camera in good light, with your whole face inside the oval. Remove glasses and caps.
+				Face the camera in good light, with your whole face inside the oval. Remove glasses and caps. You will be asked to blink
+				once before the photo.
 			</Text>
+			{blinkText && (
+				<Text role="status" aria-live="polite" fontWeight={600}>
+					{blinkText}
+				</Text>
+			)}
 			<HStack wrap="wrap" spacing={3}>
 				{state === "idle" && (
 					<Button variant="outline" size="md" onClick={start} isDisabled={isDisabled}>
 						Open camera
 					</Button>
 				)}
+				{state === "live" && blink.state.kind === "unavailable" && !blink.closedFrame && (
+					<Button size="md" variant="outline" onClick={closedByTimer} isDisabled={!streaming || countdown !== null}>
+						Take the eyes-closed picture
+					</Button>
+				)}
 				{state === "live" && (
-					<Button size="md" onClick={snap} isDisabled={!streaming} isLoading={!streaming} loadingText="Starting camera">
+					<Button size="md" onClick={snap} isDisabled={!streaming || !blink.closedFrame} isLoading={!streaming} loadingText="Starting camera">
 						Take photo
 					</Button>
 				)}
@@ -196,7 +265,7 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 						<Button size="md" onClick={use} isLoading={busy} loadingText="Uploading" isDisabled={!canUse}>
 							Use photo
 						</Button>
-						<Button size="md" variant="outline" onClick={start} isDisabled={busy}>
+						<Button size="md" variant="outline" onClick={retake} isDisabled={busy}>
 							Retake
 						</Button>
 					</>
@@ -207,7 +276,7 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 							Try the camera again
 						</Button>
 						<Button as="label" variant="outline" size="md" cursor="pointer" aria-disabled={!canUse}>
-							Take a photo with the phone camera
+							{fallbackClosed ? "Now a photo with your eyes open" : "Take a photo with your eyes closed (phone camera)"}
 							<input
 								type="file"
 								accept={acceptOf(PHOTO)}
@@ -225,7 +294,13 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 										setError(bad);
 										return;
 									}
-									await send(file);
+									setError(null);
+									// First the eyes-closed picture (the blink), then the photo itself
+									if (!fallbackClosed) {
+										setFallbackClosed(file);
+										return;
+									}
+									await send(file, fallbackClosed);
 								}}
 							/>
 						</Button>

@@ -15,6 +15,7 @@ import in.eko.eloka.partner.documents.DocumentContent;
 import in.eko.eloka.partner.documents.DocumentKind;
 import in.eko.eloka.partner.documents.DocumentRef;
 import in.eko.eloka.partner.documents.NewDocument;
+import in.eko.eloka.partner.integration.FaceCheck;
 import in.eko.eloka.partner.integration.ReverseGeocoder;
 import in.eko.eloka.partner.onboarding.PartnerStep;
 import in.eko.eloka.partner.shared.crypto.FieldCipher;
@@ -66,11 +67,13 @@ class DocumentSteps {
 	private final AuditLog audit;
 	private final JsonMapper json;
 	private final ReverseGeocoder geocoder;
+	private final FaceCheck faces;
 
 	DocumentSteps(ApplicationService applications, ApplicationDocumentRepository links, DocumentApi documents,
 			VerificationApi verification, LocationRules locationRules, PhotoLocationRepository locations, FieldCipher cipher,
-			AuditLog audit, JsonMapper json, ReverseGeocoder geocoder) {
+			AuditLog audit, JsonMapper json, ReverseGeocoder geocoder, FaceCheck faces) {
 		this.geocoder = geocoder;
+		this.faces = faces;
 		this.applications = applications;
 		this.links = links;
 		this.documents = documents;
@@ -99,7 +102,7 @@ class DocumentSteps {
 	 */
 	@Transactional
 	DocumentView upload(UUID applicantId, String publicId, String kindName, String fileName, byte[] bytes,
-			LocationRules.Input location) {
+			LocationRules.Input location, byte[] blinkFrame) {
 		DocumentKind kind = parseKind(kindName);
 		if (stepOf(kind) == PartnerStep.AADHAAR) {
 			throw ValidationException.field("kind", "Aadhaar images are sent with the Aadhaar step");
@@ -113,6 +116,10 @@ class DocumentSteps {
 				where = locationRules.check(location, context.now());
 			}
 			DocumentView view = attach(context, applicantId, kind, fileName, bytes);
+			// After the file's own checks (type, size, complete), so their messages come first; a refusal here
+			// rolls the upload back like any other
+			String blink = kind == DocumentKind.LIVE_PHOTO || kind == DocumentKind.PASSPORT_PHOTO
+					? checkFaces(kind, bytes, blinkFrame) : null;
 			LocationRules.Checked found = where;
 			if (found == null) {
 				return view;
@@ -123,13 +130,67 @@ class DocumentSteps {
 			locations.save(new PhotoLocation(context.applicationId(), UUID.fromString(view.documentId()),
 					cipher.encrypt(Double.toString(found.latitude())), cipher.encrypt(Double.toString(found.longitude())),
 					found.accuracyM(), found.capturedAt(), context.now(), found.flags())
-				.address(address == null ? null : cipher.encrypt(address)));
+				.address(address == null ? null : cipher.encrypt(address))
+				.blink(blink));
 			audit.record(new AuditEntry("LOCATION_RECORDED", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
-					publicId, Map.of("flags", found.flags().isEmpty() ? "NONE" : found.flags())));
+					publicId, Map.of("flags", found.flags().isEmpty() ? "NONE" : found.flags(), "blink", blink)));
 			return new DocumentView(view.documentId(), view.kind(), view.status(), view.fileName(), view.contentType(),
 					view.size(), view.rejectReason(), view.uploadedAt(), new Location(found.latitude(), found.longitude(),
 							Math.round(found.accuracyM()), found.capturedAt(), found.flags(), address));
 		});
+	}
+
+	/** The face must cover at least this share of the photo's width (a person, not a crowd or a far-off figure). */
+	private static final double MIN_FACE_WIDTH = 0.15;
+	private static final int MAX_BLINK_FRAME_BYTES = 2 * 1024 * 1024;
+
+	/**
+	 * Exactly one clear face in each photo; for the live photo also a blink frame (the eyes-closed moment the
+	 * browser saw) of the same face in the same place. The blink is CONFIRMED when the eyes look closed in the
+	 * frame and open in the photo, otherwise UNCONFIRMED for staff to look at (never refused for that alone:
+	 * glasses and light fool the eye detector). Not certified liveness (docs/OPEN_QUESTIONS.md C-12). The frame
+	 * is never stored.
+	 */
+	private String checkFaces(DocumentKind kind, byte[] photo, byte[] blinkFrame) {
+		if (!faces.enabled()) {
+			return kind == DocumentKind.LIVE_PHOTO ? "NOT_CHECKED" : null;
+		}
+		FaceCheck.Result inPhoto = faces.analyse(photo);
+		requireOneFace(inPhoto, "file");
+		if (kind != DocumentKind.LIVE_PHOTO) {
+			return null;
+		}
+		if (blinkFrame == null || blinkFrame.length == 0) {
+			throw ValidationException.field("blink_frame", "Blink once while the camera is open, then take the photo again.");
+		}
+		if (blinkFrame.length > MAX_BLINK_FRAME_BYTES) {
+			throw ValidationException.field("blink_frame", "The blink picture is too large. Take the photo again.");
+		}
+		FaceCheck.Result inFrame = faces.analyse(blinkFrame);
+		if (inFrame.faces().size() != 1 || !sameFace(inFrame.largest(), inPhoto.largest())) {
+			throw ValidationException.field("blink_frame",
+					"The blink did not match the photo. Keep your face in the oval, blink once, then take the photo.");
+		}
+		return inFrame.eyes() == FaceCheck.Eyes.CLOSED && inPhoto.eyes() == FaceCheck.Eyes.OPEN ? "CONFIRMED" : "UNCONFIRMED";
+	}
+
+	private static void requireOneFace(FaceCheck.Result result, String field) {
+		if (result.faces().isEmpty()) {
+			throw ValidationException.field(field,
+					"We could not find a face in this photo. Use a clear photo of your face, looking at the camera, in good light.");
+		}
+		if (result.faces().size() > 1) {
+			throw ValidationException.field(field, "Only your face should be in this photo. Take it again on your own.");
+		}
+		if (result.largest().width() < MIN_FACE_WIDTH) {
+			throw ValidationException.field(field, "Your face is too small in this photo. Come closer to the camera.");
+		}
+	}
+
+	/** The same face in the same place: centres close together and a similar size (a second or two apart). */
+	private static boolean sameFace(FaceCheck.Face a, FaceCheck.Face b) {
+		double ratio = a.width() / b.width();
+		return Math.abs(a.centreX() - b.centreX()) < 0.2 && Math.abs(a.centreY() - b.centreY()) < 0.2 && ratio > 0.65 && ratio < 1.55;
 	}
 
 	/** Stores a file and links it to the application under the caller's lock. */

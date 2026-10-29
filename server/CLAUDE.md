@@ -26,7 +26,8 @@ src/main/java/in/eko/eloka/partner/
 │             `eloka.integration.*`, EpsClient (signed calls, allow-listed hosts), EPS adapters (OTP, PAN Lite,
 │             DigiLocker), fakes, stubs, ClamAV scanner, SMTP email sender; ports MobileOtpGateway, PanVerifier,
 │             DigiLockerProvider, CreditBureau, MalwareScanner, EmailSender, VoterIdVerifier, DrivingLicenceVerifier, NameMatcher,
-│             ReverseGeocoder (OpenStreetMap Nominatim, `eloka.integration.geocoder`; optional, never blocks)
+│             ReverseGeocoder (OpenStreetMap Nominatim, `eloka.integration.geocoder`; optional, never blocks),
+│             FaceCheck (OpenCV YuNet + eye cascade on our server, models in resources/face, `eloka.integration.face-check`)
 │             (EPS adapters in EpsIdDocumentVerifiers)
 └── identity/ applicants (one per mobile), OTP challenges (provider ref + our limits), sessions
               (SessionService = CallerResolver), /v1/partner/otp, /otp/verify, /session/refresh, DELETE /session,

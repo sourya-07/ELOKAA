@@ -81,7 +81,7 @@ class ReviewService {
 	/** Where the live photo was taken, for the reviewer; the browser's word, not proof (Q-3). */
 	record PhotoLocationView(double latitude, double longitude, @JsonProperty("accuracy_m") long accuracyM,
 			@JsonProperty("captured_at") Instant capturedAt, String flags,
-			@JsonProperty("approximate_address") String approximateAddress) {
+			@JsonProperty("approximate_address") String approximateAddress, String blink) {
 	}
 
 	private final PartnerApplicationRepository applications;
@@ -218,7 +218,7 @@ class ReviewService {
 			.flatMap(d -> locations.findByDocumentId(d.getDocumentId()))
 			.map(l -> new PhotoLocationView(Double.parseDouble(cipher.decrypt(l.getLatitudeEnc())),
 					Double.parseDouble(cipher.decrypt(l.getLongitudeEnc())), Math.round(l.getAccuracyM()), l.getCapturedAt(),
-					l.getFlags(), l.getAddressEnc() == null ? null : cipher.decrypt(l.getAddressEnc())))
+					l.getFlags(), l.getAddressEnc() == null ? null : cipher.decrypt(l.getAddressEnc()), l.getBlink()))
 			.orElse(null);
 	}
 

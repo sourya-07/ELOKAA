@@ -12,3 +12,6 @@ npm-debug.log*
 /e2e/.results/
 /test-results/
 /playwright-report/
+
+# MediaPipe WebAssembly, copied from node_modules by scripts/copy-mediapipe.mjs
+/public/mediapipe/wasm/

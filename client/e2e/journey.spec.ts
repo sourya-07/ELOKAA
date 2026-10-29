@@ -28,7 +28,12 @@ test("an eligible applicant goes from the start page to a submitted application"
 
 	// Photos: the live one with the camera and the location, then the passport one
 	await expect(page).toHaveURL(/\/apply\/photos/);
+	// The fake camera shows no face, so the in-browser blink check is switched off (its files are blocked) and
+	// the timed eyes-closed picture is used; run the server with ELOKA_FACE_CHECK=fake (docs/TESTING.md)
+	await page.route("**/mediapipe/**", (route) => route.abort());
 	await page.getByRole("button", { name: "Open camera" }).click();
+	await page.getByRole("button", { name: "Take the eyes-closed picture" }).click();
+	await expect(page.getByText("Blink seen. Keep looking at the camera and take the photo.")).toBeVisible({ timeout: 10_000 });
 	await page.getByRole("button", { name: "Take photo" }).click();
 	await expect(page.getByText(/Location found/)).toBeVisible();
 	await page.getByRole("button", { name: "Use photo" }).click();

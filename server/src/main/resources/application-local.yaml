@@ -33,5 +33,7 @@ eloka:
     credit-bureau: fake
     malware-scanner: fake
     email-provider: fake # no email is sent; the email code is the fixed one below
+    face-check:
+      provider: ${ELOKA_FACE_CHECK:opencv} # the real check, so a real face and blink are needed locally (e2e: ELOKA_FACE_CHECK=fake)
     geocoder:
       provider: nominatim # the free OpenStreetMap lookup, so the address shows locally too

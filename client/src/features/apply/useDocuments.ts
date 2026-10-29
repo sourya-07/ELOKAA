@@ -20,11 +20,19 @@ export function useDocuments() {
 	}, [reload]);
 
 	const upload = useCallback(
-		async (kind: string, file: File, fields: Record<string, string> = {}, onProgress?: (share: number) => void, signal?: AbortSignal) => {
+		async (
+			kind: string,
+			file: File,
+			fields: Record<string, string> = {},
+			onProgress?: (share: number) => void,
+			signal?: AbortSignal,
+			extraFiles: Record<string, Blob> = {},
+		) => {
 			const form = new FormData();
 			form.append("kind", kind);
 			form.append("file", file, file.name);
 			Object.entries(fields).forEach(([name, value]) => form.append(name, value));
+			Object.entries(extraFiles).forEach(([name, blob]) => form.append(name, blob, `${name}.jpg`));
 			await uploadWithProgress<DocumentView>(base, form, onProgress, signal);
 			await Promise.all([reload(), refresh()]);
 		},

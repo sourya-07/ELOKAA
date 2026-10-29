@@ -11,6 +11,7 @@ import in.eko.eloka.partner.integration.DrivingLicenceVerifier;
 import in.eko.eloka.partner.integration.NameMatcher;
 import in.eko.eloka.partner.integration.VoterIdVerifier;
 import in.eko.eloka.partner.integration.EmailSender;
+import in.eko.eloka.partner.integration.FaceCheck;
 import in.eko.eloka.partner.integration.GoogleIdentityVerifier;
 import in.eko.eloka.partner.integration.MalwareScanner;
 import in.eko.eloka.partner.integration.MobileOtpGateway;
@@ -121,6 +122,16 @@ class ProviderConfig {
 			case FAKE -> new FakeReverseGeocoder();
 			case NOMINATIM -> new NominatimGeocoder(properties);
 			case NONE -> new UnconfiguredReverseGeocoder();
+		};
+	}
+
+	/** Faces in the photos and the live photo's blink, on our own server (docs/OPEN_QUESTIONS.md C-12). */
+	@Bean
+	FaceCheck faceCheck(FaceCheckProperties properties) {
+		return switch (properties.provider()) {
+			case FAKE -> new FakeFaceCheck();
+			case OPENCV -> new OpenCvFaceCheck();
+			case NONE -> new UnconfiguredFaceCheck();
 		};
 	}
 

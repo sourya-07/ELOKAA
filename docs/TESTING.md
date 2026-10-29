@@ -50,6 +50,11 @@ the UI in a real browser, never a real provider.
 One worker and Chromium only (8 GB development Mac). Screenshots land in `client/e2e/.results/screens` (not
 committed). Not in CI yet: the job needs MySQL, the server and the web app in one runner.
 
+The fake camera shows no face: the journey test blocks the self-hosted MediaPipe files so the timed eyes-closed picture
+is used, and the server must run with `ELOKA_FACE_CHECK=fake`. Finding a real face and a real blink is checked by hand
+with a webcam (the public repository holds no photos of people; `OpenCvFaceCheckTest` only proves the library and models
+load and find no face where there is none).
+
 **Never claimed by these tests:** that EPS (OTP, PAN, DigiLocker, voter ID, DL, name match), an SMTP server or
 a credit bureau work. Those need EPS UAT runs and real accounts (docs/OPEN_QUESTIONS.md Q-1, Q-21, Q-22).
 

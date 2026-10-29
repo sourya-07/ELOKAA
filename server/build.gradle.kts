@@ -34,6 +34,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.flywaydb:flyway-mysql")
+	implementation("org.openpnp:opencv:4.9.0-0") // face check on photos (OpenCvFaceCheck, C-12); bundles its native library
 	implementation("org.springframework.modulith:spring-modulith-starter-core")
 	implementation("org.springframework.modulith:spring-modulith-starter-jpa")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")

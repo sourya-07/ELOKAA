@@ -247,6 +247,7 @@ class JourneyIntegrationTest {
 			.param("captured_at", java.time.Instant.now().toString()))
 			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.code").value("LOCATION_TOO_INACCURATE"));
 		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.file(file("blink_frame", "blink.jpg", in.eko.eloka.partner.JourneyDriver.blinkFrame()))
 			.param("latitude", "51.5").param("longitude", "-0.12").param("accuracy_m", "250")
 			.param("captured_at", java.time.Instant.now().toString()))
 			.andExpect(status().isCreated())
@@ -349,6 +350,44 @@ class JourneyIntegrationTest {
 		}
 		upload("COMPUTER_CERTIFICATE", "six.pdf", pdf("six")).andExpect(status().isConflict())
 			.andExpect(jsonPath("$.code").value("TOO_MANY_DOCUMENTS"));
+	}
+
+	/** FakeFaceCheck answers by the corner colour: black = no face, white = two, red = eyes closed, else one open. */
+	@Test
+	void photosNeedOneFaceAndTheLivePhotoABlinkOfTheSameFace() throws Exception {
+		reachPhotos();
+		String file = "$.invalid_params.file";
+		upload("PASSPORT_PHOTO", "none.jpg", cornered(0x000000)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value(org.hamcrest.Matchers.startsWith("We could not find a face")));
+		upload("PASSPORT_PHOTO", "two.jpg", cornered(0xFFFFFF)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value(org.hamcrest.Matchers.startsWith("Only your face")));
+		upload("PASSPORT_PHOTO", "me.jpg", jpeg(400, 500, null)).andExpect(status().isCreated());
+
+		// the live photo needs its blink frame, of one face
+		byte[] photo = jpeg(600, 600, null);
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "20")
+			.param("captured_at", java.time.Instant.now().toString()))
+			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath("$.invalid_params.blink_frame").exists());
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.file(file("blink_frame", "blink.jpg", cornered(0x000000)))
+			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "20")
+			.param("captured_at", java.time.Instant.now().toString()))
+			.andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.invalid_params.blink_frame").value(org.hamcrest.Matchers.startsWith("The blink did not match")));
+		// eyes open in the frame too: taken, but the blink is not confirmed (staff look)
+		call(multipart(app("/documents")).file(file("file", "me.jpg", photo)).param("kind", "LIVE_PHOTO")
+			.file(file("blink_frame", "blink.jpg", jpeg(320, 240, null)))
+			.param("latitude", "19.06").param("longitude", "72.83").param("accuracy_m", "20")
+			.param("captured_at", java.time.Instant.now().toString()))
+			.andExpect(status().isCreated());
+		assertThat(blinkOfLatestLivePhoto()).isEqualTo("UNCONFIRMED");
+		// eyes closed in the frame and open in the photo: confirmed
+		upload("LIVE_PHOTO", "again.jpg", jpeg(600, 600, null)).andExpect(status().isCreated());
+		assertThat(blinkOfLatestLivePhoto()).isEqualTo("CONFIRMED");
+		// every refused photo left nothing behind
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM photo_location l JOIN partner_application a ON a.id = l.application_id "
+				+ "WHERE a.public_id = ?", Integer.class, id)).isEqualTo(2);
 	}
 
 	@Test
@@ -664,5 +703,21 @@ class JourneyIntegrationTest {
 	private int activeDocuments() {
 		return jdbc.queryForObject("SELECT COUNT(*) FROM application_document d JOIN partner_application a "
 				+ "ON a.id = d.application_id WHERE a.public_id = ? AND d.removed_at IS NULL", Integer.class, id);
+	}
+
+	/** A detailed photo whose top-left corner is one colour (what FakeFaceCheck reads). */
+	private static byte[] cornered(int rgb) throws Exception {
+		BufferedImage image = ImageIO.read(new java.io.ByteArrayInputStream(jpeg(600, 600, null)));
+		var graphics = image.createGraphics();
+		graphics.setColor(new Color(rgb));
+		graphics.fillRect(0, 0, 48, 48);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ImageIO.write(image, "jpeg", out);
+		return out.toByteArray();
+	}
+
+	private String blinkOfLatestLivePhoto() {
+		return jdbc.queryForObject("SELECT l.blink FROM photo_location l JOIN partner_application a ON a.id = l.application_id "
+				+ "WHERE a.public_id = ? ORDER BY l.received_at DESC, l.created_at DESC LIMIT 1", String.class, id);
 	}
 }
