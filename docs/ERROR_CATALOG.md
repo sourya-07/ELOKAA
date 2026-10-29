@@ -70,6 +70,8 @@ outside service failed or is not set up; nothing was used up), **server** (unexp
 | `TOO_MANY_DOCUMENTS` | 409 | a sixth computer certificate | conflict | "You can add up to 5 computer certificates." | remove one first |
 | `EMAIL_ALREADY_USED` | 409 | email code | conflict | "Please use a different email address." | another email |
 | `ADDRESS_FROM_DIGILOCKER` | 409 | typing an address DigiLocker already gave | conflict | "Your address came from DigiLocker and cannot be typed over." | — |
+| `MANUAL_CHECK_NOT_AVAILABLE` | 409 | asking our team to check a voter ID / driving licence by hand before the automatic tries are used up, or twice | conflict | "Our team checks this by hand only after the automatic checks could not verify it." | use the automatic check |
+| `ID_ALREADY_USED` | 409 | the hand check (the same code is also a step result of the automatic check) | conflict | "This document is already used in another application." | another document |
 | `ID_TYPE_EXHAUSTED` | 409 | alternate ID (3 tries of this type used) | conflict | "No tries are left for this document. Use the other one." | the other document |
 | `AADHAAR_NOT_VERIFIED` | 409 | PAN, alternate ID before Aadhaar | conflict | "Verify your Aadhaar through DigiLocker first." | DigiLocker |
 | `DIGILOCKER_ALREADY_USED` | 409 | DigiLocker return used twice | conflict | "This DigiLocker link was already used." | start again |

@@ -87,6 +87,14 @@ final class StepContext {
 		record("STEP_COMPLETED", key);
 	}
 
+	/** A blocked step handed to staff to check by hand (see {@link ApplicationStep#handOverToStaff}). */
+	void handOverToStaff(PartnerStep key, String summaryJson, byte[] fingerprint) {
+		if (steps.get(key).handOverToStaff(summaryJson, now, fingerprint)) {
+			invalidateDependents(key, EnumSet.noneOf(PartnerStep.class));
+		}
+		record("STEP_SENT_FOR_REVIEW", key);
+	}
+
 	/**
 	 * The applicant changed the data of a step that was already done (a new upload): the step must
 	 * be submitted again, and what depends on it is redone.

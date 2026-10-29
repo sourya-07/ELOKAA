@@ -1,5 +1,7 @@
 package in.eko.eloka.partner.onboarding.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +40,9 @@ class AlternateIdIntegrationTest {
 
 	@Autowired
 	JsonMapper json;
+
+	@Autowired
+	org.springframework.jdbc.core.JdbcTemplate jdbc;
 
 	private ApplicantClient client;
 	private String token;
@@ -110,6 +115,33 @@ class AlternateIdIntegrationTest {
 
 		reachTheStep(); // a second applicant
 		track(check("VOTER_ID", epic).andExpect(step("last_error_code").value("ID_ALREADY_USED")));
+	}
+
+	@Test
+	void whenEveryTryIsUsedOurTeamChecksTheDocumentByHand() throws Exception {
+		// not while an automatic check can still run
+		write("/alternate-id-reviews", "{\"type\":\"VOTER_ID\",\"number\":\"" + JourneyDriver.newEpic("4567") + "\"}")
+			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("MANUAL_CHECK_NOT_AVAILABLE"));
+		for (int i = 0; i < 3; i++) {
+			track(check("VOTER_ID", JourneyDriver.newEpic("0000")).andExpect(status().isOk()));
+			track(check("DRIVING_LICENCE", JourneyDriver.newLicence("0000")).andExpect(status().isOk()));
+		}
+		track(call(get(app(""))).andExpect(step("status").value("BLOCKED")));
+		write("/alternate-id-reviews", "{\"type\":\"VOTER_ID\",\"number\":\"AB12\"}").andExpect(status().isUnprocessableContent());
+
+		String epic = JourneyDriver.newEpic("7777");
+		track(write("/alternate-id-reviews", "{\"type\":\"VOTER_ID\",\"number\":\"" + epic + "\"}").andExpect(status().isOk())
+			.andExpect(step("status").value("COMPLETED"))
+			.andExpect(step("summary.check").value("STAFF"))
+			.andExpect(step("summary.number_masked").value("******7777"))
+			.andExpect(jsonPath("$.next_step").value("PHOTOS")));
+		// waiting for a person: never verified by itself, so approval stays blocked until staff decide
+		assertThat(jdbc.queryForObject("SELECT v.status FROM verification v JOIN partner_application a ON a.id = v.application_id "
+				+ "WHERE a.public_id = ? AND v.kind = 'VOTER_ID' AND v.method = 'MANUAL'", String.class, id))
+			.isEqualTo("MANUAL_REVIEW_REQUIRED");
+		// and only once
+		write("/alternate-id-reviews", "{\"type\":\"VOTER_ID\",\"number\":\"" + epic + "\"}")
+			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("MANUAL_CHECK_NOT_AVAILABLE"));
 	}
 
 	private ResultActions check(String type, String number) throws Exception {

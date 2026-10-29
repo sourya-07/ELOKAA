@@ -55,6 +55,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | C-3 | New `PTN-` Stitch screens in the ELOKA Platform project; Local Admin `APP-` screens unchanged | 2026-10-27 |
 | C-4 | LEAD process out of scope | 2026-10-27 |
 | C-5 | Identity through DigiLocker only; the step-by-step (masked Aadhaar) path is retired (was Q-9) (ADR-0007) | 2026-10-28 |
+| C-10 | Step-by-step fallback (owner: "do the best", 2026-10-29): when every automatic voter ID / driving licence try is used up, the applicant sends one number for staff to check by hand with the uploaded images; approval needs a person to mark it verified. Aadhaar stays DigiLocker-only (C-5, Q-20) and PAN automatic-only (the credit check runs on it). PAN, voter ID and driving licence through DigiLocker wait on EPS (Q-22) | 2026-10-29 |
 | C-9 | File rules (owner, 2026-10-29, was Q-12): documents (Aadhaar, PAN, voter ID, driving licence, marksheets, graduation, diploma, computer certificates) JPG/JPEG, PNG or PDF, 10 KB to 5 MB; photos JPG/JPEG or PNG, 20 KB to 2 MB (and at least 300 px a side); at most 5 computer certificates. PNG is stored re-encoded as JPEG | 2026-10-29 |
 | C-8 | Graduation certificate required; diploma certificate optional (was: either one) | 2026-10-29 |
 | C-7 | Start page time estimate: "about 3–5 minutes" (owner's decision; the whole journey with DigiLocker, the credit check and the uploads may take longer, so measure it on EPS UAT) | 2026-10-29 |

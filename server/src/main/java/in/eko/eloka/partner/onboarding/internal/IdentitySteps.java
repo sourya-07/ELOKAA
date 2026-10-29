@@ -224,6 +224,46 @@ class IdentitySteps {
 		return applications.get(applicantId, publicId);
 	}
 
+	/**
+	 * The step-by-step way when the automatic checks could not verify a voter ID or driving licence (all
+	 * tries of both used up): the applicant sends the number, our team checks it by hand against the record
+	 * and the uploaded images. The journey goes on; approval waits until a person marks it verified (or
+	 * rejects it). Only from a blocked step, so it never replaces an automatic check that could still run.
+	 */
+	@Transactional
+	ApplicationSnapshot requestAlternateIdReview(UUID applicantId, String publicId, long version, String typeName, String number) {
+		VerificationApi.AlternateType type = parseType(typeName);
+		applications.write(applicantId, publicId, version, context -> {
+			context.requirePrerequisites(PartnerStep.ALTERNATE_ID);
+			ApplicationStep step = context.step(PartnerStep.ALTERNATE_ID);
+			Map<VerificationApi.AlternateType, Long> failures = verification.alternateIdFailures(context.applicationId(), step.getUnblockedAt());
+			boolean triesUsedUp = java.util.Arrays.stream(VerificationApi.AlternateType.values())
+				.allMatch(t -> failures.getOrDefault(t, 0L) >= properties.maxAttempts());
+			// blocked; or reopened by staff (a rejected hand check) with every automatic try already used
+			if (!(step.getStatus() == StepStatus.BLOCKED || step.getStatus() == StepStatus.REOPENED && triesUsedUp)) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "MANUAL_CHECK_NOT_AVAILABLE",
+						"Our team checks this by hand only after the automatic checks could not verify it.");
+			}
+			VerificationApi.ManualAlternateId sent = verification.requestManualAlternateId(context.applicationId(), type, number);
+			if (applicationRows.existsBlockingIdDocument(sent.numberHash(), context.applicationId(), applications.blockingStatuses())) {
+				throw new ApiProblem(HttpStatus.CONFLICT, "ID_ALREADY_USED", "This document is already used in another application.");
+			}
+			if (type == VerificationApi.AlternateType.VOTER_ID) {
+				context.application().bindVoterId(sent.numberHash());
+			}
+			else {
+				context.application().bindDrivingLicence(sent.numberHash());
+			}
+			audit.record(new AuditEntry("ALTERNATE_ID_SENT_FOR_REVIEW", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
+					publicId, Map.of("type", type.name())));
+			context.handOverToStaff(PartnerStep.ALTERNATE_ID,
+					json.writeValueAsString(Map.of("type", type.name(), "number_masked", sent.numberMasked(), "check", "STAFF")),
+					index.hash("alternate-id", type.name() + ":" + java.util.HexFormat.of().formatHex(sent.numberHash())));
+			return null;
+		});
+		return applications.get(applicantId, publicId);
+	}
+
 	private static VerificationApi.AlternateType parseType(String type) {
 		try {
 			return VerificationApi.AlternateType.valueOf(type == null ? "" : type.trim().toUpperCase());

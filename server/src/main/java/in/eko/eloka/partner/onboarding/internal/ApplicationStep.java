@@ -99,6 +99,27 @@ class ApplicationStep extends BaseEntity {
 		this.reviewerMessage = null;
 	}
 
+	/**
+	 * A step whose automatic tries are used up, handed to staff to check by hand: done for the applicant
+	 * (the journey goes on), while its evidence waits for a person (approval needs it verified).
+	 */
+	boolean handOverToStaff(String summaryJson, Instant now, byte[] fingerprint) {
+		// Blocked, or reopened by staff after every try was used (the caller checks the tries)
+		if (status != StepStatus.BLOCKED && status != StepStatus.REOPENED) {
+			throw new ApiProblem(HttpStatus.CONFLICT, "MANUAL_CHECK_NOT_AVAILABLE",
+					"Our team checks this by hand only after the automatic checks could not verify it.");
+		}
+		boolean changed = dataHash == null || !java.security.MessageDigest.isEqual(dataHash, fingerprint);
+		this.status = StepStatus.COMPLETED;
+		this.summary = summaryJson;
+		this.lastErrorCode = null;
+		this.completedAt = now;
+		this.reopenReasonCode = null;
+		this.reviewerMessage = null;
+		this.dataHash = fingerprint;
+		return changed;
+	}
+
 	/** A result no retry can change (e.g. under 18): blocked at once, whatever attempts are left. */
 	void block(String errorCode) {
 		requireAttemptAllowed();

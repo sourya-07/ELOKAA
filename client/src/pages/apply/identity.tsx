@@ -29,7 +29,7 @@ function IdentityPage() {
 	const aadhaar = summary("AADHAAR") as { aadhaar_masked?: string };
 	const address = summary("HOME_ADDRESS") as { state?: string; pincode?: string; source?: string };
 	const pan = summary("PAN") as { pan_masked?: string };
-	const alternate = summary("ALTERNATE_ID") as { type?: string; number_masked?: string };
+	const alternate = summary("ALTERNATE_ID") as { type?: string; number_masked?: string; check?: string };
 	const addressState = taskState(snapshot, "HOME_ADDRESS");
 	const nextElsewhere = snapshot.next_step && !STEPS.includes(snapshot.next_step);
 
@@ -88,7 +88,7 @@ function IdentityPage() {
 				id="alternate-id"
 				title="Voter ID or driving licence"
 				state={taskState(snapshot, "ALTERNATE_ID")}
-				summary={`${alternate.type === "DRIVING_LICENCE" ? "Driving licence" : "Voter ID"} ${alternate.number_masked ?? ""}`}
+				summary={`${alternate.type === "DRIVING_LICENCE" ? "Driving licence" : "Voter ID"} ${alternate.number_masked ?? ""}${alternate.check === "STAFF" ? " · our team will check it" : ""}`}
 				lockedReason="After your eligibility is confirmed"
 				canChange={canChange(snapshot, "ALTERNATE_ID")}
 			>

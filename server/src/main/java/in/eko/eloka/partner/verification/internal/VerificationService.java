@@ -194,13 +194,7 @@ class VerificationService implements VerificationApi {
 	@Override
 	@Transactional
 	public AlternateIdOutcome verifyAlternateId(UUID applicationId, AlternateType type, String rawNumber) {
-		String number = rawNumber == null ? "" : rawNumber.trim().toUpperCase().replaceAll("[\\s-]", "");
-		java.util.regex.Pattern format = type == AlternateType.VOTER_ID ? EPIC : LICENCE;
-		if (!format.matcher(number).matches()) {
-			throw ValidationException.field("number", type == AlternateType.VOTER_ID
-					? "Enter the 10-character voter ID (EPIC) number, for example ABC1234567"
-					: "Enter the driving licence number, for example MH0120110012345");
-		}
+		String number = alternateNumber(type, rawNumber);
 		Verification person = latestVerifiedDigiLocker(applicationId).orElseThrow(() -> new ApiProblem(HttpStatus.CONFLICT,
 				"AADHAAR_NOT_VERIFIED", "Verify your Aadhaar through DigiLocker first"));
 		String aadhaarName = cipher.decrypt(person.getNameEnc());
@@ -222,6 +216,41 @@ class VerificationService implements VerificationApi {
 		}
 		verifications.save(attempt);
 		return new AlternateIdOutcome(check.result(), masked, check.result() == AlternateResult.VERIFIED ? hash : null);
+	}
+
+	@Override
+	@Transactional
+	public ManualAlternateId requestManualAlternateId(UUID applicationId, AlternateType type, String rawNumber) {
+		String number = alternateNumber(type, rawNumber);
+		String masked = "*".repeat(number.length() - 4) + number.substring(number.length() - 4);
+		byte[] hash = index.hash(type.name().toLowerCase(), number);
+		verifications.save(new Verification(applicationId, type.kind(), Method.MANUAL, EvidenceStatus.MANUAL_REVIEW_REQUIRED, null,
+				null).value(cipher.encrypt(number), hash, masked));
+		return new ManualAlternateId(masked, hash);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public java.util.Set<AlternateType> alternateIdsInUse(UUID applicationId) {
+		java.util.Set<AlternateType> used = java.util.EnumSet.noneOf(AlternateType.class);
+		for (AlternateType type : AlternateType.values()) {
+			latest(applicationId, type.kind())
+				.filter(v -> v.getStatus() == EvidenceStatus.VERIFIED || v.getStatus() == EvidenceStatus.MANUAL_REVIEW_REQUIRED)
+				.ifPresent(v -> used.add(type));
+		}
+		return used;
+	}
+
+	/** The number in one form (upper case, no spaces or dashes), in the document's format. */
+	private static String alternateNumber(AlternateType type, String rawNumber) {
+		String number = rawNumber == null ? "" : rawNumber.trim().toUpperCase().replaceAll("[\\s-]", "");
+		java.util.regex.Pattern format = type == AlternateType.VOTER_ID ? EPIC : LICENCE;
+		if (!format.matcher(number).matches()) {
+			throw ValidationException.field("number", type == AlternateType.VOTER_ID
+					? "Enter the 10-character voter ID (EPIC) number, for example ABC1234567"
+					: "Enter the driving licence number, for example MH0120110012345");
+		}
+		return number;
 	}
 
 	@Override

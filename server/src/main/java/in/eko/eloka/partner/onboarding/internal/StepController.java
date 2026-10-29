@@ -83,6 +83,15 @@ class StepController {
 	record AlternateIdRequest(String type, String number) {
 	}
 
+	/** The number sent to staff to check by hand, once the automatic tries are used up (no provider call). */
+	@PostMapping("/alternate-id-reviews")
+	ResponseEntity<ApplicationSnapshot> alternateIdReview(@PathVariable String id, @RequestBody AlternateIdRequest body,
+			@RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+		long version = WebSupport.expectedVersion(ifMatch);
+		return WebSupport.ok(identity.requestAlternateIdReview(WebSupport.applicantId(), id, version,
+				body == null ? null : body.type(), body == null ? null : body.number()));
+	}
+
 	/** A billable record check: needs {@code If-Match} and {@code Idempotency-Key}. */
 	@PostMapping("/alternate-id-verifications")
 	ResponseEntity<?> alternateId(@PathVariable String id, @RequestBody AlternateIdRequest body,

@@ -100,4 +100,16 @@ describe("voter ID or driving licence task", () => {
 			expect(write).toHaveBeenCalledWith("/alternate-id-verifications", { body: { type: "DRIVING_LICENCE", number: "MH0120110012345" }, idempotent: true }),
 		);
 	});
+
+	it("offers the hand check by our team once both documents' tries are used up", async () => {
+		const snapshot = snapshotAt("ALTERNATE_ID");
+		snapshot.steps = snapshot.steps.map((s) => (s.step_key === "ALTERNATE_ID" ? { ...s, status: "BLOCKED", last_error_code: "DRIVING_LICENCE_NOT_FOUND" } : s));
+		const write = jest.fn().mockResolvedValue(snapshotAt("PHOTOS"));
+		(useApplication as jest.Mock).mockReturnValue({ snapshot, write, setSnapshot: jest.fn() });
+		render(<IdentityPage />);
+		expect(screen.getByText(/our team will check it by hand/)).toBeInTheDocument();
+		fireEvent.change(screen.getByLabelText("Voter ID (EPIC) number"), { target: { value: "ABC1234567" } });
+		fireEvent.click(screen.getByRole("button", { name: "Send to our team" }));
+		await waitFor(() => expect(write).toHaveBeenCalledWith("/alternate-id-reviews", { body: { type: "VOTER_ID", number: "ABC1234567" } }));
+	});
 });

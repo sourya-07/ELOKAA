@@ -139,6 +139,19 @@ public interface VerificationApi {
 	/** The document types verified for this application (the uploaded images must be of one of them). */
 	java.util.Set<AlternateType> verifiedAlternateIds(UUID applicationId);
 
+	/** A document number sent to staff to check by hand: masked for display, blind index for uniqueness. */
+	record ManualAlternateId(String numberMasked, byte[] numberHash) {
+	}
+
+	/**
+	 * Records a voter ID or driving licence number for staff to check by hand, after the automatic checks
+	 * could not verify one: evidence {@code MANUAL_REVIEW_REQUIRED}, never verified until a person decides.
+	 */
+	ManualAlternateId requestManualAlternateId(UUID applicationId, AlternateType type, String number);
+
+	/** The voter ID or driving licence the application uses: verified, or waiting for staff to check it. */
+	java.util.Set<AlternateType> alternateIdsInUse(UUID applicationId);
+
 	/** Name and DOB from DigiLocker if used, else from the PAN step; and the verified PAN. */
 	Optional<Identity> verifiedIdentity(UUID applicationId);
 

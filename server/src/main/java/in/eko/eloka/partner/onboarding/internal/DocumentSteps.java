@@ -234,7 +234,8 @@ class DocumentSteps {
 			}
 			String idDocument = null;
 			List<DocumentKind> idGap = null;
-			for (VerificationApi.AlternateType type : verification.verifiedAlternateIds(context.applicationId())) {
+			// the document verified, or the one staff are checking by hand: its images must be uploaded
+			for (VerificationApi.AlternateType type : verification.alternateIdsInUse(context.applicationId())) {
 				List<DocumentKind> sides = type == VerificationApi.AlternateType.VOTER_ID
 						? List.of(DocumentKind.VOTER_ID_FRONT, DocumentKind.VOTER_ID_BACK)
 						: List.of(DocumentKind.DRIVING_LICENCE_FRONT, DocumentKind.DRIVING_LICENCE_BACK);

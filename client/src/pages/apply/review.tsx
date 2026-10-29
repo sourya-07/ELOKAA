@@ -59,8 +59,9 @@ function sourceOf(key: string, summary: Record<string, unknown>): string | null 
 		case "HOME_ADDRESS":
 			return summary.source === "DIGILOCKER" ? "From DigiLocker" : "Added by you";
 		case "PAN":
-		case "ALTERNATE_ID":
 			return "Verified with the government record";
+		case "ALTERNATE_ID":
+			return summary.check === "STAFF" ? "Sent to our team to check by hand" : "Verified with the government record";
 		case "CREDIT_CHECK":
 			return "Checked with the credit bureau";
 		case "PHOTOS":

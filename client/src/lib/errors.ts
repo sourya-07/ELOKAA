@@ -66,6 +66,8 @@ export const ERRORS: Record<string, Message> = {
 	TOO_MANY_DOCUMENTS: "You can add up to 5 computer certificates.",
 	EMAIL_ALREADY_USED: "Please use a different email address.",
 	ADDRESS_FROM_DIGILOCKER: "Your address came from DigiLocker and cannot be typed over.",
+	MANUAL_CHECK_NOT_AVAILABLE: "Our team checks this by hand only after the automatic checks could not verify it.",
+	ID_ALREADY_USED: "This document is already used in another application.",
 	ID_TYPE_EXHAUSTED: "No tries are left for this document. Use the other one.",
 	AADHAAR_NOT_VERIFIED: "Verify your Aadhaar through DigiLocker first.",
 	DIGILOCKER_ALREADY_USED: "This DigiLocker link was already used.",
