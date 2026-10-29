@@ -27,7 +27,7 @@ function DocumentsPage() {
 	const { snapshot, write } = useApplication();
 	const router = useRouter();
 	useStepGuard((s) => canOpen(s, "KYC_DOCUMENTS") || canOpen(s, "EDUCATION"));
-	const { documents, upload, remove, contentUrl } = useDocuments();
+	const { documents, upload, remove, contentUrl, ruleFor } = useDocuments();
 	const { busy, error, run } = useAction();
 	const filesOf = (kind: string) => documents.filter((d) => d.kind === kind);
 	const verifiedId = (snapshot.steps.find((s) => s.step_key === "ALTERNATE_ID")?.summary?.type as string | undefined) ?? "VOTER_ID";
@@ -40,14 +40,13 @@ function DocumentsPage() {
 		<FileSlot
 			label={label}
 			hint={hint}
-			rule={PAPER}
+			rule={ruleFor(kind, PAPER)}
 			required={extra.required}
 			allowMany={extra.allowMany}
 			files={filesOf(kind)}
-			onUpload={(file, onProgress) => upload(kind, file, {}, onProgress)}
+			onUpload={(file, onProgress, signal) => upload(kind, file, {}, onProgress, signal)}
 			onRemove={remove}
 			contentUrl={contentUrl}
-			showRule={false}
 		/>
 	);
 
@@ -79,7 +78,7 @@ function DocumentsPage() {
 		});
 
 	return (
-		<ApplyShell title="Your documents" subtitle="Photos or scans, JPG or PDF up to 10 MB each. Every detail must be readable." progress={snapshot}>
+		<ApplyShell title="Your documents" subtitle="Photos or scans. Every detail must be readable." progress={snapshot}>
 			<TaskSection id="identity-documents" title="Identity documents" state={open(kycState, educationState)} summary="Aadhaar, PAN card and your ID uploaded" canChange={canChange(snapshot, "KYC_DOCUMENTS")}>
 				<SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
 					{slot("AADHAAR_FRONT", "Aadhaar: front", "The whole card, unmasked. Stored encrypted; only our review team can open it.")}

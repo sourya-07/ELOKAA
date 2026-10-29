@@ -144,10 +144,10 @@ export default function CasePage() {
 												<StatusPill status={view.address.status} />
 												{reviewer && mine && view.address.status !== "VERIFIED" && (
 													<>
-														<Button size="sm" onClick={() => act("/address/decision", { verified: true })}>
+														<Button size="sm" onClick={() => act("/address/decision", { verified: true })} isDisabled={busy}>
 															Verify
 														</Button>
-														<Button size="sm" variant="outline" onClick={() => act("/address/decision", { verified: false, reason_code: reason })}>
+														<Button size="sm" variant="outline" onClick={() => act("/address/decision", { verified: false, reason_code: reason })} isDisabled={busy}>
 															Reject
 														</Button>
 													</>

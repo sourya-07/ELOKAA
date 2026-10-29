@@ -1,4 +1,4 @@
-import { checkFile, isPersonalPan, isPincode, mobileDigits, normaliseEmail, normaliseMobile, PAPER, PHOTO } from "@/lib/validation";
+import { checkFile, isPersonalPan, isPincode, mobileDigits, normaliseEmail, normaliseMobile, PAPER, PHOTO, ruleFrom } from "@/lib/validation";
 
 describe("normaliseMobile", () => {
 	it.each([
@@ -67,5 +67,18 @@ describe("normaliseEmail", () => {
 		[`a@${"b".repeat(250)}.com`, null],
 	])("%s -> %s", (raw, expected) => {
 		expect(normaliseEmail(raw)).toBe(expected);
+	});
+});
+
+// The built-in copies used before the server's rules load must say what the server says
+// (DocumentKind: photos JPEG ≤ 5 MB, ≥ 300 px; papers JPEG or PDF ≤ 10 MB)
+describe("ruleFrom", () => {
+	it("words the server's rules, and the built-in copies match them", () => {
+		const photo = ruleFrom({ kind: "PASSPORT_PHOTO", formats: ["image/jpeg"], max_bytes: 5 * 1024 * 1024, min_side_px: 300, max_count: 1 });
+		const paper = ruleFrom({ kind: "PAN_CARD", formats: ["application/pdf", "image/jpeg"], max_bytes: 10 * 1024 * 1024, min_side_px: 0, max_count: 1 });
+		expect(photo).toEqual(PHOTO);
+		expect(paper.label).toBe(PAPER.label);
+		expect(paper.maxBytes).toBe(PAPER.maxBytes);
+		expect([...paper.types].sort()).toEqual([...PAPER.types].sort());
 	});
 });

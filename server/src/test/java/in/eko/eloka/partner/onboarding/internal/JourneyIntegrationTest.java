@@ -301,6 +301,31 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
+	void theFileRulesAreTheOnesTheServerEnforces() throws Exception {
+		call(get("/v1/partner/document-rules")).andExpect(status().isOk())
+			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].formats[0]").value("image/jpeg"))
+			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].max_bytes").value(5 * 1024 * 1024))
+			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].min_side_px").value(300))
+			.andExpect(jsonPath("$[?(@.kind=='PAN_CARD')].max_bytes").value(10 * 1024 * 1024))
+			.andExpect(jsonPath("$[?(@.kind=='COMPUTER_CERTIFICATE')].max_count").value(5))
+			.andExpect(jsonPath("$[?(@.kind=='AADHAAR_MASKED_FRONT')]").isEmpty());
+		mvc.perform(get("/v1/partner/document-rules")).andExpect(status().isUnauthorized());
+	}
+
+	@Test
+	void aNewPanResetsLaterStepsButKeepsEveryUploadedFile() throws Exception {
+		reachPhotos();
+		uploadPhotosAndEducation();
+		int before = activeDocuments();
+		assertThat(before).isPositive();
+		refresh();
+		track(pan(newPan("5555")).andExpect(status().isOk())
+			.andExpect(jsonPath("$.steps[?(@.step_key=='CREDIT_CHECK')].status").value("IN_PROGRESS")));
+		// the files stay attached; only the steps that depend on the PAN are done again
+		assertThat(activeDocuments()).isEqualTo(before);
+	}
+
+	@Test
 	void theIdentityImagesNeedTheVerifiedDocumentAndNoFileTwice() throws Exception {
 		reachPhotos(); // the voter ID was verified on the way
 		uploadPhotosAndEducation();
@@ -540,5 +565,10 @@ class JourneyIntegrationTest {
 		try (var paths = java.nio.file.Files.walk(root)) {
 			return paths.filter(java.nio.file.Files::isRegularFile).count();
 		}
+	}
+
+	private int activeDocuments() {
+		return jdbc.queryForObject("SELECT COUNT(*) FROM application_document d JOIN partner_application a "
+				+ "ON a.id = d.application_id WHERE a.public_id = ? AND d.removed_at IS NULL", Integer.class, id);
 	}
 }

@@ -36,7 +36,7 @@ class DocumentSteps {
 
 	/** Kinds that may be uploaded once; a new upload replaces the old one. */
 	private static final Set<DocumentKind> SINGLE = EnumSet.complementOf(EnumSet.of(DocumentKind.COMPUTER_CERTIFICATE));
-	private static final int MAX_COMPUTER_CERTIFICATES = 5;
+	static final int MAX_COMPUTER_CERTIFICATES = 5;
 
 	@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
 	record DocumentView(@JsonProperty("document_id") String documentId, String kind, String status,

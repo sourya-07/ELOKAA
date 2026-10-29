@@ -12,7 +12,7 @@ jest.mock("@/features/apply/ApplicationContext", () => ({
 	useApplicationSession: () => ({ signedIn: true, reload: jest.fn(), signOut: jest.fn() }),
 }));
 jest.mock("@/features/apply/useDocuments", () => ({
-	useDocuments: () => ({ documents: [], upload, remove: jest.fn(), contentUrl: () => "" }),
+	useDocuments: () => ({ documents: [], upload, remove: jest.fn(), contentUrl: () => "", ruleFor: (_kind: string, fallback: unknown) => fallback }),
 }));
 
 describe("photos page", () => {

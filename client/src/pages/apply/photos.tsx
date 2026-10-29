@@ -63,7 +63,7 @@ function LocationLine({ state, onRetry }: { state: LocationState; onRetry: () =>
 function PhotosPage() {
 	const { snapshot } = useApplication();
 	useStepGuard((s) => canOpen(s, "PHOTOS"));
-	const { documents, upload, contentUrl } = useDocuments();
+	const { documents, upload, contentUrl, ruleFor } = useDocuments();
 	const location = useGeolocation();
 	const live = documents.filter((d) => d.kind === "LIVE_PHOTO");
 	const fresh = location.current();
@@ -116,10 +116,10 @@ function PhotosPage() {
 				</Text>
 				<FileSlot
 					label="Passport-size photo"
-					rule={PHOTO}
+					rule={ruleFor("PASSPORT_PHOTO", PHOTO)}
 					required
 					files={documents.filter((d) => d.kind === "PASSPORT_PHOTO")}
-					onUpload={(file, onProgress) => upload("PASSPORT_PHOTO", file, {}, onProgress)}
+					onUpload={(file, onProgress, signal) => upload("PASSPORT_PHOTO", file, {}, onProgress, signal)}
 					contentUrl={contentUrl}
 				/>
 			</Section>

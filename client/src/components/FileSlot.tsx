@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack, Image, Link, Progress, Stack, Tag, Text } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { messageOf } from "@/lib/api";
+import { ApiError, messageOf } from "@/lib/api";
 import type { DocumentView } from "@/lib/types";
 import { checkFile, type FileRule } from "@/lib/validation";
 import { enter } from "@/styles/motion";
@@ -14,7 +14,7 @@ interface Props {
 	rule: FileRule;
 	required?: boolean;
 	files: DocumentView[];
-	onUpload: (file: File, onProgress: (share: number) => void) => Promise<void>;
+	onUpload: (file: File, onProgress: (share: number) => void, signal: AbortSignal) => Promise<void>;
 	onRemove?: (documentId: string) => Promise<void>;
 	contentUrl: (documentId: string) => string;
 	allowMany?: boolean;
@@ -25,8 +25,10 @@ interface Props {
 
 /**
  * One kind of file: what is uploaded (a small preview, its review status, any rejection reason)
- * and a button to add or replace it. Uploads show real progress, then "Checking file…" while the
- * server checks it; removing asks once before it happens.
+ * and a button to add or replace it. Uploads show real progress (and can be cancelled while
+ * sending), then "Checking file…" while the server checks it; a failed upload can be tried again
+ * with the same file; removing asks once before it happens. Where several files are allowed, the
+ * button goes once the server's maximum is reached.
  */
 export function FileSlot({ label, hint, rule, required, files, onUpload, onRemove, contentUrl, allowMany, isDisabled, showRule = true }: Props) {
 	const input = useRef<HTMLInputElement>(null);
@@ -34,6 +36,9 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 	const [busy, setBusy] = useState(false);
 	const [confirming, setConfirming] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	// The file of a failed upload, so "Try again" sends it again without choosing it again
+	const [failed, setFailed] = useState<File | null>(null);
+	const sending = useRef<AbortController | null>(null);
 
 	const choose = async (file: File | undefined) => {
 		if (!file) {
@@ -42,16 +47,27 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 		const problem = checkFile(file, rule);
 		if (problem) {
 			setError(problem);
+			setFailed(null);
 			return;
 		}
 		setError(null);
+		setFailed(null);
 		setBusy(true);
 		setProgress(0);
+		sending.current = new AbortController();
 		try {
-			await onUpload(file, setProgress);
+			await onUpload(file, setProgress, sending.current.signal);
 		} catch (e) {
-			setError(messageOf(e));
+			if (e instanceof ApiError && e.code === "ABORTED") {
+				setError(null);
+			} else {
+				setError(messageOf(e));
+				// A refused file (wrong type, duplicate, too many) gains nothing from a retry; a lost connection or a busy server may
+				const retryable = !(e instanceof ApiError) || e.status === 0 || e.status >= 500;
+				setFailed(retryable ? file : null);
+			}
 		} finally {
+			sending.current = null;
 			setBusy(false);
 			setProgress(null);
 			if (input.current) {
@@ -77,6 +93,7 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 	};
 
 	const uploading = progress !== null;
+	const full = !!allowMany && rule.maxCount !== undefined && files.length >= rule.maxCount;
 	return (
 		<Box border="1px dashed" borderColor="ink.300" borderRadius="control" p={4}>
 			<Stack spacing={3}>
@@ -135,9 +152,16 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 				{uploading && (
 					<Stack spacing={1} role="status" aria-live="polite">
 						<Progress value={Math.round((progress ?? 0) * 100)} size="xs" borderRadius="full" colorScheme="blue" aria-label={`Uploading ${label}`} />
-						<Text fontSize="sm" color="text.muted">
-							{(progress ?? 0) < 1 ? `Uploading… ${Math.round((progress ?? 0) * 100)}%` : "Checking file…"}
-						</Text>
+						<Flex justify="space-between" align="center" gap={3}>
+							<Text fontSize="sm" color="text.muted">
+								{(progress ?? 0) < 1 ? `Uploading… ${Math.round((progress ?? 0) * 100)}%` : "Checking file…"}
+							</Text>
+							{(progress ?? 0) < 1 && (
+								<Button size="sm" variant="link" onClick={() => sending.current?.abort()}>
+									Cancel
+								</Button>
+							)}
+						</Flex>
 					</Stack>
 				)}
 				{showRule && (
@@ -146,10 +170,21 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 					</Text>
 				)}
 				<input ref={input} type="file" hidden accept={rule.types.join(",")} onChange={(event) => choose(event.target.files?.[0])} disabled={isDisabled || busy} />
-				<Button variant="outline" size="md" onClick={() => input.current?.click()} isDisabled={isDisabled || busy} alignSelf="flex-start">
-					{files.length && !allowMany ? "Replace file" : allowMany && files.length ? "Add another" : "Choose file"}
-				</Button>
+				{full ? (
+					<Text fontSize="sm" color="text.muted">
+						You have added {files.length} of {rule.maxCount}.
+					</Text>
+				) : (
+					<Button variant="outline" size="md" onClick={() => input.current?.click()} isDisabled={isDisabled || busy} alignSelf="flex-start">
+						{files.length && !allowMany ? "Replace file" : allowMany && files.length ? "Add another" : "Choose file"}
+					</Button>
+				)}
 				<ErrorBanner message={error} />
+				{failed && !busy && (
+					<Button size="sm" variant="link" alignSelf="flex-start" onClick={() => choose(failed)} isDisabled={isDisabled}>
+						Try again
+					</Button>
+				)}
 			</Stack>
 		</Box>
 	);

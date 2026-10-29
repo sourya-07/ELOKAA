@@ -88,9 +88,12 @@ export async function call<T>(path: string, options: CallOptions = {}): Promise<
  * through the proxy, `X-Requested-With`, and an {@link ApiError} with the server's problem.
  * Progress covers the browser-to-proxy leg; checking the file on the server comes after 100%.
  */
-export function uploadWithProgress<T>(path: string, form: FormData, onProgress?: (share: number) => void): Promise<Reply<T>> {
+export function uploadWithProgress<T>(path: string, form: FormData, onProgress?: (share: number) => void, signal?: AbortSignal): Promise<Reply<T>> {
 	return new Promise((resolve, reject) => {
 		const request = new XMLHttpRequest();
+		// Cancelling stops the sending; a file the server already received in full is still checked and kept
+		signal?.addEventListener("abort", () => request.abort());
+		request.onabort = () => reject(new ApiError({ status: 0, code: "ABORTED", detail: "Upload cancelled." }));
 		request.open("POST", `/api${path}`);
 		request.setRequestHeader("x-requested-with", "eloka");
 		request.setRequestHeader("accept", "application/json");

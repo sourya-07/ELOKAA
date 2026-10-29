@@ -14,7 +14,7 @@ jest.mock("@/features/apply/ApplicationContext", () => ({
 }));
 let documents: { document_id: string; kind: string; status: string; file_name: string; content_type: string; size: number; uploaded_at: string }[] = [];
 jest.mock("@/features/apply/useDocuments", () => ({
-	useDocuments: () => ({ documents, upload: jest.fn(), remove: jest.fn(), contentUrl: () => "" }),
+	useDocuments: () => ({ documents, upload: jest.fn(), remove: jest.fn(), contentUrl: () => "", ruleFor: (_kind: string, fallback: unknown) => fallback }),
 }));
 
 function withVerified(type: string) {

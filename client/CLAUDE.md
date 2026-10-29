@@ -39,7 +39,9 @@ src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after
                       navigation), TaskSection (one task of a multi-task page: open when current, folded when done,
                       folded again after a save; "Change" only where lib/tasks.ts canChange allows: never on a verified result),
-                      OtpInput, FileSlot (progress, "Checking file…", preview, remove asks first), CameraCapture (named camera errors, mirrored 4:5 view with a face
+                      OtpInput, FileSlot (progress with Cancel while sending, "Checking file…", "Try again" after a lost connection,
+                      preview, remove asks first, no more files past the server's max_count; the rule shown is the server's
+                      from GET /v1/partner/document-rules via useDocuments().ruleFor, PHOTO/PAPER are the fallback copy), CameraCapture (named camera errors, mirrored 4:5 view with a face
                       guide, ≤1600 px, checked phone-camera fallback), StatusPill and StatusIcon (every status is a mark and words,
                       never colour alone), ErrorBanner
 src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no font requests to third parties
