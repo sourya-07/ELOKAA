@@ -45,8 +45,13 @@ class DocumentSteps {
 			Location location) {
 	}
 
-	/** Shown to the applicant for the live photo: how precise the recorded location was (never the coordinates). */
-	record Location(@JsonProperty("accuracy_m") long accuracyM, String flags) {
+	/**
+	 * The live photo's location as the applicant's browser reported it, shown back to that applicant only
+	 * (their own files; read from the encrypted photo_location row, never kept in a step summary). It is
+	 * where the device said it was, not a checked address.
+	 */
+	record Location(double latitude, double longitude, @JsonProperty("accuracy_m") long accuracyM,
+			@JsonProperty("captured_at") Instant capturedAt, String flags) {
 	}
 
 	private final ApplicationService applications;
@@ -114,7 +119,8 @@ class DocumentSteps {
 			audit.record(new AuditEntry("LOCATION_RECORDED", "APPLICANT", applicantId.toString(), "PARTNER_APPLICATION",
 					publicId, Map.of("flags", found.flags().isEmpty() ? "NONE" : found.flags())));
 			return new DocumentView(view.documentId(), view.kind(), view.status(), view.fileName(), view.contentType(),
-					view.size(), view.rejectReason(), view.uploadedAt(), new Location(Math.round(found.accuracyM()), found.flags()));
+					view.size(), view.rejectReason(), view.uploadedAt(), new Location(found.latitude(), found.longitude(),
+							Math.round(found.accuracyM()), found.capturedAt(), found.flags()));
 		});
 	}
 
@@ -288,7 +294,9 @@ class DocumentSteps {
 	private DocumentView view(ApplicationDocument link, DocumentRef ref) {
 		Location location = link.getKind() != DocumentKind.LIVE_PHOTO ? null
 				: locations.findByDocumentId(link.getDocumentId())
-					.map(l -> new Location(Math.round(l.getAccuracyM()), l.getFlags()))
+					.map(l -> new Location(Double.parseDouble(cipher.decrypt(l.getLatitudeEnc())),
+							Double.parseDouble(cipher.decrypt(l.getLongitudeEnc())), Math.round(l.getAccuracyM()), l.getCapturedAt(),
+							l.getFlags()))
 					.orElse(null);
 		return new DocumentView(link.getDocumentId().toString(), link.getKind().name(), link.getStatus().name(),
 				ref.fileName(), ref.contentType(), ref.size(), link.getRejectReason(), ref.uploadedAt(), location);

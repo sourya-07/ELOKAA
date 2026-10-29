@@ -5,6 +5,7 @@ import { snapshotAt } from "../../fixtures";
 import { render } from "../../render";
 
 const upload = jest.fn();
+let documents: unknown[] = [];
 jest.mock("next/router", () => ({ useRouter: () => ({ push: jest.fn(), replace: jest.fn(), query: {}, asPath: "/apply/photos", pathname: "/apply/photos" }) }));
 jest.mock("@/features/apply/ApplicationContext", () => ({
 	useApplication: jest.fn(),
@@ -12,7 +13,7 @@ jest.mock("@/features/apply/ApplicationContext", () => ({
 	useApplicationSession: () => ({ signedIn: true, reload: jest.fn(), signOut: jest.fn() }),
 }));
 jest.mock("@/features/apply/useDocuments", () => ({
-	useDocuments: () => ({ documents: [], upload, remove: jest.fn(), contentUrl: () => "", ruleFor: (_kind: string, fallback: unknown) => fallback }),
+	useDocuments: () => ({ documents, upload, remove: jest.fn(), contentUrl: () => "", ruleFor: (_kind: string, fallback: unknown) => fallback }),
 }));
 
 describe("photos page", () => {
@@ -32,5 +33,26 @@ describe("photos page", () => {
 		expect(screen.getByText(/Location is blocked for this site/)).toBeInTheDocument();
 		expect(container.querySelector("input[type=file][capture]")).toBeDisabled();
 		expect(upload).not.toHaveBeenCalled();
+	});
+
+	it("shows the coordinates the browser reported, as text the applicant cannot edit", () => {
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt("PHOTOS"), write: jest.fn() });
+		documents = [
+			{
+				document_id: "d1",
+				kind: "LIVE_PHOTO",
+				status: "MANUAL_REVIEW_REQUIRED",
+				file_name: "live.jpg",
+				content_type: "image/jpeg",
+				size: 10,
+				uploaded_at: "",
+				location: { latitude: 19.0596, longitude: 72.8295, accuracy_m: 18, captured_at: "2026-10-29T05:12:00Z", flags: "" },
+			},
+		];
+		render(<PhotosPage />);
+		expect(screen.getByText("Latitude 19.05960, longitude 72.82950")).toBeInTheDocument();
+		expect(screen.getByText(/not a checked address/)).toBeInTheDocument();
+		expect(screen.queryByDisplayValue(/19\.05/)).not.toBeInTheDocument();
+		documents = [];
 	});
 });

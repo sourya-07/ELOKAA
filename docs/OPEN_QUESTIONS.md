@@ -17,6 +17,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-20 | Legal basis and controls for storing **full, unmasked** Aadhaar images (owner decision 2026-10-28; UIDAI rules on storing Aadhaar copies, Aadhaar Data Vault) | open | built with encrypted storage, restricted and audited staff viewing, no OCR (ADR-0008); not for production until answered |
 | Q-21 | Which SMTP service and sending domain for email codes (SPF, DKIM, DMARC)? | open | fake sender locally; "not configured" elsewhere |
 | Q-30 | Should the server refuse redoing a verified PAN, voter ID / driving licence or DigiLocker step (unless staff reopened it)? Today the client hides "Change" for them, but the API still accepts a redo (a different PAN runs the credit check again) | open | client read-only only; the server is unchanged until decided (a business-rule change) |
+| Q-31 | Reverse geocoding (an address from the live photo's coordinates) and IP / VPN / proxy risk signals: which provider, if any? Both send applicant data to a third party, and a VPN check gives false positives (mobile carrier networks) | open | none built: the applicant and staff see the browser-reported coordinates only; nothing blocks on location risk |
 | Q-22 | EPS DigiLocker: can it return PAN, voter ID or driving licence (`document_requested`)? Which codes mean "cancelled" or "no Aadhaar in DigiLocker"? (with Q-18) | open | Aadhaar only; unknown codes are technical errors, never a pass or a used attempt |
 
 ## Built on a default (confirm or change)

@@ -90,10 +90,24 @@ function PhotosPage() {
 					Take a photo of yourself with this device&apos;s camera. We record where it is taken, so your browser will ask to share your location: please allow it.
 				</Text>
 				{live.map((file) => (
-					<Flex key={file.document_id} justify="space-between" align="center" gap={3} wrap="wrap">
-						<Text>
-							Photo taken{file.location ? ` · location within about ${file.location.accuracy_m} m` : ""}
-						</Text>
+					<Flex key={file.document_id} justify="space-between" align="flex-start" gap={3} wrap="wrap">
+						<Stack spacing={1} minW={0}>
+							<Text>
+								Photo taken{file.location ? ` · location within about ${file.location.accuracy_m} m` : ""}
+							</Text>
+							{file.location && (
+								<>
+									{/* Read-only: what the browser reported, never a field the applicant can edit */}
+									<Text fontFamily="mono" fontSize="sm" translate="no">
+										Latitude {file.location.latitude.toFixed(5)}, longitude {file.location.longitude.toFixed(5)}
+									</Text>
+									<Text fontSize="sm" color="text.muted">
+										Reported by your browser at {new Date(file.location.captured_at).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}. It is where
+										your device said it was, not a checked address.
+									</Text>
+								</>
+							)}
+						</Stack>
 						<StatusPill status={file.status} forApplicant />
 					</Flex>
 				))}

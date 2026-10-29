@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -251,7 +252,15 @@ class JourneyIntegrationTest {
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.location.accuracy_m").value(250))
 			.andExpect(jsonPath("$.location.flags").value("LOW_ACCURACY,OUTSIDE_INDIA"))
-			.andExpect(jsonPath("$.location.latitude").doesNotExist());
+			// the applicant sees the coordinates their browser reported, back from the encrypted row
+			.andExpect(jsonPath("$.location.latitude").value(51.5))
+			.andExpect(jsonPath("$.location.longitude").value(-0.12))
+			.andExpect(jsonPath("$.location.captured_at").exists());
+		call(get(app("/documents"))).andExpect(status().isOk())
+			.andExpect(jsonPath("$[?(@.kind=='LIVE_PHOTO')].location.latitude").value(51.5));
+		// never in the snapshot (step summaries are stored as plain JSON)
+		call(get(app(""))).andExpect(status().isOk())
+			.andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("51.5"))));
 		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM photo_location l JOIN partner_application a "
 				+ "ON a.id = l.application_id WHERE a.public_id = ?", Integer.class, id)).isEqualTo(1);
 		// the rejected tries stored nothing

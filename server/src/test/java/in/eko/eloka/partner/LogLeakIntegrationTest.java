@@ -38,6 +38,7 @@ class LogLeakIntegrationTest {
 		assertThat(logs).doesNotContain("ptn_rt_");
 		assertThat(logs).doesNotContain("Ravi Kumar").doesNotContain("RAVI KUMAR");
 		assertThat(logs).doesNotContain("ABC1234567"); // voter ID number
+		assertThat(logs).doesNotContain("19.0596").doesNotContain("72.8295"); // the live photo's coordinates
 		assertThat(logs).doesNotContainPattern("(?<!\\d)92\\d{8}(?!\\d)"); // the test mobiles (92xxxxxxxx)
 	}
 }
