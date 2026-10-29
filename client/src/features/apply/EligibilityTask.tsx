@@ -44,7 +44,8 @@ export function EligibilityTask() {
 		});
 	};
 
-	const failure = step?.last_error_code && step.status !== "COMPLETED" ? ERROR_TEXT[step.last_error_code] : null;
+	const failure =
+		step?.last_error_code && step.status !== "COMPLETED" ? ERROR_TEXT[step.last_error_code] ?? "We could not complete the credit check. Please try again later." : null;
 	const attemptsLeft = (step?.max_attempts ?? 0) - (step?.attempt_count ?? 0);
 	return (
 		<Stack spacing={4}>

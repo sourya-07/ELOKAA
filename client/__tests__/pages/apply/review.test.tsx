@@ -46,4 +46,20 @@ describe("review page", () => {
 		expect(write.mock.calls.map((c) => c[0])).toEqual(["/declaration", "/submit"]);
 		expect(write.mock.calls[1][1]).toEqual({ idempotent: true });
 	});
+
+	it("keeps verified parts read-only, says where each came from, and links back to the right place", () => {
+		const snapshot = snapshotAt("DECLARATION");
+		snapshot.steps = snapshot.steps.map((s) =>
+			s.step_key === "EMAIL_VERIFICATION" ? { ...s, summary: { email_masked: "r***@example.com" } } : s.step_key === "PAN" ? { ...s, summary: { pan_masked: "ABCPK****L" } } : s.step_key === "HOME_ADDRESS" ? { ...s, summary: { state: "Bihar", pincode: "800001", source: "DIGILOCKER" } } : s,
+		);
+		(useApplication as jest.Mock).mockReturnValue({ snapshot, write: jest.fn() });
+		render(<ReviewPage />);
+		const changes = screen.getAllByRole("link", { name: "Change" }).map((link) => link.getAttribute("href"));
+		expect(changes).toContain("/apply?return=review");
+		expect(changes).toContain("/apply/documents?return=review#identity-documents");
+		expect(changes.some((href) => href?.includes("#pan") || href?.includes("#aadhaar") || href?.includes("#address"))).toBe(false);
+		expect(screen.getAllByText("Verified with the government record").length).toBeGreaterThan(0);
+		expect(screen.getByText("From DigiLocker")).toBeInTheDocument();
+		expect(screen.getByText(/Mobile \+91 \*{6}3210/)).toBeInTheDocument();
+	});
 });

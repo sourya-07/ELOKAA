@@ -17,7 +17,7 @@ export function PanForm() {
 	const [panError, setPanError] = useState<string | null>(null);
 	const { busy, error, run } = useAction();
 	const blocked = step?.status === "BLOCKED";
-	const stepError = step?.last_error_code && step.status !== "COMPLETED" ? ERROR_TEXT[step.last_error_code] : null;
+	const stepError = step?.last_error_code && step.status !== "COMPLETED" ? ERROR_TEXT[step.last_error_code] ?? "We could not verify this PAN. Check the number and try again." : null;
 
 	const submit = async () => {
 		const value = pan.trim().toUpperCase();

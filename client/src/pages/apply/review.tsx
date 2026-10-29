@@ -49,6 +49,35 @@ const SUMMARY: Record<string, (s: Record<string, unknown>, snapshot: Snapshot) =
 		`Class 10 and 12 marksheets, ${s.degree === "DIPLOMA" ? "diploma" : "graduation"} certificate${Number(s.computer_certificates) ? `, ${s.computer_certificates} computer certificate(s)` : ""}`,
 };
 
+/** Where a done part's data came from: checked with a record, supplied by the applicant, or waiting for our team. */
+function sourceOf(key: string, summary: Record<string, unknown>): string | null {
+	switch (key) {
+		case "EMAIL_VERIFICATION":
+			return "Verified with codes";
+		case "AADHAAR":
+			return "Verified through DigiLocker";
+		case "HOME_ADDRESS":
+			return summary.source === "DIGILOCKER" ? "From DigiLocker" : "Added by you";
+		case "PAN":
+		case "ALTERNATE_ID":
+			return "Verified with the government record";
+		case "CREDIT_CHECK":
+			return "Checked with the credit bureau";
+		case "PHOTOS":
+		case "KYC_DOCUMENTS":
+		case "EDUCATION":
+			return "Uploaded by you; our team will check it";
+		default:
+			return null;
+	}
+}
+
+/** "Change" and "Fix" go to the right part of the page and bring the applicant back here. */
+function changeLink(path: string): string {
+	const [base, anchor] = path.split("#");
+	return `${base}?return=review${anchor ? `#${anchor}` : ""}`;
+}
+
 /**
  * Everything at a glance before submitting: what still stops submission comes first, each with a
  * link to fix it (which brings the applicant back here); then every part, grouped as the progress
@@ -117,7 +146,8 @@ function ReviewPage() {
 								return null;
 							}
 							const text = step.summary ? SUMMARY[page.step]?.(step.summary, snapshot) : undefined;
-							const editable = page.step !== "CREDIT_CHECK" && canChange(snapshot, page.step);
+							const source = isDone(step) ? sourceOf(page.step, step.summary ?? {}) : null;
+							const editable = canChange(snapshot, page.step);
 							return (
 								<Flex key={page.path} justify="space-between" align="center" gap={3} wrap="wrap">
 									<Stack spacing={0} minW={0}>
@@ -125,6 +155,11 @@ function ReviewPage() {
 										{text && (
 											<Text color="text.muted" fontSize="sm" fontFamily={/\*{2,}|X{4}/.test(text) ? "mono" : undefined}>
 												{text}
+											</Text>
+										)}
+										{source && (
+											<Text color="text.muted" fontSize="xs">
+												{source}
 											</Text>
 										)}
 										{step.reviewer_message && (
@@ -136,7 +171,7 @@ function ReviewPage() {
 									<Flex gap={3} align="center">
 										<StatusPill status={step.status} />
 										{editable && (
-											<Link as={NextLink} href={`${page.path.split("#")[0]}?return=review`} color="text.link" fontSize="sm">
+											<Link as={NextLink} href={changeLink(page.path)} color="text.link" fontSize="sm">
 												Change
 											</Link>
 										)}

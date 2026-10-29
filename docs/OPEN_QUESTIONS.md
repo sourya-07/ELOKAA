@@ -16,6 +16,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-6 | Can an ineligible or rejected applicant apply again, and after how long? | open | an open, approved or ineligible application blocks a new one for the same mobile or PAN (so a failed credit check cannot be retried); rejected, withdrawn and expired ones do not |
 | Q-20 | Legal basis and controls for storing **full, unmasked** Aadhaar images (owner decision 2026-10-28; UIDAI rules on storing Aadhaar copies, Aadhaar Data Vault) | open | built with encrypted storage, restricted and audited staff viewing, no OCR (ADR-0008); not for production until answered |
 | Q-21 | Which SMTP service and sending domain for email codes (SPF, DKIM, DMARC)? | open | fake sender locally; "not configured" elsewhere |
+| Q-30 | Should the server refuse redoing a verified PAN, voter ID / driving licence or DigiLocker step (unless staff reopened it)? Today the client hides "Change" for them, but the API still accepts a redo (a different PAN runs the credit check again) | open | client read-only only; the server is unchanged until decided (a business-rule change) |
 | Q-22 | EPS DigiLocker: can it return PAN, voter ID or driving licence (`document_requested`)? Which codes mean "cancelled" or "no Aadhaar in DigiLocker"? (with Q-18) | open | Aadhaar only; unknown codes are technical errors, never a pass or a used attempt |
 
 ## Built on a default (confirm or change)

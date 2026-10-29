@@ -122,7 +122,12 @@ enquiry, so only an approver can. An under-18 block should not be unblocked unti
 ## Review page
 
 Before submitting, the applicant sees what still stops submission (the snapshot's `submit_blockers`), each with
-a link to the part to fix; links and "Change" carry `?return=review`, and those pages offer "Back to review".
+a link to the part to fix; links and "Change" carry `?return=review` and the part's anchor, and those pages offer
+"Back to review". Each done part says where it came from (verified through DigiLocker or with the government
+record, checked with the credit bureau, added by the applicant, or uploaded for our team to check). Verified
+results (Aadhaar, PAN, credit check, voter ID or driving licence) and a DigiLocker address have no "Change": they
+are read-only in the client; when staff reopen one in a correction, its form opens by itself. The server still
+accepts a redone check on these steps (docs/OPEN_QUESTIONS.md Q-30 decides whether it should stop).
 Submitting asks for confirmation once, then sends one request. The review and status pages show the
 verified mobile and email masked (`snapshot.contact`). No email or SMS is sent when the status changes (no
 notification service exists yet), so the pages say "check this page for updates" and never promise a message.

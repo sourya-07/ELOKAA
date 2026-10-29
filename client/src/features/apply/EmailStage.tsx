@@ -94,7 +94,7 @@ export function EmailStage() {
 		}
 		await run(async () => {
 			const latest = consentDone ? snapshot : await write("/consents", { body: { purpose: "DATA_PROCESSING", version: CONSENT_VERSION } });
-			await router.push(routeFor(latest));
+			await router.push(router.query.return === "review" ? "/apply/review" : routeFor(latest));
 		});
 	};
 

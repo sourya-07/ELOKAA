@@ -1,4 +1,5 @@
 import { Badge } from "@chakra-ui/react";
+import { StatusIcon, type StatusTone } from "@/components/StatusIcon";
 import { useTurnedOn } from "@/styles/motion";
 
 const TONES: Record<string, { bg: string; color: string; label: string }> = {
@@ -23,6 +24,20 @@ const APPLICANT: Record<string, { bg: string; color: string; label: string }> = 
 	SUBMITTED: { bg: "status.ok.bg", color: "status.ok.fg", label: "Uploaded" },
 };
 
+/** The mark for a pill, from its colour family: the same meaning, not only the colour. */
+function toneOf(bg: string, status: string): StatusTone {
+	if (bg === "status.ok.bg") {
+		return "ok";
+	}
+	if (bg === "status.error.bg") {
+		return "error";
+	}
+	if (bg === "status.warn.bg") {
+		return status === "REOPENED" ? "attention" : "warn";
+	}
+	return status === "IN_PROGRESS" ? "current" : "neutral";
+}
+
 /** A status as a pill: words, not only colour. Staff see review states; applicants see their own words. */
 export function StatusPill({ status, forApplicant }: { status: string; forApplicant?: boolean }) {
 	const turned = useTurnedOn(status === "VERIFIED" || status === "COMPLETED");
@@ -30,7 +45,8 @@ export function StatusPill({ status, forApplicant }: { status: string; forApplic
 	return (
 		// keyed by status: in the journey a change fades in, and one to verified or done grows in a
 		// little (journeyFeedback); staff see no motion
-		<Badge key={status} className="status-pill" data-turned={turned ? "ok" : undefined} bg={tone.bg} color={tone.color} borderRadius="full" px={2.5} py={0.5} textTransform="none" fontWeight={500}>
+		<Badge key={status} className="status-pill" data-turned={turned ? "ok" : undefined} bg={tone.bg} color={tone.color} borderRadius="full" px={2.5} py={0.5} textTransform="none" fontWeight={500} display="inline-flex" alignItems="center" gap={1}>
+			<StatusIcon tone={toneOf(tone.bg, status)} />
 			{tone.label}
 		</Badge>
 	);

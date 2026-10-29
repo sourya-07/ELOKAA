@@ -6,7 +6,8 @@ import { render } from "../../render";
 
 const push = jest.fn();
 const replace = jest.fn();
-jest.mock("next/router", () => ({ useRouter: () => ({ push, replace, query: {}, asPath: "/apply/identity", pathname: "/apply" }) }));
+let query: Record<string, string> = {};
+jest.mock("next/router", () => ({ useRouter: () => ({ push, replace, query, asPath: "/apply/identity", pathname: "/apply" }) }));
 
 function respond(...replies: { status: number; body: unknown }[]) {
 	const fetchMock = jest.fn();
@@ -34,8 +35,20 @@ function renderPage() {
 
 describe("contact details page", () => {
 	beforeEach(() => {
+		query = {};
 		push.mockReset();
 		replace.mockReset();
+	});
+
+	it("opens the email again for \"Change\" on the review page instead of sending the applicant away", async () => {
+		const done = snapshotAt("DECLARATION");
+		done.steps = done.steps.map((s) => (s.step_key === "EMAIL_VERIFICATION" ? { ...s, summary: { email_masked: "r***@example.com" } } : s));
+		respond({ status: 200, body: done });
+		query = { return: "review" };
+		renderPage();
+		expect(await screen.findByText("r***@example.com")).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Change email" })).toBeInTheDocument();
+		expect(replace).not.toHaveBeenCalled();
 	});
 
 	it("rejects an invalid number without calling the server", async () => {

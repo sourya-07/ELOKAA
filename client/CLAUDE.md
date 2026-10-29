@@ -26,7 +26,8 @@ src/lib/              api.ts (fetch through the proxy, ApiError, uploadWithProgr
                       statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts
 src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 shows the latest; loads once per
                       session, never goes back to an older snapshot), guards, PanForm, SubmitStep, useDocuments,
-                      useAction, withApplication / withOptionalApplication (marks a journey page; _app wraps marked
+                      useAction, useCountdown (resend waits from the server's resend_after / retry_after only),
+                      withApplication / withOptionalApplication (marks a journey page; _app wraps marked
                       pages in ONE shared provider; "optional" pages such as /apply also render signed out),
                       EmailStage (email code + data-use consent on the /apply card), DigiLockerTask (explainer, consent,
                       official help links, return with ?state=, automatic re-checks, start again), AddressForm,
@@ -36,9 +37,11 @@ src/features/apply/   ApplicationContext (snapshot + write with If-Match; 412 sh
                       then withdraw)
 src/features/staff/   StaffShell (who is signed in), types
 src/components/       ApplyShell/Section (milestone progress, "My application", sign-out, focus to the h1 after
-                      navigation), TaskSection (one task of a multi-task page: open when current, folded when done),
+                      navigation), TaskSection (one task of a multi-task page: open when current, folded when done,
+                      folded again after a save; "Change" only where lib/tasks.ts canChange allows: never on a verified result),
                       OtpInput, FileSlot (progress, "Checking file…", preview, remove asks first), CameraCapture (named camera errors, mirrored 4:5 view with a face
-                      guide, ≤1600 px, checked phone-camera fallback), StatusPill, ErrorBanner
+                      guide, ≤1600 px, checked phone-camera fallback), StatusPill and StatusIcon (every status is a mark and words,
+                      never colour alone), ErrorBanner
 src/styles/font.ts    Inter, self-hosted with next/font/local (fonts/, OFL); no font requests to third parties
 src/styles/theme.ts   Chakra theme from eloka_design/design-system-and-prompts/DESIGN.md
 src/styles/motion.ts  the only motion: easing curves, enter/stagger, delayed loading, reduced-motion helpers

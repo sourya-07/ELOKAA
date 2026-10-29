@@ -13,6 +13,7 @@ import { ApiError, call } from "@/lib/api";
 import { mobileDigits, normaliseMobile } from "@/lib/validation";
 import { waitText } from "@/lib/format";
 import { routeFor, safeNext } from "@/lib/steps";
+import { canChange } from "@/lib/tasks";
 import { delayedAppear } from "@/styles/motion";
 
 interface Sent {
@@ -34,7 +35,9 @@ function ContactPage() {
 	const router = useRouter();
 	const snapshot = application?.snapshot;
 	const editable = !!snapshot && ["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status);
-	const contactOpen = !!snapshot && editable && CONTACT_STEPS.includes(snapshot.next_step ?? "");
+	// Open while the server's next step is here, or when "Change" on the review page asks for the email
+	const changingFromReview = router.query.return === "review" && !!snapshot && canChange(snapshot, "EMAIL_VERIFICATION");
+	const contactOpen = !!snapshot && editable && (CONTACT_STEPS.includes(snapshot.next_step ?? "") || changingFromReview);
 
 	useEffect(() => {
 		if (snapshot && !contactOpen) {

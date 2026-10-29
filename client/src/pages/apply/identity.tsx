@@ -36,6 +36,7 @@ function IdentityPage() {
 	return (
 		<ApplyShell title="Identity and eligibility" progress={snapshot}>
 			<TaskSection
+				version={snapshot.version}
 				id="aadhaar"
 				title="Aadhaar, through DigiLocker"
 				state={taskState(snapshot, "AADHAAR")}
@@ -47,11 +48,12 @@ function IdentityPage() {
 
 			{(addressState !== "locked" || taskState(snapshot, "AADHAAR") === "done") && (
 				<TaskSection
+					version={snapshot.version}
 					id="address"
 					title="Home address"
 					state={addressState}
 					summary={`${address.state ?? ""} ${address.pincode ?? ""} · ${address.source === "DIGILOCKER" ? "from DigiLocker" : "added by you"}`}
-					canChange={canChange(snapshot, "HOME_ADDRESS") && address.source !== "DIGILOCKER"}
+					canChange={canChange(snapshot, "HOME_ADDRESS")}
 				>
 					<Text>DigiLocker did not give your complete address. Add where you live now.</Text>
 					<AddressForm />
@@ -59,6 +61,7 @@ function IdentityPage() {
 			)}
 
 			<TaskSection
+				version={snapshot.version}
 				id="pan"
 				title="PAN"
 				state={taskState(snapshot, "PAN")}
@@ -70,6 +73,7 @@ function IdentityPage() {
 			</TaskSection>
 
 			<TaskSection
+				version={snapshot.version}
 				id="eligibility"
 				title="Eligibility (credit check)"
 				state={taskState(snapshot, "CREDIT_CHECK")}
@@ -80,6 +84,7 @@ function IdentityPage() {
 			</TaskSection>
 
 			<TaskSection
+				version={snapshot.version}
 				id="alternate-id"
 				title="Voter ID or driving licence"
 				state={taskState(snapshot, "ALTERNATE_ID")}

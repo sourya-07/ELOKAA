@@ -29,8 +29,25 @@ export function taskState(snapshot: Snapshot, key: StepKey): TaskState {
 	}
 }
 
-/** A done step the applicant may still change (not frozen during a review). */
+/**
+ * Results that came from a provider check (DigiLocker, the PAN and ID records, the credit bureau). They
+ * are shown read-only: no "Change". If our team needs one redone, they reopen the step and its form
+ * opens by itself (status REOPENED).
+ */
+const VERIFIED: StepKey[] = ["AADHAAR", "PAN", "CREDIT_CHECK", "ALTERNATE_ID"];
+
+/**
+ * A done step the applicant may still change (not frozen during a review): what they supplied
+ * themselves (email, a typed address, photos, documents), never a verified result, and never an
+ * address that came from DigiLocker.
+ */
 export function canChange(snapshot: Snapshot, key: StepKey): boolean {
 	const step = snapshot.steps.find((s) => s.step_key === key);
-	return !!step && step.status === "COMPLETED" && ["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status);
+	if (!step || step.status !== "COMPLETED" || !["IN_PROGRESS", "CORRECTION_REQUIRED"].includes(snapshot.status)) {
+		return false;
+	}
+	if (VERIFIED.includes(key)) {
+		return false;
+	}
+	return !(key === "HOME_ADDRESS" && step.summary?.source === "DIGILOCKER");
 }
