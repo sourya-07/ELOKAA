@@ -1,15 +1,17 @@
 import { Button, Checkbox, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { OtpInput } from "@/components/OtpInput";
 import { ApiError, call } from "@/lib/api";
 import { CONSENT_VERSION } from "@/lib/consent";
-import { clock } from "@/lib/format";
+import { waitText } from "@/lib/format";
 import { routeFor } from "@/lib/steps";
 import { isDone } from "@/lib/types";
+import { normaliseEmail } from "@/lib/validation";
 import { useApplication } from "./ApplicationContext";
 import { useAction } from "./useAction";
+import { useCountdown } from "./useCountdown";
 
 interface Sent {
 	challenge_ref: string;
@@ -18,8 +20,6 @@ interface Sent {
 	otp_length: number;
 	email_masked: string;
 }
-
-const EMAIL = /^[^\s@]{1,64}@[^\s@]+\.[^\s@.]{2,}$/;
 
 /**
  * Second part of contact details, on the sign-in card: the email address (proved with a code),
@@ -37,22 +37,14 @@ export function EmailStage() {
 	const [emailError, setEmailError] = useState<string | null>(null);
 	const [sent, setSent] = useState<Sent | null>(null);
 	const [code, setCode] = useState("");
-	const [wait, setWait] = useState(0);
+	const { wait, start, fromError } = useCountdown();
 	const [agreed, setAgreed] = useState(consentDone);
 	const { busy, error, setError, run } = useAction();
 
-	useEffect(() => {
-		if (wait <= 0) {
-			return;
-		}
-		const timer = setTimeout(() => setWait(wait - 1), 1000);
-		return () => clearTimeout(timer);
-	}, [wait]);
-
 	const send = async (event?: FormEvent) => {
 		event?.preventDefault();
-		const value = email.trim().toLowerCase();
-		if (!EMAIL.test(value)) {
+		const value = normaliseEmail(email);
+		if (!value) {
 			setEmailError("Enter a valid email address, for example name@example.com");
 			return;
 		}
@@ -64,11 +56,9 @@ export function EmailStage() {
 				});
 				setSent(reply.data);
 				setCode("");
-				setWait(Math.max(reply.data.resend_after, 30));
+				start(reply.data.resend_after);
 			} catch (e) {
-				if (e instanceof ApiError && e.code === "OTP_LIMIT_REACHED" && e.problem.retry_after) {
-					setWait(Number(e.problem.retry_after));
-				}
+				fromError(e);
 				throw e;
 			}
 		});
@@ -141,7 +131,7 @@ export function EmailStage() {
 							</FormControl>
 							{!sent && (
 								<Button type="submit" isLoading={busy} isDisabled={wait > 0}>
-									{wait > 0 ? `Try again in ${clock(wait)}` : "Email me a code"}
+									{wait > 0 ? `Try again in ${waitText(wait)}` : "Email me a code"}
 								</Button>
 							)}
 						</Stack>
@@ -161,7 +151,7 @@ export function EmailStage() {
 									Verify email
 								</Button>
 								<Button variant="link" size="sm" alignSelf="flex-start" isDisabled={wait > 0 || busy} onClick={() => send()}>
-									{wait > 0 ? `Resend code in ${clock(wait)}` : "Resend code"}
+									{wait > 0 ? `Resend in ${waitText(wait)}` : "Resend code"}
 								</Button>
 							</Stack>
 						</form>

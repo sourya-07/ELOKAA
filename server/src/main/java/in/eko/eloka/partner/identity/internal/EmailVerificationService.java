@@ -62,6 +62,11 @@ class EmailVerificationService implements EmailVerification {
 
 	@Override
 	public String normalise(String email) {
+		return normaliseAddress(email);
+	}
+
+	/** The one email rule; the client's normaliseEmail (lib/validation.ts) is the same, tested with the same cases. */
+	static String normaliseAddress(String email) {
 		String value = email == null ? "" : email.trim().toLowerCase(java.util.Locale.ROOT);
 		if (value.length() > 254 || !EMAIL.matcher(value).matches()) {
 			throw ValidationException.field("email", "Enter a valid email address, for example name@example.com");

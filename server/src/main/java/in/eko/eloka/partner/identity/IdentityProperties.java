@@ -28,7 +28,7 @@ public record IdentityProperties(int otpLength, Duration otpTtl, int otpMaxAttem
 		otpLength = otpLength == 0 ? 6 : otpLength;
 		otpTtl = otpTtl == null ? Duration.ofMinutes(5) : otpTtl;
 		otpMaxAttempts = otpMaxAttempts == 0 ? 5 : otpMaxAttempts;
-		otpMinGap = otpMinGap == null ? Duration.ofSeconds(30) : otpMinGap;
+		otpMinGap = otpMinGap == null ? Duration.ofSeconds(60) : otpMinGap;
 		otpMaxPerHour = otpMaxPerHour == 0 ? 5 : otpMaxPerHour;
 		otpMaxPerDay = otpMaxPerDay == 0 ? 10 : otpMaxPerDay;
 		otpMaxPerIpPerHour = otpMaxPerIpPerHour == 0 ? 10 : otpMaxPerIpPerHour;

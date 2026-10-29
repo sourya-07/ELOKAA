@@ -12,10 +12,10 @@ Callers are the client's server-side proxy (ADR-0003), not browsers.
 | `POST /v1/partner/otp/verify` | public | `{"otp_ref","otp"}` | `200 {"access_token","refresh_token","token_type":"Bearer","expires_in"}` | `422 OTP_INVALID` (+`attempts_left`), `429 OTP_LOCKED`, `410 OTP_EXPIRED`, `422 VALIDATION_FAILED` (bad `otp_ref`), `503 PROVIDER_UNAVAILABLE` |
 | `POST /v1/partner/session/refresh` | public | `{"refresh_token"}` | `200` new token pair (both rotate) | `401 SESSION_EXPIRED` (a reused old refresh token also ends the session) |
 | `DELETE /v1/partner/session` | applicant | — | `204` | `401 UNAUTHENTICATED` |
-| `POST /v1/partner/reauth` | applicant | — | `202 {"expires_in","otp_length"}`: a fresh code to the applicant's own mobile (step-up before withdrawing) | `429 OTP_LIMIT_REACHED` (+`retry_after` s, same limits as sign-in), `503 PROVIDER_UNAVAILABLE` |
+| `POST /v1/partner/reauth` | applicant | — | `202 {"expires_in","resend_after","otp_length"}`: a fresh code to the applicant's own mobile (step-up before withdrawing) | `429 OTP_LIMIT_REACHED` (+`retry_after` s, same limits as sign-in), `503 PROVIDER_UNAVAILABLE` |
 
 Rules: answers are the same for new and known mobiles; the first verified OTP creates the applicant.
-Limits (defaults, `eloka.identity.*`): OTP valid 5 min, 5 wrong tries, 30 s between sends, 5 per hour and
+Limits (defaults, `eloka.identity.*`): OTP valid 5 min, 5 wrong tries, 60 s between sends (the client counts down from `resend_after` / `retry_after`: "Resend in 1 min"), 5 per hour and
 10 per day per mobile, 10 per hour per IP. Email codes use the same limits per address and per application
 (and per IP), valid 10 min; only a keyed hash of the code is stored. Sessions: access token 30 min, idle 2 h, absolute 12 h.
 

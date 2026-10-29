@@ -22,6 +22,16 @@ export function normaliseMobile(raw: string): string | null {
 	return /^[6-9]\d{9}$/.test(digits) ? digits : null;
 }
 
+// The same rule as the server (EmailVerificationService): something, an @, a domain with a dot and a
+// top-level part of 2 or more; at most 254 characters. Quoted or IP-literal addresses are not accepted.
+const EMAIL = /^[^\s@]{1,64}@[^\s@]+\.[^\s@.]{2,}$/;
+
+/** The address as the server will keep it (trimmed, lower case), or null when it is not one. */
+export function normaliseEmail(raw: string): string | null {
+	const value = raw.trim().toLowerCase();
+	return value.length <= 254 && EMAIL.test(value) ? value : null;
+}
+
 export function isPersonalPan(raw: string): boolean {
 	return /^[A-Z]{3}P[A-Z]\d{4}[A-Z]$/.test(raw.trim().toUpperCase());
 }

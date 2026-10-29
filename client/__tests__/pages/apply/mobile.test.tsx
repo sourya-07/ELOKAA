@@ -61,7 +61,7 @@ describe("contact details page", () => {
 	it("signs in with the mobile code and continues on the same card with the email", async () => {
 		const fetchMock = respond(
 			SIGNED_OUT,
-			{ status: 202, body: { otp_ref: "otpref_x", expires_in: 300, resend_after: 30, otp_length: 6 } },
+			{ status: 202, body: { otp_ref: "otpref_x", expires_in: 300, resend_after: 60, otp_length: 6 } },
 			{ status: 422, body: { code: "OTP_INVALID", detail: "The code is not correct.", attempts_left: 4 } },
 			{ status: 200, body: { signed_in: true } },
 			{ status: 200, body: snapshotAt("EMAIL_VERIFICATION") },
@@ -71,7 +71,8 @@ describe("contact details page", () => {
 		fireEvent.click(screen.getByRole("button", { name: "Send code" }));
 		expect(await screen.findByLabelText("Digit 1 of 6")).toBeInTheDocument();
 		expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ mobile: "9876543210" });
-		expect(screen.getByRole("button", { name: /Resend code in/ })).toBeDisabled();
+		// the server's wait, in words: no early resend
+		expect(screen.getByRole("button", { name: "Resend in 1 min" })).toBeDisabled();
 
 		fireEvent.paste(screen.getByLabelText("Digit 1 of 6"), { clipboardData: { getData: () => "000000" } });
 		fireEvent.click(screen.getByRole("button", { name: "Verify" }));

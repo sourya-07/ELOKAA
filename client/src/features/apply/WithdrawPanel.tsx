@@ -6,6 +6,8 @@ import { Section } from "@/components/ApplyShell";
 import { useApplication } from "@/features/apply/ApplicationContext";
 import { useAction } from "@/features/apply/useAction";
 import { call } from "@/lib/api";
+import { waitText } from "@/lib/format";
+import { useCountdown } from "./useCountdown";
 
 const REASONS: Record<string, string> = {
 	CHANGED_MIND: "I changed my mind",
@@ -22,6 +24,7 @@ export function WithdrawPanel() {
 	const [reason, setReason] = useState("CHANGED_MIND");
 	const [code, setCode] = useState("");
 	const [length, setLength] = useState(6);
+	const { wait, start, fromError } = useCountdown();
 
 	if (stage === "closed") {
 		return (
@@ -32,10 +35,16 @@ export function WithdrawPanel() {
 	}
 	const sendCode = () =>
 		run(async () => {
-			const reply = await call<{ otp_length: number }>("/v1/partner/reauth", { method: "POST" });
-			setLength(reply.data.otp_length);
-			setCode("");
-			setStage("code");
+			try {
+				const reply = await call<{ otp_length: number; resend_after: number }>("/v1/partner/reauth", { method: "POST" });
+				setLength(reply.data.otp_length);
+				setCode("");
+				setStage("code");
+				start(reply.data.resend_after);
+			} catch (e) {
+				fromError(e);
+				throw e;
+			}
 		});
 	return (
 		<Section>
@@ -51,8 +60,8 @@ export function WithdrawPanel() {
 				</Select>
 				<ErrorBanner message={error} />
 				{stage === "confirm" ? (
-					<Button onClick={sendCode} isLoading={busy}>
-						Send code to my mobile
+					<Button onClick={sendCode} isLoading={busy} isDisabled={wait > 0}>
+						{wait > 0 ? `Try again in ${waitText(wait)}` : "Send code to my mobile"}
 					</Button>
 				) : (
 					<>
@@ -67,8 +76,8 @@ export function WithdrawPanel() {
 						>
 							Withdraw
 						</Button>
-						<Button variant="link" alignSelf="flex-start" onClick={sendCode} isDisabled={busy}>
-							Send a new code
+						<Button variant="link" alignSelf="flex-start" onClick={sendCode} isDisabled={busy || wait > 0}>
+							{wait > 0 ? `Resend in ${waitText(wait)}` : "Send a new code"}
 						</Button>
 					</>
 				)}

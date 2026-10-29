@@ -85,3 +85,4 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-29 | Scroll reveal replays on every scroll down (`--uncommitted --dir client`) | — | `client/src/styles/motion.ts` | no findings | — |
 | 2026-10-29 | P1 server safety fixes (capture time required, no orphan files, log masking) | minor | `shared/logging/PiiMasker.java` | a lowercase voter ID number was not masked | fixed: the EPIC rule ignores case; test for both cases |
 | 2026-10-29 | P2 application number (V18) | — | — | no findings | — |
+| 2026-10-29 | P3 OTP resend 60 s, server-driven countdown, one email rule | minor | `client/src/features/apply/WithdrawPanel.tsx` | after a 429 on the first send, "Send code to my mobile" stayed enabled | fixed: it waits with "Try again in …" like the resend button |

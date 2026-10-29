@@ -38,7 +38,8 @@ class WithdrawIntegrationTest {
 		String withdraw = "/v1/partner/applications/" + applicant.id() + "/withdraw";
 
 		applicant.call(withdraw(withdraw, version, "wd-1", "123456")).andExpect(status().isGone()); // no code asked for
-		applicant.call(post("/v1/partner/reauth")).andExpect(status().isAccepted());
+		applicant.call(post("/v1/partner/reauth")).andExpect(status().isAccepted())
+			.andExpect(jsonPath("$.resend_after").value(60));
 		applicant.call(withdraw(withdraw, version, "wd-2", "000000")).andExpect(status().isUnprocessableContent())
 			.andExpect(jsonPath("$.attempts_left").value(4));
 		// A stale version is refused before the code is checked, so the code still works afterwards

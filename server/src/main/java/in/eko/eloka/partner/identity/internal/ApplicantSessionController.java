@@ -113,8 +113,8 @@ class ApplicantSessionController {
 	ResponseEntity<Map<String, Object>> reauth(HttpServletRequest request) {
 		Caller caller = CallerContext.require();
 		reauth.sendCode(caller.subjectId(), request.getRemoteAddr());
-		return ResponseEntity.accepted().body(Map.of("expires_in", properties.otpTtl().toSeconds(), "otp_length",
-				properties.otpLength()));
+		return ResponseEntity.accepted().body(Map.of("expires_in", properties.otpTtl().toSeconds(), "resend_after",
+				properties.otpMinGap().toSeconds(), "otp_length", properties.otpLength()));
 	}
 
 	@DeleteMapping("/session")

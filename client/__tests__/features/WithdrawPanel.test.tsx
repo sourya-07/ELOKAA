@@ -63,4 +63,13 @@ describe("withdraw panel", () => {
 		expect(screen.getByRole("button", { name: "Withdraw application" })).toBeInTheDocument();
 		expect(fetchMock).not.toHaveBeenCalled();
 	});
+
+	it("offers a new code only after the server's wait", async () => {
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt(null), write: jest.fn() });
+		respond({ status: 202, body: { expires_in: 300, resend_after: 60, otp_length: 6 } });
+		render(<WithdrawPanel />);
+		fireEvent.click(screen.getByRole("button", { name: "Withdraw application" }));
+		fireEvent.click(screen.getByRole("button", { name: "Send code to my mobile" }));
+		expect(await screen.findByRole("button", { name: "Resend in 1 min" })).toBeDisabled();
+	});
 });

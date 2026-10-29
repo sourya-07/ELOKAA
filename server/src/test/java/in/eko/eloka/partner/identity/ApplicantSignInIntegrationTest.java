@@ -103,10 +103,12 @@ class ApplicantSignInIntegrationTest {
 	@Test
 	void resendingTooSoonIsLimited() throws Exception {
 		String mobile = nextMobile();
-		sendOtp(mobile).andExpect(status().isAccepted());
+		sendOtp(mobile).andExpect(status().isAccepted()).andExpect(jsonPath("$.resend_after").value(60));
+		// the server holds the 60-second gap whatever the client shows
 		sendOtp(mobile).andExpect(status().isTooManyRequests())
 			.andExpect(jsonPath("$.code").value("OTP_LIMIT_REACHED"))
-			.andExpect(jsonPath("$.retry_after").isNumber());
+			.andExpect(jsonPath("$.retry_after").value(org.hamcrest.Matchers.allOf(
+					org.hamcrest.Matchers.greaterThan(50), org.hamcrest.Matchers.lessThanOrEqualTo(60))));
 	}
 
 	@Test

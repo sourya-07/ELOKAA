@@ -7,10 +7,11 @@ import { OtpInput } from "@/components/OtpInput";
 import { useApplicationSession, useOptionalApplication } from "@/features/apply/ApplicationContext";
 import { EmailStage } from "@/features/apply/EmailStage";
 import { useAction } from "@/features/apply/useAction";
+import { useCountdown } from "@/features/apply/useCountdown";
 import { withOptionalApplication } from "@/features/apply/withApplication";
 import { ApiError, call } from "@/lib/api";
 import { mobileDigits, normaliseMobile } from "@/lib/validation";
-import { clock } from "@/lib/format";
+import { waitText } from "@/lib/format";
 import { routeFor, safeNext } from "@/lib/steps";
 import { delayedAppear } from "@/styles/motion";
 
@@ -68,16 +69,8 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 	const [mobileError, setMobileError] = useState<string | null>(null);
 	const [sent, setSent] = useState<Sent | null>(null);
 	const [code, setCode] = useState("");
-	const [wait, setWait] = useState(0);
+	const { wait, start, fromError } = useCountdown();
 	const { busy, error, setError, run } = useAction();
-
-	useEffect(() => {
-		if (wait <= 0) {
-			return;
-		}
-		const timer = setTimeout(() => setWait(wait - 1), 1000);
-		return () => clearTimeout(timer);
-	}, [wait]);
 
 	const send = async (event?: FormEvent) => {
 		event?.preventDefault();
@@ -92,11 +85,9 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 				const reply = await call<Sent>("/v1/partner/otp", { body: { mobile: normalised } });
 				setSent(reply.data);
 				setCode("");
-				setWait(Math.max(reply.data.resend_after, 30));
+				start(reply.data.resend_after);
 			} catch (e) {
-				if (e instanceof ApiError && e.code === "OTP_LIMIT_REACHED" && e.problem.retry_after) {
-					setWait(Number(e.problem.retry_after));
-				}
+				fromError(e);
 				throw e;
 			}
 		});
@@ -146,7 +137,7 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 						</FormControl>
 						{!sent && (
 							<Button type="submit" isLoading={busy} isDisabled={wait > 0}>
-								{wait > 0 ? `Try again in ${clock(wait)}` : "Send code"}
+								{wait > 0 ? `Try again in ${waitText(wait)}` : "Send code"}
 							</Button>
 						)}
 					</Stack>
@@ -165,7 +156,7 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 								Verify
 							</Button>
 							<Button variant="link" size="sm" alignSelf="flex-start" isDisabled={wait > 0 || busy} onClick={() => send()}>
-								{wait > 0 ? `Resend code in ${clock(wait)}` : "Resend code"}
+								{wait > 0 ? `Resend in ${waitText(wait)}` : "Resend code"}
 							</Button>
 						</Stack>
 					</form>

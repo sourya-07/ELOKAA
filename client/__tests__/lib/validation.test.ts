@@ -1,4 +1,4 @@
-import { checkFile, isPersonalPan, isPincode, mobileDigits, normaliseMobile, PAPER, PHOTO } from "@/lib/validation";
+import { checkFile, isPersonalPan, isPincode, mobileDigits, normaliseEmail, normaliseMobile, PAPER, PHOTO } from "@/lib/validation";
 
 describe("normaliseMobile", () => {
 	it.each([
@@ -47,5 +47,25 @@ describe("checkFile", () => {
 	});
 	it("enforces the size limit", () => {
 		expect(checkFile(file("image/jpeg", 6 * 1024 * 1024), PHOTO)).toMatch(/5 MB/);
+	});
+});
+
+// The same cases as the server's EmailRuleTest, so the two checks stay one rule
+describe("normaliseEmail", () => {
+	it.each([
+		["name@example.com", "name@example.com"],
+		["  Name.Surname+tag@Example.CO.IN ", "name.surname+tag@example.co.in"],
+		["o'brien@example.org", "o'brien@example.org"],
+		["user@sub.domain.example", "user@sub.domain.example"],
+		["name.example.com", null],
+		["name@example", null],
+		["name@example.c", null],
+		["name @example.com", null],
+		["@example.com", null],
+		["a@b@example.com", null],
+		[`${"a".repeat(65)}@example.com`, null],
+		[`a@${"b".repeat(250)}.com`, null],
+	])("%s -> %s", (raw, expected) => {
+		expect(normaliseEmail(raw)).toBe(expected);
 	});
 });

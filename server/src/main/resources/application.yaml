@@ -58,7 +58,7 @@ eloka:
     otp-length: 6
     otp-ttl: 5m
     otp-max-attempts: 5
-    otp-min-gap: 30s
+    otp-min-gap: 60s # the client shows "Resend in 1 min" from resend_after / retry_after
     otp-max-per-hour: 5
     otp-max-per-day: 10
     otp-max-per-ip-per-hour: 10
