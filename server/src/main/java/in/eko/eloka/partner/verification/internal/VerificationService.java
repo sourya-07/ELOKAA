@@ -115,6 +115,13 @@ class VerificationService implements VerificationApi {
 
 	@Override
 	@Transactional
+	public void endDigiLockerTrips(UUID applicationId) {
+		Instant now = Instant.now(clock);
+		sessions.findByApplicationIdAndConsumedAtIsNull(applicationId).forEach(open -> open.consume(now));
+	}
+
+	@Override
+	@Transactional
 	public DigiLockerStart startDigiLocker(UUID applicationId, String returnUrlPattern) {
 		Instant now = Instant.now(clock);
 		if (sessions.countByApplicationIdAndCreatedAtAfter(applicationId, now.minus(Duration.ofHours(1))) >= MAX_STARTS_PER_HOUR) {

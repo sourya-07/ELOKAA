@@ -121,6 +121,9 @@ public interface VerificationApi {
 	/** Reads the session the state belongs to. A state works once, for its own application, for 15 minutes. */
 	DigiLockerOutcome completeDigiLocker(UUID applicationId, String state);
 
+	/** Ends the application's unfinished DigiLocker trips (the application closed); deletes nothing. */
+	void endDigiLockerTrips(UUID applicationId);
+
 	/**
 	 * Checks a voter ID or driving licence with its government record, and the holder's name (and
 	 * date of birth where given) against the DigiLocker identity. Records the attempt, except an outage.

@@ -6,8 +6,9 @@ import { StaffShell } from "@/features/staff/StaffShell";
 import type { QueueItem } from "@/features/staff/types";
 import { call } from "@/lib/api";
 
-// "BLOCKED": applications still with the applicant that have a step blocked (staff follow up)
-const FILTERS = ["", "SUBMITTED", "UNDER_REVIEW", "ON_HOLD", "CORRECTION_REQUIRED", "BLOCKED", "APPROVED", "REJECTED"];
+// "BLOCKED": applications still with the applicant that have a step blocked (staff follow up). The
+// closed ones (approved, rejected, withdrawn, expired, ineligible) can be looked up but never acted on
+const FILTERS = ["", "SUBMITTED", "UNDER_REVIEW", "ON_HOLD", "CORRECTION_REQUIRED", "BLOCKED", "APPROVED", "REJECTED", "WITHDRAWN", "EXPIRED", "INELIGIBLE"];
 
 /** Applications waiting for review, oldest first. */
 export default function QueuePage() {

@@ -80,6 +80,13 @@ step keeps it done until DigiLocker answers; the same identity again changes not
 
 Each transition runs under a row lock, writes the audit event and the applicant timeline in the same transaction, and publishes an application event.
 
+**Closing never deletes.** Withdrawing (and every other terminal status) changes the status only: steps, files,
+checks, consents, the address, the credit result, the photo location and the audit trail stay (a test counts them
+before and after). An unfinished DigiLocker trip is ended (`ClosedApplications`). The default staff queue leaves
+closed applications out; staff can still look them up by status, but no review action applies. Withdrawing while
+staff are reviewing (`UNDER_REVIEW`, `ON_HOLD`) is not allowed (docs/OPEN_QUESTIONS.md Q-33), and when anything
+is deleted is Q-5.
+
 ## Steps
 
 Step status: `NOT_STARTED`, `IN_PROGRESS`, `PENDING_EXTERNAL`, `COMPLETED`, `FAILED`, `BLOCKED`, `LOCKED`, `REOPENED`, `NOT_APPLICABLE`.

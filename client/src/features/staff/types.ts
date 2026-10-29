@@ -6,6 +6,9 @@ export interface StaffView {
 	display_name: string;
 	roles: ("REVIEWER" | "APPROVER")[];
 	active: boolean;
+	environment?: string;
+	/** Fake identity checks may run here (local, test): evidence is not from a real provider */
+	test_providers?: boolean;
 }
 
 export interface QueueItem {

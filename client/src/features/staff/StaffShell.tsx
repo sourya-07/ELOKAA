@@ -47,6 +47,14 @@ export function StaffShell({ title, children }: { title: string; children: (me: 
 					</Flex>
 				</Container>
 			</Box>
+			{me?.test_providers && (
+				<Box role="note" bg="status.warn.bg" color="status.warn.fg" borderBottom="1px solid" borderColor="border.hairline">
+					<Container maxW="1200px" py={2} fontSize="sm" fontWeight={600}>
+						Test environment ({me.environment}): identity, credit and document checks here come from test providers, not real
+						records.
+					</Container>
+				</Box>
+			)}
 			<Container as="main" maxW="1200px" py={8}>
 				<Heading as="h1" size="lg" mb={6}>
 					{title}

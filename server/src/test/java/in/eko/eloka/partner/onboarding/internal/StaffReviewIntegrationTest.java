@@ -46,6 +46,7 @@ class StaffReviewIntegrationTest {
 	void staffSignInAndSessionKindsStayApart() throws Exception {
 		String reviewer = staffToken(REVIEWER);
 		mvc.perform(get("/v1/admin/me").header("Authorization", "Bearer " + reviewer)).andExpect(status().isOk())
+			.andExpect(jsonPath("$.environment").value("test")).andExpect(jsonPath("$.test_providers").value(true))
 			.andExpect(jsonPath("$.roles[0]").value("REVIEWER"))
 			.andExpect(jsonPath("$.email_masked").value("r***@example.com"))
 			.andExpect(jsonPath("$.display_name").value("Sample Reviewer"));
@@ -58,6 +59,56 @@ class StaffReviewIntegrationTest {
 		staffOtp("9000000099");
 		mvc.perform(post("/v1/admin/auth/otp/verify").contentType(MediaType.APPLICATION_JSON)
 			.content("{\"mobile\":\"9000000099\",\"otp\":\"123456\"}")).andExpect(status().isUnprocessableContent());
+	}
+
+	@Test
+	void aWithdrawnApplicationKeepsItsRecordsAndLeavesTheQueue() throws Exception {
+		JourneyDriver applicant = new JourneyDriver(mvc, json).submit();
+		String id = applicant.id();
+		// an unfinished DigiLocker trip, as if one had been left open (a submitted application starts none)
+		jdbc.update("""
+				INSERT INTO digilocker_session (id, application_id, verification_ref, provider_ref, state_hash, expires_at, created_at, updated_at, version)
+				SELECT UUID_TO_BIN(UUID()), id, CONCAT('DLtest', SUBSTRING(public_id, 5, 14)), 'ref', UNHEX(SHA2(public_id, 256)),
+				       NOW(6) + INTERVAL 10 MINUTE, NOW(6), NOW(6), 0 FROM partner_application WHERE public_id = ?""", id);
+		String[] tables = { "application_step", "application_document", "verification", "consent_record", "partner_address",
+				"credit_assessment", "photo_location", "digilocker_session" };
+		java.util.Map<String, Integer> before = new java.util.HashMap<>();
+		for (String table : tables) {
+			before.put(table, rows(table, id));
+		}
+		int audit = jdbc.queryForObject("SELECT COUNT(*) FROM audit_event", Integer.class);
+
+		long version = applicant.refresh().get("version").asLong();
+		applicant.call(post("/v1/partner/reauth")).andExpect(status().isAccepted());
+		String withdraw = "/v1/partner/applications/" + id + "/withdraw";
+		applicant.call(post(withdraw).header("If-Match", "\"v" + version + "\"").header("Idempotency-Key", "wd-keep")
+			.contentType(MediaType.APPLICATION_JSON).content("{\"otp\":\"123456\",\"reason_code\":\"WILL_APPLY_LATER\"}"))
+			.andExpect(status().isOk()).andExpect(jsonPath("$.status").value("WITHDRAWN"))
+			.andExpect(jsonPath("$.available_actions").isEmpty());
+
+		// nothing deleted: every related row is still there, and the audit trail only grew
+		for (String table : tables) {
+			assertThat(rows(table, id)).as(table).isEqualTo(before.get(table));
+		}
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event", Integer.class)).isGreaterThan(audit);
+		// the open DigiLocker trip was ended, not removed
+		assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM digilocker_session s JOIN partner_application a ON a.id = s.application_id "
+				+ "WHERE a.public_id = ? AND s.consumed_at IS NULL", Integer.class, id)).isZero();
+		// a second withdrawal with a new key is refused, not repeated
+		applicant.call(post(withdraw).header("If-Match", "\"v" + (version + 1) + "\"").header("Idempotency-Key", "wd-again")
+			.contentType(MediaType.APPLICATION_JSON).content("{\"otp\":\"123456\"}"))
+			.andExpect(jsonPath("$.code").value(org.hamcrest.Matchers.oneOf("INVALID_STATE_TRANSITION", "PRECONDITION_FAILED")));
+
+		String reviewer = staffToken(REVIEWER);
+		assertThat(body(staff(reviewer, get("/v1/admin/applications"))).findValuesAsString("application_id")).doesNotContain(id);
+		assertThat(body(staff(reviewer, get("/v1/admin/applications?status=WITHDRAWN"))).findValuesAsString("application_id")).contains(id);
+		staff(reviewer, post("/v1/admin/applications/" + id + "/claim")).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("INVALID_STATE_TRANSITION"));
+	}
+
+	private int rows(String table, String publicId) {
+		return jdbc.queryForObject("SELECT COUNT(*) FROM " + table + " t JOIN partner_application a ON a.id = t.application_id "
+				+ "WHERE a.public_id = ?", Integer.class, publicId);
 	}
 
 	@Test

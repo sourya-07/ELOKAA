@@ -1,11 +1,15 @@
 package in.eko.eloka.partner.identity.internal;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import in.eko.eloka.partner.identity.StaffView;
+import in.eko.eloka.partner.shared.config.ElokaProperties;
 import in.eko.eloka.partner.shared.error.ApiProblem;
 import in.eko.eloka.partner.shared.error.ForbiddenException;
 import in.eko.eloka.partner.shared.security.Caller;
+import in.eko.eloka.partner.shared.security.Role;
 import in.eko.eloka.partner.shared.security.CallerContext;
 import in.eko.eloka.partner.shared.security.SessionKind;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +29,18 @@ class StaffAuthController {
 
 	private final StaffService staff;
 	private final SessionService sessions;
+	private final ElokaProperties eloka;
 
-	StaffAuthController(StaffService staff, SessionService sessions) {
+	/**
+	 * Who is signed in, and where: {@code test_providers} is true only where fake identity checks may
+	 * run (local and test), so the console can say that evidence there is not real.
+	 */
+	record Me(UUID id, @JsonProperty("email_masked") String emailMasked, @JsonProperty("display_name") String displayName,
+			Set<Role> roles, boolean active, String environment, @JsonProperty("test_providers") boolean testProviders) {
+	}
+
+	StaffAuthController(StaffService staff, SessionService sessions, ElokaProperties eloka) {
+		this.eloka = eloka;
 		this.staff = staff;
 		this.sessions = sessions;
 	}
@@ -83,9 +97,11 @@ class StaffAuthController {
 
 	/** Who am I and what may I do (the console hides actions the staff member cannot take). */
 	@GetMapping("/me")
-	StaffView me() {
+	Me me() {
 		Caller caller = requireStaff();
-		return staff.find(caller.subjectId()).orElseThrow(() -> new ForbiddenException("FORBIDDEN", "Not allowed"));
+		StaffView view = staff.find(caller.subjectId()).orElseThrow(() -> new ForbiddenException("FORBIDDEN", "Not allowed"));
+		return new Me(view.id(), view.emailMasked(), view.displayName(), view.roles(), view.active(),
+				eloka.environment().name().toLowerCase(java.util.Locale.ROOT), eloka.environment().allowsDevelopmentShortcuts());
 	}
 
 	private static Caller requireStaff() {
