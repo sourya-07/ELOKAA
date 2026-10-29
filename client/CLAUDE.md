@@ -71,6 +71,8 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
 ## Rules
 
 - The browser calls only `/api/v1/**`; the proxy adds the session from HttpOnly cookies and checks `X-Requested-With: eloka` and the Origin on writes. Use `call()` from `@/lib/api`, never `fetch` to the server.
+- While a check or a code is being sent (`useAction().busy`), its fields are disabled: nothing can be edited during a
+  verification. Verified results have no "Change" at all (lib/tasks.ts).
 - The server decides what is next: pages follow `snapshot.next_step` (`routeFor`) and guard themselves with `useStepGuard`.
 - Every application write sends `If-Match` (done by `write()`); billable or once-only calls also send an `Idempotency-Key`.
 - Imports use `@/` for `src/`.

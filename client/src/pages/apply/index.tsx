@@ -120,7 +120,7 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 			<Section>
 				<form onSubmit={send} noValidate>
 					<Stack spacing={4}>
-						<FormControl isInvalid={!!mobileError} isDisabled={!!sent}>
+						<FormControl isInvalid={!!mobileError} isDisabled={!!sent || busy}>
 							<FormLabel htmlFor="mobile">Mobile number</FormLabel>
 							<InputGroup>
 								<InputLeftAddon>+91</InputLeftAddon>
@@ -151,7 +151,7 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 									Change number
 								</Button>
 							</Text>
-							<OtpInput length={sent.otp_length} value={code} onChange={setCode} isInvalid={!!error} />
+							<OtpInput length={sent.otp_length} value={code} onChange={setCode} isInvalid={!!error} isDisabled={busy} />
 							<Button type="submit" isLoading={busy}>
 								Verify
 							</Button>

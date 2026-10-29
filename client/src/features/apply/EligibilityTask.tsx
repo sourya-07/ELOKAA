@@ -58,7 +58,7 @@ export function EligibilityTask() {
 					<Text>Checking your eligibility…</Text>
 				</Stack>
 			) : (
-				<Checkbox isChecked={agreed} onChange={(event) => setAgreed(event.target.checked)} isDisabled={blocked || unavailable} alignItems="flex-start">
+				<Checkbox isChecked={agreed} onChange={(event) => setAgreed(event.target.checked)} isDisabled={blocked || unavailable || busy} alignItems="flex-start">
 					I allow ELOKA to get my credit information from a credit bureau for this application.
 				</Checkbox>
 			)}

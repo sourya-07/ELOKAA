@@ -67,13 +67,13 @@ export function AlternateIdTask() {
 			) : (
 				<Text>One of these is enough. We check it with the government record and against your name and date of birth from DigiLocker.</Text>
 			)}
-			<RadioGroup value={type} onChange={(value) => { setType(value as IdType); setNumber(""); setNumberError(null); }}>
+			<RadioGroup isDisabled={busy} value={type} onChange={(value) => { setType(value as IdType); setNumber(""); setNumberError(null); }}>
 				<Stack direction={{ base: "column", sm: "row" }} spacing={5}>
-					<Radio value="VOTER_ID" isDisabled={!byHand && exhausted.includes("VOTER_ID")}>Voter ID</Radio>
-					<Radio value="DRIVING_LICENCE" isDisabled={!byHand && exhausted.includes("DRIVING_LICENCE")}>Driving licence</Radio>
+					<Radio value="VOTER_ID" isDisabled={busy || (!byHand && exhausted.includes("VOTER_ID"))}>Voter ID</Radio>
+					<Radio value="DRIVING_LICENCE" isDisabled={busy || (!byHand && exhausted.includes("DRIVING_LICENCE"))}>Driving licence</Radio>
 				</Stack>
 			</RadioGroup>
-			<FormControl isInvalid={!!numberError}>
+			<FormControl isInvalid={!!numberError} isDisabled={busy}>
 				<FormLabel htmlFor="alternate-number">{FORMAT[type].label}</FormLabel>
 				<Input id="alternate-number" autoCapitalize="characters" autoComplete="off" spellCheck={false} fontFamily="mono" maxLength={FORMAT[type].max} value={number} onChange={(event) => setNumber(event.target.value.toUpperCase())} />
 				<FormHelperText>{FORMAT[type].help}</FormHelperText>

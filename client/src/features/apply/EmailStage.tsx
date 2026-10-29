@@ -120,7 +120,7 @@ export function EmailStage() {
 				<Stack spacing={4}>
 					<form onSubmit={send} noValidate>
 						<Stack spacing={4}>
-							<FormControl isInvalid={!!emailError} isDisabled={!!sent}>
+							<FormControl isInvalid={!!emailError} isDisabled={!!sent || busy}>
 								<FormLabel htmlFor="email">Email address</FormLabel>
 								<Input id="email" type="email" inputMode="email" autoComplete="email" spellCheck={false} value={email} onChange={(event) => setEmail(event.target.value)} />
 								<FormErrorMessage>{emailError}</FormErrorMessage>
@@ -142,7 +142,7 @@ export function EmailStage() {
 										Change email
 									</Button>
 								</Text>
-								<OtpInput length={sent.otp_length} value={code} onChange={setCode} isInvalid={!!error} />
+								<OtpInput length={sent.otp_length} value={code} onChange={setCode} isInvalid={!!error} isDisabled={busy} />
 								<Button type="submit" isLoading={busy}>
 									Verify email
 								</Button>
@@ -157,7 +157,7 @@ export function EmailStage() {
 
 			{verified && !changing && (
 				<Stack spacing={4}>
-					<Checkbox isChecked={agreed} isDisabled={consentDone} onChange={(event) => setAgreed(event.target.checked)} alignItems="flex-start">
+					<Checkbox isChecked={agreed} isDisabled={consentDone || busy} onChange={(event) => setAgreed(event.target.checked)} alignItems="flex-start">
 						I agree that ELOKA uses the details I give here to check my identity and my application, as described in the privacy notice.
 					</Checkbox>
 					<Button onClick={next} isLoading={busy}>

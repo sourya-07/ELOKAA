@@ -26,4 +26,16 @@ describe("PAN form", () => {
 		fireEvent.click(screen.getByRole("button", { name: "Verify PAN" }));
 		await waitFor(() => expect(write).toHaveBeenCalledWith("/pan-verifications", { body: { pan: "ABCPK1234L" }, idempotent: true }));
 	});
+
+	it("cannot be edited while the PAN is being checked", async () => {
+		let finish: (value: unknown) => void = () => undefined;
+		const write = jest.fn(() => new Promise((resolve) => (finish = resolve)));
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt("PAN"), write });
+		render(<PanForm />);
+		fireEvent.change(screen.getByLabelText("PAN"), { target: { value: "ABCPK1234L" } });
+		fireEvent.click(screen.getByRole("button", { name: "Verify PAN" }));
+		await waitFor(() => expect(screen.getByLabelText("PAN")).toBeDisabled());
+		finish(snapshotAt("CREDIT_CHECK"));
+		await waitFor(() => expect(screen.getByLabelText("PAN")).toBeEnabled());
+	});
 });

@@ -46,7 +46,7 @@ export function AddressForm() {
 	};
 
 	const field = (name: Field, label: string, props: Record<string, unknown> = {}) => (
-		<FormControl isInvalid={!!errors[name]} isRequired={name !== "line2" && name !== "district"}>
+		<FormControl isInvalid={!!errors[name]} isRequired={name !== "line2" && name !== "district"} isDisabled={busy}>
 			<FormLabel htmlFor={name}>{label}</FormLabel>
 			<Input id={name} value={values[name]} onChange={set(name)} {...props} />
 			<FormErrorMessage>{errors[name]}</FormErrorMessage>
@@ -62,7 +62,7 @@ export function AddressForm() {
 				{field("district", "District (optional)")}
 			</SimpleGrid>
 			<SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-				<FormControl isInvalid={!!errors.state} isRequired>
+				<FormControl isInvalid={!!errors.state} isRequired isDisabled={busy}>
 					<FormLabel htmlFor="state">State</FormLabel>
 					<Select id="state" placeholder="Choose your state" value={values.state} onChange={set("state")}>
 						{STATES.map((state) => (

@@ -141,7 +141,7 @@ export function DigiLockerTask() {
 				</Text>
 			)}
 			<ErrorBanner message={linkProblem ?? (stepError && step?.status !== "COMPLETED" ? `${stepError}${step?.status === "FAILED" && step.last_error_code !== "DIGILOCKER_UNAVAILABLE" ? ` ${attemptsLeft} attempts left.` : ""}` : null)} tone="warning" />
-			<Checkbox isChecked={agreed} onChange={(event) => setAgreed(event.target.checked)} alignItems="flex-start">
+			<Checkbox isChecked={agreed} onChange={(event) => setAgreed(event.target.checked)} isDisabled={busy} alignItems="flex-start">
 				I allow ELOKA to fetch these details from DigiLocker for this application.
 			</Checkbox>
 			<ErrorBanner message={error} />
