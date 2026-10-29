@@ -87,3 +87,4 @@ CodeRabbit CLI (`coderabbit review --agent --uncommitted`) runs once per cohesiv
 | 2026-10-29 | P2 application number (V18) | — | — | no findings | — |
 | 2026-10-29 | P3 OTP resend 60 s, server-driven countdown, one email rule | minor | `client/src/features/apply/WithdrawPanel.tsx` | after a 429 on the first send, "Send code to my mobile" stayed enabled | fixed: it waits with "Try again in …" like the resend button |
 | 2026-10-29 | P4 masked contact in the snapshot, no notification promises | — | — | review deferred: hourly allowance used up | owed: `coderabbit review --committed --base-commit d3d0f3e` with the next phases |
+| 2026-10-29 | P5–P13 (copy, read-only verified rows, file rules, coordinates, error catalog, languages, closing, motion, docs) | — | — | review deferred: hourly allowance used up (each retry moved the wait further) | owed: `coderabbit review --agent --committed --base-commit d3d0f3e` covers P4–P13 |
