@@ -3,6 +3,8 @@
  * session; nothing personal is logged or stored in the browser.
  */
 
+import { errorMessage } from "@/lib/errors";
+
 export interface Problem {
 	status: number;
 	code: string;
@@ -139,14 +141,17 @@ export function newKey(): string {
 	return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-/** A sentence for the person, from a problem: field errors first, then the server's detail. */
+/**
+ * A sentence for the person, from a problem: a field's own message first, then the catalogue's words
+ * for the code (lib/errors.ts, docs/ERROR_CATALOG.md), then the server's detail.
+ */
 export function messageOf(error: unknown): string {
 	if (error instanceof ApiError) {
 		const fields = error.problem.invalid_params;
 		if (fields && Object.keys(fields).length) {
 			return Object.values(fields)[0];
 		}
-		return error.problem.detail ?? "Something went wrong. Please try again.";
+		return errorMessage(error.problem) ?? error.problem.detail ?? "Something went wrong. Please try again.";
 	}
 	return "Something went wrong. Please try again.";
 }

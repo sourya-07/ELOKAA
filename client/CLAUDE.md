@@ -20,7 +20,8 @@ src/pages/            routes only: index, apply/* (journey: index = contact deta
                       address, PAN, credit check and voter ID / licence as tasks, photos, documents = identity
                       documents and education, review, status; old pages redirect in next.config.js), staff/*, api/health, api/v1/[...path] (BFF)
 src/middleware.ts     per-request CSP nonce (pages render per request so the nonce is real)
-src/lib/              api.ts (fetch through the proxy, ApiError, uploadWithProgress (XHR, for upload progress)), documents.ts (kind labels), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
+src/lib/              api.ts (fetch through the proxy, ApiError, messageOf, uploadWithProgress (XHR, progress, cancel)), errors.ts (the words
+                      for every server error code, docs/ERROR_CATALOG.md; a test keeps them in step), documents.ts (kind labels), bff.ts (proxy rules, unit-tested), format.ts, steps.ts
                       (PAGES: step → page#anchor, routeFor, safeNext for ?next= after sign-in), tasks.ts (step status →
                       task state), blockers.ts (submit blockers → sentence + fix link), milestones.ts (progress = finished parts, from server step
                       statuses, never a screen count), types.ts, validation.ts, consent.ts, states.ts

@@ -11,7 +11,7 @@ The web journey through which a prospective ELOKA partner verifies their mobile 
 | [`docs/PARTNER_JOURNEY.md`](docs/PARTNER_JOURNEY.md) | pages, steps, states and the rules the server enforces |
 | [`docs/adr/`](docs/adr/) | architecture decisions |
 | [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md) | what is still undecided and the default we build on |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/API.md`](docs/API.md), [`docs/SECURITY.md`](docs/SECURITY.md), [`docs/TESTING.md`](docs/TESTING.md), [`docs/LOCAL_DEVELOPMENT.md`](docs/LOCAL_DEVELOPMENT.md) | how it fits together, the endpoints, security, tests, running it locally |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/API.md`](docs/API.md), [`docs/ERROR_CATALOG.md`](docs/ERROR_CATALOG.md), [`docs/SECURITY.md`](docs/SECURITY.md), [`docs/TESTING.md`](docs/TESTING.md), [`docs/LOCAL_DEVELOPMENT.md`](docs/LOCAL_DEVELOPMENT.md) | how it fits together, the endpoints, security, tests, running it locally |
 | [`eloka_design/`](eloka_design/README.md) | Google Stitch designs (png + html) |
 | `client/` | Next.js web app: applicant journey (`/apply`), staff console (`/staff`), BFF proxy |
 | `server/` | Spring Boot backend: sign-in, application, checks, documents, review |

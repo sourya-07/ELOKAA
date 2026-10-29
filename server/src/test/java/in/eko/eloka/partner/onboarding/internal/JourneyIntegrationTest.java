@@ -310,6 +310,14 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
+	void frameworkRefusalsCarryACodeToo() throws Exception {
+		call(get(app("/documents/not-a-uuid/content"))).andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
+		call(put(app("/documents"))).andExpect(status().isMethodNotAllowed())
+			.andExpect(jsonPath("$.code").value("METHOD_NOT_ALLOWED"));
+	}
+
+	@Test
 	void theFileRulesAreTheOnesTheServerEnforces() throws Exception {
 		call(get("/v1/partner/document-rules")).andExpect(status().isOk())
 			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].formats[0]").value("image/jpeg"))

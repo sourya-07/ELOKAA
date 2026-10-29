@@ -76,9 +76,6 @@ export function EmailStage() {
 				setSent(null);
 				setChanging(false);
 			} catch (e) {
-				if (e instanceof ApiError && e.code === "OTP_INVALID") {
-					throw new ApiError({ ...e.problem, detail: `The code is not correct. ${e.problem.attempts_left} attempts left.` });
-				}
 				if (e instanceof ApiError && (e.code === "OTP_LOCKED" || e.code === "OTP_EXPIRED")) {
 					setCode("");
 				}

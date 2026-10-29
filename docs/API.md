@@ -1,7 +1,10 @@
 # Server API
 
 Only what is built. Base path `/v1`. Errors are RFC 9457 `application/problem+json` with a stable `code`
-(and `invalid_params`, `retry_after`, `attempts_left` where relevant). JSON fields are snake_case.
+(and `invalid_params`, `retry_after`, `attempts_left` where relevant); every code, its cause and the message
+shown for it: [ERROR_CATALOG.md](ERROR_CATALOG.md). Framework refusals carry a code too (`MALFORMED_REQUEST`,
+`METHOD_NOT_ALLOWED`, `UNSUPPORTED_MEDIA_TYPE`, …), and `STEP_NOT_EDITABLE` is always `409` (it was `403` for a
+locked step before 2026-10-29). JSON fields are snake_case.
 Callers are the client's server-side proxy (ADR-0003), not browsers.
 
 ## Applicant sign-in (`identity` module)

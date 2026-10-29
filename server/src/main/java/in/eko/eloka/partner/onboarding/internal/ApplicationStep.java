@@ -187,7 +187,8 @@ class ApplicationStep extends BaseEntity {
 					"Too many failed attempts on this step. Please contact support.");
 		}
 		if (status == StepStatus.LOCKED || status == StepStatus.NOT_APPLICABLE) {
-			throw new ApiProblem(HttpStatus.FORBIDDEN, "STEP_NOT_EDITABLE", "This step cannot be changed now");
+			// 409 like every other STEP_NOT_EDITABLE (a 403 reads as "not signed in" to the client)
+			throw new ApiProblem(HttpStatus.CONFLICT, "STEP_NOT_EDITABLE", "This step cannot be changed now");
 		}
 	}
 

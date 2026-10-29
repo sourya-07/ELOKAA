@@ -68,6 +68,34 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE).body(problem);
 	}
 
+	/**
+	 * Framework refusals (unreadable body, wrong value type, 404, 405, 415) get a {@code code} like every
+	 * other error, so the client can always map one (docs/ERROR_CATALOG.md).
+	 */
+	@Override
+	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+			HttpStatusCode statusCode, WebRequest request) {
+		// The parent builds the problem body when none is given, so the code is added to what it returns
+		ResponseEntity<Object> response = super.handleExceptionInternal(ex, body, headers, statusCode, request);
+		if (response != null && response.getBody() instanceof ProblemDetail problem
+				&& (problem.getProperties() == null || !problem.getProperties().containsKey("code"))) {
+			problem.setProperty("code", frameworkCode(statusCode.value()));
+		}
+		return response;
+	}
+
+	static String frameworkCode(int status) {
+		return switch (status) {
+			case 400 -> "MALFORMED_REQUEST";
+			case 404 -> "NOT_FOUND";
+			case 405 -> "METHOD_NOT_ALLOWED";
+			case 406 -> "NOT_ACCEPTABLE";
+			case 415 -> "UNSUPPORTED_MEDIA_TYPE";
+			case 413 -> "FILE_TOO_LARGE";
+			default -> status >= 500 ? "INTERNAL_ERROR" : "REQUEST_REJECTED";
+		};
+	}
+
 	@ExceptionHandler(Exception.class)
 	ProblemDetail handleUnexpected(Exception ex) {
 		log.error("Unexpected error", ex);
