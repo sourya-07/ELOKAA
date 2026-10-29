@@ -63,7 +63,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONTENT_TOO_LARGE,
-				"The file is too large. Files can be at most 10 MB.");
+				"The file is too large. Documents can be at most 5 MB and photos 2 MB.");
 		problem.setProperty("code", "FILE_TOO_LARGE");
 		return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE).body(problem);
 	}

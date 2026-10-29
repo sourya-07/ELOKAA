@@ -43,7 +43,7 @@ export const ERRORS: Record<string, Message> = {
 	ADDRESS_NOT_FOUND: "This application has no address yet.",
 	EVIDENCE_NOT_FOUND: "This check was not found.",
 	NOTHING_TO_SHOW: "There is no value to show.",
-	FILE_TOO_LARGE: "The file is too large. Files can be at most 10 MB.",
+	FILE_TOO_LARGE: "The file is too large. Documents can be at most 5 MB and photos 2 MB.",
 	DUPLICATE_FILE: "You already uploaded this same file for another document. Choose the right file.",
 	LOCATION_REQUIRED: "The live photo needs your location. Allow location for this site and take the photo again.",
 	LOCATION_INVALID: "We could not read your location. Take the photo again.",

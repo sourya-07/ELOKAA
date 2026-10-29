@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { CameraCapture } from "@/components/CameraCapture";
+import { fakeJpeg, jpegFile } from "../files";
 import { render } from "../render";
 
 describe("CameraCapture", () => {
@@ -9,7 +10,7 @@ describe("CameraCapture", () => {
 		const { container } = render(<CameraCapture onCapture={onCapture} />);
 		fireEvent.click(screen.getByRole("button", { name: "Open camera" }));
 		const input = container.querySelector("input[type=file]") as HTMLInputElement;
-		fireEvent.change(input, { target: { files: [new File(["x"], "me.jpg", { type: "image/jpeg" })] } });
+		fireEvent.change(input, { target: { files: [jpegFile(50 * 1024)] } });
 		await waitFor(() => expect(onCapture).toHaveBeenCalledTimes(1));
 		expect(await screen.findByRole("button", { name: "Open camera" })).toBeInTheDocument();
 		expect(container.querySelector("input[type=file]")).toBeNull();
@@ -43,9 +44,9 @@ describe("CameraCapture", () => {
 		const { container } = render(<CameraCapture onCapture={onCapture} />);
 		fireEvent.click(screen.getByRole("button", { name: "Open camera" }));
 		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, {
-			target: { files: [new File(["x"], "me.png", { type: "image/png" })] },
+			target: { files: [fakeJpeg(50 * 1024)] },
 		});
-		expect(await screen.findByText("Only JPG photos are accepted.")).toBeInTheDocument();
+		expect(await screen.findByText("Only JPG or PNG files are accepted.")).toBeInTheDocument();
 		expect(onCapture).not.toHaveBeenCalled();
 	});
 });

@@ -199,13 +199,21 @@ public final class JourneyDriver {
 		// A different mark each time, so two uploads are never the same file (DUPLICATE_FILE)
 		graphics.setColor(new Color(ThreadLocalRandom.current().nextInt(0xFFFFFF)));
 		graphics.fillRect(0, 0, Math.min(64, width), Math.min(64, height));
+		// Some detail, so the file has a real photo's size (photos must be at least 20 KB, documents 10 KB)
+		for (int y = 0; y < Math.min(200, height); y++) {
+			for (int x = 0; x < Math.min(200, width); x++) {
+				image.setRGB(x, y, ThreadLocalRandom.current().nextInt(0xFFFFFF));
+			}
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpeg", out);
 		return out.toByteArray();
 	}
 
 	static byte[] pdf() {
-		return ("%PDF-1.4\n%" + UUID.randomUUID() + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
+		// Documents must be at least 10 KB: a comment pads it to a real scan's size
+		return ("%PDF-1.4\n1 0 obj << >> endobj\n%" + UUID.randomUUID() + "\n%" + "x".repeat(12 * 1024) + "\n%%EOF")
+			.getBytes(StandardCharsets.ISO_8859_1);
 	}
 
 	private static MockMultipartFile file(String part, byte[] bytes) {

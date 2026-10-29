@@ -2,7 +2,7 @@ import { Box, Button, Flex, HStack, Image, Link, Progress, Stack, Tag, Text } fr
 import { useRef, useState } from "react";
 import { ApiError, messageOf } from "@/lib/api";
 import type { DocumentView } from "@/lib/types";
-import { checkFile, type FileRule } from "@/lib/validation";
+import { acceptOf, checkFile, type FileRule } from "@/lib/validation";
 import { enter } from "@/styles/motion";
 import { ErrorBanner } from "./ErrorBanner";
 import { StatusPill } from "./StatusPill";
@@ -44,7 +44,7 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 		if (!file) {
 			return;
 		}
-		const problem = checkFile(file, rule);
+		const problem = await checkFile(file, rule);
 		if (problem) {
 			setError(problem);
 			setFailed(null);
@@ -169,7 +169,7 @@ export function FileSlot({ label, hint, rule, required, files, onUpload, onRemov
 						{rule.label}
 					</Text>
 				)}
-				<input ref={input} type="file" hidden accept={rule.types.join(",")} onChange={(event) => choose(event.target.files?.[0])} disabled={isDisabled || busy} />
+				<input ref={input} type="file" hidden accept={acceptOf(rule)} onChange={(event) => choose(event.target.files?.[0])} disabled={isDisabled || busy} />
 				{full ? (
 					<Text fontSize="sm" color="text.muted">
 						You have added {files.length} of {rule.maxCount}.

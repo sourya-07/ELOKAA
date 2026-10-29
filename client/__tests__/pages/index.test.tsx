@@ -20,6 +20,6 @@ describe("Home", () => {
 	it("asks for soft copies and states the real file limits", () => {
 		render(<Home />);
 		expect(screen.getByText("Keep your documents ready in digital format (soft copies).")).toBeInTheDocument();
-		expect(screen.getByText(/JPG photos up to 5 MB; certificates and cards as JPG or PDF up to 10 MB/)).toBeInTheDocument();
+		expect(screen.getByText("Photos: JPG or PNG, 20 KB to 2 MB. Documents: JPG, PNG or PDF, 10 KB to 5 MB.")).toBeInTheDocument();
 	});
 });

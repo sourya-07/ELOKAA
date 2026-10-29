@@ -26,6 +26,12 @@ export async function jpeg(page: Page, width = 800, height = 600): Promise<{ nam
 			context.fillStyle = "#222";
 			context.font = "32px sans-serif";
 			context.fillText(`${Date.now()} ${Math.random()}`, 20, 60);
+			// Some detail, so the file has a real photo's size (photos must be at least 20 KB, documents 10 KB)
+			const noise = context.createImageData(200, 200);
+			for (let i = 0; i < noise.data.length; i++) {
+				noise.data[i] = i % 4 === 3 ? 255 : Math.floor(Math.random() * 256);
+			}
+			context.putImageData(noise, 0, 100);
 			return canvas.toDataURL("image/jpeg", 0.9).split(",")[1];
 		},
 		[width, height],

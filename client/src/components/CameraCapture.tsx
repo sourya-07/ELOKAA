@@ -1,7 +1,7 @@
 import { AspectRatio, Box, Button, HStack, Stack, Text } from "@chakra-ui/react";
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { messageOf } from "@/lib/api";
-import { checkFile, PHOTO } from "@/lib/validation";
+import { acceptOf, checkFile, PHOTO } from "@/lib/validation";
 import { ErrorBanner } from "./ErrorBanner";
 
 interface Props {
@@ -134,18 +134,25 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 		canvas.height = Math.round(element.videoHeight * scale);
 		// The saved photo is the true image (not mirrored); only the live view is a mirror
 		canvas.getContext("2d")?.drawImage(element, 0, 0, canvas.width, canvas.height);
-		canvas.toBlob(
-			(blob) => {
-				if (blob) {
-					const file = new File([blob], "live-photo.jpg", { type: "image/jpeg" });
-					setPreview({ url: URL.createObjectURL(blob), file });
-					setState("preview");
-					stop();
-				}
-			},
-			"image/jpeg",
-			0.9,
-		);
+		// Within the photo limit (2 MB): a little more compression only when a detailed picture needs it
+		const encode = (quality: number) =>
+			canvas.toBlob(
+				(blob) => {
+					if (blob && blob.size > PHOTO.maxBytes && quality > 0.6) {
+						encode(Math.round((quality - 0.1) * 10) / 10);
+						return;
+					}
+					if (blob) {
+						const file = new File([blob], "live-photo.jpg", { type: "image/jpeg" });
+						setPreview({ url: URL.createObjectURL(blob), file });
+						setState("preview");
+						stop();
+					}
+				},
+				"image/jpeg",
+				quality,
+			);
+		encode(0.9);
 	};
 
 	const use = async () => {
@@ -203,7 +210,7 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 							Take a photo with the phone camera
 							<input
 								type="file"
-								accept="image/jpeg"
+								accept={acceptOf(PHOTO)}
 								capture="user"
 								hidden
 								disabled={!canUse}
@@ -213,7 +220,7 @@ export function CameraCapture({ onCapture, onStart, canUse = true, waitingFor, i
 									if (!file) {
 										return;
 									}
-									const bad = checkFile(file, PHOTO);
+									const bad = await checkFile(file, PHOTO);
 									if (bad) {
 										setError(bad);
 										return;

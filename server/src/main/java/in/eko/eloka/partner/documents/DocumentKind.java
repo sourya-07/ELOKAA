@@ -3,9 +3,9 @@ package in.eko.eloka.partner.documents;
 import java.util.Set;
 
 /**
- * What a file is, and the rules it must meet (docs/OPEN_QUESTIONS.md Q-12): photos are JPEG
- * only, at most 5 MB and at least 300 px on each side; Aadhaar images, PAN card, certificates,
- * marksheets and ID images are JPEG or PDF, at most 10 MB.
+ * What a file is, and the rules it must meet (owner's rules of 2026-10-29, docs/OPEN_QUESTIONS.md
+ * C-9): photos are JPG/JPEG or PNG, 20 KB to 2 MB and at least 300 px on each side; Aadhaar images,
+ * PAN card, ID images, marksheets and certificates are JPG/JPEG, PNG or PDF, 10 KB to 5 MB.
  */
 public enum DocumentKind {
 	LIVE_PHOTO(Rules.PHOTO),
@@ -28,14 +28,22 @@ public enum DocumentKind {
 	DRIVING_LICENCE_FRONT(Rules.PAPER),
 	DRIVING_LICENCE_BACK(Rules.PAPER);
 
-	/** Accepted formats and limits. */
-	public record Rules(Set<String> contentTypes, long maxBytes, int minImageSide) {
+	/** Accepted formats (detected from the bytes) and limits, in bytes of the uploaded file. */
+	public record Rules(Set<String> contentTypes, long minBytes, long maxBytes, int minImageSide) {
 
-		static final Rules PHOTO = new Rules(Set.of("image/jpeg"), 5L * 1024 * 1024, 300);
-		static final Rules PAPER = new Rules(Set.of("image/jpeg", "application/pdf"), 10L * 1024 * 1024, 0);
+		private static final long KB = 1024;
+		private static final long MB = 1024 * KB;
+
+		static final Rules PHOTO = new Rules(Set.of("image/jpeg", "image/png"), 20 * KB, 2 * MB, 300);
+		static final Rules PAPER = new Rules(Set.of("image/jpeg", "image/png", "application/pdf"), 10 * KB, 5 * MB, 0);
 
 		public boolean acceptsPdf() {
 			return contentTypes.contains("application/pdf");
+		}
+
+		/** "JPG or PNG" / "JPG, PNG or PDF", as the messages name the formats. */
+		public String formatNames() {
+			return acceptsPdf() ? "JPG, PNG or PDF" : "JPG or PNG";
 		}
 	}
 

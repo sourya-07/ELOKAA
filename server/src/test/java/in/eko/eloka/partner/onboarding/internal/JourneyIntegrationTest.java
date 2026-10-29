@@ -273,7 +273,11 @@ class JourneyIntegrationTest {
 		call(multipart(app("/documents")).file(file("file", "me.jpg", jpeg(600, 600, null))).param("kind", "LIVE_PHOTO"))
 			.andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("PREREQUISITE_INCOMPLETE"));
 		reachPhotos();
-		upload("LIVE_PHOTO", "me.png", png()).andExpect(status().isUnprocessableContent());
+		// a real JPEG, but under the 20 KB photo minimum; and one over the 2 MB photo maximum
+		upload("LIVE_PHOTO", "me.jpg", plainJpeg(600, 600)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.invalid_params.file").value(org.hamcrest.Matchers.containsString("smaller than 20 KB")));
+		upload("LIVE_PHOTO", "me.jpg", padded(jpeg(600, 600, null), 2 * 1024 * 1024 + 1)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath("$.invalid_params.file").value(org.hamcrest.Matchers.containsString("larger than 2 MB")));
 		upload("LIVE_PHOTO", "me.jpg", jpeg(120, 120, null)).andExpect(status().isUnprocessableContent());
 		upload("LIVE_PHOTO", "me.jpg", "MZ not really a picture".getBytes()).andExpect(status().isUnprocessableContent());
 		upload("LIVE_PHOTO", "me.pdf", pdf("")).andExpect(status().isUnprocessableContent());
@@ -310,6 +314,42 @@ class JourneyIntegrationTest {
 	}
 
 	@Test
+	void documentRulesTypesSizesDamageAndTheCertificateLimit() throws Exception {
+		reachPhotos();
+		uploadPhotosAndEducation();
+		String file = "$.invalid_params.file";
+		// PNG is accepted and stored as a clean JPEG
+		upload("CLASS_12_MARKSHEET", "marks.png", png(800, 600)).andExpect(status().isCreated())
+			.andExpect(jsonPath("$.content_type").value("image/jpeg")).andExpect(jsonPath("$.file_name").value("marks.jpg"));
+		upload("CLASS_12_MARKSHEET", "marks.gif", "GIF89a not accepted".repeat(1000).getBytes(StandardCharsets.ISO_8859_1))
+			.andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value("Only JPG, PNG or PDF files are accepted."));
+		upload("CLASS_12_MARKSHEET", "small.pdf", "%PDF-1.4\n1 0 obj << >> endobj\n%%EOF".getBytes(StandardCharsets.ISO_8859_1))
+			.andExpect(status().isUnprocessableContent()).andExpect(jsonPath(file).value(org.hamcrest.Matchers.containsString("smaller than 10 KB")));
+		upload("CLASS_12_MARKSHEET", "big.pdf", padded(pdf("big"), 5 * 1024 * 1024 + 1)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value(org.hamcrest.Matchers.containsString("larger than 5 MB")));
+		// damaged: a PDF without its end, a JPEG and a PNG cut off before theirs
+		byte[] whole = pdf("cut");
+		upload("CLASS_12_MARKSHEET", "cut.pdf", java.util.Arrays.copyOf(whole, whole.length - 8)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value(org.hamcrest.Matchers.containsString("damaged")));
+		byte[] picture = jpeg(800, 600, null);
+		upload("CLASS_12_MARKSHEET", "cut.jpg", java.util.Arrays.copyOf(picture, picture.length - 200)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value(org.hamcrest.Matchers.containsString("damaged")));
+		byte[] png = png(800, 600);
+		upload("CLASS_12_MARKSHEET", "cut.png", java.util.Arrays.copyOf(png, png.length - 20)).andExpect(status().isUnprocessableContent())
+			.andExpect(jsonPath(file).value(org.hamcrest.Matchers.containsString("damaged")));
+		// every refusal left the uploaded marksheet as it was
+		call(get(app("/documents"))).andExpect(jsonPath("$[?(@.kind=='CLASS_12_MARKSHEET')].file_name").value("marks.jpg"));
+
+		// five computer certificates at most (one was uploaded on the way)
+		for (int i = 0; i < 4; i++) {
+			upload("COMPUTER_CERTIFICATE", "ccc" + i + ".pdf", pdf("ccc" + i)).andExpect(status().isCreated());
+		}
+		upload("COMPUTER_CERTIFICATE", "six.pdf", pdf("six")).andExpect(status().isConflict())
+			.andExpect(jsonPath("$.code").value("TOO_MANY_DOCUMENTS"));
+	}
+
+	@Test
 	void frameworkRefusalsCarryACodeToo() throws Exception {
 		call(get(app("/documents/not-a-uuid/content"))).andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
@@ -320,10 +360,13 @@ class JourneyIntegrationTest {
 	@Test
 	void theFileRulesAreTheOnesTheServerEnforces() throws Exception {
 		call(get("/v1/partner/document-rules")).andExpect(status().isOk())
-			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].formats[0]").value("image/jpeg"))
-			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].max_bytes").value(5 * 1024 * 1024))
+			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].formats").value(org.hamcrest.Matchers.contains(
+					org.hamcrest.Matchers.contains("image/jpeg", "image/png"))))
+			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].min_bytes").value(20 * 1024))
+			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].max_bytes").value(2 * 1024 * 1024))
 			.andExpect(jsonPath("$[?(@.kind=='PASSPORT_PHOTO')].min_side_px").value(300))
-			.andExpect(jsonPath("$[?(@.kind=='PAN_CARD')].max_bytes").value(10 * 1024 * 1024))
+			.andExpect(jsonPath("$[?(@.kind=='PAN_CARD')].min_bytes").value(10 * 1024))
+			.andExpect(jsonPath("$[?(@.kind=='PAN_CARD')].max_bytes").value(5 * 1024 * 1024))
 			.andExpect(jsonPath("$[?(@.kind=='COMPUTER_CERTIFICATE')].max_count").value(5))
 			.andExpect(jsonPath("$[?(@.kind=='AADHAAR_MASKED_FRONT')]").isEmpty());
 		mvc.perform(get("/v1/partner/document-rules")).andExpect(status().isUnauthorized());
@@ -558,6 +601,12 @@ class JourneyIntegrationTest {
 		// A different mark each time, so two uploads are never the same file (DUPLICATE_FILE)
 		graphics.setColor(new Color(ThreadLocalRandom.current().nextInt(0xFFFFFF)));
 		graphics.fillRect(0, 0, Math.min(64, width), Math.min(64, height));
+		// Some detail, so the file has a real photo's size (photos must be at least 20 KB, documents 10 KB)
+		for (int y = 0; y < Math.min(200, height); y++) {
+			for (int x = 0; x < Math.min(200, width); x++) {
+				image.setRGB(x, y, ThreadLocalRandom.current().nextInt(0xFFFFFF));
+			}
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ImageIO.write(image, "jpeg", out);
 		if (trailer != null) {
@@ -566,14 +615,38 @@ class JourneyIntegrationTest {
 		return out.toByteArray();
 	}
 
-	private static byte[] png() throws Exception {
+	private static byte[] png(int width, int height) throws Exception {
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		for (int y = 0; y < Math.min(200, height); y++) {
+			for (int x = 0; x < Math.min(200, width); x++) {
+				image.setRGB(x, y, ThreadLocalRandom.current().nextInt(0xFFFFFF));
+			}
+		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ImageIO.write(new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB), "png", out);
+		ImageIO.write(image, "png", out);
 		return out.toByteArray();
 	}
 
+	/** A real JPEG of one colour: a few KB, under the photo minimum. */
+	private static byte[] plainJpeg(int width, int height) throws Exception {
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		var graphics = image.createGraphics();
+		graphics.setColor(new Color(ThreadLocalRandom.current().nextInt(0xFFFFFF)));
+		graphics.fillRect(0, 0, width, height);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ImageIO.write(image, "jpeg", out);
+		return out.toByteArray();
+	}
+
+	/** The file followed by filler up to {@code size} bytes (the type is still read from its start). */
+	private static byte[] padded(byte[] bytes, int size) {
+		return java.util.Arrays.copyOf(bytes, Math.max(size, bytes.length));
+	}
+
 	private static byte[] pdf(String body) {
-		return ("%PDF-1.4\n1 0 obj << >> endobj\n" + body + "\n%" + UUID.randomUUID() + "\n%%EOF").getBytes(StandardCharsets.ISO_8859_1);
+		// Documents must be at least 10 KB: a comment pads it to a real scan's size
+		return ("%PDF-1.4\n1 0 obj << >> endobj\n" + body + "\n%" + UUID.randomUUID() + "\n%" + "x".repeat(12 * 1024) + "\n%%EOF")
+			.getBytes(StandardCharsets.ISO_8859_1);
 	}
 
 	private long storedFiles() throws java.io.IOException {

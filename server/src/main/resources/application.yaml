@@ -18,7 +18,7 @@ spring:
       enabled: true
   servlet:
     multipart:
-      max-file-size: 10MB
+      max-file-size: 10MB # above the largest rule (5 MB, DocumentKind) so most oversized files get the rule's own message
       max-request-size: 25MB
   threads:
     virtual:

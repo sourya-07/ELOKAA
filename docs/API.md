@@ -75,10 +75,13 @@ its check; a failed check sets the step to `FAILED` with `last_error_code` and u
 | `POST …/{id}/alternate-id-verifications` | `{"type": VOTER_ID \| DRIVING_LICENCE, "number"}` (+ `Idempotency-Key`) | `200`, `ALTERNATE_ID` done (summary `type`, `number_masked`), or failed with `VOTER_ID_NOT_FOUND`, `*_NAME_MISMATCH`, `*_DOB_MISMATCH`, `DRIVING_LICENCE_NOT_ACTIVE`, `ID_ALREADY_USED` (an attempt each), `ALTERNATE_ID_UNAVAILABLE` (an outage, no attempt) | `422` wrong number format or type, `409 ID_TYPE_EXHAUSTED` (3 tries of this type used: try the other), `423 STEP_BLOCKED`, `409 AADHAAR_NOT_VERIFIED` |
 | `POST …/{id}/kyc-documents/submit` | — | `200`, `KYC_DOCUMENTS` done (summary `id_document`) | `409 DOCUMENTS_MISSING` (+`missing_documents`): Aadhaar front and back, PAN card, both sides of a verified voter ID or driving licence |
 
-Document kinds: `LIVE_PHOTO`, `PASSPORT_PHOTO` (JPG only, ≤ 5 MB, ≥ 300 px a side); `GRADUATION_CERTIFICATE`,
-`COMPUTER_CERTIFICATE`, `VOTER_ID_FRONT`, `VOTER_ID_BACK`, `DRIVING_LICENCE_FRONT`, `DRIVING_LICENCE_BACK`
-(JPG or PDF, ≤ 10 MB). Type is read from the bytes; pictures are re-encoded (metadata and trailing data removed);
-PDFs are malware-scanned. Every upload waits for staff review (`MANUAL_REVIEW_REQUIRED`). Uploading or removing
+Document kinds: `LIVE_PHOTO`, `PASSPORT_PHOTO` (JPG/JPEG or PNG, 20 KB to 2 MB, ≥ 300 px a side); `AADHAAR_FRONT`,
+`AADHAAR_BACK`, `PAN_CARD`, `VOTER_ID_FRONT/BACK`, `DRIVING_LICENCE_FRONT/BACK`, `CLASS_10_MARKSHEET`,
+`CLASS_12_MARKSHEET`, `GRADUATION_CERTIFICATE`, `DIPLOMA_CERTIFICATE`, `COMPUTER_CERTIFICATE` (JPG/JPEG, PNG or PDF,
+10 KB to 5 MB; at most 5 computer certificates). Type is read from the bytes, never the name or the browser's type;
+a file must be complete (not cut off or damaged); pictures (JPEG and PNG) are decoded and re-encoded as JPEG
+(metadata and trailing data removed, so a PNG is stored as `.jpg`); PDFs are malware-scanned. A refused upload changes
+nothing already uploaded; the reason is in `invalid_params.file`. Every upload waits for staff review (`MANUAL_REVIEW_REQUIRED`). Uploading or removing
 a file of a finished step sets it back to `IN_PROGRESS`.
 
 ## Staff review (`/v1/admin`, staff session)

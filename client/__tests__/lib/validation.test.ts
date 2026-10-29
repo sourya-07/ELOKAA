@@ -1,3 +1,4 @@
+import { fakeJpeg, jpegFile, pdfFile, pngFile } from "../files";
 import { checkFile, isPersonalPan, isPincode, mobileDigits, normaliseEmail, normaliseMobile, PAPER, PHOTO, ruleFrom } from "@/lib/validation";
 
 describe("normaliseMobile", () => {
@@ -38,15 +39,35 @@ describe("PAN and pincode", () => {
 });
 
 describe("checkFile", () => {
-	const file = (type: string, size: number) => new File([new Uint8Array(size)], "f", { type });
-	it("allows only JPG for photos and JPG or PDF for papers", () => {
-		expect(checkFile(file("image/jpeg", 100), PHOTO)).toBeNull();
-		expect(checkFile(file("image/png", 100), PHOTO)).toMatch(/Only JPG/);
-		expect(checkFile(file("application/pdf", 100), PHOTO)).toMatch(/Only JPG/);
-		expect(checkFile(file("application/pdf", 100), PAPER)).toBeNull();
+	const KB = 1024;
+	const MB = 1024 * KB;
+
+	it("accepts JPG, PNG and PDF documents of the right size, read from their bytes", async () => {
+		expect(await checkFile(jpegFile(50 * KB), PAPER)).toBeNull();
+		expect(await checkFile(pngFile(50 * KB), PAPER)).toBeNull();
+		expect(await checkFile(pdfFile(50 * KB), PAPER)).toBeNull();
+		expect(await checkFile(jpegFile(50 * KB), PHOTO)).toBeNull();
+		expect(await checkFile(pngFile(50 * KB), PHOTO)).toBeNull();
 	});
-	it("enforces the size limit", () => {
-		expect(checkFile(file("image/jpeg", 6 * 1024 * 1024), PHOTO)).toMatch(/5 MB/);
+
+	it("refuses other formats, whatever the name or browser type says", async () => {
+		expect(await checkFile(fakeJpeg(50 * KB), PAPER)).toBe("Only JPG, PNG or PDF files are accepted.");
+		expect(await checkFile(pdfFile(50 * KB), PHOTO)).toBe("Only JPG or PNG files are accepted.");
+		expect(await checkFile(new File([], "empty.pdf", { type: "application/pdf" }), PAPER)).toMatch(/empty/);
+	});
+
+	it("keeps documents between 10 KB and 5 MB, and photos between 20 KB and 2 MB", async () => {
+		expect(await checkFile(pdfFile(9 * KB), PAPER)).toMatch(/smaller than 10 KB/);
+		expect(await checkFile(pdfFile(5 * MB + 1), PAPER)).toMatch(/larger than 5 MB/);
+		expect(await checkFile(jpegFile(19 * KB), PHOTO)).toMatch(/smaller than 20 KB/);
+		expect(await checkFile(jpegFile(2 * MB + 1), PHOTO)).toMatch(/larger than 2 MB/);
+		expect(await checkFile(jpegFile(2 * MB), PHOTO)).toBeNull();
+	});
+
+	it("refuses a cut-off or damaged file", async () => {
+		expect(await checkFile(jpegFile(50 * KB, { cut: true }), PAPER)).toMatch(/damaged or incomplete/);
+		expect(await checkFile(pngFile(50 * KB, { cut: true }), PAPER)).toMatch(/damaged or incomplete/);
+		expect(await checkFile(pdfFile(50 * KB, { cut: true }), PAPER)).toMatch(/damaged or incomplete/);
 	});
 });
 
@@ -74,11 +95,11 @@ describe("normaliseEmail", () => {
 // (DocumentKind: photos JPEG ≤ 5 MB, ≥ 300 px; papers JPEG or PDF ≤ 10 MB)
 describe("ruleFrom", () => {
 	it("words the server's rules, and the built-in copies match them", () => {
-		const photo = ruleFrom({ kind: "PASSPORT_PHOTO", formats: ["image/jpeg"], max_bytes: 5 * 1024 * 1024, min_side_px: 300, max_count: 1 });
-		const paper = ruleFrom({ kind: "PAN_CARD", formats: ["application/pdf", "image/jpeg"], max_bytes: 10 * 1024 * 1024, min_side_px: 0, max_count: 1 });
+		// as GET /v1/partner/document-rules answers (formats sorted)
+		const photo = ruleFrom({ kind: "PASSPORT_PHOTO", formats: ["image/jpeg", "image/png"], min_bytes: 20 * 1024, max_bytes: 2 * 1024 * 1024, min_side_px: 300, max_count: 1 });
+		const paper = ruleFrom({ kind: "PAN_CARD", formats: ["application/pdf", "image/jpeg", "image/png"], min_bytes: 10 * 1024, max_bytes: 5 * 1024 * 1024, min_side_px: 0, max_count: 1 });
 		expect(photo).toEqual(PHOTO);
-		expect(paper.label).toBe(PAPER.label);
-		expect(paper.maxBytes).toBe(PAPER.maxBytes);
-		expect([...paper.types].sort()).toEqual([...PAPER.types].sort());
+		expect(paper).toEqual(PAPER);
+		expect(paper.label).toBe("JPG, PNG or PDF, 10 KB to 5 MB");
 	});
 });

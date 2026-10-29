@@ -2,15 +2,24 @@ import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import { FileSlot } from "@/components/FileSlot";
 import { ApiError } from "@/lib/api";
 import { PAPER, PHOTO } from "@/lib/validation";
+import { fakeJpeg, jpegFile, pdfFile } from "../files";
 import { render } from "../render";
 
 describe("FileSlot", () => {
-	it("refuses a PNG before sending it", async () => {
+	it("refuses a file that is not really a picture before sending it", async () => {
 		const onUpload = jest.fn();
 		const { container } = render(<FileSlot label="Passport-size photo" rule={PHOTO} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
 		const input = container.querySelector("input[type=file]") as HTMLInputElement;
-		fireEvent.change(input, { target: { files: [new File(["x"], "me.png", { type: "image/png" })] } });
-		expect(await screen.findByRole("alert")).toHaveTextContent("Only JPG photos are accepted.");
+		fireEvent.change(input, { target: { files: [fakeJpeg(50 * 1024)] } });
+		expect(await screen.findByRole("alert")).toHaveTextContent("Only JPG or PNG files are accepted.");
+		expect(onUpload).not.toHaveBeenCalled();
+	});
+
+	it("refuses a photo under 20 KB before sending it", async () => {
+		const onUpload = jest.fn();
+		const { container } = render(<FileSlot label="Passport-size photo" rule={PHOTO} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
+		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, { target: { files: [jpegFile(5 * 1024)] } });
+		expect(await screen.findByRole("alert")).toHaveTextContent("smaller than 20 KB");
 		expect(onUpload).not.toHaveBeenCalled();
 	});
 
@@ -19,7 +28,7 @@ describe("FileSlot", () => {
 		const { container } = render(<FileSlot label="Passport-size photo" rule={PHOTO} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
 		expect(screen.getByText("Required")).toBeInTheDocument();
 		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, {
-			target: { files: [new File(["x"], "me.jpg", { type: "image/jpeg" })] },
+			target: { files: [jpegFile(50 * 1024)] },
 		});
 		await waitFor(() => expect(onUpload).toHaveBeenCalledTimes(1));
 	});
@@ -58,6 +67,12 @@ describe("FileSlot", () => {
 		expect(onRemove).toHaveBeenCalledWith("d1");
 	});
 
+	it("names the types and sizes beside every upload, and offers them in the picker", () => {
+		const { container } = render(<FileSlot label="PAN card" rule={PAPER} required files={[]} onUpload={jest.fn()} contentUrl={() => ""} />);
+		expect(screen.getByText("JPG, PNG or PDF, 10 KB to 5 MB")).toBeInTheDocument();
+		expect(container.querySelector("input[type=file]")?.getAttribute("accept")).toContain(".png");
+	});
+
 	it("shows real upload progress, then that the file is being checked", async () => {
 		let report: (share: number) => void = () => undefined;
 		let finish: () => void = () => undefined;
@@ -67,8 +82,9 @@ describe("FileSlot", () => {
 		});
 		const { container } = render(<FileSlot label="PAN card" rule={PHOTO} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
 		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, {
-			target: { files: [new File(["x"], "pan.jpg", { type: "image/jpeg" })] },
+			target: { files: [jpegFile(50 * 1024)] },
 		});
+		await waitFor(() => expect(onUpload).toHaveBeenCalled()); // after the file is checked
 		act(() => report(0.4));
 		expect(screen.getByText("Uploading… 40%")).toBeInTheDocument();
 		act(() => report(1));
@@ -90,7 +106,7 @@ describe("FileSlot", () => {
 				new Promise<void>((_resolve, reject) => signal.addEventListener("abort", () => reject(new ApiError({ status: 0, code: "ABORTED", detail: "Upload cancelled." })))),
 		);
 		const { container } = render(<FileSlot label="PAN card" rule={PAPER} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
-		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, { target: { files: [new File(["x"], "pan.pdf", { type: "application/pdf" })] } });
+		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, { target: { files: [pdfFile(50 * 1024)] } });
 		fireEvent.click(await screen.findByRole("button", { name: "Cancel" }));
 		await waitFor(() => expect(screen.queryByText(/Uploading/)).not.toBeInTheDocument());
 		expect(screen.queryByRole("alert")).not.toBeInTheDocument();
@@ -102,7 +118,7 @@ describe("FileSlot", () => {
 			.mockRejectedValueOnce(new ApiError({ status: 0, code: "NETWORK", detail: "No connection. Check your internet and try again." }))
 			.mockRejectedValueOnce(new ApiError({ status: 422, code: "DUPLICATE_FILE", detail: "You already uploaded this same file for another document." }));
 		const { container } = render(<FileSlot label="PAN card" rule={PAPER} required files={[]} onUpload={onUpload} contentUrl={() => ""} />);
-		const file = new File(["x"], "pan.pdf", { type: "application/pdf" });
+		const file = pdfFile(50 * 1024);
 		fireEvent.change(container.querySelector("input[type=file]") as HTMLInputElement, { target: { files: [file] } });
 		fireEvent.click(await screen.findByRole("button", { name: "Try again" }));
 		await waitFor(() => expect(onUpload).toHaveBeenCalledTimes(2));
@@ -113,6 +129,6 @@ describe("FileSlot", () => {
 
 	it("states the rule it is given", () => {
 		render(<FileSlot label="Passport-size photo" rule={PHOTO} required files={[]} onUpload={jest.fn()} contentUrl={() => ""} />);
-		expect(screen.getByText("JPG, up to 5 MB, at least 300 × 300 px")).toBeInTheDocument();
+		expect(screen.getByText("JPG or PNG, 20 KB to 2 MB, at least 300 × 300 px")).toBeInTheDocument();
 	});
 });

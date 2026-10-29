@@ -32,7 +32,6 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-8 | PAN, DigiLocker, voter ID, driving licence checks | default | EPS PAN Lite, EPS DigiLocker (Aadhaar), EPS Voter ID and Driving Licence APIs plus EPS Name Match (built in journey v2; before it, voter ID and DL were only typed and checked by staff); staff review on top. Mock-tested only, not yet on EPS UAT |
 | Q-10 | Who is the partner after approval? Provisioning? | default | an individual partner; approval ends this project and publishes `PartnerApproved`; no account is created |
 | Q-11 | Staff console in scope? | default | yes, a minimal one ported from eloka (queue, case, decisions) |
-| Q-12 | File formats | default | photos JPEG (.jpg/.jpeg) only, 5 MB; certificates and ID images JPEG or PDF, 10 MB. The whiteboard may also say PNG |
 | Q-13 | Malware scanning | default | ClamAV container in staging and production |
 | Q-14 | Java base package | default | `in.eko.eloka.partner` |
 | Q-15 | Voter ID and driving licence: may an applicant add both? | default | one verified document is required (`ALTERNATE_ID`); its two sides are uploaded |
@@ -56,6 +55,7 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | C-3 | New `PTN-` Stitch screens in the ELOKA Platform project; Local Admin `APP-` screens unchanged | 2026-10-27 |
 | C-4 | LEAD process out of scope | 2026-10-27 |
 | C-5 | Identity through DigiLocker only; the step-by-step (masked Aadhaar) path is retired (was Q-9) (ADR-0007) | 2026-10-28 |
+| C-9 | File rules (owner, 2026-10-29, was Q-12): documents (Aadhaar, PAN, voter ID, driving licence, marksheets, graduation, diploma, computer certificates) JPG/JPEG, PNG or PDF, 10 KB to 5 MB; photos JPG/JPEG or PNG, 20 KB to 2 MB (and at least 300 px a side); at most 5 computer certificates. PNG is stored re-encoded as JPEG | 2026-10-29 |
 | C-8 | Graduation certificate required; diploma certificate optional (was: either one) | 2026-10-29 |
 | C-7 | Start page time estimate: "about 3–5 minutes" (owner's decision; the whole journey with DigiLocker, the credit check and the uploads may take longer, so measure it on EPS UAT) | 2026-10-29 |
 | C-6 | Official DigiLocker links in the help: `digilocker.gov.in/web/signup`, Play Store `com.digilocker.android`, App Store `id1320618078` (checked on digilocker.gov.in; was Q-27) | 2026-10-28 |

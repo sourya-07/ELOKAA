@@ -15,7 +15,7 @@ import javax.imageio.stream.ImageOutputStream;
 import in.eko.eloka.partner.shared.error.ValidationException;
 
 /**
- * Decodes an uploaded JPEG and writes a fresh one from the pixels. What survives is only the
+ * Decodes an uploaded JPEG or PNG and writes a fresh JPEG from the pixels (transparency becomes white). What survives is only the
  * picture: EXIF data (camera, location), comments and anything appended after the image (polyglot
  * files) are gone. Images are limited to 40 megapixels before decoding, so a small file cannot
  * expand into a huge bitmap.
@@ -81,6 +81,6 @@ final class ImageSanitizer {
 	}
 
 	private static ValidationException unreadable() {
-		return ValidationException.field("file", "We could not read this picture. Please save it as a standard JPG and try again.");
+		return ValidationException.field("file", "This picture is damaged or cannot be read. Save it again as a JPG or PNG and upload it.");
 	}
 }

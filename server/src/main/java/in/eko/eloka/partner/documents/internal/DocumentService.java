@@ -28,9 +28,11 @@ interface StoredDocumentRepository extends JpaRepository<StoredDocument, UUID> {
 }
 
 /**
- * Accepts a file only after: size within its kind's limit, real type (by bytes) allowed for its
- * kind, images decoded and re-encoded (metadata and trailing data removed, minimum size checked),
- * PDFs scanned for malware. Then the cleaned bytes are encrypted and stored.
+ * Accepts a file only after: not empty, real type (by bytes, never the name or the browser's type)
+ * allowed for its kind, size within its kind's minimum and maximum, the file complete (not cut off or
+ * damaged), pictures (JPEG or PNG) decoded and re-encoded as JPEG (metadata and trailing data removed,
+ * minimum pixel size checked), PDFs scanned for malware. Then the cleaned bytes are encrypted and stored.
+ * A refused file changes nothing: the files already uploaded stay as they were.
  */
 @Service
 @Transactional(readOnly = true)
@@ -57,26 +59,32 @@ class DocumentService implements DocumentApi {
 		DocumentKind.Rules rules = document.kind().rules();
 		byte[] bytes = document.bytes();
 		if (bytes == null || bytes.length == 0) {
-			throw ValidationException.field("file", "The file is empty");
-		}
-		if (bytes.length > rules.maxBytes()) {
-			throw ValidationException.field("file", "The file is larger than " + rules.maxBytes() / (1024 * 1024) + " MB");
+			throw ValidationException.field("file", "The file is empty. Choose the file again.");
 		}
 		FileType type = FileType.sniff(bytes).filter(t -> rules.contentTypes().contains(t.contentType()))
-			.orElseThrow(() -> ValidationException.field("file",
-					rules.acceptsPdf() ? "Only JPG or PDF files are accepted" : "Only JPG photos are accepted"));
+			.orElseThrow(() -> ValidationException.field("file", "Only " + rules.formatNames() + " files are accepted."));
+		if (bytes.length < rules.minBytes()) {
+			throw ValidationException.field("file", "The file is smaller than " + size(rules.minBytes())
+					+ ". It may be blank or damaged: upload a clear photo or scan.");
+		}
+		if (bytes.length > rules.maxBytes()) {
+			throw ValidationException.field("file", "The file is larger than " + size(rules.maxBytes()) + ". Upload a smaller file.");
+		}
+		if (!type.intact(bytes)) {
+			throw ValidationException.field("file", "This file is damaged or incomplete. Save it again and upload it.");
+		}
 		byte[] cleaned;
 		int width = 0;
 		int height = 0;
-		if (type == FileType.JPEG) {
+		if (type == FileType.JPEG || type == FileType.PNG) {
 			ImageSanitizer.Clean clean = ImageSanitizer.reencodeJpeg(bytes);
 			if (Math.min(clean.width(), clean.height()) < rules.minImageSide()) {
 				throw ValidationException.field("file",
 						"The photo is too small. It must be at least " + rules.minImageSide() + " pixels on each side.");
 			}
 			if (clean.bytes().length > rules.maxBytes()) {
-				throw ValidationException.field("file",
-						"The photo is larger than " + rules.maxBytes() / (1024 * 1024) + " MB. Please use a smaller photo.");
+				throw ValidationException.field("file", "The picture is larger than " + size(rules.maxBytes())
+						+ " once cleaned. Upload a smaller picture.");
 			}
 			cleaned = clean.bytes();
 			width = clean.width();
@@ -89,11 +97,13 @@ class DocumentService implements DocumentApi {
 			}
 			cleaned = bytes;
 		}
+		// Pictures are stored as the JPEG they were re-encoded to (a PNG too)
+		FileType stored = type == FileType.PNG ? FileType.JPEG : type;
 		String key = UUID.randomUUID().toString();
 		storage.put(key, cipher.encryptBytes(cleaned));
 		deleteIfRolledBack(key);
-		return documents.save(new StoredDocument(document.ownerId(), document.kind(), cleanName(document.fileName(), type),
-				type.contentType(), cleaned.length, width, height, sha256(cleaned), key)).toRef();
+		return documents.save(new StoredDocument(document.ownerId(), document.kind(), cleanName(document.fileName(), stored),
+				stored.contentType(), cleaned.length, width, height, sha256(cleaned), key)).toRef();
 	}
 
 	@Override
@@ -119,6 +129,9 @@ class DocumentService implements DocumentApi {
 	 * new for every upload, so no committed row can point to a file deleted here.
 	 */
 	private void deleteIfRolledBack(String key) {
+		if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+			return;
+		}
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
 			@Override
 			public void afterCompletion(int status) {
@@ -132,6 +145,11 @@ class DocumentService implements DocumentApi {
 				}
 			}
 		});
+	}
+
+	/** "10 KB", "2 MB": how the limits are said to the applicant (1 KB = 1024 bytes). */
+	static String size(long bytes) {
+		return bytes >= 1024 * 1024 ? bytes / (1024 * 1024) + " MB" : bytes / 1024 + " KB";
 	}
 
 	/** Keeps a readable base name; the extension always matches the real type. */

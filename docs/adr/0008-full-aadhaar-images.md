@@ -14,7 +14,7 @@ and may require an Aadhaar Data Vault; we have no legal answer yet (Q-20).
 
 ## Decision
 
-- The upload kinds are `AADHAAR_FRONT` and `AADHAAR_BACK`, full images (JPEG or PDF).
+- The upload kinds are `AADHAAR_FRONT` and `AADHAAR_BACK`, full images (JPEG, PNG or PDF; C-9).
 - **Bytes:** encrypted like every file (AES-256-GCM, ADR-0006), never in MySQL and never logged.
 - **No extraction:** no OCR, and the Aadhaar number is never read out of the image or stored as a field. The only Aadhaar value in the database stays the masked one from DigiLocker.
 - **Staff access:** only the reviewer who has claimed the case, or an approver, can open these files.

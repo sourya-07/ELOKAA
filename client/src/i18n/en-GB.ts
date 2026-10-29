@@ -36,7 +36,7 @@ export const enGB = {
 	"home.ready.ids": "Aadhaar, PAN card, and voter ID or driving licence (both sides)",
 	"home.ready.education": "Class 10 and 12 marksheets, and a graduation certificate",
 	"home.ready.camera": "A camera, in good light",
-	"home.files": "Photos and documents: JPG photos up to 5 MB; certificates and cards as JPG or PDF up to 10 MB.",
+	"home.files": "Photos: JPG or PNG, 20 KB to 2 MB. Documents: JPG, PNG or PDF, 10 KB to 5 MB.",
 	"home.start": "Start your application",
 
 	"status.IN_PROGRESS.title": "Your application is in progress",

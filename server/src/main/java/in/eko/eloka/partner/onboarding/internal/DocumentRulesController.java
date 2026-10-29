@@ -20,7 +20,7 @@ class DocumentRulesController {
 	private static final Set<DocumentKind> RETIRED = EnumSet.of(DocumentKind.AADHAAR_MASKED_FRONT,
 			DocumentKind.AADHAAR_MASKED_BACK);
 
-	record Rule(String kind, List<String> formats, @JsonProperty("max_bytes") long maxBytes,
+	record Rule(String kind, List<String> formats, @JsonProperty("min_bytes") long minBytes, @JsonProperty("max_bytes") long maxBytes,
 			@JsonProperty("min_side_px") int minSidePx, @JsonProperty("max_count") int maxCount) {
 	}
 
@@ -28,7 +28,7 @@ class DocumentRulesController {
 	List<Rule> rules() {
 		return Arrays.stream(DocumentKind.values())
 			.filter(kind -> !RETIRED.contains(kind))
-			.map(kind -> new Rule(kind.name(), kind.rules().contentTypes().stream().sorted().toList(), kind.rules().maxBytes(),
+			.map(kind -> new Rule(kind.name(), kind.rules().contentTypes().stream().sorted().toList(), kind.rules().minBytes(), kind.rules().maxBytes(),
 					kind.rules().minImageSide(), kind == DocumentKind.COMPUTER_CERTIFICATE ? DocumentSteps.MAX_COMPUTER_CERTIFICATES : 1))
 			.toList();
 	}

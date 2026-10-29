@@ -18,7 +18,7 @@ outside service failed or is not set up; nothing was used up), **server** (unexp
 
 | Code | HTTP | Where | Class | Message (client) | What to do |
 |---|---|---|---|---|---|
-| `VALIDATION_FAILED` | 422 | any write | validation | the field message from `invalid_params`, else "Check the details you entered." | correct the field shown |
+| `VALIDATION_FAILED` | 422 | any write; for uploads `invalid_params.file` says why: wrong type ("Only JPG, PNG or PDF files are accepted."), empty, under the minimum or over the maximum size, damaged or cut off, picture unreadable or under 300 px, malware found | validation | the field message from `invalid_params`, else "Check the details you entered." | correct the field shown; for a file, choose another one (nothing already uploaded changes) |
 | `MALFORMED_REQUEST` | 400 | any route (body not readable, wrong type of value) | validation | "Something in the request was not right. Please reload the page and try again." | reload |
 | `METHOD_NOT_ALLOWED` | 405 | any route | validation | as above | reload |
 | `UNSUPPORTED_MEDIA_TYPE` | 415 | any route | validation | as above | reload |
@@ -48,7 +48,7 @@ outside service failed or is not set up; nothing was used up), **server** (unexp
 | `ADDRESS_NOT_FOUND` | 404 | staff address decision | not-found | "This application has no address yet." | — |
 | `EVIDENCE_NOT_FOUND` | 404 | staff evidence decision | not-found | "This check was not found." | reload |
 | `NOTHING_TO_SHOW` | 404 | staff reveal | not-found | "There is no value to show." | — |
-| `FILE_TOO_LARGE` | 413 | upload above the request limit | validation | "The file is too large. Files can be at most 10 MB." | a smaller file |
+| `FILE_TOO_LARGE` | 413 | upload above the request limit | validation | "The file is too large. Documents can be at most 5 MB and photos 2 MB." | a smaller file |
 | `DUPLICATE_FILE` | 422 | upload | validation | "You already uploaded this same file for another document. Choose the right file." | choose another file |
 | `LOCATION_REQUIRED` | 422 | live photo | validation | "The live photo needs your location. Allow location for this site and take the photo again." | allow location |
 | `LOCATION_INVALID` | 422 | live photo | validation | "We could not read your location. Take the photo again." | take it again |
