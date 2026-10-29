@@ -22,7 +22,6 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | Q-33 | May an applicant withdraw while staff are reviewing (`UNDER_REVIEW`, `ON_HOLD`)? Should reject and hold need a second person, as approve does? Should staff see only some applications (region, assignment)? | open | no withdrawal during review; one approver rejects; any staff role can hold; every staff member sees every application (a state-machine and role change each, if decided) |
 | Q-34 | Status notifications: should submit, correction, approval and rejection send an email and/or SMS? Needs the SMTP account (Q-21) and an SMS template (DLT) | open | nothing is sent; the pages say "check this page for updates" |
 | Q-35 | Product name: the pages say "ELOKA"; the brief says "ELOKAA". Which is right? | open | "ELOKA" (one catalog change once decided) |
-| Q-36 | Time estimate on the start page: a "3-5 minutes" figure would not cover DigiLocker, the credit check and 10+ uploads. Measure on EPS UAT? | default | "about 20 minutes" stays until measured |
 | Q-22 | EPS DigiLocker: can it return PAN, voter ID or driving licence (`document_requested`)? Which codes mean "cancelled" or "no Aadhaar in DigiLocker"? (with Q-18) | open | Aadhaar only; unknown codes are technical errors, never a pass or a used attempt |
 
 ## Built on a default (confirm or change)
@@ -57,4 +56,5 @@ Status: **open** (needs a decision), **default** (we build on the default, confi
 | C-3 | New `PTN-` Stitch screens in the ELOKA Platform project; Local Admin `APP-` screens unchanged | 2026-10-27 |
 | C-4 | LEAD process out of scope | 2026-10-27 |
 | C-5 | Identity through DigiLocker only; the step-by-step (masked Aadhaar) path is retired (was Q-9) (ADR-0007) | 2026-10-28 |
+| C-7 | Start page time estimate: "about 3–5 minutes" (owner's decision; the whole journey with DigiLocker, the credit check and the uploads may take longer, so measure it on EPS UAT) | 2026-10-29 |
 | C-6 | Official DigiLocker links in the help: `digilocker.gov.in/web/signup`, Play Store `com.digilocker.android`, App Store `id1320618078` (checked on digilocker.gov.in; was Q-27) | 2026-10-28 |

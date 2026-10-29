@@ -12,7 +12,7 @@ export const enGB = {
 	"shell.titleSuffix": "ELOKA partner",
 
 	"home.title": "Become an ELOKA partner",
-	"home.lead": "Apply online in about 20 minutes. Your progress is saved, so you can stop and come back any time.",
+	"home.lead": "Apply online in about 3–5 minutes. Your progress is saved, so you can stop and come back any time.",
 	"home.who": "Who can apply",
 	"home.who.age": "You are 18 or older and live in India.",
 	"home.who.credit": "Your CIBIL credit score is 700 or more.",
