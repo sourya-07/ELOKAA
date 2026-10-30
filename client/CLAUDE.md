@@ -87,8 +87,9 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
   also needs a right-to-left layout check, and each script its own self-hosted font (the CSP allows only 'self').
 - The progress line (ApplyShell `Milestones`) animates with `framer-motion` (the v11 Chakra brings; never add the
   `motion` package), using the curves in `@/styles/motion` (`EASE_OUT_CURVE`, `EASE_IN_OUT_CURVE`): newly finished parts
-  fill one after another, the current part fills in and its name is underlined, "Now: …" and the count slide in when they
-  differ from the previous page; `MotionConfig reducedMotion="user"` in `_app` keeps only the fades.
+  fill one after another, a new current part fills in and its name is underlined, "Now: …" and the count slide in when they
+  differ from the previous page; nothing replays on a reload or while the same part is current (the run stays under about
+  0.5 s); `MotionConfig reducedMotion="user"` in `_app` keeps only the fades.
 - Other motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
   (the success tick is the one exception), and a fade-only version under `prefers-reduced-motion`. What
   moves: journey pages enter in order, a finished part of the progress line fills in, task panels open and fold

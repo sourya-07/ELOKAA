@@ -129,31 +129,36 @@ function SignOut() {
 // Set after the first page: only later pages move focus to their title (not the first load)
 let navigated = false;
 
-// Parts already drawn as done on the previous page, so only a newly finished part fills in
+// Parts already drawn as done on the previous page, so only a newly finished part fills in; and the part
+// that was current there, so the current part fills in only when it is a new one (not on every page or reload)
 let drawn: Set<string> | null = null;
+let drawnCurrent: string | null | undefined;
 
 const MotionBox = motion.create(Box);
 
 /**
  * Progress as parts of the application (contact, identity, eligibility, ...), each one finished
  * or not, from the server's step statuses. What moves, and only to explain a change: parts finished
- * since the last page fill in one after another, the part to do now fills in after them each time a
- * page opens, its name is underlined, and "Now: …" and the count slide in when they change. Under
- * reduced motion (MotionConfig in _app) only the fades stay. Nothing loops.
+ * since the last page fill in one after another, a new current part fills in after them and its name is
+ * underlined, and "Now: …" and the count slide in when they change. Nothing replays on a reload or when the
+ * same part is still current. Under reduced motion (MotionConfig in _app) only the fades stay. Nothing loops.
  */
 function Milestones({ states }: { states: MilestoneState[] }) {
 	const done = states.filter((state) => state.done);
 	const current = states.find((state) => state.current);
 	const fresh = useRef<Set<string>>(new Set());
+	const newCurrent = useRef(false);
 	if (drawn !== null) {
 		fresh.current = new Set(done.filter((state) => !drawn?.has(state.key)).map((state) => state.key));
+		newCurrent.current = drawnCurrent !== undefined && !!current && drawnCurrent !== current.key;
 	}
 	useEffect(() => {
 		drawn = new Set(done.map((state) => state.key));
+		drawnCurrent = current?.key ?? null;
 	});
-	// The newly finished parts fill first, in order; the current part follows them
+	// The newly finished parts fill first, in order; a new current part follows them (the whole run ≤ ~0.5 s)
 	const freshOrder = states.filter((state) => fresh.current.has(state.key)).map((state) => state.key);
-	const currentDelay = freshOrder.length * 0.08 + 0.1;
+	const currentDelay = Math.min(freshOrder.length, 3) * 0.05;
 	const now = current ? `Now: ${current.label}` : done.length === states.length ? "All parts done" : "";
 	return (
 		<Box>
@@ -174,8 +179,8 @@ function Milestones({ states }: { states: MilestoneState[] }) {
 					<Segment
 						key={state.key}
 						state={state}
-						fill={fresh.current.has(state.key) || state.current}
-						delay={state.current ? currentDelay : freshOrder.indexOf(state.key) * 0.08}
+						fill={fresh.current.has(state.key) || (state.current && newCurrent.current)}
+						delay={state.current ? currentDelay : Math.min(Math.max(freshOrder.indexOf(state.key), 0), 3) * 0.05}
 					/>
 				))}
 			</HStack>
@@ -194,9 +199,9 @@ function Milestones({ states }: { states: MilestoneState[] }) {
 								bg="connect.500"
 								borderRadius="full"
 								transformOrigin="left"
-								initial={{ scaleX: 0, opacity: 0 }}
+								initial={newCurrent.current ? { scaleX: 0, opacity: 0 } : false}
 								animate={{ scaleX: 1, opacity: 1 }}
-								transition={{ duration: 0.3, delay: currentDelay + 0.15, ease: EASE_OUT_CURVE }}
+								transition={{ duration: 0.25, delay: currentDelay + 0.1, ease: EASE_OUT_CURVE }}
 							/>
 						)}
 					</Box>
@@ -220,19 +225,22 @@ function Changing({ id, value }: { id: string; value: string }) {
 	});
 	const changed = before.current !== undefined && before.current !== value;
 	return (
-		<AnimatePresence mode="popLayout" initial={changed}>
-			<MotionBox
-				as="span"
-				key={value}
-				display="block"
-				initial={{ y: 8, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				exit={{ y: -8, opacity: 0 }}
-				transition={{ duration: 0.2, ease: EASE_OUT_CURVE }}
-			>
+		// popLayout lifts the leaving text out of the flow: it needs a positioned parent to stay in place
+		<Box position="relative" minW={0}>
+				<AnimatePresence mode="popLayout" initial={changed}>
+				<MotionBox
+					as="span"
+					key={value}
+					display="block"
+					initial={{ y: 8, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					exit={{ y: -8, opacity: 0 }}
+					transition={{ duration: 0.2, ease: EASE_OUT_CURVE }}
+				>
 				{value}
-			</MotionBox>
-		</AnimatePresence>
+				</MotionBox>
+			</AnimatePresence>
+		</Box>
 	);
 }
 
