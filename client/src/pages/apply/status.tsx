@@ -24,6 +24,7 @@ function StatusPage() {
 	return (
 		<ApplyShell
 			signedIn
+			progress={snapshot}
 			title={text.title}
 			subtitle={text.body}
 			mark={snapshot.status === "SUBMITTED" || snapshot.status === "APPROVED" ? <SuccessMark /> : undefined}

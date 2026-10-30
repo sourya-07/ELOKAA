@@ -28,4 +28,11 @@ describe("status page", () => {
 		expect(screen.queryByText(/on your mobile/)).not.toBeInTheDocument();
 		expect(screen.queryByText(/We tell you/)).not.toBeInTheDocument();
 	});
+
+	it("shows the progress line here too", () => {
+		(useApplication as jest.Mock).mockReturnValue({ snapshot: snapshotAt(null, { status: "SUBMITTED" }), write: jest.fn() });
+		render(<StatusPage />);
+		expect(screen.getByRole("progressbar", { name: "Progress" })).toBeInTheDocument();
+		expect(screen.queryByText("My application")).not.toBeInTheDocument(); // no link to the page itself
+	});
 });

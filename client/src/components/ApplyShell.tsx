@@ -67,8 +67,8 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress &&
 						</Text>
 						<HStack spacing={4}>
 							<LanguageSelector />
-							{/* Journey steps only: the status page shows the application and lets the applicant withdraw */}
-							{progress && progress !== "start" && (
+							{/* Journey pages link to the status page ("My application"), which does not link to itself */}
+							{progress && progress !== "start" && router?.pathname !== "/apply/status" && (
 								<Text as={NextLink} href="/apply/status" fontSize="sm" color="text.link">
 									{t("shell.myApplication")}
 								</Text>
