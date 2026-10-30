@@ -10,7 +10,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { call } from "@/lib/api";
 import { milestonesAtStart, milestonesOf, type MilestoneState } from "@/lib/milestones";
 import type { Snapshot } from "@/lib/types";
-import { EASE_IN_OUT_CURVE, EASE_OUT_CURVE, journeyFeedback, staggerChildren, useRevealOnScroll } from "@/styles/motion";
+import { EASE_OUT_CURVE, journeyFeedback, staggerChildren, useRevealOnScroll } from "@/styles/motion";
 
 interface Props {
 	title: string;
@@ -129,36 +129,27 @@ function SignOut() {
 // Set after the first page: only later pages move focus to their title (not the first load)
 let navigated = false;
 
-// Parts already drawn as done on the previous page, so only a newly finished part fills in; and the part
-// that was current there, so the current part fills in only when it is a new one (not on every page or reload)
-let drawn: Set<string> | null = null;
-let drawnCurrent: string | null | undefined;
-
 const MotionBox = motion.create(Box);
+
+/** One finished part's share of the sweep, and the pause before the next one starts (seconds). */
+const SWEEP_STEP = 0.12;
+const SWEEP_DONE = 0.13;
+/** The part to do now: the sweep slows down and stops there. */
+const SWEEP_STOP = 0.32;
 
 /**
  * Progress as parts of the application (contact, identity, eligibility, ...), each one finished
- * or not, from the server's step statuses. What moves, and only to explain a change: parts finished
- * since the last page fill in one after another, a new current part fills in after them and its name is
- * underlined, and "Now: …" and the count slide in when they change. Nothing replays on a reload or when the
- * same part is still current. Under reduced motion (MotionConfig in _app) only the fades stay. Nothing loops.
+ * or not, from the server's step statuses. Each time a page opens (a refresh too) the line sweeps
+ * from left to right through the finished parts and eases to a stop on the part to do now, whose
+ * name is then underlined; "Now: …" and the count slide in when they change. Under reduced motion
+ * (MotionConfig in _app) the line is simply there. Nothing loops.
  */
 function Milestones({ states }: { states: MilestoneState[] }) {
 	const done = states.filter((state) => state.done);
 	const current = states.find((state) => state.current);
-	const fresh = useRef<Set<string>>(new Set());
-	const newCurrent = useRef(false);
-	if (drawn !== null) {
-		fresh.current = new Set(done.filter((state) => !drawn?.has(state.key)).map((state) => state.key));
-		newCurrent.current = drawnCurrent !== undefined && !!current && drawnCurrent !== current.key;
-	}
-	useEffect(() => {
-		drawn = new Set(done.map((state) => state.key));
-		drawnCurrent = current?.key ?? null;
-	});
-	// The newly finished parts fill first, in order; a new current part follows them (the whole run ≤ ~0.5 s)
-	const freshOrder = states.filter((state) => fresh.current.has(state.key)).map((state) => state.key);
-	const currentDelay = Math.min(freshOrder.length, 3) * 0.05;
+	// Order of the filled parts in the sweep, left to right
+	const filled = states.filter((state) => state.done || state.current).map((state) => state.key);
+	const stopDelay = current ? filled.indexOf(current.key) * SWEEP_STEP : 0;
 	const now = current ? `Now: ${current.label}` : done.length === states.length ? "All parts done" : "";
 	return (
 		<Box>
@@ -176,12 +167,7 @@ function Milestones({ states }: { states: MilestoneState[] }) {
 				aria-valuetext={`${done.length} of ${states.length} parts done${current ? `, now ${current.label}` : ""}`}
 			>
 				{states.map((state) => (
-					<Segment
-						key={state.key}
-						state={state}
-						fill={fresh.current.has(state.key) || (state.current && newCurrent.current)}
-						delay={state.current ? currentDelay : Math.min(Math.max(freshOrder.indexOf(state.key), 0), 3) * 0.05}
-					/>
+					<Segment key={state.key} state={state} delay={Math.max(filled.indexOf(state.key), 0) * SWEEP_STEP} />
 				))}
 			</HStack>
 			{/* The parts by name on wider screens (a phone shows "Now: …" above) */}
@@ -199,9 +185,9 @@ function Milestones({ states }: { states: MilestoneState[] }) {
 								bg="connect.500"
 								borderRadius="full"
 								transformOrigin="left"
-								initial={newCurrent.current ? { scaleX: 0, opacity: 0 } : false}
+								initial={{ scaleX: 0, opacity: 0 }}
 								animate={{ scaleX: 1, opacity: 1 }}
-								transition={{ duration: 0.25, delay: currentDelay + 0.1, ease: EASE_OUT_CURVE }}
+								transition={{ duration: 0.25, delay: stopDelay + SWEEP_STOP * 0.7, ease: EASE_OUT_CURVE }}
 							/>
 						)}
 					</Box>
@@ -244,8 +230,12 @@ function Changing({ id, value }: { id: string; value: string }) {
 	);
 }
 
-/** One part of the line: done is full colour, now a lighter shade; a part that changed fills in from the left. */
-function Segment({ state, fill, delay }: { state: MilestoneState; fill: boolean; delay: number }) {
+/**
+ * One part of the line: done is full colour, now a lighter shade. Its fill is one stretch of the sweep:
+ * a finished part at an even pace (so the stretches join into one movement), the current part slowing to
+ * a stop.
+ */
+function Segment({ state, delay }: { state: MilestoneState; delay: number }) {
 	return (
 		<Box flex="1" h="6px" bg="paper.300" borderRadius="full" overflow="hidden" title={state.label}>
 			{(state.done || state.current) && (
@@ -253,9 +243,9 @@ function Segment({ state, fill, delay }: { state: MilestoneState; fill: boolean;
 					h="100%"
 					bg="connect.500"
 					transformOrigin="left"
-					initial={fill ? { scaleX: 0, opacity: state.done ? 1 : 0.35 } : false}
+					initial={{ scaleX: 0, opacity: state.done ? 1 : 0.35 }}
 					animate={{ scaleX: 1, opacity: state.done ? 1 : 0.35 }}
-					transition={{ duration: 0.3, delay, ease: EASE_IN_OUT_CURVE }}
+					transition={state.done ? { duration: SWEEP_DONE, delay, ease: "linear" } : { duration: SWEEP_STOP, delay, ease: EASE_OUT_CURVE }}
 				/>
 			)}
 		</Box>
