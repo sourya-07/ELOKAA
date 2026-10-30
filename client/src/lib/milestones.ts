@@ -38,6 +38,11 @@ export function milestonesOf(snapshot: Snapshot): MilestoneState[] {
 	});
 }
 
+/** Before sign-in there is no application yet: nothing done, the contact details are the part to do now. */
+export function milestonesAtStart(): MilestoneState[] {
+	return MILESTONES.map((milestone) => ({ ...milestone, done: false, current: milestone.key === "CONTACT" }));
+}
+
 export function progressOf(snapshot: Snapshot): { done: number; total: number } {
 	const states = milestonesOf(snapshot);
 	return { done: states.filter((state) => state.done).length, total: states.length };

@@ -116,7 +116,7 @@ function MobileStage({ onSignedIn }: { onSignedIn: () => void }) {
 	};
 
 	return (
-		<ApplyShell title="Contact details">
+		<ApplyShell title="Contact details" progress="start">
 			<Section>
 				<form onSubmit={send} noValidate>
 					<Stack spacing={4}>

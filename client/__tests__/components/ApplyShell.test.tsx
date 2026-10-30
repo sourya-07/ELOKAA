@@ -20,6 +20,20 @@ describe("apply shell", () => {
 		expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuetext", "1 of 6 parts done, now Identity");
 	});
 
+	it("shows the progress on the sign-in screen too, before there is an application", () => {
+		render(
+			<ApplyShell title="Contact details" progress="start">
+				<p>mobile</p>
+			</ApplyShell>,
+		);
+		expect(screen.getByText("0 of 6 done")).toBeInTheDocument();
+		expect(screen.getByText("Now: Contact details")).toBeInTheDocument();
+		expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
+		// not signed in yet: no "My application" or "Sign out"
+		expect(screen.queryByText("My application")).not.toBeInTheDocument();
+		expect(screen.queryByRole("button", { name: "Sign out" })).not.toBeInTheDocument();
+	});
+
 	it("puts an outcome mark above the title, hidden from screen readers", () => {
 		const { container } = render(
 			<ApplyShell title="Application submitted" mark={<SuccessMark />}>

@@ -7,15 +7,15 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { useApplicationSession } from "@/features/apply/ApplicationContext";
 import { useI18n } from "@/i18n/I18nProvider";
 import { call } from "@/lib/api";
-import { milestonesOf, type MilestoneState } from "@/lib/milestones";
+import { milestonesAtStart, milestonesOf, type MilestoneState } from "@/lib/milestones";
 import type { Snapshot } from "@/lib/types";
 import { EASE_OUT, prefersReducedMotion, journeyFeedback, staggerChildren, useRevealOnScroll } from "@/styles/motion";
 
 interface Props {
 	title: string;
 	subtitle?: ReactNode;
-	/** The application, for the progress line; leave out on pages outside the journey steps */
-	progress?: Snapshot;
+	/** The application, for the progress line ("start" before sign-in); leave out on pages outside the journey steps */
+	progress?: Snapshot | "start";
 	/** Show "Sign out" (defaults to whether progress is shown) */
 	signedIn?: boolean;
 	/** Shown above the title, e.g. the tick on a good outcome */
@@ -24,7 +24,7 @@ interface Props {
 }
 
 /** Page frame of the applicant journey: brand bar, step counter and one focused column. */
-export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, mark, children }: Props) {
+export function ApplyShell({ title, subtitle, progress, signedIn = !!progress && progress !== "start", mark, children }: Props) {
 	const heading = useRef<HTMLHeadingElement>(null);
 	const reveal = useRevealOnScroll<HTMLDivElement>();
 	const router = useRouter();
@@ -68,7 +68,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 						<HStack spacing={4}>
 							<LanguageSelector />
 							{/* Journey steps only: the status page shows the application and lets the applicant withdraw */}
-							{progress && (
+							{progress && progress !== "start" && (
 								<Text as={NextLink} href="/apply/status" fontSize="sm" color="text.link">
 									{t("shell.myApplication")}
 								</Text>
@@ -82,7 +82,7 @@ export function ApplyShell({ title, subtitle, progress, signedIn = !!progress, m
 				{/* A new page (or a new part of one) enters in order instead of appearing all at once; what
 				    starts below the screen rises in when scrolled to */}
 				<Stack ref={reveal} spacing={6} sx={staggerChildren()}>
-					{progress && <Milestones states={milestonesOf(progress)} />}
+					{progress && <Milestones states={progress === "start" ? milestonesAtStart() : milestonesOf(progress)} />}
 					{backToReview && (
 						<Text as={NextLink} href="/apply/review" fontSize="sm" color="text.link" alignSelf="flex-start">
 							{t("shell.backToReview")}
@@ -166,6 +166,14 @@ function Milestones({ states }: { states: MilestoneState[] }) {
 					<Segment key={state.key} state={state} fill={fresh.current.has(state.key)} />
 				))}
 			</HStack>
+			{/* The parts by name on wider screens (a phone shows "Now: …" above) */}
+			<HStack spacing={1} mt={2} display={{ base: "none", md: "flex" }} aria-hidden>
+				{states.map((state) => (
+					<Text key={state.key} flex="1" fontSize="xs" color={state.current ? "connect.500" : state.done ? "text.primary" : "text.muted"} fontWeight={state.current ? 600 : 400} noOfLines={1}>
+						{state.label}
+					</Text>
+				))}
+			</HStack>
 		</Box>
 	);
 }
@@ -178,9 +186,10 @@ function Segment({ state, fill }: { state: MilestoneState; fill: boolean }) {
 		}
 	}, [fill]);
 	return (
-		<Box flex="1" h="4px" bg="paper.300" borderRadius="full" overflow="hidden" title={state.label}>
+		<Box flex="1" h="6px" bg="paper.300" borderRadius="full" overflow="hidden" title={state.label}>
 			{(state.done || state.current) && (
-				<Box ref={bar} h="100%" bg={state.done ? "connect.500" : "connect.50"} transformOrigin="left" />
+				// done: full colour; now: a lighter shade of it, so the current part stands out from those still to come
+				<Box ref={bar} h="100%" bg="connect.500" opacity={state.done ? 1 : 0.35} transformOrigin="left" />
 			)}
 		</Box>
 	);
