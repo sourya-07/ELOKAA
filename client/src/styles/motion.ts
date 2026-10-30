@@ -13,6 +13,10 @@ export const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
 /** Strong ease-in-out: something moving on screen (the progress line). */
 export const EASE_IN_OUT = "cubic-bezier(0.77, 0, 0.175, 1)";
 
+/** The same curves for framer-motion (the progress line; Chakra brings framer-motion 11). */
+export const EASE_OUT_CURVE = [0.23, 1, 0.32, 1] as const;
+export const EASE_IN_OUT_CURVE = [0.77, 0, 0.175, 1] as const;
+
 const rise = keyframes`
 	from { opacity: 0; transform: translateY(8px); }
 	to { opacity: 1; transform: none; }

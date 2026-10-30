@@ -85,7 +85,11 @@ No `NEXT_PUBLIC_*` settings: they would be compiled into the image, and one imag
 - Applicant-facing text goes through `useI18n().t` with a key in `src/i18n/en-GB.ts` on pages already moved (a test
   fails on hard-coded text there). Never add a language without a person's reviewed translation of every key; Urdu
   also needs a right-to-left layout check, and each script its own self-hosted font (the CSP allows only 'self').
-- Motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
+- The progress line (ApplyShell `Milestones`) animates with `framer-motion` (the v11 Chakra brings; never add the
+  `motion` package), using the curves in `@/styles/motion` (`EASE_OUT_CURVE`, `EASE_IN_OUT_CURVE`): newly finished parts
+  fill one after another, the current part fills in and its name is underlined, "Now: …" and the count slide in when they
+  differ from the previous page; `MotionConfig reducedMotion="user"` in `_app` keeps only the fades.
+- Other motion comes from `@/styles/motion` only: `transform`/`opacity`, strong ease-out curves, at most 300 ms
   (the success tick is the one exception), and a fade-only version under `prefers-reduced-motion`. What
   moves: journey pages enter in order, a finished part of the progress line fills in, task panels open and fold
   (Chakra Collapse; instant under reduced motion) and an opened panel's content rises 8 px, journey buttons give
